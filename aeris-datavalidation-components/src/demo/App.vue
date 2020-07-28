@@ -4,7 +4,6 @@
       <v-app-bar
               app
               color="primary"
-              dark
       >
         <div class="d-flex align-center">
           <v-img
@@ -27,6 +26,26 @@
 
         <v-spacer></v-spacer>
 
+        <v-list
+                class="d-flex flex-row"
+        >
+          <v-list-item
+                  v-for="item in items"
+                  :key="item.text"
+                  link
+          >
+            <v-tab :to="item.to">
+              <v-list-item-content>
+                <v-list-item-title>
+                  {{ item.text }}
+                </v-list-item-title>
+              </v-list-item-content>
+              <v-list-item-action>
+                <v-icon>{{ item.icon }}</v-icon>
+              </v-list-item-action>
+            </v-tab>
+          </v-list-item>
+        </v-list>
         <v-btn
                 href="https://github.com/vuetifyjs/vuetify/releases/latest"
                 target="_blank"
@@ -36,24 +55,28 @@
           <v-icon>mdi-open-in-new</v-icon>
         </v-btn>
       </v-app-bar>
-
       <v-main>
-        <HelloWorld/>
+        <v-container fluid>
+          <router-view/>
+        </v-container>
       </v-main>
     </v-app>
   </div>
 </template>
 
 <script>
-import HelloWorld from './modules/aeris-datavalidation-ui/submodules/HelloWorld';
 
 export default {
   name: 'App',
   components: {
-    HelloWorld,
   },
-  data: () => ({
-    //
-  }),
+  data: function() {
+    return {
+      items: [
+        { icon: 'mdi-home', text: 'Data validation tool', to : "/catalogue"},
+        { icon: 'mdi-cog', text: 'statistics', to : "/" },
+      ],
+    }
+  },
 };
 </script>

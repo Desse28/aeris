@@ -21,10 +21,12 @@ const router = new VueRouter({
   routes: [
     {
       path: "/catalogue",
+      name: 'catalogue',
       component: () => catalogue
     },
     {
       path: "/statistics",
+      name: 'HelloWorld',
       component: () => HelloWorld
     },
   ]
