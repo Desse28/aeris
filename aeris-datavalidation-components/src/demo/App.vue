@@ -56,9 +56,7 @@
         </v-btn>
       </v-app-bar>
       <v-main>
-        <v-container fluid>
           <router-view/>
-        </v-container>
       </v-main>
     </v-app>
   </div>
@@ -73,8 +71,8 @@ export default {
   data: function() {
     return {
       items: [
-        { icon: 'mdi-home', text: 'Data validation tool', to : "/catalogue"},
-        { icon: 'mdi-cog', text: 'statistics', to : "/" },
+        { icon: 'mdi-home', text: 'Data validation tool', to : "/data-validation-tool" },
+        { icon: 'mdi-cog', text: 'statistics', to : "/settings" },
       ],
     }
   },

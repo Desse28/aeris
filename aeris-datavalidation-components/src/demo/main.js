@@ -1,5 +1,4 @@
 import Vue from 'vue'
-
 import Vuex from "vuex";
 import VueRouter from "vue-router"
 import vuetify from './../../plugins/vuetify'
@@ -20,12 +19,15 @@ const router = new VueRouter({
   mode: "history",
   routes: [
     {
-      path: "/catalogue",
-      name: 'catalogue',
+      path: "/",
+      component: () => HelloWorld
+    },
+    {
+      path: "/data-validation-tool",
       component: () => catalogue
     },
     {
-      path: "/statistics",
+      path: "/settings",
       name: 'HelloWorld',
       component: () => HelloWorld
     },
