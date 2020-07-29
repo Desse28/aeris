@@ -20,16 +20,16 @@ const router = new VueRouter({
   routes: [
     {
       path: "/",
-      component: () => HelloWorld
+      component: HelloWorld
     },
     {
       path: "/data-validation-tool",
-      component: () => catalogue
+      component: catalogue
     },
     {
       path: "/settings",
       name: 'HelloWorld',
-      component: () => HelloWorld
+      component: HelloWorld
     },
   ]
 });
