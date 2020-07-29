@@ -1,6 +1,5 @@
 package com.aeris.datavalidationrest.catalogue;
 
-import com.aeris.datavalidationrest.catalogue.data.GroundData;
 import com.aeris.datavalidationrest.catalogue.flag.Flag;
 import com.aeris.datavalidationrest.catalogue.flag.FlagDao;
 import com.aeris.datavalidationrest.catalogue.flag.FlagService;
