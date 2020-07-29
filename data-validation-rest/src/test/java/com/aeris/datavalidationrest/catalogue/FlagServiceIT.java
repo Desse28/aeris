@@ -20,7 +20,7 @@ import java.util.List;
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment= SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class FlagServiceTest {
+public class FlagServiceIT {
     @Autowired
     private FlagDao flagDao;
     @Autowired

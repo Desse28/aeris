@@ -16,7 +16,7 @@ import java.util.List;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment= SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class GroundDataServiceTest {
+public class GroundDataServiceIT {
     @Autowired
     private GroundDataDao groundDataDao;
     @Autowired

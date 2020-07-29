@@ -20,7 +20,7 @@ import java.util.List;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment= SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class DataInfoServiceTest {
+public class DataInfoServiceIT {
     @Autowired
     private DataInfoDao dataInfoDao;
     @Autowired
