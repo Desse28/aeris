@@ -5,6 +5,7 @@ import com.aeris.datavalidationrest.catalogue.datainfo.DataInfoDao;
 import com.aeris.datavalidationrest.catalogue.datainfo.DataInfoService;
 import org.junit.Assert;
 import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.TestMethodOrder;
@@ -16,8 +17,8 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 
-@RunWith(SpringRunner.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+@RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment= SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class DataInfoServiceTest {
     @Autowired
@@ -35,6 +36,7 @@ public class DataInfoServiceTest {
     }
 
     @Test
+    @Disabled
     @Order(2)
     public void deleteAllDataInfo() {
         List<DataInfo> dataInfos;
