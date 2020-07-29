@@ -13,8 +13,7 @@ import java.util.List;
 public class GroundDataService {
     public static final String SEDOO_GROUND_DATA_URL = "https://sedoo.aeris-data.fr/actris-datacenter-rest/rest/quicklook/download?uuid=91440f71-9c3e-5d31-befc-2729873ce581&folder=/GROUND-BASED/P2OA_Pic-Du-Midi/NEPHE/NEPHE_RAW/2019&image=PDM_NEPH_20190517.csv";
 
-    public List<GroundData> getGroundData() {
-        RestTemplate restTemplate = new RestTemplate();
+    public List<GroundData> getGroundData(RestTemplate restTemplate) {
         Reader reader;
         List<GroundData> groundDataList;
         String data = restTemplate.getForObject( SEDOO_GROUND_DATA_URL, String.class);
@@ -28,12 +27,6 @@ public class GroundDataService {
                 .build();
 
         groundDataList = csvToBean.parse();
-
-        System.out.println("Test groundData : ");
-
-        for(GroundData groundData : groundDataList) {
-            System.out.println(groundData);
-        }
 
         return groundDataList;
     }

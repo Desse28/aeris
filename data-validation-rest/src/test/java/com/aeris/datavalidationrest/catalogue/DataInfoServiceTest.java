@@ -5,7 +5,9 @@ import com.aeris.datavalidationrest.catalogue.datainfo.DataInfoDao;
 import com.aeris.datavalidationrest.catalogue.datainfo.DataInfoService;
 import org.junit.Assert;
 import org.junit.Test;
+import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -15,6 +17,7 @@ import org.springframework.web.client.RestTemplate;
 import java.util.List;
 
 @RunWith(SpringRunner.class)
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @SpringBootTest(webEnvironment= SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class DataInfoServiceTest {
     @Autowired
