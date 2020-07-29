@@ -20,7 +20,7 @@ const router = new VueRouter({
   routes: [
     {
       path: "/",
-      component: HelloWorld
+      component: catalogue
     },
     {
       path: "/data-validation-tool",

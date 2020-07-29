@@ -4,6 +4,7 @@
       <v-app-bar
               app
               color="primary"
+              dark
       >
         <div class="d-flex align-center">
           <v-img
@@ -28,6 +29,7 @@
 
         <v-list
                 class="d-flex flex-row"
+                color="primary"
         >
           <v-list-item
                   v-for="item in items"
@@ -46,6 +48,7 @@
             </v-tab>
           </v-list-item>
         </v-list>
+
         <v-btn
                 href="https://github.com/vuetifyjs/vuetify/releases/latest"
                 target="_blank"
@@ -56,7 +59,6 @@
         </v-btn>
       </v-app-bar>
       <v-main>
-
         <router-view/>
       </v-main>
     </v-app>
