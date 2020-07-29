@@ -5,7 +5,7 @@ import org.springframework.data.annotation.Id;
 
 import java.util.Arrays;
 
-class DataInfo {
+public class DataInfo {
     @Id
     private String id;
     private ResourceTitle resourceTitle;
@@ -400,7 +400,7 @@ class DataInfo {
     }
 
     @JsonIgnoreProperties(ignoreUnknown = true)
-    class ResourceTitle {
+    static class ResourceTitle {
         private String en;
         private String fr;
 
@@ -437,7 +437,7 @@ class DataInfo {
     }
 
     @JsonIgnoreProperties(ignoreUnknown = true)
-    class ResourceAbstract {
+    static class ResourceAbstract {
         private String en;
         private String fr;
 
@@ -474,7 +474,7 @@ class DataInfo {
     }
 
     @JsonIgnoreProperties(ignoreUnknown = true)
-    class LastModification {
+    static class LastModification {
         private String value;
 
         public LastModification() {}
@@ -500,7 +500,7 @@ class DataInfo {
     }
 
     @JsonIgnoreProperties(ignoreUnknown = true)
-    class TemporalExtent {
+    static class TemporalExtent {
         private String beginDate;
         private String endDate;
         private String comment;
@@ -548,7 +548,7 @@ class DataInfo {
     }
 
     @JsonIgnoreProperties(ignoreUnknown = true)
-    class SpatialExtent {
+    static class SpatialExtent {
         private Area area;
         private String name;
         private String description;
@@ -638,7 +638,7 @@ class DataInfo {
 
 
         @JsonIgnoreProperties(ignoreUnknown = true)
-        class Area {
+        static class Area {
             private String type;
             private String latitude;
             private String longitude;
@@ -698,12 +698,12 @@ class DataInfo {
     }
 
     @JsonIgnoreProperties(ignoreUnknown = true)
-    class Publication {
+    static class Publication {
         public Publication() {}
     }
 
     @JsonIgnoreProperties(ignoreUnknown = true)
-    class Link {
+    static class Link {
         private String type;
         private String url;
         private String name;
@@ -762,7 +762,7 @@ class DataInfo {
     }
 
     @JsonIgnoreProperties(ignoreUnknown = true)
-    class Description {
+    static class Description {
         private String DEFAULT_VALUE_KEY;
 
         public Description() {}
@@ -781,17 +781,17 @@ class DataInfo {
     }
 
     @JsonIgnoreProperties(ignoreUnknown = true)
-    class Identifier {
+    static class Identifier {
         public Identifier() {}
     }
 
     @JsonIgnoreProperties(ignoreUnknown = true)
-    class Visibility {
+    static class Visibility {
         public Visibility() {}
     }
 
     @JsonIgnoreProperties(ignoreUnknown = true)
-    class DistributionInformation {
+    static class DistributionInformation {
         private String dataPolicyName;
         private String dataPolicyVersion;
         private String dataPolicyUrl;
@@ -964,14 +964,14 @@ class DataInfo {
     }
 
     @JsonIgnoreProperties(ignoreUnknown = true)
-    class EmbargoRole {
+    static class EmbargoRole {
 
         public EmbargoRole() {}
 
     }
 
     @JsonIgnoreProperties(ignoreUnknown = true)
-    class Role {
+    static class Role {
         private String pointofcontact;
 
         public Role() {}
@@ -989,17 +989,17 @@ class DataInfo {
     }
 
     @JsonIgnoreProperties(ignoreUnknown = true)
-    class AccessConstraint {
+    static class AccessConstraint {
 
     }
 
     @JsonIgnoreProperties(ignoreUnknown = true)
-    class UseConstraint {
+    static class UseConstraint {
         public UseConstraint() {}
     }
 
     @JsonIgnoreProperties(ignoreUnknown = true)
-    class Contact {
+    static class Contact {
         private String name;
         private String email;
         private String organisation;
@@ -1091,7 +1091,7 @@ class DataInfo {
     }
 
     @JsonIgnoreProperties(ignoreUnknown = true)
-    class Comment {
+    static class Comment {
         private String DEFAULT_VALUE_KEY;
         private String en;
         private String fr;
@@ -1139,27 +1139,27 @@ class DataInfo {
     }
 
     @JsonIgnoreProperties(ignoreUnknown = true)
-    class Quicklook {
+    static class Quicklook {
         public Quicklook() {}
     }
 
     @JsonIgnoreProperties(ignoreUnknown = true)
-    class Keyword {
+    static class Keyword {
         public Keyword() {}
     }
 
     @JsonIgnoreProperties(ignoreUnknown = true)
-    class Modification {
+    static class Modification {
         public Modification() {}
     }
 
     @JsonIgnoreProperties(ignoreUnknown = true)
-    class Genealogy {
+    static class Genealogy {
         public Genealogy() {}
     }
 
     @JsonIgnoreProperties(ignoreUnknown = true)
-    class Format {
+    static class Format {
         private String name;
         private String version;
         private Description description;
@@ -1230,17 +1230,17 @@ class DataInfo {
     }
 
     @JsonIgnoreProperties(ignoreUnknown = true)
-    class ReadingInformation {
+    static class ReadingInformation {
         public ReadingInformation() {}
     }
 
     @JsonIgnoreProperties(ignoreUnknown = true)
-    class TemporalInterval {
+    static class TemporalInterval {
         public TemporalInterval() {}
     }
 
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public class Parameter {
+    static class Parameter {
         private String shortName;
         private String longName;
         private String uom;
@@ -1344,7 +1344,7 @@ class DataInfo {
     }
 
     @JsonIgnoreProperties(ignoreUnknown = true)
-    class ThesaurusVariable {
+    static class ThesaurusVariable {
         private String code;
         private Name name;
         private ThesaurusVariable thesaurusVariable;
@@ -1392,7 +1392,7 @@ class DataInfo {
     }
 
     @JsonIgnoreProperties(ignoreUnknown = true)
-    class Name {
+    static class Name {
         private String en;
         private String fr;
 
@@ -1430,7 +1430,7 @@ class DataInfo {
     }
 
     @JsonIgnoreProperties(ignoreUnknown = true)
-    class Instrument {
+    static class Instrument {
         private String thesaurusConcat;
         private ThesaurusClass thesaurusClass;
         private String manufacturer;
@@ -1545,7 +1545,7 @@ class DataInfo {
     }
 
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public class ThesaurusClass {
+    static class ThesaurusClass {
         private String code;
         private Name name;
         private ThesaurusCode thesaurusCode;
@@ -1594,7 +1594,7 @@ class DataInfo {
     }
 
     @JsonIgnoreProperties(ignoreUnknown = true)
-    class ThesaurusCode {
+    static class ThesaurusCode {
         private String code;
         private Name name;
         private ThesaurusName thesaurusName;
@@ -1643,7 +1643,7 @@ class DataInfo {
     }
 
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public class ThesaurusName {
+    static class ThesaurusName {
         private String code;
         private Name name;
         private LongName longName;
@@ -1692,7 +1692,7 @@ class DataInfo {
     }
 
     @JsonIgnoreProperties(ignoreUnknown = true)
-    class LongName {
+    static class LongName {
         private String en;
         private String fr;
 
@@ -1729,12 +1729,12 @@ class DataInfo {
     }
 
     @JsonIgnoreProperties(ignoreUnknown = true)
-    class Resolution {
+    static class Resolution {
         public Resolution() {}
     }
 
     @JsonIgnoreProperties(ignoreUnknown = true)
-    class Plateform {
+    static class Plateform {
         private String thesaurusConcat;
         private ThesaurusClass thesaurusClass;
         private String name;
@@ -1804,7 +1804,7 @@ class DataInfo {
     }
 
     @JsonIgnoreProperties(ignoreUnknown = true)
-    class Project {
+    static class Project {
         private String thesaurusConcat;
         private ThesaurusCategory thesaurusCategory;
         private String aerisProjectUuid;
@@ -1852,7 +1852,7 @@ class DataInfo {
     }
 
     @JsonIgnoreProperties(ignoreUnknown = true)
-    class ThesaurusCategory {
+    static class ThesaurusCategory {
         private String code;
         private Name name;
         private ThesaurusName thesaurusName;
@@ -1900,7 +1900,7 @@ class DataInfo {
     }
 
     @JsonIgnoreProperties(ignoreUnknown = true)
-    class DatasetSpecification {
+    static class DatasetSpecification {
         public DatasetSpecification() {}
     }
 }
