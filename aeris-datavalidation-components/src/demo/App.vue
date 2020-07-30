@@ -49,7 +49,7 @@
 </template>
 
 <script>
-  //import { mdiLogout } from '@mdi/js';
+  import { keycloak } from 'main.js'
   export default {
     name: 'App',
     components: {
@@ -63,5 +63,13 @@
         ],
       }
     },
+    methods: {
+      login : function () {
+        keycloak.login();
+      },
+      logout : function () {
+        keycloak.logout();
+      }
+    }
   };
 </script>
