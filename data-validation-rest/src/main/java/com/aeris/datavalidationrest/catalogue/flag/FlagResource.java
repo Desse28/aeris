@@ -23,4 +23,23 @@ public class FlagResource {
         Optional<Flag> flag = flagDao.findById(id);
         return flag;
     }
+
+    public void test() {
+        //KeycloakSecurityContext scToken = (KeycloakSecurityContext) request.getAttribute(KeycloakSecurityContext.class.getName());
+        //AccessToken scAccessToken = scToken.getToken();
+
+        // Extraction des données
+        //String id = scAccessToken.getId();
+        //String name = scAccessToken.getPreferredUsername();
+        //String email = scAccessToken.getEmail();
+
+        // Récupération des rôles
+        //AccessToken.Access access = scAccessToken.getResourceAccess("APP-SPRING");
+        //Set<String> resourcesRoles = access.getRoles();
+        //access = scAccessToken.getRealmAccess();
+        //Set<String> realmRoles = access.getRoles();
+        //Set<String> roles = new HashSet<String>();
+        //roles.addAll(resourcesRoles);
+        //roles.addAll(realmRoles);
+    }
 }
