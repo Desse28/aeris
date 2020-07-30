@@ -48,15 +48,6 @@
             </v-tab>
           </v-list-item>
         </v-list>
-
-        <v-btn
-                href="https://github.com/vuetifyjs/vuetify/releases/latest"
-                target="_blank"
-                text
-        >
-          <span class="mr-2">Latest Release</span>
-          <v-icon>mdi-open-in-new</v-icon>
-        </v-btn>
       </v-app-bar>
       <v-main>
         <router-view/>
@@ -66,18 +57,19 @@
 </template>
 
 <script>
-
-export default {
-  name: 'App',
-  components: {
-  },
-  data: function() {
-    return {
-      items: [
-        { icon: 'mdi-home', text: 'Data validation tool', to : "/data-validation-tool" },
-        { icon: 'mdi-cog', text: 'statistics', to : "/settings" },
-      ],
-    }
-  },
-};
+  //import { mdiLogout } from '@mdi/js';
+  export default {
+    name: 'App',
+    components: {
+    },
+    data: function() {
+      return {
+        items: [
+          { icon: 'mdi-chart-line', text: 'Data validation tool', to : "/data-validation-tool" },
+          { icon: 'mdi-login', text: 'Login', to : "/settings" },
+          { icon: 'mdi-logout', text: 'Logout', to : "/settings" },
+        ],
+      }
+    },
+  };
 </script>
