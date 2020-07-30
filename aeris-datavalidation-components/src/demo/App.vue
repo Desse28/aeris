@@ -11,17 +11,9 @@
                   alt="Vuetify Logo"
                   class="shrink mr-2"
                   contain
-                  src="https://cdn.vuetifyjs.com/images/logos/vuetify-logo-dark.png"
+                  src="https://www7.obs-mip.fr/wp-content-aeris/uploads/sites/15/2017/09/logo_passy.png"
                   transition="scale-transition"
-                  width="40"
-          />
-          <v-img
-                  alt="Vuetify Name"
-                  class="shrink mt-1 hidden-sm-and-down"
-                  contain
-                  min-width="100"
-                  src="https://cdn.vuetifyjs.com/images/logos/vuetify-name-dark.png"
-                  width="100"
+                  width="160"
           />
         </div>
 
