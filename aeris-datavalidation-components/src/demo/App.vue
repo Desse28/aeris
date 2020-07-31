@@ -28,7 +28,10 @@
                   :key="item.text"
                   link
           >
-            <v-tab :to="item.to">
+            <v-tab
+                v-if="!authenticated && item.text === 'Login'"
+                v-on:click="login"
+            >
               <v-list-item-content>
                 <v-list-item-title>
                   {{ item.text }}
@@ -38,6 +41,34 @@
                 <v-icon>{{ item.icon }}</v-icon>
               </v-list-item-action>
             </v-tab>
+
+            <v-tab
+                v-else-if="authenticated && item.text === 'Logout'"
+                v-on:click="logout"
+            >
+              <v-list-item-content>
+                <v-list-item-title>
+                  {{ item.text }}
+                </v-list-item-title>
+              </v-list-item-content>
+              <v-list-item-action>
+                <v-icon>{{ item.icon }}</v-icon>
+              </v-list-item-action>
+            </v-tab>
+
+            <v-tab
+                v-else-if="authenticated"
+                :to="item.to">
+              <v-list-item-content>
+                <v-list-item-title>
+                  {{ item.text }}
+                </v-list-item-title>
+              </v-list-item-content>
+              <v-list-item-action>
+                <v-icon>{{ item.icon }}</v-icon>
+              </v-list-item-action>
+            </v-tab>
+
           </v-list-item>
         </v-list>
       </v-app-bar>
@@ -47,9 +78,8 @@
     </v-app>
   </div>
 </template>
-
 <script>
-  import { keycloak } from 'main.js'
+  import { keycloak } from './main.js'
   export default {
     name: 'App',
     components: {
@@ -58,14 +88,16 @@
       return {
         items: [
           { icon: 'mdi-chart-line', text: 'Data validation tool', to : "/data-validation-tool" },
-          { icon: 'mdi-login', text: 'Login', to : "/settings" },
-          { icon: 'mdi-logout', text: 'Logout', to : "/settings" },
+          { icon: 'mdi-login', text: 'Login', to : "" },
+          { icon: 'mdi-logout', text: 'Logout', to : "" },
         ],
+        authenticated :  keycloak.authenticated,
       }
     },
     methods: {
       login : function () {
         keycloak.login();
+
       },
       logout : function () {
         keycloak.logout();

@@ -24,6 +24,7 @@ import org.springframework.security.web.authentication.session.SessionAuthentica
 @EnableGlobalMethodSecurity(securedEnabled = true)
 @ComponentScan(basePackageClasses = KeycloakSecurityComponents.class,
         excludeFilters = @ComponentScan.Filter(type = FilterType.REGEX, pattern = "org.keycloak.adapters.springsecurity.management.HttpSessionManager"))
+
 public class WebSecurityConfig extends KeycloakWebSecurityConfigurerAdapter {
 
 

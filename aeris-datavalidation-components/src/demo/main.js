@@ -9,16 +9,15 @@ import catalogue from "./modules/aeris-datavalidation-ui/submodules/catalogue-gr
 import HelloWorld from "./modules/aeris-datavalidation-ui/submodules/HelloWorld";
 import Keycloak from "keycloak-js";
 
-
 Vue.use(VueAxios, axios);
 Vue.use(Vuex);
 Vue.use(VueRouter);
 Vue.config.productionTip = false
 
 let initOptions = {
-  url: "https://sso.aeris-data.fr/auth",
-  realm: "aeris",
-  clientId: "app-vjs"
+  url: "http://localhost:8180/auth",
+  realm: "test",
+  clientId: "test-web"
 };
 
 export let keycloak = Keycloak(initOptions);
@@ -56,10 +55,13 @@ keycloak
       if (authenticated) {
         // Récupération des informations de l'utilisateur
         if (keycloak.tokenParsed) {
-          var username = keycloak.tokenParsed.preferred_username;
+          let username = keycloak.tokenParsed.preferred_username;
+          console.log("Test UserName : ");
+          console.log(username);
+          /*
           var name = keycloak.tokenParsed.given_name;
           var family_name = keycloak.tokenParsed.family_name;
-          var email = keycloak.tokenParsed.email;
+          var email = keycloak.tokenParsed.email;*/
 
           // Le rôle est porté par le back-end (app-spring)
           if (keycloak.tokenParsed.resource_access["app-spring"]) {
@@ -70,9 +72,13 @@ keycloak
           var roles = [];
           if (realmRoles) {
             roles = roles.concat(realmRoles)
+            console.log("Test roles : ");
+            console.log(roles);
           }
           if (resourceRoles) {
             roles = roles.concat(resourceRoles)
+            console.log("Test roles : ");
+            console.log(roles);
           }
         }
       }

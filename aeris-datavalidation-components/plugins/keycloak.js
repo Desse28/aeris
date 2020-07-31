@@ -1,3 +1,4 @@
+/*
 import Keycloak from "keycloak-js";
 import axios from "axios";
 import "babel-polyfill";
@@ -48,4 +49,4 @@ function updateSSoToken(keycloak) {
         keycloak.updateToken(REFRESH_TOKEN_TIMEOUT);
         updateSSoToken(keycloak);
     }, REFRESH_TOKEN_TIMEOUT);
-}
+}*/
