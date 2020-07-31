@@ -94,8 +94,6 @@
         authenticated : keycloak.authenticated,
       }
     },
-    mounted() {
-    },
     methods: {
       login : function () {
         keycloak.login()

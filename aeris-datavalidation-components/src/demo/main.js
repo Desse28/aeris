@@ -6,7 +6,7 @@ import axios from "axios";
 import VueAxios from 'vue-axios'
 import app from "./App.vue";
 import catalogue from "./modules/aeris-datavalidation-ui/submodules/catalogue-ground-data";
-import HelloWorld from "./modules/aeris-datavalidation-ui/submodules/HelloWorld";
+import AerisDataValidationChart from "../lib/modules/aeris-datavalidation-blocks/submodules/aeris-datavalidation-chart/components/aeris-datavalidation-chart";
 import Keycloak from "keycloak-js";
 
 Vue.use(VueAxios, axios);
@@ -36,12 +36,7 @@ const router = new VueRouter({
     },
     {
       path: "/data-validation-tool",
-      component: catalogue
-    },
-    {
-      path: "/settings",
-      name: 'HelloWorld',
-      component: HelloWorld
+      component: AerisDataValidationChart
     },
   ]
 });
@@ -117,5 +112,3 @@ keycloak
         }
       }).$mount("#app");
     });
-
-console.log("Test outside : ", keycloak.authenticated)

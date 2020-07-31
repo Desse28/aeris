@@ -1,10 +1,12 @@
 <template>
-  <AerisMetadataServices
-      serverUrl="http://localhost:9001"
-      flagUrl="/flags"
-      groundDataUrl="/ground-data"
-  >
-  </AerisMetadataServices>
+  <div>
+    <AerisMetadataServices
+        serverUrl="http://localhost:9001"
+        flagUrl="/flags"
+        groundDataUrl="/ground-data"
+    >
+    </AerisMetadataServices>
+  </div>
 </template>
 <script>
 import  AerisDataValidationServices from "../../../lib/modules/aeris-datavalidation-services/components/aeris-datavalidation-services"
