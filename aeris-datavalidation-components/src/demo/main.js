@@ -90,6 +90,7 @@ keycloak
               config.headers.Authorization = "Bearer " + keycloak.token;
               config.headers.Accept = "application/json";
             }
+            console.log("Test interceptors");
             return config;
           },
           error => Promise.reject(error)
@@ -116,3 +117,5 @@ keycloak
         }
       }).$mount("#app");
     });
+
+console.log("Test outside : ", keycloak.authenticated)

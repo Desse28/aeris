@@ -24,6 +24,9 @@ public class FlagResource {
                 .getAttribute(KeycloakSecurityContext.class.getName());
         AccessToken scAccessToken = scToken.getToken();
 
+        System.out.println("Test get token : ");
+        System.out.println(scAccessToken);
+
         return flagDao.findAll();
     }
 

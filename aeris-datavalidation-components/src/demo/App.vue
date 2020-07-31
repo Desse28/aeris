@@ -57,7 +57,7 @@
             </v-tab>
 
             <v-tab
-                v-else-if="authenticated"
+                v-else-if="authenticated && item.text !== 'Login'"
                 :to="item.to">
               <v-list-item-content>
                 <v-list-item-title>
@@ -91,16 +91,18 @@
           { icon: 'mdi-login', text: 'Login', to : "" },
           { icon: 'mdi-logout', text: 'Logout', to : "" },
         ],
-        authenticated :  keycloak.authenticated,
+        authenticated : keycloak.authenticated,
       }
+    },
+    mounted() {
     },
     methods: {
       login : function () {
-        keycloak.login();
+        keycloak.login()
 
       },
       logout : function () {
-        keycloak.logout();
+        keycloak.logout()
       }
     }
   };
