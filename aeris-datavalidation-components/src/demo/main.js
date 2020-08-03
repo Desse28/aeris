@@ -16,8 +16,9 @@ Vue.config.productionTip = false
 
 let initOptions = {
   url: "http://localhost:8180/auth",
+  logoutRedirectUri: "http://localhost:8080",
   realm: "test",
-  clientId: "test-web"
+  clientId: "test-web",
 };
 
 export let keycloak = Keycloak(initOptions);
@@ -44,7 +45,7 @@ const router = new VueRouter({
 keycloak
     .init({
       onLoad: "check-sso",
-      promiseType: "native"
+      promiseType: "native",
     })
     .then(function(authenticated) {
       if (authenticated) {

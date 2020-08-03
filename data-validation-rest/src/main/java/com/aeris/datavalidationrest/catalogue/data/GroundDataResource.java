@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 
-//@CrossOrigin
+@CrossOrigin
 @RestController
 @RequestMapping("/ground-data")
 public class GroundDataResource {

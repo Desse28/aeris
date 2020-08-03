@@ -1,5 +1,6 @@
 package com.aeris.datavalidationrest;
 
+import com.google.common.collect.ImmutableList;
 import org.keycloak.adapters.springboot.KeycloakSpringBootConfigResolver;
 import org.keycloak.adapters.springsecurity.KeycloakSecurityComponents;
 import org.keycloak.adapters.springsecurity.authentication.KeycloakAuthenticationProvider;
@@ -17,14 +18,16 @@ import org.springframework.security.core.authority.mapping.SimpleAuthorityMapper
 import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.web.authentication.session.RegisterSessionAuthenticationStrategy;
 import org.springframework.security.web.authentication.session.SessionAuthenticationStrategy;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 
 @Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(securedEnabled = true)
+@EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
 @ComponentScan(basePackageClasses = KeycloakSecurityComponents.class,
         excludeFilters = @ComponentScan.Filter(type = FilterType.REGEX, pattern = "org.keycloak.adapters.springsecurity.management.HttpSessionManager"))
-
 public class WebSecurityConfig extends KeycloakWebSecurityConfigurerAdapter {
 
 
@@ -34,8 +37,7 @@ public class WebSecurityConfig extends KeycloakWebSecurityConfigurerAdapter {
         SimpleAuthorityMapper grantedAuthorityMapper = new SimpleAuthorityMapper();
         grantedAuthorityMapper.setPrefix("ROLE_");
         grantedAuthorityMapper.setConvertToUpperCase(true);
-        keycloakAuthenticationProvider.setGrantedAuthoritiesMapper(
-                grantedAuthorityMapper);
+        keycloakAuthenticationProvider.setGrantedAuthoritiesMapper(grantedAuthorityMapper);
         auth.authenticationProvider(keycloakAuthenticationProvider);
 
     }
@@ -48,23 +50,33 @@ public class WebSecurityConfig extends KeycloakWebSecurityConfigurerAdapter {
     @Bean
     @Override
     protected SessionAuthenticationStrategy sessionAuthenticationStrategy() {
-        return new RegisterSessionAuthenticationStrategy(
-                new SessionRegistryImpl());
+        return new RegisterSessionAuthenticationStrategy(new SessionRegistryImpl());
     }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         super.configure(http);
 
-      /*  http.csrf().disable().authorizeRequests()
-                .antMatchers("/public/**").permitAll()
-                .anyRequest().authenticated();*/
-
         http.authorizeRequests()
-                .antMatchers("/data-info*").permitAll()
-                .antMatchers("/flags*").hasRole("user")
+                .antMatchers("/flags*").permitAll()
+                .antMatchers("/ground-data*").permitAll()
+                .antMatchers("/data-information*").permitAll()
+                .antMatchers("/test*").hasRole("user")
                 .anyRequest()
                 .permitAll();
         http.csrf().disable();
+    }
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        final CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(ImmutableList.of("*"));
+        configuration.setAllowedMethods(ImmutableList.of("HEAD", "GET", "POST", "PUT", "DELETE", "PATCH"));
+        configuration.setAllowCredentials(true);
+        configuration.setAllowedHeaders(ImmutableList.of("Authorization", "Cache-Control", "Content-Type",
+                "Origin-Catalogue", "Visitor-Information", "DNT"));
+        final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
     }
 }

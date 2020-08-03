@@ -24,4 +24,16 @@ export default {
             }]
         }))
     },
+    getDataInfo : ( serverUrl, dataInfoUrl ) => {
+        const instance = axios.create({
+            baseURL: serverUrl,
+            timeout: 1000
+        });
+
+        return (instance.get( dataInfoUrl, {
+            transformResponse: [function (data) {
+                return data? JSON.parse(data) : data;
+            }]
+        }))
+    },
 }

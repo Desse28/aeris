@@ -15,6 +15,7 @@
     "keycloak-js": "^11.0.0",
     "vue": "^2.6.11",
     "vue-axios": "^2.1.5",
+    "vue-custom-element": "^3.2.14",
     "vue-plotly": "^1.1.0",
     "vue-router": "^3.2.0",
     "vuetify": "^2.2.11",

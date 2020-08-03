@@ -1,4 +1,4 @@
-import HelperRegisterModule from "../../../../helper-register-module.js";
+import HelperRegisterModule from "./../../helper-register-module"
 
 import AerisMetadataServices from "./aeris-datavalidation-services";
 

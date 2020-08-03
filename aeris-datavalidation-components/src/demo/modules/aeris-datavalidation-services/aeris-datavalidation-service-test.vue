@@ -4,6 +4,7 @@
         serverUrl="http://localhost:9001"
         flagUrl="/flags"
         groundDataUrl="/ground-data"
+        dataInfoUrl="/data-information"
     >
     </AerisMetadataServices>
   </div>

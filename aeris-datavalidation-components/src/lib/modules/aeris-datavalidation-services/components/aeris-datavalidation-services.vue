@@ -1,5 +1,6 @@
 <template>
-  <div></div>
+  <div>
+  </div>
 </template>
 
 <script>
@@ -19,11 +20,16 @@
       groundDataUrl : {
         type : String,
         default : ""
+      },
+      dataInfoUrl : {
+        type : String,
+        default : ""
       }
     },
     data() {
       return {
-        currentGroundData: null
+        currentGroundData: null,
+        error: null,
       }
     },
     watch: {
@@ -34,18 +40,36 @@
     methods: {
       refresh() {
         this.getFlags();
+        this.getDataInfo();
+        this.getGroundData();
       },
       getFlags () {
         api.getFlagData(this.serverUrl, this.flagUrl)
             .then(response => {
-              console.log("Test get flag : ");
-              console.log(response.data);
-              //this.chart_data = response.data;
+              this.$emit("metadata", response.data, "flags");
             })
             .catch(error => {
-              console.log("Test flag (Error) : ");
-              console.log(error);
-              //this.error = "Failed to load groundData"
+              this.error = "Failed to load groundData" + error
+            })
+            .finally(() => this.loading = false)
+      },
+      getGroundData () {
+        api.getFlagData(this.serverUrl, this.groundDataUrl)
+            .then(response => {
+              this.$emit("metadata", response.data, "data");
+            })
+            .catch(error => {
+              this.error = "Failed to load groundData" + error
+            })
+            .finally(() => this.loading = false)
+      },
+      getDataInfo() {
+        api.getFlagData(this.serverUrl, this.dataInfoUrl)
+            .then(response => {
+              this.$emit("metadata", response.data, "dataInfo");
+            })
+            .catch(error => {
+              this.error = "Failed to load groundData" + error
             })
             .finally(() => this.loading = false)
       }
