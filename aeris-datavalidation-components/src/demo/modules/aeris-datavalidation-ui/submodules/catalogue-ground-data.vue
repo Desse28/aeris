@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h3>Ground data page</h3>
+    <h3>Home page</h3>
     <AerisDataValidationServicesTest/>
   </div>
 </template>

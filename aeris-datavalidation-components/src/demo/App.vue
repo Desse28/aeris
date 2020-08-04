@@ -100,6 +100,8 @@
 
       },
       logout : function () {
+        window.location.href = '/'
+        //this.$router.push('/')
         keycloak.logout()
       }
     }
