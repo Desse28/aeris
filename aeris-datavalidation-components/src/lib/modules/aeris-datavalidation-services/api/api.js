@@ -1,4 +1,4 @@
-import {instance} from '../../../../../plugins/keycloak'
+import { instance } from '../../../../../plugins/keycloak'
 
 export default {
     getFlagData : ( flagDataUrl ) => {
@@ -9,7 +9,6 @@ export default {
         }))
     },
     getGroundData : ( groundDataUrl ) => {
-
         return (instance.get( groundDataUrl, {
             transformResponse: [function (data) {
                 return data? JSON.parse(data) : data;

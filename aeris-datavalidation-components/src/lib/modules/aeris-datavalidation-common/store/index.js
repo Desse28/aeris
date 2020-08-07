@@ -11,6 +11,6 @@ export default {
         },
         updateAuthenticated(state, authenticated) {
             state.authenticated = authenticated;
-        }
+        },
     }
 };

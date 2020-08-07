@@ -33,21 +33,21 @@
       }
     },
     watch: {
-    },
-    mounted() {
-      this.refresh();
+      '$store.state.common.authenticated': function() {
+        if( this.$store.state.common.authenticated ) {
+          this.refresh();
+        }
+      }
     },
     methods: {
       refresh() {
-        //this.getFlags();
-        //this.getDataInfo();
-        //this.getGroundData();
+        this.getFlags();
+        this.getDataInfo();
+        this.getGroundData();
       },
       getFlags () {
         api.getFlagData(this.flagUrl)
             .then(response => {
-              console.log("Test get flags : ")
-              console.log(response.data)
               this.$emit("metadata", response.data, "flags")
             })
             .catch(error => {

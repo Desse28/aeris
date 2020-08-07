@@ -13,11 +13,9 @@ const keycloak = Keycloak({
 });
 
 async function start_keycloack(store) {
-    console.log("Test before connect : ", keycloak.authenticated)
     addTokenToRequest(keycloak);
     await initKeycloak(keycloak, store);
     updateSSoToken(keycloak);
-    console.log("Test after connect : ", keycloak.authenticated)
 }
 
 async function initKeycloak(keycloak, store) {
@@ -29,25 +27,7 @@ async function initKeycloak(keycloak, store) {
         .then(function(authenticated) {
             if (authenticated && keycloak.tokenParsed) {
                 let username = keycloak.tokenParsed.preferred_username;
-                console.log("Test UserName : ");
-                console.log(username);
-                // Le rôle est porté par le back-end (app-spring)
-                if (keycloak.tokenParsed.resource_access["app-spring"]) {
-                    let resourceRoles = keycloak.tokenParsed.resource_access["app-spring"].roles;
-
-                    let realmRoles = keycloak.tokenParsed.realm_access.roles;
-                    let roles = [];
-                    if (realmRoles) {
-                        roles = roles.concat(realmRoles)
-                        console.log("Test roles : ");
-                        console.log(roles);
-                    }
-                    if (resourceRoles) {
-                        roles = roles.concat(resourceRoles)
-                        console.log("Test roles : ");
-                        console.log(roles);
-                    }
-                }
+                console.log("Test UserName : ", username);
                 store.commit("updateAuthenticated", keycloak.authenticated);
             }
         });
