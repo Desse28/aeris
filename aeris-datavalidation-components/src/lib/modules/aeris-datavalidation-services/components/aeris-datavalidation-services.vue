@@ -4,7 +4,7 @@
 </template>
 
 <script>
-  import  api from  './../Api/DataApi'
+  import  api from '../api/api'
 
   export default {
     name: "aeris-datavalidation-services",
@@ -39,22 +39,26 @@
     },
     methods: {
       refresh() {
-        this.getFlags();
-        this.getDataInfo();
-        this.getGroundData();
+        //this.getFlags();
+        //this.getDataInfo();
+        //this.getGroundData();
       },
       getFlags () {
-        api.getFlagData(this.serverUrl, this.flagUrl)
+        api.getFlagData(this.flagUrl)
             .then(response => {
-              this.$emit("metadata", response.data, "flags");
+              console.log("Test get flags : ")
+              console.log(response.data)
+              this.$emit("metadata", response.data, "flags")
             })
             .catch(error => {
+              console.log("Test get flags (Error) : ")
+              console.log(error)
               this.error = "Failed to load groundData" + error
             })
             .finally(() => this.loading = false)
       },
       getGroundData () {
-        api.getFlagData(this.serverUrl, this.groundDataUrl)
+        api.getFlagData(this.groundDataUrl)
             .then(response => {
               this.$emit("metadata", response.data, "data");
             })
@@ -64,7 +68,7 @@
             .finally(() => this.loading = false)
       },
       getDataInfo() {
-        api.getFlagData(this.serverUrl, this.dataInfoUrl)
+        api.getFlagData(this.dataInfoUrl)
             .then(response => {
               this.$emit("metadata", response.data, "dataInfo");
             })

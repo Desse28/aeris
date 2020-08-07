@@ -71,8 +71,9 @@
     },
     watch: {
       currentData : function(newData) {
-        this.refreshChart(newData);
-        this.setLayout();
+        console.log(newData)
+        //this.refreshChart(newData);
+        //this.setLayout();
       }
     },
     mounted() {

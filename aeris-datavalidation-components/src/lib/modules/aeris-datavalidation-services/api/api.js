@@ -1,22 +1,14 @@
-import axios from 'axios'
+import {instance} from '../../../../../plugins/keycloak'
 
 export default {
-    getFlagData : ( serverUrl, flagDataUrl ) => {
-        const instance = axios.create({
-            baseURL: serverUrl,
-            timeout: 1000
-        });
+    getFlagData : ( flagDataUrl ) => {
         return (instance.get( flagDataUrl, {
             transformResponse: [function (data) {
                 return data? JSON.parse(data) : data;
             }]
         }))
     },
-    getGroundData : ( serverUrl, groundDataUrl ) => {
-        const instance = axios.create({
-            baseURL: serverUrl,
-            timeout: 1000
-        });
+    getGroundData : ( groundDataUrl ) => {
 
         return (instance.get( groundDataUrl, {
             transformResponse: [function (data) {
@@ -24,11 +16,7 @@ export default {
             }]
         }))
     },
-    getDataInfo : ( serverUrl, dataInfoUrl ) => {
-        const instance = axios.create({
-            baseURL: serverUrl,
-            timeout: 1000
-        });
+    getDataInfo : ( dataInfoUrl ) => {
 
         return (instance.get( dataInfoUrl, {
             transformResponse: [function (data) {

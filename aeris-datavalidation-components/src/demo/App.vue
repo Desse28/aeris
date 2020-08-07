@@ -79,10 +79,14 @@
   </div>
 </template>
 <script>
-  import { keycloak } from './main.js'
+  import {keycloak}  from '../../plugins/keycloak'
+
   export default {
     name: 'App',
-    components: {
+    watch: {
+      '$store.state.common.authenticated': function() {
+        this.authenticated = this.$store.state.common.authenticated
+      }
     },
     data: function() {
       return {
@@ -91,19 +95,16 @@
           { icon: 'mdi-login', text: 'Login', to : "" },
           { icon: 'mdi-logout', text: 'Logout', to : "" },
         ],
-        authenticated : keycloak.authenticated,
+        authenticated : false,
       }
     },
     methods: {
-      login : function () {
+      login : function() {
         keycloak.login()
-
       },
-      logout : function () {
-        window.location.href = '/'
-        //this.$router.push('/')
+      logout : function() {
         keycloak.logout()
       }
-    }
+    },
   };
 </script>
