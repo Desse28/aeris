@@ -1,11 +1,16 @@
 package com.aeris.datavalidationrest.catalogue.flag;
 
+import org.keycloak.KeycloakSecurityContext;
+import org.keycloak.representations.AccessToken;
+import org.keycloak.representations.UserInfo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @CrossOrigin
 @RestController
@@ -18,14 +23,36 @@ public class FlagResource {
     private FlagDao flagDao;
 
     @GetMapping
+    //@PreAuthorize("hasRole('ROLE_user')")
     public List<Flag> getAllFlags() {
-        /*KeycloakSecurityContext scToken = (KeycloakSecurityContext) request
+        KeycloakSecurityContext scToken = (KeycloakSecurityContext) request
                 .getAttribute(KeycloakSecurityContext.class.getName());
         AccessToken scAccessToken = scToken.getToken();
 
-        System.out.println("Test get token : ");
-        System.out.println(scAccessToken);*/
+        Map<String, AccessToken.Access> test = scAccessToken.getResourceAccess();
+        System.out.println("Test keys : ");
+        System.out.println(test.keySet());
+        System.out.println(request.isUserInRole("user"));
+        System.out.println(request.isUserInRole("user"));
+        System.out.println(request.isUserInRole("USER"));
+        System.out.println(request.isUserInRole("ROLE_USER"));
+        System.out.println(request.isUserInRole("ROLE_user"));
+        System.out.println(request.isUserInRole("ROLE_manage-account"));
+        System.out.println(request.isUserInRole("manage-account"));
 
+        // Récupération des rôles
+       AccessToken.Access access = scAccessToken.getResourceAccess("account");
+        Set<String> resourcesRoles = access.getRoles();
+        access = scAccessToken.getRealmAccess();
+        Set<String> realmRoles = access.getRoles();
+        Set<String> roles = new HashSet<>();
+        roles.addAll(resourcesRoles);
+        roles.addAll(realmRoles);
+
+        System.out.println("Test get role : ");
+        for (String role: roles){
+            //System.out.println(role);
+        }
         return flagDao.findAll();
     }
 

@@ -57,26 +57,14 @@ public class WebSecurityConfig extends KeycloakWebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         super.configure(http);
 
-        http.authorizeRequests()
-                .antMatchers("/flags*").permitAll()
-                .antMatchers("/ground-data*").permitAll()
-                .antMatchers("/data-information*").permitAll()
-                .antMatchers("/test*").hasRole("user")
+        http.csrf().disable().
+                authorizeRequests()
+                //.antMatchers("/flags*").permitAll()
+                //.antMatchers("/ground-data*").permitAll()
+                //.antMatchers("/data-information*").permitAll()
+                //.antMatchers("/test*").hasRole("user")
                 .anyRequest()
-                .permitAll();
+                .authenticated();
         http.csrf().disable();
-    }
-
-    @Bean
-    public CorsConfigurationSource corsConfigurationSource() {
-        final CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(ImmutableList.of("*"));
-        configuration.setAllowedMethods(ImmutableList.of("HEAD", "GET", "POST", "PUT", "DELETE", "PATCH"));
-        configuration.setAllowCredentials(true);
-        configuration.setAllowedHeaders(ImmutableList.of("Authorization", "Cache-Control", "Content-Type",
-                "Origin-Catalogue", "Visitor-Information", "DNT"));
-        final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
-        return source;
     }
 }
