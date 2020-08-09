@@ -9,7 +9,7 @@ const instance = axios.create({
 const keycloak = Keycloak({
     url: "http://localhost:8180/auth",
     realm: "SpringBootKeycloak",
-    clientId: "test-vjs"
+    clientId: "test-vjs",
 });
 
 async function start_keycloack(store) {

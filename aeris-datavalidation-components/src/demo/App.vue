@@ -103,7 +103,7 @@
         keycloak.login()
       },
       logout : function() {
-        keycloak.logout()
+        keycloak.logout({ redirectUri: 'https://test.com' })
       }
     },
   };
