@@ -1,6 +1,5 @@
 package com.aeris.datavalidationrest.catalogue.datainfo;
 
-import com.aeris.datavalidationrest.catalogue.flag.Flag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

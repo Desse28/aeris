@@ -1,4 +1,4 @@
-package com.aeris.datavalidationrest.catalogue.flag;
+package com.aeris.datavalidationrest.flags;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.springframework.data.annotation.Id;

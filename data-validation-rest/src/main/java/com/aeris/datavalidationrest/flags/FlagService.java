@@ -1,4 +1,4 @@
-package com.aeris.datavalidationrest.catalogue.flag;
+package com.aeris.datavalidationrest.flags;
 
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;

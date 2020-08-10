@@ -1,4 +1,4 @@
-package com.aeris.datavalidationrest.catalogue.flag;
+package com.aeris.datavalidationrest.flags;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
 

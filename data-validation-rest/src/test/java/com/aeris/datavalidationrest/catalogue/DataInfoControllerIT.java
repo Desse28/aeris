@@ -1,7 +1,6 @@
 package com.aeris.datavalidationrest.catalogue;
 
 import com.aeris.datavalidationrest.catalogue.datainfo.DataInfo;
-import com.aeris.datavalidationrest.catalogue.flag.Flag;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;

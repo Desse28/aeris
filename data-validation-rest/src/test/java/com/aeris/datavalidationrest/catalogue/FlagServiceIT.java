@@ -1,8 +1,8 @@
 package com.aeris.datavalidationrest.catalogue;
 
-import com.aeris.datavalidationrest.catalogue.flag.Flag;
-import com.aeris.datavalidationrest.catalogue.flag.FlagDao;
-import com.aeris.datavalidationrest.catalogue.flag.FlagService;
+import com.aeris.datavalidationrest.flags.Flag;
+import com.aeris.datavalidationrest.flags.FlagDao;
+import com.aeris.datavalidationrest.flags.FlagService;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.jupiter.api.MethodOrderer;

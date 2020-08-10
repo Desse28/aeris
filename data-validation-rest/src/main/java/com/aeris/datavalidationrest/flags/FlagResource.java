@@ -1,12 +1,8 @@
-package com.aeris.datavalidationrest.catalogue.flag;
+package com.aeris.datavalidationrest.flags;
 
 import org.keycloak.KeycloakSecurityContext;
 import org.keycloak.representations.AccessToken;
-import org.keycloak.representations.UserInfo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -23,7 +19,6 @@ public class FlagResource {
     private FlagDao flagDao;
 
     @GetMapping
-    //@PreAuthorize("hasRole('ROLE_user')")
     public List<Flag> getAllFlags() {
         KeycloakSecurityContext scToken = (KeycloakSecurityContext) request
                 .getAttribute(KeycloakSecurityContext.class.getName());
