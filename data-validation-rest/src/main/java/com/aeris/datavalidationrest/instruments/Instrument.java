@@ -8,7 +8,7 @@ import java.util.Arrays;
 
 public class Instrument {
     private String uuid;//UUID de la fiche dans le catalogue AERIS
-    private User responsible;
+    private String responsibleId;
     private Parameter[] parameters;
     private Flag[] flags;
 
@@ -24,12 +24,12 @@ public class Instrument {
         this.uuid = uuid;
     }
 
-    public User getResponsible() {
-        return responsible;
+    public String getResponsibleId() {
+        return responsibleId;
     }
 
-    public void setResponsible(User responsible) {
-        this.responsible = responsible;
+    public void setResponsibleId(String responsibleId) {
+        this.responsibleId = responsibleId;
     }
 
     public Parameter[] getParameters() {
@@ -52,7 +52,7 @@ public class Instrument {
     public String toString() {
         return "Instrument{" +
                 "uuid='" + uuid + '\'' +
-                ", responsible=" + responsible +
+                ", responsibleId='" + responsibleId + '\'' +
                 ", parameters=" + Arrays.toString(parameters) +
                 ", flags=" + Arrays.toString(flags) +
                 '}';
