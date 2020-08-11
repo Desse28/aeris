@@ -2,7 +2,9 @@ package com.aeris.datavalidationrest.parameters;
 
 public class Parameter {
     private String id;
-    private String name;
+    private String value;
+    private boolean isLinked;
+    private boolean isMainParameter;
 
     public Parameter() {
         super();
@@ -16,19 +18,37 @@ public class Parameter {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getValue() {
+        return value;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setValue(String value) {
+        this.value = value;
+    }
+
+    public boolean isLinked() {
+        return isLinked;
+    }
+
+    public void setLinked(boolean linked) {
+        isLinked = linked;
+    }
+
+    public boolean isMainParameter() {
+        return isMainParameter;
+    }
+
+    public void setMainParameter(boolean mainParameter) {
+        isMainParameter = mainParameter;
     }
 
     @Override
     public String toString() {
         return "Parameter{" +
                 "id='" + id + '\'' +
-                ", name='" + name + '\'' +
+                ", value='" + value + '\'' +
+                ", isLinked=" + isLinked +
+                ", isMainParameter=" + isMainParameter +
                 '}';
     }
 }
