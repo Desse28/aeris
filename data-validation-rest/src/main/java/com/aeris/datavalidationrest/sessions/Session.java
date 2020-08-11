@@ -1,18 +1,25 @@
 package com.aeris.datavalidationrest.sessions;
 
+import com.aeris.datavalidationrest.instruments.Instrument;
 import com.aeris.datavalidationrest.parameters.Parameter;
 import org.springframework.data.annotation.Id;
 
-import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
 
 public class Session {
     @Id
     private String id;
+    private boolean state;
     private String userId;
-    private String startDate;// type Date ?
-    private String endDate;
+    private Date startDate;
+    private Date endDate;
+    private Instrument instrument;
     private Parameter mainParameter;
-    private Parameter[] parameters; // or define linkedPameters list and auxParameters list
+    private List<Parameter> parameters;
+
+    public Session() {
+    }
 
     public String getId() {
         return id;
@@ -20,6 +27,14 @@ public class Session {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public boolean isState() {
+        return state;
+    }
+
+    public void setState(boolean state) {
+        this.state = state;
     }
 
     public String getUserId() {
@@ -30,20 +45,28 @@ public class Session {
         this.userId = userId;
     }
 
-    public String getStartDate() {
+    public Date getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(String startDate) {
+    public void setStartDate(Date startDate) {
         this.startDate = startDate;
     }
 
-    public String getEndDate() {
+    public Date getEndDate() {
         return endDate;
     }
 
-    public void setEndDate(String endDate) {
+    public void setEndDate(Date endDate) {
         this.endDate = endDate;
+    }
+
+    public Instrument getInstrument() {
+        return instrument;
+    }
+
+    public void setInstrument(Instrument instrument) {
+        this.instrument = instrument;
     }
 
     public Parameter getMainParameter() {
@@ -54,11 +77,11 @@ public class Session {
         this.mainParameter = mainParameter;
     }
 
-    public Parameter[] getParameters() {
+    public List<Parameter> getParameters() {
         return parameters;
     }
 
-    public void setParameters(Parameter[] parameters) {
+    public void setParameters(List<Parameter> parameters) {
         this.parameters = parameters;
     }
 
@@ -66,11 +89,13 @@ public class Session {
     public String toString() {
         return "Session{" +
                 "id='" + id + '\'' +
+                ", state=" + state +
                 ", userId='" + userId + '\'' +
-                ", startDate='" + startDate + '\'' +
-                ", endDate='" + endDate + '\'' +
+                ", startDate=" + startDate +
+                ", endDate=" + endDate +
+                ", instrument=" + instrument +
                 ", mainParameter=" + mainParameter +
-                ", parameters=" + Arrays.toString(parameters) +
+                ", parameters=" + parameters +
                 '}';
     }
 }

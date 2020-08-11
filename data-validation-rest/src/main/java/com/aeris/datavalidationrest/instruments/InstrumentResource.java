@@ -18,8 +18,12 @@ public class InstrumentResource {
     @Autowired
     private InstrumentDao instrumentDao;
 
+
+    //public void creteInstrument() {//PI
+    //}
+
     @GetMapping
-    public List<Instrument> getAllInstruments() {
+    public List<Instrument> getInstruments() {
         List<Instrument> instruments = instrumentDao.findAll();
         return instruments;
     }
@@ -29,4 +33,10 @@ public class InstrumentResource {
         Optional<Instrument> instrument = instrumentDao.findById(id);
         return instrument;
     }
+
+    //public void setInstrument() {
+    //}
+
+    //public void deleteInstrument() {//ADMIN
+    //}
 }
