@@ -1,10 +1,19 @@
 package com.aeris.datavalidationrest.parameters;
 
 public class Parameter {
+    private String id;
     private String name;
 
     public Parameter() {
         super();
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -18,7 +27,8 @@ public class Parameter {
     @Override
     public String toString() {
         return "Parameter{" +
-                "name='" + name + '\'' +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
                 '}';
     }
 }

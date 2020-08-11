@@ -1,6 +1,5 @@
 package com.aeris.datavalidationrest;
 
-import com.google.common.collect.ImmutableList;
 import org.keycloak.adapters.springboot.KeycloakSpringBootConfigResolver;
 import org.keycloak.adapters.springsecurity.KeycloakSecurityComponents;
 import org.keycloak.adapters.springsecurity.authentication.KeycloakAuthenticationProvider;
@@ -18,9 +17,6 @@ import org.springframework.security.core.authority.mapping.SimpleAuthorityMapper
 import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.web.authentication.session.RegisterSessionAuthenticationStrategy;
 import org.springframework.security.web.authentication.session.SessionAuthenticationStrategy;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 
 @Configuration
@@ -59,10 +55,17 @@ public class WebSecurityConfig extends KeycloakWebSecurityConfigurerAdapter {
 
         http.csrf().disable().
                 authorizeRequests()
-                //.antMatchers("/flags*").permitAll()
+                .antMatchers("/v2/api-docs").permitAll()
+                .antMatchers("/configuration/ui").permitAll()
+                .antMatchers("/configuration/ui").permitAll()
+                .antMatchers("/swagger-resources/**").permitAll()
+                .antMatchers("/configuration/security").permitAll()
+                .antMatchers("/swagger-ui.html").permitAll()
+                .antMatchers("/webjars/**").permitAll()
+
                 //.antMatchers("/ground-data*").permitAll()
                 //.antMatchers("/data-information*").permitAll()
-                //.antMatchers("/test*").hasRole("user")
+                //.antMatchers("/flags*").hasRole("user")
                 .anyRequest()
                 .authenticated();
         http.csrf().disable();

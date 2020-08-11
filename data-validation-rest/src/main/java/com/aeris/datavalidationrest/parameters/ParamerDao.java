@@ -1,8 +1,7 @@
 package com.aeris.datavalidationrest.parameters;
 
-import com.aeris.datavalidationrest.instruments.Instrument;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
-public interface ParamerDao extends MongoRepository<Instrument, String>  {
-
+public interface ParamerDao extends MongoRepository<Parameter, String>  {
+    public Parameter findByName(String parameterName);
 }
