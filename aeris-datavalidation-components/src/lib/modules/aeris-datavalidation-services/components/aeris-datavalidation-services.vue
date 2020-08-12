@@ -35,7 +35,7 @@
     watch: {
       '$store.state.common.authenticated': function() {
         if( this.$store.state.common.authenticated ) {
-          this.refresh();
+          //this.refresh();
         }
       }
     },
