@@ -15,20 +15,14 @@ public class SwaggerConfig {
     @Bean
     public Docket instrumentsApi() {
         return new Docket(DocumentationType.SWAGGER_2)
-                .groupName("Instruments")
+                .groupName("datavalidation")
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("com.aeris.datavalidationrest.instruments"))
-                .paths(PathSelectors.any())
-                .build();
-    }
-
-    @Bean
-    public Docket sessionsApi() {
-        return new Docket(DocumentationType.SWAGGER_2)
-                .groupName("Sessions")
-                .select()
-                .apis(RequestHandlerSelectors.basePackage("com.aeris.datavalidationrest.sessions"))
-                .paths(PathSelectors.any())
+                .apis(RequestHandlerSelectors.basePackage("com.aeris.datavalidationrest"))
+                .paths(PathSelectors.regex("(?!/error).+"))
+                .paths(PathSelectors.regex("(?!/flags).+"))
+                .paths(PathSelectors.regex("(?!/parameters).+"))
+                .paths(PathSelectors.regex("(?!/data-information).+"))
+                .paths(PathSelectors.regex("(?!/ground-data).+"))
                 .build();
     }
 }
