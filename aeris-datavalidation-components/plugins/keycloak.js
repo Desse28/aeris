@@ -6,10 +6,16 @@ const instance = axios.create({
     timeout: 1000
 });
 
-const keycloak = Keycloak({
+/*const keycloak = Keycloak({
     url: "https://sso.aeris-data.fr/auth",
     realm: "test",
     clientId: "datavalidation-vjs",
+});*/
+
+const keycloak = Keycloak({
+    url: "http://localhost:8180/auth",
+    realm: "SpringBootKeycloak",
+    clientId: "test-vjs",
 });
 
 async function start_keycloack(store) {
@@ -30,7 +36,7 @@ async function initKeycloak(keycloak, store) {
                 console.log("Test UserName : ", username);
                 store.commit("updateAuthenticated", keycloak.authenticated);
             }
-        });
+        })
 }
 
 function addTokenToRequest(keycloak) {
