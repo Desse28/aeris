@@ -22,7 +22,7 @@ public class InstrumentResource {
     //public void creteInstrument() {//PI
     //}
 
-    @GetMapping
+    @GetMapping(value = "/")
     public List<Instrument> getInstruments() {
         List<Instrument> instruments = instrumentDao.findAll();
         return instruments;
