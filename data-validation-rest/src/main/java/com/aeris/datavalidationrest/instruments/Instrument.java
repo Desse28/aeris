@@ -2,19 +2,33 @@ package com.aeris.datavalidationrest.instruments;
 
 import com.aeris.datavalidationrest.flags.Flag;
 import com.aeris.datavalidationrest.parameters.Parameter;
+import org.springframework.data.annotation.Id;
 
+import javax.validation.constraints.NotNull;
 import java.util.Arrays;
 import java.util.List;
 
 public class Instrument {
+    @Id
+    private String id;
+    @NotNull(message = "UUID cannot be null")
     private String uuid;
-    private List<String> responsibleId;
+    @NotNull(message = "Responsibles Id's cannot be null")
+    private List<String> responsiblesId;
     private List<Parameter> parameters;
     private List<Parameter> auxParameters;
     private Flag[] flags;
 
     public Instrument() {
         super();
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getUuid() {
@@ -25,12 +39,12 @@ public class Instrument {
         this.uuid = uuid;
     }
 
-    public List<String> getResponsibleId() {
-        return responsibleId;
+    public List<String> getResponsiblesId() {
+        return responsiblesId;
     }
 
-    public void setResponsibleId(List<String> responsibleId) {
-        this.responsibleId = responsibleId;
+    public void setResponsiblesId(List<String> responsiblesId) {
+        this.responsiblesId = responsiblesId;
     }
 
     public List<Parameter> getParameters() {
@@ -60,8 +74,9 @@ public class Instrument {
     @Override
     public String toString() {
         return "Instrument{" +
-                "uuid='" + uuid + '\'' +
-                ", responsibleId=" + responsibleId +
+                "id='" + id + '\'' +
+                ", uuid='" + uuid + '\'' +
+                ", responsiblesId=" + responsiblesId +
                 ", parameters=" + parameters +
                 ", auxParameters=" + auxParameters +
                 ", flags=" + Arrays.toString(flags) +

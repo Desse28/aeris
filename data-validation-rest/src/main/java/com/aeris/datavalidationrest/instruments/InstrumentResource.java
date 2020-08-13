@@ -1,12 +1,13 @@
 package com.aeris.datavalidationrest.instruments;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
+import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,11 +19,7 @@ public class InstrumentResource {
     @Autowired
     private InstrumentDao instrumentDao;
 
-
-    //public void creteInstrument() {//PI
-    //}
-
-    @GetMapping(value = "/")
+    @GetMapping
     public List<Instrument> getInstruments() {
         List<Instrument> instruments = instrumentDao.findAll();
         return instruments;
@@ -32,6 +29,24 @@ public class InstrumentResource {
     public Optional<Instrument> getInstrumentById(@PathVariable String id) {
         Optional<Instrument> instrument = instrumentDao.findById(id);
         return instrument;
+    }
+
+    @PostMapping
+    public ResponseEntity<Void> addInstrument(@RequestBody @Valid Instrument instrument) {//PI
+            Instrument instrumentAdded;
+
+            if(instrument == null)
+                return ResponseEntity.noContent().build();
+
+            instrumentAdded = instrumentDao.save(instrument);
+
+            URI location = ServletUriComponentsBuilder
+                    .fromCurrentRequest()
+                    .path("/{id}")
+                    .buildAndExpand(instrumentAdded.getId())
+                    .toUri();
+
+            return ResponseEntity.created(location).build();
     }
 
     //public void setInstrument() {
