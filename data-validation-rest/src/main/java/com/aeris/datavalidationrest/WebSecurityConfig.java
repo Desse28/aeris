@@ -26,7 +26,6 @@ import org.springframework.security.web.authentication.session.SessionAuthentica
         excludeFilters = @ComponentScan.Filter(type = FilterType.REGEX, pattern = "org.keycloak.adapters.springsecurity.management.HttpSessionManager"))
 public class WebSecurityConfig extends KeycloakWebSecurityConfigurerAdapter {
 
-
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
         KeycloakAuthenticationProvider keycloakAuthenticationProvider = keycloakAuthenticationProvider();
@@ -35,7 +34,6 @@ public class WebSecurityConfig extends KeycloakWebSecurityConfigurerAdapter {
         grantedAuthorityMapper.setConvertToUpperCase(true);
         keycloakAuthenticationProvider.setGrantedAuthoritiesMapper(grantedAuthorityMapper);
         auth.authenticationProvider(keycloakAuthenticationProvider);
-
     }
 
     @Bean
