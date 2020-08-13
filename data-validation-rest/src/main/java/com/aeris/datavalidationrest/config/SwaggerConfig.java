@@ -100,7 +100,8 @@ public class SwaggerConfig {
         AuthorizationScope[] scopes = {
                 new AuthorizationScope("user", "for CRUD operations"),
                 new AuthorizationScope("read", "for read operations"),
-                new AuthorizationScope("write", "for write operations")
+                new AuthorizationScope("write", "for write operations"),
+                new AuthorizationScope("datavalidation-rest", "Access datavalidation-rest API")
         };
         return scopes;
     }
