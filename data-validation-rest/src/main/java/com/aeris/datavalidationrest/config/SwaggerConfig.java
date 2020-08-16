@@ -40,7 +40,7 @@ public class SwaggerConfig {
     private static final String DATA_INFORMATION_PATH = "(?!/data-information).+";
 
     private static final String OAUTH_NAME = "spring_oauth";
-    private static final String ALLOWED_PATHS = "/directory_to_controllers/.*";
+    private static final String ALLOWED_PATHS = "/flags/.*";
     private static final String GROUP_NAME = "datavalidation";
     private static final String TITLE = "Datavalidation REST API";
     private static final String DESCRIPTION = "Aeris Data validation tool.";
@@ -54,7 +54,7 @@ public class SwaggerConfig {
                 .select()
                 .apis(RequestHandlerSelectors.basePackage(BASE_PACKAGE))
                 .paths(PathSelectors.regex(ERROR_PATH))
-                //.paths(PathSelectors.regex(FLAG_PATH))
+                .paths(PathSelectors.regex(FLAG_PATH))
                 .paths(PathSelectors.regex(PARAMETERS_PATH))
                 .paths(PathSelectors.regex(GROUND_DATA_PATH))
                 .paths(PathSelectors.regex(DATA_INFORMATION_PATH))
@@ -98,10 +98,10 @@ public class SwaggerConfig {
 
     private AuthorizationScope[] scopes() {
         AuthorizationScope[] scopes = {
-                new AuthorizationScope("user", "for CRUD operations"),
-                new AuthorizationScope("read", "for read operations"),
-                new AuthorizationScope("write", "for write operations"),
-                new AuthorizationScope("datavalidation-rest", "Access datavalidation-rest API")
+                //new AuthorizationScope("user", "for CRUD operations"),
+                //new AuthorizationScope("read", "for read operations"),
+                //new AuthorizationScope("write", "for write operations"),
+                //new AuthorizationScope("datavalidation-rest", "Access datavalidation-rest API")
         };
         return scopes;
     }

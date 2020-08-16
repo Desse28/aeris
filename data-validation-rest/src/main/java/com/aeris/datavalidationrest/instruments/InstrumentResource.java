@@ -20,19 +20,19 @@ public class InstrumentResource {
     private InstrumentDao instrumentDao;
 
     @GetMapping
-    public List<Instrument> getInstruments() {
+    public List<Instrument> findAll() {
         List<Instrument> instruments = instrumentDao.findAll();
         return instruments;
     }
 
     @GetMapping(value = "/{id}")
-    public Optional<Instrument> getInstrumentById(@PathVariable String id) {
+    public Optional<Instrument> findById(@PathVariable String id) {
         Optional<Instrument> instrument = instrumentDao.findById(id);
         return instrument;
     }
 
     @PostMapping
-    public ResponseEntity<Void> addInstrument(@RequestBody @Valid Instrument instrument) {//PI
+    public ResponseEntity<Void> add(@RequestBody @Valid Instrument instrument) {//PI
             Instrument instrumentAdded;
 
             if(instrument == null)
@@ -49,9 +49,13 @@ public class InstrumentResource {
             return ResponseEntity.created(location).build();
     }
 
-    //public void setInstrument() {
-    //}
+    @DeleteMapping(value = "/{id}")
+    public void delete(@PathVariable Instrument instrument) {//ADMIN and PI
+        instrumentDao.delete(instrument);
+    }
 
-    //public void deleteInstrument() {//ADMIN
-    //}
+    @PutMapping(value = "/update")
+    public void update(@RequestBody Instrument instrument) {
+        instrumentDao.save(instrument);
+    }
 }

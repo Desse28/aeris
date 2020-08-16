@@ -20,7 +20,7 @@ public class FlagResource {
 
     @GetMapping
     public List<Flag> getAllFlags() {
-        KeycloakSecurityContext scToken = (KeycloakSecurityContext) request
+        /*KeycloakSecurityContext scToken = (KeycloakSecurityContext) request
                 .getAttribute(KeycloakSecurityContext.class.getName());
         AccessToken scAccessToken = scToken.getToken();
 
@@ -47,7 +47,7 @@ public class FlagResource {
         System.out.println("Test get role : ");
         for (String role: roles){
             //System.out.println(role);
-        }
+        }*/
         return flagDao.findAll();
     }
 

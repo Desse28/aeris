@@ -60,12 +60,12 @@ public class WebSecurityConfig extends KeycloakWebSecurityConfigurerAdapter {
                 .antMatchers("/configuration/security").permitAll()
                 .antMatchers("/swagger-ui.html").permitAll()
                 .antMatchers("/webjars/**").permitAll()
-
-                //.antMatchers("/ground-data*").permitAll()
-                //.antMatchers("/data-information*").permitAll()
+                .antMatchers("/instruments*").permitAll()
+                .antMatchers("/sessions*").permitAll()
                 //.antMatchers("/flags*").hasRole("user")
                 .anyRequest()
                 .authenticated();
+
         http.csrf().disable();
     }
 }
