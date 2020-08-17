@@ -1,7 +1,5 @@
 package com.aeris.datavalidationrest.flags;
 
-import org.keycloak.KeycloakSecurityContext;
-import org.keycloak.representations.AccessToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -51,9 +49,9 @@ public class FlagResource {
         return flagDao.findAll();
     }
 
-    @GetMapping(value = "/{id}")
-    public Optional<Flag> getFlagById(@PathVariable String id) {
-        Optional<Flag> flag = flagDao.findById(id);
+    @GetMapping(value = "/{label}")
+    public Flag getFlagByLabel(@PathVariable String label) {
+        Flag flag = flagDao.findByLabel(label);
         return flag;
     }
 }
