@@ -1,6 +1,4 @@
 package com.aeris.datavalidationrest.sessions;
-
-import com.aeris.datavalidationrest.instruments.Instrument;
 import com.aeris.datavalidationrest.parameters.Parameter;
 
 import java.util.Date;
@@ -11,7 +9,7 @@ public class Session {
     private boolean state;
     private Date startDate;
     private Date endDate;
-    private Instrument instrument;
+    private String instrumentId;
     private Parameter mainParameter;
     private List<Parameter> parameters;
     private List<SessionSelection> sessionSelections;
@@ -52,12 +50,12 @@ public class Session {
         this.endDate = endDate;
     }
 
-    public Instrument getInstrument() {
-        return instrument;
+    public String getInstrumentId() {
+        return instrumentId;
     }
 
-    public void setInstrument(Instrument instrument) {
-        this.instrument = instrument;
+    public void setInstrumentId(String instrumentId) {
+        this.instrumentId = instrumentId;
     }
 
     public Parameter getMainParameter() {
@@ -91,7 +89,7 @@ public class Session {
                 ", state=" + state +
                 ", startDate=" + startDate +
                 ", endDate=" + endDate +
-                ", instrument=" + instrument +
+                ", instrumentId='" + instrumentId + '\'' +
                 ", mainParameter=" + mainParameter +
                 ", parameters=" + parameters +
                 ", sessionSelections=" + sessionSelections +

@@ -1,5 +1,6 @@
 package com.aeris.datavalidationrest.config;
 
+import com.google.common.collect.Lists;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -10,11 +11,10 @@ import springfox.documentation.service.*;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spi.service.contexts.SecurityContext;
 import springfox.documentation.spring.web.plugins.Docket;
-import springfox.documentation.swagger.web.SecurityConfiguration;
-import springfox.documentation.swagger.web.SecurityConfigurationBuilder;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 import java.util.Arrays;
+import java.util.List;
 
 @Configuration
 @EnableSwagger2
@@ -54,63 +54,42 @@ public class SwaggerConfig {
                 .select()
                 .apis(RequestHandlerSelectors.basePackage(BASE_PACKAGE))
                 .paths(PathSelectors.regex(ERROR_PATH))
-                .paths(PathSelectors.regex(FLAG_PATH))
+                //.paths(PathSelectors.regex(FLAG_PATH))
                 .paths(PathSelectors.regex(PARAMETERS_PATH))
                 .paths(PathSelectors.regex(GROUND_DATA_PATH))
                 .paths(PathSelectors.regex(DATA_INFORMATION_PATH))
                 .build()
-                .apiInfo(apiInfo())
-                .securitySchemes(Arrays.asList(securityScheme()))
-                .securityContexts(Arrays.asList(securityContext()));
+                .securitySchemes(Lists.newArrayList(apiKey()))
+                .securityContexts(Lists.newArrayList(securityContext()))
+                .apiInfo(apiInfo());
     }
 
     private ApiInfo apiInfo() {
-        return new ApiInfoBuilder().title(TITLE).description(DESCRIPTION).version(VERSION).build();
+        return new ApiInfoBuilder()
+                .title(TITLE)
+                .description(DESCRIPTION)
+                .version(VERSION).build();
     }
 
     @Bean
-    public SecurityConfiguration security() {
-        return SecurityConfigurationBuilder.builder()
-                .realm(REALM)
-                .clientId(CLIENT_ID)
-                .clientSecret(CLIENT_SECRET)
-                .appName(GROUP_NAME)
-                .scopeSeparator(" ")
-                .build();
-    }
-
-    private SecurityScheme securityScheme() {
-        GrantType grantType =
-                new AuthorizationCodeGrantBuilder()
-                        .tokenEndpoint(new TokenEndpoint(AUTH_SERVER + "/realms/" + REALM + "/protocol/openid-connect/token", GROUP_NAME))
-                        .tokenRequestEndpoint(
-                                new TokenRequestEndpoint(AUTH_SERVER + "/realms/" + REALM + "/protocol/openid-connect/auth", CLIENT_ID, CLIENT_SECRET))
-                        .build();
-
-        SecurityScheme oauth =
-                new OAuthBuilder()
-                        .name(OAUTH_NAME)
-                        .grantTypes(Arrays.asList(grantType))
-                        .scopes(Arrays.asList(scopes()))
-                        .build();
-        return oauth;
-    }
-
-    private AuthorizationScope[] scopes() {
-        AuthorizationScope[] scopes = {
-                //new AuthorizationScope("user", "for CRUD operations"),
-                //new AuthorizationScope("read", "for read operations"),
-                //new AuthorizationScope("write", "for write operations"),
-                //new AuthorizationScope("datavalidation-rest", "Access datavalidation-rest API")
-        };
-        return scopes;
-    }
-
-    private SecurityContext securityContext() {
+    SecurityContext securityContext() {
         return SecurityContext.builder()
-                .securityReferences(Arrays.asList(new SecurityReference(OAUTH_NAME, scopes())))
-                .forPaths(PathSelectors.regex(ALLOWED_PATHS))
+                .securityReferences(defaultAuth())
+                .forPaths(PathSelectors.any())
                 .build();
+    }
+
+    List<SecurityReference> defaultAuth() {
+        AuthorizationScope authorizationScope
+                = new AuthorizationScope("global", "accessEverything");
+        AuthorizationScope[] authorizationScopes = new AuthorizationScope[1];
+        authorizationScopes[0] = authorizationScope;
+        return Lists.newArrayList(
+                new SecurityReference("JWT", authorizationScopes));
+    }
+
+    private ApiKey apiKey() {
+        return new ApiKey("JWT", "Authorization", "header");
     }
 }
 

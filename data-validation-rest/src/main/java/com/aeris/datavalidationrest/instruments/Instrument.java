@@ -2,11 +2,14 @@ package com.aeris.datavalidationrest.instruments;
 
 import com.aeris.datavalidationrest.flags.Flag;
 import com.aeris.datavalidationrest.parameters.Parameter;
+import org.springframework.data.annotation.Id;
 
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
 public class Instrument {
+    @Id
+    private String id;
     @NotNull(message = "UUID cannot be null")
     private String uuid;
     @NotNull(message = "PIID cannot be null")
@@ -62,8 +65,9 @@ public class Instrument {
     @Override
     public String toString() {
         return "Instrument{" +
-                "uuid='" + uuid + '\'' +
-                ", responsiblesId=" + piId +
+                "id='" + id + '\'' +
+                ", uuid='" + uuid + '\'' +
+                ", piId=" + piId +
                 ", parameters=" + parameters +
                 ", auxParameters=" + auxParameters +
                 ", flags=" + flags +

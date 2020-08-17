@@ -9,6 +9,7 @@ import java.util.*;
 @CrossOrigin
 @RestController
 @RequestMapping("/flags")
+
 public class FlagResource {
     @Autowired
     private HttpServletRequest request;
