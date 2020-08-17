@@ -14,6 +14,7 @@ public class Session {
     private Instrument instrument;
     private Parameter mainParameter;
     private List<Parameter> parameters;
+    private List<SessionSelection> sessionSelections;
 
     public Session() {
         super();
@@ -75,16 +76,25 @@ public class Session {
         this.parameters = parameters;
     }
 
+    public List<SessionSelection> getSessionSelections() {
+        return sessionSelections;
+    }
+
+    public void setSessionSelections(List<SessionSelection> sessionSelections) {
+        this.sessionSelections = sessionSelections;
+    }
+
     @Override
     public String toString() {
         return "Session{" +
+                "piId='" + piId + '\'' +
                 ", state=" + state +
-                ", userId='" + piId + '\'' +
                 ", startDate=" + startDate +
                 ", endDate=" + endDate +
                 ", instrument=" + instrument +
                 ", mainParameter=" + mainParameter +
                 ", parameters=" + parameters +
+                ", sessionSelections=" + sessionSelections +
                 '}';
     }
 }

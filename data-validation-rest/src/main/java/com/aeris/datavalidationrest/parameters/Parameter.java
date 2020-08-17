@@ -1,33 +1,24 @@
 package com.aeris.datavalidationrest.parameters;
 
 public class Parameter {
-    private String id;
-    private String value;
+    private String name;
 
     public Parameter() {
+        super();
     }
 
-    public String getId() {
-        return id;
+    public String getName() {
+        return name;
     }
 
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getValue() {
-        return value;
-    }
-
-    public void setValue(String value) {
-        this.value = value;
+    public void setName(String name) {
+        this.name = name;
     }
 
     @Override
     public String toString() {
         return "Parameter{" +
-                "id='" + id + '\'' +
-                ", value='" + value + '\'' +
+                "name='" + name + '\'' +
                 '}';
     }
 }

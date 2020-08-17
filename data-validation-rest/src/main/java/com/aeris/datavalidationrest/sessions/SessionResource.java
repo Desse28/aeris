@@ -27,13 +27,14 @@ public class SessionResource {
     }
 
     @GetMapping(value = "/{piId}")
-    public Session findById(@PathVariable String piId) {
+    public Session findByPiid(@PathVariable String piId) {
         Session session = sessionDao.findByPiId(piId);
         return session;
     }
 
     @PostMapping
-    public ResponseEntity<Void> add(@RequestBody @Valid Session session) {//PI
+    public ResponseEntity<Void> add(@RequestBody @Valid Session session) {
+        //By PI id's
         Session sessionAdded;
 
         if(session == null)
