@@ -13,25 +13,12 @@ import springfox.documentation.spi.service.contexts.SecurityContext;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
-import java.util.Arrays;
 import java.util.List;
 
 @Configuration
 @EnableSwagger2
 @Import(BeanValidatorPluginsConfiguration.class)
 public class SwaggerConfig {
-    @Value("${keycloak.auth-server-url}")
-    private String AUTH_SERVER;
-
-    @Value("${keycloak.credentials.secret}")
-    private String CLIENT_SECRET;
-
-    @Value("${keycloak.resource}")
-    private String CLIENT_ID;
-
-    @Value("${keycloak.realm}")
-    private String REALM;
-
     private static final String FLAG_PATH = "(?!/flags).+";
     private static final String ERROR_PATH = "(?!/error).+";
     private static final String PARAMETERS_PATH = "(?!/parameters).+";
@@ -54,7 +41,7 @@ public class SwaggerConfig {
                 .select()
                 .apis(RequestHandlerSelectors.basePackage(BASE_PACKAGE))
                 .paths(PathSelectors.regex(ERROR_PATH))
-                //.paths(PathSelectors.regex(FLAG_PATH))
+                .paths(PathSelectors.regex(FLAG_PATH))
                 .paths(PathSelectors.regex(PARAMETERS_PATH))
                 .paths(PathSelectors.regex(GROUND_DATA_PATH))
                 .paths(PathSelectors.regex(DATA_INFORMATION_PATH))
