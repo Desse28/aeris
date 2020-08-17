@@ -9,8 +9,8 @@ import java.util.List;
 public class Instrument {
     @NotNull(message = "UUID cannot be null")
     private String uuid;
-    @NotNull(message = "Responsibles Id's cannot be null")
-    private List<String> responsiblesId;
+    @NotNull(message = "PIID cannot be null")
+    private List<String> piId;
     private List<Parameter> parameters;
     private List<Parameter> auxParameters;
     private List<Flag> flags;
@@ -27,12 +27,12 @@ public class Instrument {
         this.uuid = uuid;
     }
 
-    public List<String> getResponsiblesId() {
-        return responsiblesId;
+    public List<String> getPiId() {
+        return piId;
     }
 
-    public void setResponsiblesId(List<String> responsiblesId) {
-        this.responsiblesId = responsiblesId;
+    public void setPiId(List<String> piId) {
+        this.piId = piId;
     }
 
     public List<Parameter> getParameters() {
@@ -63,7 +63,7 @@ public class Instrument {
     public String toString() {
         return "Instrument{" +
                 "uuid='" + uuid + '\'' +
-                ", responsiblesId=" + responsiblesId +
+                ", responsiblesId=" + piId +
                 ", parameters=" + parameters +
                 ", auxParameters=" + auxParameters +
                 ", flags=" + flags +
