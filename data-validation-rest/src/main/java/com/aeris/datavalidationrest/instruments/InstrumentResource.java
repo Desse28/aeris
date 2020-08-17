@@ -9,7 +9,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/instruments")
@@ -21,18 +20,20 @@ public class InstrumentResource {
 
     @GetMapping
     public List<Instrument> findAll() {
+        //By PI id
         List<Instrument> instruments = instrumentDao.findAll();
         return instruments;
     }
 
-    @GetMapping(value = "/{id}")
-    public Optional<Instrument> findById(@PathVariable String id) {
-        Optional<Instrument> instrument = instrumentDao.findById(id);
+    @GetMapping(value = "/{uuid}")
+    public Instrument findByUuid(@PathVariable String uuid) {
+        Instrument instrument = instrumentDao.findByUuid(uuid);
         return instrument;
     }
 
     @PostMapping
-    public ResponseEntity<Void> add(@RequestBody @Valid Instrument instrument) {//PI
+    public ResponseEntity<Void> add(@RequestBody @Valid Instrument instrument) {
+            //ADMIN
             Instrument instrumentAdded;
 
             if(instrument == null)
@@ -43,7 +44,7 @@ public class InstrumentResource {
             URI location = ServletUriComponentsBuilder
                     .fromCurrentRequest()
                     .path("/{id}")
-                    .buildAndExpand(instrumentAdded.getId())
+                    .buildAndExpand(instrumentAdded.getUuid())
                     .toUri();
 
             return ResponseEntity.created(location).build();

@@ -1,14 +1,14 @@
 package com.aeris.datavalidationrest.sessions;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
+import java.net.URI;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/sessions")
@@ -19,24 +19,44 @@ public class SessionResource {
     @Autowired
     private SessionDao sessionDao;
 
-    //public void createSession() {
-    //}
-
-    @GetMapping(value = "/{id}")
-    public Optional<Session> getSessionById(@PathVariable String id) {
-        Optional<Session> session = sessionDao.findById(id);
-        return session;
-    }
-
     @GetMapping
-    public List<Session> getSessions() {
+    public List<Session> findAll() {
+        //By PI id
         List<Session> sessions = sessionDao.findAll();
         return sessions;
     }
 
-    //public void setInstrument(@PathVariable Instrument instrument) {//not validate
-    //}
+    @GetMapping(value = "/{piId}")
+    public Session findById(@PathVariable String piId) {
+        Session session = sessionDao.findByPiId(piId);
+        return session;
+    }
 
-    //public void deleteInstrument(@PathVariable Instrument instrument) {//ADMIN (not validate or save in session)
-    //}
+    @PostMapping
+    public ResponseEntity<Void> add(@RequestBody @Valid Session session) {//PI
+        Session sessionAdded;
+
+        if(session == null)
+            return ResponseEntity.noContent().build();
+
+        sessionAdded = sessionDao.save(session);
+
+        URI location = ServletUriComponentsBuilder
+                .fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(sessionAdded.getPiId())
+                .toUri();
+
+        return ResponseEntity.created(location).build();
+    }
+
+    @DeleteMapping(value = "/{id}")
+    public void delete(@PathVariable Session session) {//ADMIN and PI
+        sessionDao.delete(session);
+    }
+
+    @PutMapping(value = "/update")
+    public void update(@RequestBody Session session) {
+        sessionDao.save(session);
+    }
 }

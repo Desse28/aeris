@@ -2,16 +2,13 @@ package com.aeris.datavalidationrest.sessions;
 
 import com.aeris.datavalidationrest.instruments.Instrument;
 import com.aeris.datavalidationrest.parameters.Parameter;
-import org.springframework.data.annotation.Id;
 
 import java.util.Date;
 import java.util.List;
 
 public class Session {
-    @Id
-    private String id;
+    private String piId;
     private boolean state;
-    private String userId;
     private Date startDate;
     private Date endDate;
     private Instrument instrument;
@@ -19,14 +16,7 @@ public class Session {
     private List<Parameter> parameters;
 
     public Session() {
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
+        super();
     }
 
     public boolean isState() {
@@ -37,12 +27,12 @@ public class Session {
         this.state = state;
     }
 
-    public String getUserId() {
-        return userId;
+    public String getPiId() {
+        return piId;
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
+    public void setPiId(String piId) {
+        this.piId = piId;
     }
 
     public Date getStartDate() {
@@ -88,9 +78,8 @@ public class Session {
     @Override
     public String toString() {
         return "Session{" +
-                "id='" + id + '\'' +
                 ", state=" + state +
-                ", userId='" + userId + '\'' +
+                ", userId='" + piId + '\'' +
                 ", startDate=" + startDate +
                 ", endDate=" + endDate +
                 ", instrument=" + instrument +
