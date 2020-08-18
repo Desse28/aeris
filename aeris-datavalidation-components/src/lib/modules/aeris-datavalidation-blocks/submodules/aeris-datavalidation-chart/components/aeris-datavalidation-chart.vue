@@ -7,36 +7,26 @@
         dataInfoUrl="/data-information"
         @metadata="updateMetadata"
     >
-    </AerisDataValidationServices>
+      <v-row justify="center">
+        <v-col cols="12">
+          <AerisDataValidationOptions/>
+        </v-col>
+        <v-col cols="12">
+          <Plotly
+              :x="Date"
+              :data="data"
+              :id="chartId"
+              :layout="layout"
+              :scrollZoom="true"
+              :displaylogo="false"
+              :displayModeBar="true"
+              :modeBarButtons=" modeBarButtons"
+          >
+          </Plotly>
+        </v-col>
+      </v-row>
 
-    <v-row justify="center">
-      <v-col cols="6">
-        <Plotly
-            :x="Date"
-            :data="data"
-            :id="chartId"
-            :layout="layout"
-            :scrollZoom="true"
-            :displaylogo="false"
-            :displayModeBar="true"
-            :modeBarButtons=" modeBarButtons"
-        >
-        </Plotly>
-      </v-col>
-      <v-col  cols="6">
-        <Plotly
-            :x="Date"
-            :data="data"
-            :id="chartId"
-            :layout="layout"
-            :scrollZoom="true"
-            :displaylogo="false"
-            :displayModeBar="true"
-            :modeBarButtons=" modeBarButtons"
-        >
-        </Plotly>
-      </v-col>
-    </v-row>
+    </AerisDataValidationServices>
 
   </div>
 </template>
@@ -44,13 +34,17 @@
 <script>
   import { Plotly } from 'vue-plotly'
 
-  import { AerisDataValidationServices } from "./../../../../aeris-datavalidation-components"
+  import {
+    AerisDataValidationOptions,
+    AerisDataValidationServices,
+  } from "./../../../../aeris-datavalidation-components"
 
   export default {
     name: "aeris-datavalidation-chart",
     components: {
       Plotly,
-      AerisDataValidationServices
+      AerisDataValidationOptions,
+      AerisDataValidationServices,
     },
     data() {
       return {
