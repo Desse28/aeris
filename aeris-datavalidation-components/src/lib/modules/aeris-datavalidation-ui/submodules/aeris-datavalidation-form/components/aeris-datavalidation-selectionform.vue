@@ -4,16 +4,19 @@
       <v-col cols="12" sm="6" md="6">
         <AerisDatavalidationDateMounthPicker
           :date_label="date_label"
+          :setCurrentDate="setCurrentDate"
         />
         <v-row>
           <v-col cols="6">
             <AerisDatavalidationTimePicker
               :time_label="start_label"
+              :setCurrentTime="setStartTime"
             />
           </v-col>
           <v-col cols="6">
             <AerisDatavalidationTimePicker
                 :time_label="end_label"
+                :setCurrentTime="setEndTime"
             />
           </v-col>
           <v-col cols="12">
@@ -23,7 +26,9 @@
           </v-col>
           <v-col cols="12">
             <div class="my-2">
-              <v-btn>{{save_label}}</v-btn>
+              <v-btn v-on:click="saveSelection">
+                {{save_label}}
+              </v-btn>
             </div>
           </v-col>
         </v-row>
@@ -46,13 +51,33 @@ export default {
   },
   data() {
     return {
-      start_label : "Start",
       end_label : "End",
-      flag_message : "Choose quality flag",
       date_label : "Date",
       save_label : "Save",
+      start_label : "Start",
+      flag_message : "Choose quality flag",
+      startTime : null,
+      endTime : null,
+      currentDate: null,
+      qualityFlags : [],
     }
   },
+  methods:{
+    setCurrentDate : function(date) {
+      this.currentDate = date;
+    },
+    setStartTime: function(time) {
+      this.startTime = time;
+      console.log("Test setStartTime : ", this.startTime)
+    },
+    setEndTime: function(time) {
+      this.endTime = time;
+      console.log("Test setEndTime : ",  this.endTime)
+    },
+    saveSelection : function () {
+      console.log("Test pickerDate : ", this.pickerDate)
+    },
+  }
 }
 </script>
 

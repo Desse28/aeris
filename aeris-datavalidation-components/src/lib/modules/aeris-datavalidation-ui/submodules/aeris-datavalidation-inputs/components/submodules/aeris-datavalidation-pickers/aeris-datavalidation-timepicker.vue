@@ -36,6 +36,9 @@ export default {
     time_label : {
       type : String,
       default : "Time"
+    },
+    setCurrentTime : {
+      type : Function
     }
   },
   data() {
@@ -45,6 +48,11 @@ export default {
       modal2: false,
     }
   },
+  watch: {
+    time(val) {
+      this.setCurrentTime(val)
+    }
+  }
 }
 </script>
 

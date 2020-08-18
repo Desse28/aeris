@@ -32,14 +32,22 @@ export default {
     date_label : {
       type : String,
       default : "Date"
+    },
+    setCurrentDate : {
+      type : Function
     }
   },
   data() {
     return {
-      date: new Date().toISOString().substr(0, 10),
       menu: false,
+      date: null,
     }
   },
+  watch: {
+    date(val) {
+      this.setCurrentDate(val)
+    }
+  }
 }
 </script>
 
