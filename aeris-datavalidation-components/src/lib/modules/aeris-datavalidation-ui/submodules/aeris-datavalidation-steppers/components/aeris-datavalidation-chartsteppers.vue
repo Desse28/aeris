@@ -21,18 +21,10 @@
         <v-card
             class="mb-12"
             color="grey lighten-1"
-            height="200px"
-        >
 
+        >
+          <AerisDatavalidationSelectionform/>
         </v-card>
-        <v-btn
-            color="primary"
-            @click="e1 = 2"
-        >
-          Continue
-        </v-btn>
-
-        <v-btn text>Cancel</v-btn>
       </v-stepper-content>
 
       <v-stepper-content step="2">
@@ -57,8 +49,12 @@
 </template>
 
 <script>
+import AerisDatavalidationSelectionform from "./../../aeris-datavalidation-form/components/aeris-datavalidation-selectionform"
 export default {
   name: "aeris-datavalidation-chartsteppers",
+  components: {
+    AerisDatavalidationSelectionform
+  },
   data () {
     return {
       e1: 1,

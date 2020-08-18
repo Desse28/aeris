@@ -1,6 +1,5 @@
 <template>
-  <div>
-    <p>Test selection</p>
+  <div class="ma-8">
     <AerisDatavalidationChartSteppers/>
   </div>
 </template>
