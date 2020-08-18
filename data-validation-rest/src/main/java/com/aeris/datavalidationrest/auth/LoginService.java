@@ -15,7 +15,6 @@ public class LoginService {
     private Environment env;
     @Autowired
     private RestTemplate restTemplate;
-
     @Value( "${keycloak.realm}" )
     private String realm;
     @Value( "${keycloak.auth-server-url}" )

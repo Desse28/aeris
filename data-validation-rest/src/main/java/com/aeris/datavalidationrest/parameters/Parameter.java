@@ -1,6 +1,9 @@
 package com.aeris.datavalidationrest.parameters;
 
+import com.opencsv.bean.CsvBindByPosition;
+
 public class Parameter {
+    //@CsvBindByPosition(position = 0)
     private String name;
 
     public Parameter() {

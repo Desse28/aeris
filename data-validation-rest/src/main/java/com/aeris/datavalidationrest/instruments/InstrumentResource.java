@@ -2,6 +2,7 @@ package com.aeris.datavalidationrest.instruments;
 
 import com.aeris.datavalidationrest.auth.LoginResource;
 import com.aeris.datavalidationrest.common.CommonService;
+import io.swagger.annotations.ApiParam;
 import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,6 +24,8 @@ public class InstrumentResource {
     @Autowired
     private InstrumentDao instrumentDao;
     @Autowired
+    private InstrumentService instrumentService;
+    @Autowired
     private CommonService commonService;
 
     private static final String NOT_ALLOWED_TO_ADD_INSTRUMENT = "You are not allowed to add an instrument";
@@ -40,6 +43,13 @@ public class InstrumentResource {
     public Instrument findByUuid(@PathVariable String uuid) {
         Instrument instrument = instrumentDao.findByUuid(uuid);
         return instrument;
+    }
+
+    @GetMapping("/{parameter_name}/{uuid}")
+    public String getParameterData(@ApiParam(value = "Air Temp")@PathVariable @Valid String parameter_name,
+                                   @ApiParam(value = "91440f71-9c3e-5d31-befc-2729873ce581") @PathVariable String uuid ) {
+        this.instrumentService.getParameterData(parameter_name, uuid);
+        return "Hello world";
     }
 
     @PostMapping
@@ -64,20 +74,6 @@ public class InstrumentResource {
         return ResponseEntity.status(HttpStatus.SC_FORBIDDEN).body(NOT_ALLOWED_TO_ADD_INSTRUMENT);
     }
 
-    @DeleteMapping(value = "/{id}")
-    public  ResponseEntity<String> delete(@PathVariable Instrument instrument) {
-
-        if(instrument == null)
-            return ResponseEntity.noContent().build();
-
-        if (this.commonService.isAdmin(request)) {
-            instrumentDao.delete(instrument);
-            return ResponseEntity.status(HttpStatus.SC_OK).body("Update");
-        }
-
-        return ResponseEntity.status(HttpStatus.SC_FORBIDDEN).body("Error Message");
-    }
-
     @PutMapping(value = "/update")
     public ResponseEntity<String> update(@RequestBody Instrument instrument) {
 
@@ -87,6 +83,20 @@ public class InstrumentResource {
         if (this.commonService.isAdmin(request)) {
             instrumentDao.save(instrument);
             return ResponseEntity.status(HttpStatus.SC_ACCEPTED).body("Update");
+        }
+
+        return ResponseEntity.status(HttpStatus.SC_FORBIDDEN).body("Error Message");
+    }
+
+    @DeleteMapping(value = "/{id}")
+    public  ResponseEntity<String> delete(@PathVariable Instrument instrument) {
+
+        if(instrument == null)
+            return ResponseEntity.noContent().build();
+
+        if (this.commonService.isAdmin(request)) {
+            instrumentDao.delete(instrument);
+            return ResponseEntity.status(HttpStatus.SC_OK).body("Update");
         }
 
         return ResponseEntity.status(HttpStatus.SC_FORBIDDEN).body("Error Message");
