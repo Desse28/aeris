@@ -9,7 +9,6 @@
     >
       <v-row justify="center">
         <v-col cols="12">
-          <AerisDataValidationOptions/>
         </v-col>
         <v-col cols="12">
           <Plotly
@@ -24,6 +23,9 @@
           >
           </Plotly>
         </v-col>
+        <v-col cols="12">
+          <AerisDatavalidationSelection/>
+        </v-col>
       </v-row>
 
     </AerisDataValidationServices>
@@ -35,16 +37,18 @@
   import { Plotly } from 'vue-plotly'
 
   import {
-    AerisDataValidationOptions,
+    //AerisDataValidationOptions,
     AerisDataValidationServices,
+    AerisDatavalidationSelection
   } from "./../../../../aeris-datavalidation-components"
 
   export default {
     name: "aeris-datavalidation-chart",
     components: {
       Plotly,
-      AerisDataValidationOptions,
+      //AerisDataValidationOptions,
       AerisDataValidationServices,
+      AerisDatavalidationSelection
     },
     data() {
       return {

@@ -4,7 +4,7 @@ import VueCustomElement from "vue-custom-element";
 import axios from "axios";
 import VueAxios from "vue-axios";
 
-import AerisDataValidationChart from "../lib/modules/aeris-datavalidation-blocks/submodules/aeris-datavalidation-chart/components/aeris-datavalidation-chart";
+import AerisDataValidationChart from "./modules/aeris-datavalidation-blocks/submodules/aeris-datavalidation-charts/components/aeris-datavalidation-chart";
 
 Vue.use(Vuex);
 Vue.use(VueCustomElement);
