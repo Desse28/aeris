@@ -22,6 +22,7 @@
           <v-col cols="12">
             <AerisDatavalidationSelect
                 :flag_message="flag_message"
+                :setQualityFlags="setQualityFlags"
             />
           </v-col>
           <v-col cols="12">
@@ -68,11 +69,13 @@ export default {
     },
     setStartTime: function(time) {
       this.startTime = time;
-      console.log("Test setStartTime : ", this.startTime)
     },
     setEndTime: function(time) {
       this.endTime = time;
-      console.log("Test setEndTime : ",  this.endTime)
+    },
+    setQualityFlags: function(flags) {
+      this.qualityFlags = flags;
+      console.log("Test pickerDate : ", this.qualityFlags)
     },
     saveSelection : function () {
       console.log("Test pickerDate : ", this.pickerDate)
