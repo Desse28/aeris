@@ -25,6 +25,8 @@ public class InstrumentResource {
     @Autowired
     private CommonService commonService;
 
+    private static final String NOT_ALLOWED_TO_ADD_INSTRUMENT = "You are not allowed to add an instrument";
+
     Logger logger = LoggerFactory.getLogger(LoginResource.class);
 
     @GetMapping
@@ -59,7 +61,7 @@ public class InstrumentResource {
             return ResponseEntity.created(location).build();
         }
 
-        return ResponseEntity.status(HttpStatus.SC_FORBIDDEN).body("Error Message");
+        return ResponseEntity.status(HttpStatus.SC_FORBIDDEN).body(NOT_ALLOWED_TO_ADD_INSTRUMENT);
     }
 
     @DeleteMapping(value = "/{id}")
