@@ -26,12 +26,6 @@ public class FlagResource {
         System.out.println("Test keys : ");
         System.out.println(test.keySet());
         System.out.println(request.isUserInRole("user"));
-        System.out.println(request.isUserInRole("user"));
-        System.out.println(request.isUserInRole("USER"));
-        System.out.println(request.isUserInRole("ROLE_USER"));
-        System.out.println(request.isUserInRole("ROLE_user"));
-        System.out.println(request.isUserInRole("ROLE_manage-account"));
-        System.out.println(request.isUserInRole("manage-account"));
 
         // Récupération des rôles
        AccessToken.Access access = scAccessToken.getResourceAccess("account");

@@ -17,6 +17,8 @@ public class InstrumentResource {
     private HttpServletRequest request;
     @Autowired
     private InstrumentDao instrumentDao;
+    @Autowired
+    private InstrumentService instrumentService;
 
     @GetMapping
     public List<Instrument> findAll() {
@@ -39,12 +41,15 @@ public class InstrumentResource {
             if(instrument == null)
                 return ResponseEntity.noContent().build();
 
-            instrumentAdded = instrumentDao.save(instrument);
+            this.instrumentService.getCurrentUserRole(request);
+
+            //instrumentAdded = instrumentDao.save(instrument);
 
             URI location = ServletUriComponentsBuilder
                     .fromCurrentRequest()
                     .path("/{id}")
-                    .buildAndExpand(instrumentAdded.getUuid())
+                    //.buildAndExpand(instrumentAdded.getUuid())
+                    .buildAndExpand("Hello world !")
                     .toUri();
 
             return ResponseEntity.created(location).build();

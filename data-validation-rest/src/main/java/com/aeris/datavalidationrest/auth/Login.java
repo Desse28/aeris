@@ -8,10 +8,10 @@ import javax.validation.constraints.NotNull;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Login {
     @NotNull(message = "Username cannot be null")
-    @ApiModelProperty(value = "user1")
+    @ApiModelProperty(value = "admin", example = "user1")
     private String username;
     @NotNull(message = "Password cannot be null")
-    @ApiModelProperty(value = "test")
+    @ApiModelProperty(value = "test", example = "test")
     private String password;
     @ApiModelProperty(hidden = true)
     private String client_id;
