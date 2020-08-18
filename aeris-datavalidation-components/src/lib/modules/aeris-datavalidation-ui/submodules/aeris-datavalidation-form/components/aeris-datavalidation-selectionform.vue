@@ -2,20 +2,29 @@
   <div class="pa-8">
     <v-row>
       <v-col cols="12" sm="6" md="6">
-        <AerisDatavalidationDateMounthPicker/>
+        <AerisDatavalidationDateMounthPicker
+          :date_label="date_label"
+        />
         <v-row>
           <v-col cols="6">
             <AerisDatavalidationTimePicker
-              :time_label="start_time"
+              :time_label="start_label"
             />
           </v-col>
           <v-col cols="6">
             <AerisDatavalidationTimePicker
-                :time_label="end_time"
+                :time_label="end_label"
             />
           </v-col>
           <v-col cols="12">
-            <AerisDatavalidationSelect/>
+            <AerisDatavalidationSelect
+                :flag_message="flag_message"
+            />
+          </v-col>
+          <v-col cols="12">
+            <div class="my-2">
+              <v-btn>{{save_label}}</v-btn>
+            </div>
           </v-col>
         </v-row>
       </v-col>
@@ -37,8 +46,11 @@ export default {
   },
   data() {
     return {
-      start_time : "Start",
-      end_time : "End",
+      start_label : "Start",
+      end_label : "End",
+      flag_message : "Choose quality flag",
+      date_label : "Date",
+      save_label : "Save",
     }
   },
 }

@@ -28,6 +28,12 @@
 <script>
 export default {
   name: "aeris-datavalidation-datemounthpicker",
+  props: {
+    date_label : {
+      type : String,
+      default : "Date"
+    }
+  },
   data() {
     return {
       date: new Date().toISOString().substr(0, 10),
