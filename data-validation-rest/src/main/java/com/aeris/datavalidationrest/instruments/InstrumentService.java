@@ -40,26 +40,15 @@ public class InstrumentService {
         data = data.replace("\uFEFF", "");
         reader = new StringReader(data);
 
-        CsvBindByPosition annotation = CsvBindByPosition.class.getAnnotation(CsvBindByPosition.class);
-        System.out.println("TestClass annotation before:" + annotation);
-        Map<String, Object> valuesMap = new HashMap<>();
-        valuesMap.put("position", 0);
-        Class<Parameter> test = Parameter.class;
-        RuntimeAnnotations.putAnnotation(test, CsvBindByPosition.class, valuesMap);
-
-        annotation = test.getAnnotation(CsvBindByPosition.class);
-        System.out.println("TestClass annotation after:" + annotation);
-
-        CsvToBean csvToBean = new CsvToBeanBuilder<Parameter>(reader)
-                .withType(test)
+        /*CsvToBean csvToBean = new CsvToBeanBuilder<Parameter>(reader)
+                .withType(Parameter.class)
                 .withIgnoreLeadingWhiteSpace(true)
-                .build();
-
-        parameters = csvToBean.parse();
-
-        for ( Parameter parameter : parameters ) {
-            logger.info(parameter.toString());
-        }
+                .build();*/
+        //parameters = csvToBean.parse();
+        logger.info("Test data");
+        logger.info(data);
+        logger.info("Test reader");
+        logger.info(reader.toString());
     }
 
 
