@@ -80,7 +80,6 @@ public class SessionResource {
             session.setPiId(piid);
 
             newSession = sessionDao.save(session);
-            setCurrentSession(newSession);
 
             URI location = ServletUriComponentsBuilder
                     .fromCurrentRequest()
@@ -123,50 +122,12 @@ public class SessionResource {
         return ResponseEntity.status(HttpStatus.SC_FORBIDDEN).body("Error Message");
     }
 
-    @PutMapping
-    public ResponseEntity<String> setCurrentSession(@RequestBody Session newSession) {
-        Session currentSession;
-
-        if( newSession == null)
-            return ResponseEntity.noContent().build();
-
-        if(this.commonService.isPI(request)) {
-            currentSession = getCurrentSession();
-
-            if(currentSession == null) {
-                sessionDao.save(newSession);
-            } else {
-                currentSession.setCurrentSession(false);
-                newSession.setCurrentSession(true);
-                sessionDao.save(currentSession);
-                sessionDao.save(newSession);
-            }
-
-            return ResponseEntity.status(HttpStatus.SC_ACCEPTED).body("Set current session(" + newSession.getId() + ")");
-        }
-        return ResponseEntity.status(HttpStatus.SC_FORBIDDEN).body("Error Message");
-    }
-
-    @GetMapping("/current-session")
-    public Session getCurrentSession() {
-        String piid;
-        Session session = null;
-
-        if(this.commonService.isPI(request)) {
-            piid = this.commonService.getCurrrentUserId(request);
-            session = this.sessionDao.findByPiIdAndCurrentSession(piid, true);
-        }
-
-        return session;
-    }
-
     @PostMapping("/submit-session")
     public ResponseEntity<String> submitSession(@RequestBody Session session) {
         if( session == null)
             return ResponseEntity.noContent().build();
 
         if(this.commonService.isPI(request)) {
-            session.setCurrentSession(false);
             session.setState(true);
             sessionDao.save(session);
             this.sessionService.submitSession(session);

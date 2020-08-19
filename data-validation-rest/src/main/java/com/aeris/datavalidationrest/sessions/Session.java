@@ -51,10 +51,6 @@ public class Session {
     )
     private List<SessionSelection> sessionSelections;
 
-    @NotNull(message = "CurrentSession cannot be null")
-    @ApiModelProperty( example = "false" )
-    private boolean currentSession;
-
     public Session() {
         super();
     }
@@ -131,14 +127,6 @@ public class Session {
         this.sessionSelections = sessionSelections;
     }
 
-    public boolean isCurrentSession() {
-        return currentSession;
-    }
-
-    public void setCurrentSession(boolean currentSession) {
-        this.currentSession = currentSession;
-    }
-
     @Override
     public String toString() {
         return "Session{" +
@@ -151,7 +139,6 @@ public class Session {
                 ", mainParameter=" + mainParameter +
                 ", parameters=" + linkedParameters +
                 ", sessionSelections=" + sessionSelections +
-                ", currentSession=" + currentSession +
                 '}';
     }
 }
