@@ -34,10 +34,17 @@ public class InstrumentResource {
     Logger logger = LoggerFactory.getLogger(LoginResource.class);
 
     @GetMapping
-    public List<Instrument> findAll() {
-        //By PI id
-        List<Instrument> instruments = instrumentDao.findAll();
-        return instruments;
+    public ResponseEntity<List<Instrument>> findAll() {
+        String responsibleId;
+        List<Instrument> instruments = new ArrayList<>();
+
+        if (this.commonService.isAdmin(request) || this.commonService.isPI(request)) {
+            responsibleId = this.commonService.getCurrrentUserId(request);
+            instruments = instrumentDao.findByResponsibleIdContains(responsibleId);
+            return ResponseEntity.status(HttpStatus.SC_OK).body(instruments);
+        }
+
+        return ResponseEntity.status(HttpStatus.SC_FORBIDDEN).body(instruments);
     }
 
     @GetMapping(value = "/{uuid}")
@@ -54,9 +61,10 @@ public class InstrumentResource {
         if (this.commonService.isAdmin(request) || this.commonService.isPI(request)) {
             parameterData = this.instrumentService.getParameterData(parameter_name, uuid);
             return ResponseEntity.status(HttpStatus.SC_OK).body(parameterData);
-        } else {
-            return ResponseEntity.status(HttpStatus.SC_FORBIDDEN).body(parameterData);
         }
+
+        return ResponseEntity.status(HttpStatus.SC_FORBIDDEN).body(parameterData);
+
     }
 
     @PostMapping

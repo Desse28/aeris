@@ -43,4 +43,10 @@ public class CommonService {
     public boolean isAdmin(HttpServletRequest request) {
         return getCurrentUserRoles(request).contains(ADMIN_ROLE);
     }
+
+    public String getCurrrentUserId(HttpServletRequest request) {
+        AccessToken scAccessToken = getAccessToken(request);
+        String userId = scAccessToken.getSubject();
+        return userId;
+    }
 }
