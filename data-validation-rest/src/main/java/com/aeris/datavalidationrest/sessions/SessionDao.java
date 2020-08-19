@@ -6,7 +6,8 @@ import java.util.List;
 
 public interface SessionDao extends MongoRepository<Session, String> {
     void deleteById(String id);
-
     List<Session> findByPiId(String piId);
     List<Session> findAllByPiIdAndAndState(String piId, boolean state);
+    Session findByPiIdAndCurrentSession(String piid, boolean currentSession);
+    boolean existsByCurrentSession(Session session);
 }

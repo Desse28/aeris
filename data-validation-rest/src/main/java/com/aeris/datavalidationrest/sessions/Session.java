@@ -1,6 +1,7 @@
 package com.aeris.datavalidationrest.sessions;
 import com.aeris.datavalidationrest.parameters.Parameter;
 import io.swagger.annotations.ApiModelProperty;
+import org.springframework.data.annotation.Id;
 
 import javax.validation.constraints.NotNull;
 import java.util.Date;
@@ -8,6 +9,7 @@ import java.util.List;
 
 public class Session {
     @ApiModelProperty(hidden=true)
+    @Id
     private String id;
     @ApiModelProperty(hidden=true)
     private String piId;
@@ -47,6 +49,10 @@ public class Session {
                     "]"
     )
     private List<SessionSelection> sessionSelections;
+
+    @NotNull(message = "CurrentSession cannot be null")
+    @ApiModelProperty( example = "false" )
+    private boolean currentSession;
 
     public Session() {
         super();
@@ -124,6 +130,14 @@ public class Session {
         this.sessionSelections = sessionSelections;
     }
 
+    public boolean isCurrentSession() {
+        return currentSession;
+    }
+
+    public void setCurrentSession(boolean currentSession) {
+        this.currentSession = currentSession;
+    }
+
     @Override
     public String toString() {
         return "Session{" +
@@ -136,6 +150,7 @@ public class Session {
                 ", mainParameter=" + mainParameter +
                 ", parameters=" + parameters +
                 ", sessionSelections=" + sessionSelections +
+                ", currentSession=" + currentSession +
                 '}';
     }
 }
