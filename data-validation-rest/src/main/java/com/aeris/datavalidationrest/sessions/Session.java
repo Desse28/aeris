@@ -34,7 +34,8 @@ public class Session {
                     "{ \"name\": \"Cell Temp\"}," +
                     "]"
     )
-    private List<Parameter> parameters;
+
+    private List<Parameter> linkedParameters;
     @ApiModelProperty(
             example = "[" +
                         "{" +
@@ -114,12 +115,12 @@ public class Session {
         this.mainParameter = mainParameter;
     }
 
-    public List<Parameter> getParameters() {
-        return parameters;
+    public List<Parameter> getLinkedParameters() {
+        return linkedParameters;
     }
 
-    public void setParameters(List<Parameter> parameters) {
-        this.parameters = parameters;
+    public void setLinkedParameters(List<Parameter> linkedParameters) {
+        this.linkedParameters = linkedParameters;
     }
 
     public List<SessionSelection> getSessionSelections() {
@@ -148,7 +149,7 @@ public class Session {
                 ", endDate=" + endDate +
                 ", instrumentId='" + instrumentId + '\'' +
                 ", mainParameter=" + mainParameter +
-                ", parameters=" + parameters +
+                ", parameters=" + linkedParameters +
                 ", sessionSelections=" + sessionSelections +
                 ", currentSession=" + currentSession +
                 '}';
