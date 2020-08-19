@@ -1,7 +1,9 @@
 import Vue from "vue";
 
-import AerisDatavalidationChartSteppers from "./components/aeris-datavalidation-chartsteppers";
+import AerisDatavalidationPortraitLayaout from "./components/aeris-datavalidation-landscapelayout";
+import AerisDatavalidationLandScapeLayaout from "./components/aeris-datavalidation-potraitlayout";
 
 Vue.use(
-    AerisDatavalidationChartSteppers
+    AerisDatavalidationLandScapeLayaout,
+    AerisDatavalidationPortraitLayaout
 );
