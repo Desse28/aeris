@@ -74,7 +74,7 @@ public class InstrumentResource {
             URI location = ServletUriComponentsBuilder
                     .fromCurrentRequest()
                     .path("/{id}")
-                    .buildAndExpand(instrumentAdded.getUuid())
+                    .buildAndExpand(instrumentAdded.getId())
                     .toUri();
 
             return ResponseEntity.created(location).build();

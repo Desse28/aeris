@@ -1,5 +1,7 @@
 package com.aeris.datavalidationrest.sessions;
 
+import com.aeris.datavalidationrest.common.CommonService;
+import org.apache.http.HttpStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,9 +21,13 @@ public class SessionResource {
     @Autowired
     private SessionDao sessionDao;
 
+    @Autowired
+    private CommonService commonService;
+
+    private static final String NOT_ALLOWED_TO_CREATE_SESSION = "You are not allowed to create a session";
+
     @GetMapping
     public List<Session> findAll() {
-        //By PI id
         List<Session> sessions = sessionDao.findAll();
         return sessions;
     }
@@ -33,22 +39,25 @@ public class SessionResource {
     }
 
     @PostMapping
-    public ResponseEntity<Void> add(@RequestBody @Valid Session session) {
-        //By PI id's
+    public ResponseEntity<String> add(@RequestBody @Valid Session session) {
         Session sessionAdded;
 
         if(session == null)
             return ResponseEntity.noContent().build();
 
-        sessionAdded = sessionDao.save(session);
+        if (this.commonService.isPI(request)) {
+            sessionAdded = sessionDao.save(session);
 
-        URI location = ServletUriComponentsBuilder
-                .fromCurrentRequest()
-                .path("/{id}")
-                .buildAndExpand(sessionAdded.getPiId())
-                .toUri();
+            URI location = ServletUriComponentsBuilder
+                    .fromCurrentRequest()
+                    .path("/{id}")
+                    .buildAndExpand(sessionAdded.getId())
+                    .toUri();
 
-        return ResponseEntity.created(location).build();
+            return ResponseEntity.created(location).build();
+        }
+
+        return ResponseEntity.status(HttpStatus.SC_FORBIDDEN).body(NOT_ALLOWED_TO_CREATE_SESSION);
     }
 
     @DeleteMapping(value = "/{id}")

@@ -43,7 +43,6 @@ public class Instrument {
             example = "[" +
                         "{ \"label\": \"Valid measurement\"}," +
                         "{ \"label\": \"Episode data checked and accepted by data originator\"}," +
-                        "{ \"label\": \"Valid measurement\"}," +
                         "{ \"label\": \"Unspecified contamination or local influence\"}," +
                         "{ \"label\": \"Unspecified contamination or local influence\"}," +
                         "{ \"label\": \"Missing measurement\"}," +
