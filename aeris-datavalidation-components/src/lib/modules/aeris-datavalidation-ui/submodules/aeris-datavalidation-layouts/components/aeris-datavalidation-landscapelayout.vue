@@ -1,6 +1,10 @@
 <template>
     <v-row justify="center">
       <v-col cols="6">
+        <slot/>
+      </v-col>
+      <v-col cols="6">
+        <slot/>
       </v-col>
     </v-row>
 </template>
