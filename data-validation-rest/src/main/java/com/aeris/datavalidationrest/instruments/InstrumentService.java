@@ -1,12 +1,5 @@
 package com.aeris.datavalidationrest.instruments;
 import com.aeris.datavalidationrest.auth.LoginResource;
-import com.aeris.datavalidationrest.common.CommonService;
-import com.aeris.datavalidationrest.common.RuntimeAnnotations;
-import com.aeris.datavalidationrest.parameters.Parameter;
-import com.opencsv.bean.ColumnPositionMappingStrategy;
-import com.opencsv.bean.CsvBindByPosition;
-import com.opencsv.bean.CsvToBean;
-import com.opencsv.bean.CsvToBeanBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,17 +7,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.Reader;
-import java.io.StringReader;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class InstrumentService {
     @Autowired
     private RestTemplate restTemplate;
-    @Autowired
-    private CommonService commonService;
 
     Logger logger = LoggerFactory.getLogger(LoginResource.class);
 
@@ -32,24 +20,38 @@ public class InstrumentService {
     public static final String SEDOO_BASED_DATA_URL = "https://sedoo.aeris-data.fr/actris-datacenter-rest/rest/quicklook/download?uuid=";
 
 
-    public void getParameterData(String parameterName, String uuid) {
+    public List<String> getParameterData(String parameterName, String uuid) {
         Reader reader;
-        List<Parameter> parameters;
+        //List<Parameter> parameters;
         String url = SEDOO_BASED_DATA_URL + uuid + "&folder=" + FOLDER;
         String data = restTemplate.getForObject( url, String.class);
         data = data.replace("\uFEFF", "");
-        reader = new StringReader(data);
 
+        //reader = new StringReader(data);
         /*CsvToBean csvToBean = new CsvToBeanBuilder<Parameter>(reader)
                 .withType(Parameter.class)
                 .withIgnoreLeadingWhiteSpace(true)
                 .build();*/
         //parameters = csvToBean.parse();
-        logger.info("Test data");
-        logger.info(data);
-        logger.info("Test reader");
-        logger.info(reader.toString());
+
+        return parseData(parameterName, data);
     }
 
+    public List<String> parseData(String parameterName, String data) {
+        int columnIndex;
+        List<String> result = new ArrayList<>();
+        String[] dataLines = data.split("\n");
+        List<String> columns = Arrays.asList(dataLines[0].split(","));
+
+        if (columns.contains("\"" + parameterName + "\"")) {
+            columnIndex = columns.indexOf("\"" + parameterName + "\"");
+
+            for (String line : dataLines) {
+                result.add(line.split(",")[columnIndex]);
+            }
+        }
+
+        return result;
+    }
 
 }

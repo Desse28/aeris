@@ -18,8 +18,8 @@ public class Instrument {
     @NotNull(message = "PIID cannot be null")
     @ApiModelProperty(
             example = "[" +
-                            "ae5a9185-a31a-4181-b48b-936bc42a630e," +
-                            "9b9e2d5a-f93c-402e-bcbf-f2963bdfd97e" +
+                            "19a46f95-56ae-432c-877c-477c7c7075b2," +
+                            "e5ea86c6-fcec-436e-8218-280a883ac549" +
                     "]"
     )
     private List<String> responsibleId;

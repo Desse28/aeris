@@ -14,6 +14,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -46,10 +47,16 @@ public class InstrumentResource {
     }
 
     @GetMapping("/{parameter_name}/{uuid}")
-    public String getParameterData(@ApiParam(value = "Air Temp")@PathVariable @Valid String parameter_name,
+    public ResponseEntity<List<String>> getParameterData(@ApiParam(value = "Air Temp")@PathVariable @Valid String parameter_name,
                                    @ApiParam(value = "91440f71-9c3e-5d31-befc-2729873ce581") @PathVariable String uuid ) {
-        this.instrumentService.getParameterData(parameter_name, uuid);
-        return "Hello world";
+        List<String> parameterData = new ArrayList<>();
+
+        if (this.commonService.isAdmin(request) || this.commonService.isPI(request)) {
+            parameterData = this.instrumentService.getParameterData(parameter_name, uuid);
+            return ResponseEntity.status(HttpStatus.SC_OK).body(parameterData);
+        } else {
+            return ResponseEntity.status(HttpStatus.SC_FORBIDDEN).body(parameterData);
+        }
     }
 
     @PostMapping
