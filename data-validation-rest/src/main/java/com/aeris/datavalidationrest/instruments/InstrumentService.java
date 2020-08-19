@@ -1,10 +1,12 @@
 package com.aeris.datavalidationrest.instruments;
 import com.aeris.datavalidationrest.auth.LoginResource;
-import com.aeris.datavalidationrest.catalogue.data.GroundData;
 import com.aeris.datavalidationrest.common.CommonService;
+import com.aeris.datavalidationrest.common.RuntimeAnnotations;
 import com.aeris.datavalidationrest.parameters.Parameter;
-import com.opencsv.CSVReader;
-import com.opencsv.bean.*;
+import com.opencsv.bean.ColumnPositionMappingStrategy;
+import com.opencsv.bean.CsvBindByPosition;
+import com.opencsv.bean.CsvToBean;
+import com.opencsv.bean.CsvToBeanBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,15 +34,33 @@ public class InstrumentService {
 
     public void getParameterData(String parameterName, String uuid) {
         Reader reader;
+        List<Parameter> parameters;
         String url = SEDOO_BASED_DATA_URL + uuid + "&folder=" + FOLDER;
         String data = restTemplate.getForObject( url, String.class);
         data = data.replace("\uFEFF", "");
-
         reader = new StringReader(data);
 
+        CsvBindByPosition annotation = CsvBindByPosition.class.getAnnotation(CsvBindByPosition.class);
+        System.out.println("TestClass annotation before:" + annotation);
+        Map<String, Object> valuesMap = new HashMap<>();
+        valuesMap.put("position", 0);
+        Class<Parameter> test = Parameter.class;
+        RuntimeAnnotations.putAnnotation(test, CsvBindByPosition.class, valuesMap);
+
+        annotation = test.getAnnotation(CsvBindByPosition.class);
+        System.out.println("TestClass annotation after:" + annotation);
+
         CsvToBean csvToBean = new CsvToBeanBuilder<Parameter>(reader)
-                .withType(Parameter.class)
+                .withType(test)
                 .withIgnoreLeadingWhiteSpace(true)
                 .build();
+
+        parameters = csvToBean.parse();
+
+        for ( Parameter parameter : parameters ) {
+            logger.info(parameter.toString());
+        }
     }
+
+
 }

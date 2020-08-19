@@ -8,6 +8,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.BufferedReader;
+import java.io.Reader;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -47,5 +49,24 @@ public class CommonService {
 
     public boolean isAdmin(HttpServletRequest request) {
         return getCurrentUserRoles(request).contains(ADMIN_ROLE);
+    }
+
+    public void readCsv(Reader reader) {
+        BufferedReader fileReader = null;
+
+        final String DELIMITER = ",";
+        logger.info("test readCsv");
+        try {
+            String line = "";
+            fileReader = new BufferedReader(reader);
+            while ((line = fileReader.readLine()) != null) {
+                String[] tokens = line.split(DELIMITER);
+                for(String token : tokens) {
+                    logger.info(token);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
