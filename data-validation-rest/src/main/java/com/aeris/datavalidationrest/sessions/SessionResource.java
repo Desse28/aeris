@@ -71,7 +71,15 @@ public class SessionResource {
     }
 
     @DeleteMapping(value = "/{id}")
-    public void delete(@PathVariable Session session) {//ADMIN and PI
-        sessionDao.delete(session);
+    public ResponseEntity<String> delete(@PathVariable String id) {
+        if(id == null)
+            return ResponseEntity.noContent().build();
+
+        if (this.commonService.isPI(request)) {
+            sessionDao.deleteById(id);
+            return ResponseEntity.status(HttpStatus.SC_OK).body("Delete session");
+        }
+
+        return ResponseEntity.status(HttpStatus.SC_FORBIDDEN).body("Error Message");
     }
 }
