@@ -10,6 +10,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -17,35 +18,39 @@ import java.util.List;
 public class SessionResource {
     @Autowired
     private HttpServletRequest request;
-
     @Autowired
     private SessionDao sessionDao;
-
     @Autowired
     private CommonService commonService;
 
     private static final String NOT_ALLOWED_TO_CREATE_SESSION = "You are not allowed to create a session";
 
     @GetMapping
-    public List<Session> findAll() {
-        List<Session> sessions = sessionDao.findAll();
-        return sessions;
-    }
+    public ResponseEntity<List<Session>> findAll() {
+        String piid;
+        List<Session> sessions = new ArrayList<>();
 
-    @GetMapping(value = "/{piId}")
-    public Session findByPiid(@PathVariable String piId) {
-        Session session = sessionDao.findByPiId(piId);
-        return session;
+        if ( this.commonService.isPI(request)) {
+            piid = this.commonService.getCurrrentUserId(request);
+            sessions = sessionDao.findByPiId(piid);
+            return ResponseEntity.status(HttpStatus.SC_OK).body(sessions);
+        }
+
+        return ResponseEntity.status(HttpStatus.SC_FORBIDDEN).body(sessions);
     }
 
     @PostMapping
     public ResponseEntity<String> add(@RequestBody @Valid Session session) {
+        String piid;
         Session sessionAdded;
 
         if(session == null)
             return ResponseEntity.noContent().build();
 
         if (this.commonService.isPI(request)) {
+            piid = this.commonService.getCurrrentUserId(request);
+            session.setPiId(piid);
+
             sessionAdded = sessionDao.save(session);
 
             URI location = ServletUriComponentsBuilder
@@ -60,13 +65,13 @@ public class SessionResource {
         return ResponseEntity.status(HttpStatus.SC_FORBIDDEN).body(NOT_ALLOWED_TO_CREATE_SESSION);
     }
 
-    @DeleteMapping(value = "/{id}")
-    public void delete(@PathVariable Session session) {//ADMIN and PI
-        sessionDao.delete(session);
-    }
-
     @PutMapping(value = "/update")
     public void update(@RequestBody Session session) {
         sessionDao.save(session);
+    }
+
+    @DeleteMapping(value = "/{id}")
+    public void delete(@PathVariable Session session) {//ADMIN and PI
+        sessionDao.delete(session);
     }
 }
