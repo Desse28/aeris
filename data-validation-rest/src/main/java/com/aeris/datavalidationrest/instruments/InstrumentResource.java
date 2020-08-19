@@ -91,7 +91,7 @@ public class InstrumentResource {
 
         if (this.commonService.isAdmin(request)) {
             instrumentDao.save(instrument);
-            return ResponseEntity.status(HttpStatus.SC_ACCEPTED).body("Update");
+            return ResponseEntity.status(HttpStatus.SC_ACCEPTED).body("Update instrument");
         }
 
         return ResponseEntity.status(HttpStatus.SC_FORBIDDEN).body("Error Message");

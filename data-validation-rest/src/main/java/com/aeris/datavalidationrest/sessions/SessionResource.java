@@ -66,8 +66,17 @@ public class SessionResource {
     }
 
     @PutMapping(value = "/update")
-    public void update(@RequestBody Session session) {
-        sessionDao.save(session);
+    public ResponseEntity<String> update(@RequestBody Session session) {
+
+        if(session == null)
+            return ResponseEntity.noContent().build();
+
+        if (this.commonService.isPI(request)) {
+            sessionDao.save(session);
+            return ResponseEntity.status(HttpStatus.SC_ACCEPTED).body("Update session (" + session.getId() + ")");
+        }
+
+        return ResponseEntity.status(HttpStatus.SC_FORBIDDEN).body("Error Message");
     }
 
     @DeleteMapping(value = "/{id}")

@@ -24,7 +24,7 @@ public class Session {
     @ApiModelProperty( example = "5f3cebf56aa6f0740378af21" )
     private String instrumentId;
     @NotNull(message = "MainParameter cannot be null")
-    @ApiModelProperty( example = "{ \"name\": \"Pressure\"},")
+    @ApiModelProperty( example = "{\"name\": \"Pressure\"}")
     private Parameter mainParameter;
     @ApiModelProperty(
             example = "[" +
