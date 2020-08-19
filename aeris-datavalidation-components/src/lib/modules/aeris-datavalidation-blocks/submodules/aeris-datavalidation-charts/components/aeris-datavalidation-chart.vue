@@ -33,64 +33,10 @@
         :nbrChildElement="2"
     >
       <template v-slot:land1>
-        <AerisDataValidationServices
-            serverUrl="http://localhost:9001"
-            flagUrl="/flags"
-            groundDataUrl="/ground-data"
-            dataInfoUrl="/data-information"
-            @metadata="updateMetadata"
-        >
-          <v-row justify="center">
-            <v-col cols="12">
-            </v-col>
-            <v-col cols="12">
-              <Plotly
-                  :x="Date"
-                  :data="data"
-                  :id="chartId"
-                  :layout="layout"
-                  :scrollZoom="true"
-                  :displaylogo="false"
-                  :displayModeBar="true"
-                  :modeBarButtons=" modeBarButtons"
-              >
-              </Plotly>
-            </v-col>
-            <v-col cols="12">
-              <AerisDatavalidationSelection/>
-            </v-col>
-          </v-row>
-        </AerisDataValidationServices>
+        <h1>Le titre de ma page</h1>
       </template>
       <template v-slot:land2>
-        <AerisDataValidationServices
-            serverUrl="http://localhost:9001"
-            flagUrl="/flags"
-            groundDataUrl="/ground-data"
-            dataInfoUrl="/data-information"
-            @metadata="updateMetadata"
-        >
-          <v-row justify="center">
-            <v-col cols="12">
-            </v-col>
-            <v-col cols="12">
-              <Plotly
-                  :x="Date"
-                  :data="data"
-                  :id="chartId"
-                  :layout="layout"
-                  :scrollZoom="true"
-                  :displaylogo="false"
-                  :displayModeBar="true"
-                  :modeBarButtons=" modeBarButtons"
-              >
-              </Plotly>
-            </v-col>
-            <v-col cols="12">
-              <AerisDatavalidationSelection/>
-            </v-col>
-          </v-row>
-        </AerisDataValidationServices>
+        <p>Ici les infos de contact</p>
       </template>
     </AerisDatavalidationLandScapeLayaout>
   </div>
