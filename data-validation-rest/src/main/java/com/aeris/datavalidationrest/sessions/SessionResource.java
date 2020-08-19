@@ -25,6 +25,32 @@ public class SessionResource {
 
     private static final String NOT_ALLOWED_TO_CREATE_SESSION = "You are not allowed to create a session";
 
+    @GetMapping(value = "/{piid}/{state}")
+    public ResponseEntity<List<Session>> findSessionsByPiIdAndAndState(@PathVariable String piid, @PathVariable boolean state) {
+        List<Session> sessions = new ArrayList<>();
+
+        if ( this.commonService.isPI(request)) {
+            sessions = sessionDao.findAllByPiIdAndAndState(piid,state);
+            return ResponseEntity.status(HttpStatus.SC_OK).body(sessions);
+        }
+
+        return ResponseEntity.status(HttpStatus.SC_FORBIDDEN).body(sessions);
+    }
+
+    @GetMapping(value = "/in-progress")
+    public ResponseEntity<List<Session>> findInprogressSession() {
+        String piid;
+        piid = this.commonService.getCurrrentUserId(request);
+        return findSessionsByPiIdAndAndState(piid, false);
+    }
+
+    @GetMapping(value = "/done")
+    public ResponseEntity<List<Session>> findDoneSession() {
+        String piid;
+        piid = this.commonService.getCurrrentUserId(request);
+        return findSessionsByPiIdAndAndState(piid, true);
+    }
+
     @GetMapping
     public ResponseEntity<List<Session>> findAll() {
         String piid;
@@ -40,7 +66,7 @@ public class SessionResource {
     }
 
     @PostMapping
-    public ResponseEntity<String> add(@RequestBody @Valid Session session) {
+    public ResponseEntity<String> create(@RequestBody @Valid Session session) {
         String piid;
         Session sessionAdded;
 
@@ -67,11 +93,14 @@ public class SessionResource {
 
     @PutMapping(value = "/update")
     public ResponseEntity<String> update(@RequestBody Session session) {
+        String piid;
 
         if(session == null)
             return ResponseEntity.noContent().build();
 
         if (this.commonService.isPI(request)) {
+            piid = this.commonService.getCurrrentUserId(request);
+            session.setPiId(piid);
             sessionDao.save(session);
             return ResponseEntity.status(HttpStatus.SC_ACCEPTED).body("Update session (" + session.getId() + ")");
         }
