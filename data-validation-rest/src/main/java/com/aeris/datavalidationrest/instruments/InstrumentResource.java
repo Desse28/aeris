@@ -47,12 +47,6 @@ public class InstrumentResource {
         return ResponseEntity.status(HttpStatus.SC_FORBIDDEN).body(instruments);
     }
 
-    @GetMapping(value = "/{uuid}")
-    public Instrument findByUuid(@PathVariable String uuid) {
-        Instrument instrument = instrumentDao.findByUuid(uuid);
-        return instrument;
-    }
-
     @GetMapping("/{parameter_name}/{uuid}")
     public ResponseEntity<List<String>> getParameterData(@ApiParam(value = "Air Temp")@PathVariable @Valid String parameter_name,
                                    @ApiParam(value = "91440f71-9c3e-5d31-befc-2729873ce581") @PathVariable String uuid ) {
@@ -104,14 +98,14 @@ public class InstrumentResource {
     }
 
     @DeleteMapping(value = "/{id}")
-    public  ResponseEntity<String> delete(@PathVariable Instrument instrument) {
+    public  ResponseEntity<String> delete(@PathVariable String id) {
 
-        if(instrument == null)
+        if(id == null)
             return ResponseEntity.noContent().build();
 
         if (this.commonService.isAdmin(request)) {
-            instrumentDao.delete(instrument);
-            return ResponseEntity.status(HttpStatus.SC_OK).body("Update");
+            instrumentDao.deleteById(id);
+            return ResponseEntity.status(HttpStatus.SC_OK).body("Delete instrument");
         }
 
         return ResponseEntity.status(HttpStatus.SC_FORBIDDEN).body("Error Message");

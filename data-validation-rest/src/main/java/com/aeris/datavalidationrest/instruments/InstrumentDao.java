@@ -11,4 +11,6 @@ public interface InstrumentDao extends MongoRepository<Instrument, String>  {
     Instrument findByUuid(@PathVariable String uuid);
 
     List<Instrument> findByResponsibleIdContains(@PathVariable String responsibleId);
+
+    void deleteById(@PathVariable String id);
 }
