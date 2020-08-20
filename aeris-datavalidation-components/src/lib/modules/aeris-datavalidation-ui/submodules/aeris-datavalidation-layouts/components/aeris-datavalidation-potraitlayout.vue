@@ -2,9 +2,9 @@
   <div>
     <v-row :justify="justify">
       <v-col
-          cols="12"
           :class="padding"
           v-for="i in nbrChildElement" :key="i"
+          :cols="cols[i-1]"
       >
         <slot :name="'portrait'+ i"></slot>
       </v-col>
@@ -26,6 +26,10 @@ export default {
     padding : {
       type : String,
       default : "pa-8"
+    },
+    cols : {
+      type : Array,
+      default : () => [12]
     },
   },
   data() {

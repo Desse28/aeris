@@ -4,6 +4,7 @@
         padding="pa-8"
         justify="center"
         :nbrChildElement="2"
+        :cols="[12, 12]"
     >
       <template v-slot:portrait1>
         <AerisDatavalidationChart/>
@@ -23,6 +24,7 @@
             padding="pa-8"
             justify="center"
             :nbrChildElement="2"
+            :cols="[12, 12]"
         >
           <template v-slot:portrait1>
             <AerisDatavalidationChart/>
