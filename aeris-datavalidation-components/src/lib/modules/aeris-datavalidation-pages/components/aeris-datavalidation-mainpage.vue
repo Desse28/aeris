@@ -1,6 +1,6 @@
 <template>
   <div>
-    <AerisDataValidationOptions/>
+    <AerisDatavalidationSimpleToolbar/>
     <AerisDatavalidationPortraitLayaout
         padding="pa-8"
         justify="center"
@@ -44,8 +44,8 @@
 <script>
 import {
   AerisDatavalidationChart,
-  AerisDataValidationOptions,
   AerisDatavalidationSelection,
+  AerisDatavalidationSimpleToolbar,
   AerisDatavalidationPortraitLayaout,
   AerisDatavalidationLandScapeLayaout,
 } from "./../../aeris-datavalidation-components"
@@ -54,8 +54,8 @@ export default {
   name: "aeris-datavalidation-homepage",
   components: {
     AerisDatavalidationChart,
-    AerisDataValidationOptions,
     AerisDatavalidationSelection,
+    AerisDatavalidationSimpleToolbar,
     AerisDatavalidationPortraitLayaout,
     AerisDatavalidationLandScapeLayaout,
   },
