@@ -1,8 +1,12 @@
 import HelperRegisterModule from "./../../helper-register-module"
 
 import AerisDataValidationMainPage from "./aeris-datavalidation-mainpage";
+import AerisDataValidationHomePage from "./aeris-datavalidation-homepage";
 
-const components = [AerisDataValidationMainPage];
+const components = [
+    AerisDataValidationMainPage,
+    AerisDataValidationHomePage
+];
 
 export default {
     install: (Vue, options) => {
