@@ -6,7 +6,7 @@
         :nbrChildElement="2"
     >
       <template v-slot:portrait1>
-        <h1>Le titre de ma page</h1>
+        <AerisDatavalidationChart/>
       </template>
       <template v-slot:portrait2>
         <AerisDatavalidationSelection/>
@@ -16,16 +16,17 @@
         :nbrChildElement="2"
     >
       <template v-slot:land1>
-        <h1>Le titre de ma page</h1>
+        <AerisDatavalidationChart/>
       </template>
       <template v-slot:land2>
-        <p>Ici les infos de contact</p>
+        <AerisDatavalidationChart/>
       </template>
     </AerisDatavalidationLandScapeLayaout>
   </div>
 </template>
 <script>
 import {
+  AerisDatavalidationChart,
   AerisDatavalidationSelection,
   AerisDatavalidationPortraitLayaout,
   AerisDatavalidationLandScapeLayaout,
@@ -34,6 +35,7 @@ import {
 export default {
   name: "aeris-datavalidation-homepage",
   components: {
+    AerisDatavalidationChart,
     AerisDatavalidationSelection,
     AerisDatavalidationPortraitLayaout,
     AerisDatavalidationLandScapeLayaout,
