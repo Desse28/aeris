@@ -15,6 +15,7 @@
     <AerisDatavalidationLandScapeLayaout
         justify="center"
         padding="pa-8"
+        :cols="[7, 5]"
         :nbrChildElement="2"
     >
       <template v-slot:land1>

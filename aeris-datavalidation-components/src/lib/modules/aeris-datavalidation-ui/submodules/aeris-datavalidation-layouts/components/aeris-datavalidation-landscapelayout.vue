@@ -2,9 +2,10 @@
     <div>
       <v-row :justify="justify">
         <v-col
-            :cols="colSize"
             :class="padding"
-            v-for="i in nbrChildElement" :key="i">
+            v-for="i in nbrChildElement" :key="i"
+            :cols="cols[i-1]"
+        >
           <slot :name="'land'+ i"></slot>
         </v-col>
       </v-row>
@@ -26,6 +27,10 @@ export default {
     padding : {
       type : String,
       default : "pa-8"
+    },
+    cols : {
+      type : Array,
+      default : () => [12]
     },
   },
   beforeMount() {
