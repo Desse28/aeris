@@ -100,7 +100,7 @@
     },
     methods: {
       login : function() {
-        keycloak.login()
+        keycloak.login({ redirectUri: 'http://localhost:8080/data-validation-tool' })
       },
       logout : function() {
         keycloak.logout({ redirectUri: 'http://localhost:8080' })
