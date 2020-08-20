@@ -103,7 +103,7 @@
         keycloak.login()
       },
       logout : function() {
-        keycloak.logout({ redirectUri: 'https://www.aeris-data.fr/' })
+        keycloak.logout({ redirectUri: 'http://localhost:8080' })
       }
     },
   };

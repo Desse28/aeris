@@ -7,7 +7,7 @@ import VueAxios from 'vue-axios'
 import {start_keycloack} from "../../plugins/keycloak.js"
 import app from "./App.vue"
 import common from "./../lib/modules/aeris-datavalidation-common/store/index"
-import catalogue from "./modules/aeris-datavalidation-ui/submodules/catalogue-ground-data"
+import AerisDataValidationMainPage from "../lib/modules/aeris-datavalidation-pages/components/aeris-datavalidation-mainpage"
 import AerisDataValidationChart from "../lib/modules/aeris-datavalidation-blocks/submodules/aeris-datavalidation-charts/components/aeris-datavalidation-chart"
 
 Vue.use(VueAxios, axios);
@@ -29,7 +29,7 @@ const router = new VueRouter({
   routes: [
     {
       path: "/",
-      component: catalogue
+      component: AerisDataValidationMainPage
     },
     {
       path: "/data-validation-tool",
