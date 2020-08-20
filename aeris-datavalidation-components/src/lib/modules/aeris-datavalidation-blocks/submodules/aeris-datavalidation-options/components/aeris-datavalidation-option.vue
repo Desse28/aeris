@@ -13,7 +13,7 @@
             v-bind="attrs"
             v-on="on"
         >
-          Add option(s)
+          Add parameter(s)
         </v-btn>
       </template>
 
