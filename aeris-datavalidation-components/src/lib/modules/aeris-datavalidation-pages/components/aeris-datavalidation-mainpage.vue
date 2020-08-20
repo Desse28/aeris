@@ -1,8 +1,8 @@
 <template>
   <div>
     <AerisDatavalidationPortraitLayaout
-        :padding="padding"
-        :justify="justify"
+        padding="pa-8"
+        justify="center"
         :nbrChildElement="2"
     >
       <template v-slot:portrait1>
@@ -13,12 +13,14 @@
       </template>
     </AerisDatavalidationPortraitLayaout>
     <AerisDatavalidationLandScapeLayaout
+        justify="center"
+        padding="pa-8"
         :nbrChildElement="2"
     >
       <template v-slot:land1>
         <AerisDatavalidationPortraitLayaout
-            :padding="padding"
-            :justify="justify"
+            padding="pa-8"
+            justify="center"
             :nbrChildElement="2"
         >
           <template v-slot:portrait1>
@@ -53,8 +55,6 @@ export default {
   },
   data() {
     return {
-      justify : "center",
-      padding: "pa-8"
     }
   },
 }

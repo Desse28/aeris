@@ -1,9 +1,9 @@
 <template>
     <div>
-      <v-row justify="center">
+      <v-row :justify="justify">
         <v-col
             :cols="colSize"
-            class="pa-8"
+            :class="padding"
             v-for="i in nbrChildElement" :key="i">
           <slot :name="'land'+ i"></slot>
         </v-col>
@@ -18,6 +18,14 @@ export default {
     nbrChildElement : {
       type : Number,
       default : 1
+    },
+    justify : {
+      type : String,
+      default : "center"
+    },
+    padding : {
+      type : String,
+      default : "pa-8"
     },
   },
   beforeMount() {
