@@ -16,7 +16,18 @@
         :nbrChildElement="2"
     >
       <template v-slot:land1>
-        <AerisDatavalidationChart/>
+        <AerisDatavalidationPortraitLayaout
+            :padding="padding"
+            :justify="justify"
+            :nbrChildElement="2"
+        >
+          <template v-slot:portrait1>
+            <AerisDatavalidationChart/>
+          </template>
+          <template v-slot:portrait2>
+            <AerisDatavalidationSelection/>
+          </template>
+        </AerisDatavalidationPortraitLayaout>
       </template>
       <template v-slot:land2>
         <AerisDatavalidationChart/>
