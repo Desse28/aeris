@@ -5,21 +5,24 @@
       tile
   >
     <v-toolbar dense class="d-flex justify-center">
-      <v-btn icon>
-        <v-icon>mdi-magnify</v-icon>
-      </v-btn>
-      <v-btn icon>
-        <v-icon>mdi-heart</v-icon>
-      </v-btn>
-      <v-btn icon>
-        <v-icon>mdi-dots-vertical</v-icon>
-      </v-btn>
+      <AerisDataValidationOptions/>
     </v-toolbar>
   </v-card>
 </template>
 <script>
+import {
+  AerisDataValidationOptions,
+} from "@/lib/modules/aeris-datavalidation-components";
+
 export default {
-  name: "aeris-datavalidation-simpletoolbar"
+  name: "aeris-datavalidation-simpletoolbar",
+  components: {
+    AerisDataValidationOptions
+  },
+  data() {
+    return {
+    }
+  },
 }
 </script>
 
