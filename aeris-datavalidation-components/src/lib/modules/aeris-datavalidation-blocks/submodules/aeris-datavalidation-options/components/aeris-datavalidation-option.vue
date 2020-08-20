@@ -26,11 +26,11 @@
             </v-list>
             <v-divider></v-divider>
             <v-list>
-              <v-list-item>
+              <v-list-item v-for="label in optionsLabel" :key="label">
                 <v-list-item-action>
-                  <v-switch v-model="opt1" color="purple"></v-switch>
+                  <v-switch v-model="options" :value="label" color="blue"></v-switch>
                 </v-list-item-action>
-                <v-list-item-title>Parameter(s)</v-list-item-title>
+                <v-list-item-title>{{label}}</v-list-item-title>
               </v-list-item>
             </v-list>
           </v-col>
@@ -44,11 +44,17 @@
             </v-list>
             <v-divider></v-divider>
             <v-list>
-              <v-list-item>
+              <v-list-item  v-for=" (parallelLabel, index) in parallelsLabel" :key="parallelLabel">
                 <v-list-item-action>
-                  <v-switch v-model="mode1" color="purple"></v-switch>
+                  <v-switch
+                      v-model="parallels"
+                      :value="parallelLabel"
+                      color="blue"
+                      :disabled="!options.includes(optionsLabel[index])"
+                  >
+                  </v-switch>
                 </v-list-item-action>
-                <v-list-item-title>Mode1</v-list-item-title>
+                <v-list-item-title>{{parallelLabel}}</v-list-item-title>
               </v-list-item>
             </v-list>
           </v-col>
@@ -62,8 +68,10 @@ export default {
   name: "aeris-datavalidation-options",
   data() {
     return {
-      opt1: false,
-      mode1: true,
+      options: [],
+      parallels: [],
+      optionsLabel: ["options1", "options2", "options3"],
+      parallelsLabel: ["parallel1", "parallel2", "parallel3"],
     }
   },
 }
