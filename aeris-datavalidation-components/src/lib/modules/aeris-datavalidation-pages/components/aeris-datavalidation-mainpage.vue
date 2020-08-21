@@ -18,7 +18,10 @@
             :cols="[12, 12]"
         >
           <template v-slot:portrait1>
-            <AerisDatavalidationChart/>
+            <AerisDatavalidationChart
+                :url="url"
+                :callBack="setCurrentSession"
+            />
           </template>
           <template v-slot:portrait2>
             <AerisDatavalidationSelection/>
@@ -51,11 +54,17 @@ export default {
   },
   data() {
     return {
+      currentSession: null,
       mainChartGridSize : 12,
       parallelChartGridSize : 0,
+      url: "http://localhost:9001/sessions/5f3d06f1f94fdd631a02655c",
     }
   },
   methods : {
+    setCurrentSession : function (session) {
+      this.currentSession = session;
+      console.log("Test current session : ", session);
+    },
     displayParallelChart : function () {
       this.mainChartGridSize = 7;
       this.parallelChartGridSize = 12 - this.mainChartGridSize;

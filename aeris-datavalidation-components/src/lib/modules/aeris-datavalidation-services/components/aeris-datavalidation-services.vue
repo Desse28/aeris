@@ -10,22 +10,13 @@
   export default {
     name: "aeris-datavalidation-services",
     props: {
-      serverUrl : {
+      url : {
         type : String,
         default : ""
       },
-      flagUrl : {
-        type : String,
-        default : ""
+      callBack : {
+        type : Function,
       },
-      groundDataUrl : {
-        type : String,
-        default : ""
-      },
-      dataInfoUrl : {
-        type : String,
-        default : ""
-      }
     },
     data() {
       return {
@@ -35,21 +26,19 @@
     },
     watch: {
       '$store.state.common.authenticated': function() {
-        if( this.$store.state.common.authenticated ) {
-          //this.refresh();
+        if(this.$store.state.common.authenticated ) {
+          this.refresh();
         }
       }
     },
     methods: {
       refresh() {
-        this.getFlags();
-        this.getDataInfo();
-        this.getGroundData();
+        this.getData();
       },
-      getFlags () {
-        api.getFlagData(this.flagUrl)
+      getData () {
+        api.getData(this.url)
             .then(response => {
-              this.$emit("metadata", response.data, "flags")
+              this.callBack(response.data)
             })
             .catch(error => {
               console.log("Test get flags (Error) : ")
@@ -58,26 +47,6 @@
             })
             .finally(() => this.loading = false)
       },
-      getGroundData () {
-        api.getFlagData(this.groundDataUrl)
-            .then(response => {
-              this.$emit("metadata", response.data, "data");
-            })
-            .catch(error => {
-              this.error = "Failed to load groundData" + error
-            })
-            .finally(() => this.loading = false)
-      },
-      getDataInfo() {
-        api.getFlagData(this.dataInfoUrl)
-            .then(response => {
-              this.$emit("metadata", response.data, "dataInfo");
-            })
-            .catch(error => {
-              this.error = "Failed to load groundData" + error
-            })
-            .finally(() => this.loading = false)
-      }
     },
   }
 </script>

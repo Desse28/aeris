@@ -1,11 +1,8 @@
 <template>
   <div>
     <AerisDataValidationServices
-        serverUrl="http://localhost:9001"
-        flagUrl="/flags"
-        groundDataUrl="/ground-data"
-        dataInfoUrl="/data-information"
-        @metadata="updateMetadata"
+        :url="url"
+        :callBack="callBack"
     >
       <v-row justify="center">
         <v-col cols="12">
@@ -37,6 +34,15 @@
 
   export default {
     name: "aeris-datavalidation-chart",
+    props: {
+      url : {
+        type : String,
+        default : ""
+      },
+      callBack : {
+        type : Function,
+      },
+    },
     components: {
       Plotly,
       AerisDataValidationServices
