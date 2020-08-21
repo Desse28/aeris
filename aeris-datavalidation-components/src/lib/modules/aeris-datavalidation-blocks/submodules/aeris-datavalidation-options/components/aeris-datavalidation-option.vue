@@ -34,7 +34,7 @@
             <v-list>
               <v-list-item>
                 <v-list-item-content>
-                  <v-list-item-title>Parallel Mode</v-list-item-title>
+                  <v-list-item-title>Parallels</v-list-item-title>
                 </v-list-item-content>
               </v-list-item>
             </v-list>
@@ -100,8 +100,8 @@ export default {
 
       if ( -1 < targetParallelIndex) {
         this.parallels.splice(targetParallelIndex, 1);
+        this.removeParallel(this.parallels)
       }
-      console.log("Test disabledParallel : ",  this.parallels)
     }
   },
   watch: {

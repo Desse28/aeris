@@ -1,11 +1,14 @@
 <template>
   <div>
-    <AerisDatavalidationSimpleToolbar/>
+    <AerisDatavalidationSimpleToolbar
+        :displayParallelChart="displayParallelChart"
+        :hideParallelChart="hideParallelChart"
+    />
     <AerisDatavalidationPortraitLayaout
         padding="pa-8"
         justify="center"
         :nbrChildElement="2"
-        :cols="[12, 12]"
+        :cols="[mainChartGridSize, mainChartGridSize]"
     >
       <template v-slot:portrait1>
         <AerisDatavalidationChart/>
@@ -61,6 +64,18 @@ export default {
   },
   data() {
     return {
+      mainChartGridSize : 12,
+      parallelChartGridSize : 0,
+    }
+  },
+  methods : {
+    displayParallelChart : function () {
+      this.mainChartGridSize = 7;
+      this.parallelChartGridSize = 12 - this.mainChartGridSize;
+    },
+    hideParallelChart : function () {
+      this.mainChartGridSize = 12;
+      this.parallelChartGridSize = 12 - this.mainChartGridSize;
     }
   },
 }

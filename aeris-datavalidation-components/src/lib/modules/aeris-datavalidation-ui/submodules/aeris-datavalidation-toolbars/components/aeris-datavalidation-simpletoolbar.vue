@@ -23,16 +23,31 @@ import {
 
 export default {
   name: "aeris-datavalidation-simpletoolbar",
+  props: {
+    displayParallelChart : {
+      type : Function,
+    },
+    hideParallelChart : {
+      type : Function,
+    },
+  },
   components: {
     AerisDataValidationOptions
+  },
+  mounted() {
+    this.setParallelsArray()
   },
   data() {
     return {
       parametersLabel: ["options1", "options2", "options3"],
-      parallelsLabel: ["parallel1", "parallel2", "parallel3"],
+      parallelsLabel: [],
     }
   },
   methods : {
+    setParallelsArray : function () {
+      let len = this.parametersLabel.length
+      this.parallelsLabel = Array(len).fill().map((_, i) => 'parallel' + (i + 1));
+    },
     addNewParameter : function (newOptions) {
       let lastIndex = newOptions.length - 1;
       let newParameter = newOptions[lastIndex];
@@ -49,13 +64,26 @@ export default {
       let lastIndex = newParallels.length - 1
       let newParallelIndex = newParallels[lastIndex].split("parallel")[1]
       let targetParameter = this.parametersLabel[newParallelIndex-1]
+
+      if(1 <= newParallels.length)
+        this.displayParallelChart()
+
+      console.log("Test (newParallels.len) : ", newParallels.length)
       console.log("Test (addNewParallel) targetParameter : ", targetParameter)
     },
     removeParallel : function (newParallels, oldParrales) {
-      let oldParallelsInterNewParallels = oldParrales.filter(value => !newParallels.includes(value))
-      let deletedIndex = oldParallelsInterNewParallels[0].split("parallel")[1]
-      let targetParameter = this.parametersLabel[deletedIndex-1]
-      console.log("Test (removeParallel) targetParameter : ", targetParameter)
+      let deletedIndex;
+      let targetParameter;
+      let oldParallelsInterNewParallels;
+
+      if(newParallels.length === 0) {
+        this.hideParallelChart()
+      } else if(newParallels && oldParrales) {
+        oldParallelsInterNewParallels = oldParrales.filter(value => !newParallels.includes(value))
+        deletedIndex = oldParallelsInterNewParallels[0].split("parallel")[1]
+        targetParameter = this.parametersLabel[deletedIndex-1]
+        console.log("Test (removeParallel) targetParameter : ", targetParameter)
+      }
     },
   },
 }
