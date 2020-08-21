@@ -7,13 +7,10 @@
         offset-x
     >
       <template v-slot:activator="{ on, attrs }">
-
         <v-btn class="ma-2" tile outlined color="blue" v-on="on" v-bind="attrs">
           <v-icon left>mdi-plus-circle-outline</v-icon> Add parameter(s)
         </v-btn>
-
       </template>
-
       <v-card>
         <v-row justify="center">
           <v-col cols="6">
@@ -26,9 +23,9 @@
             </v-list>
             <v-divider></v-divider>
             <v-list>
-              <v-list-item v-for="label in optionsLabel" :key="label">
+              <v-list-item v-for="label in parametersLabel" :key="label">
                 <v-list-item-action>
-                  <v-switch v-model="options" :value="label" color="blue"></v-switch>
+                  <v-switch v-model="parameters" :value="label" color="blue"></v-switch>
                 </v-list-item-action>
                 <v-list-item-title>{{label}}</v-list-item-title>
               </v-list-item>
@@ -50,7 +47,7 @@
                       v-model="parallels"
                       :value="parallelLabel"
                       color="blue"
-                      :disabled="!options.includes(optionsLabel[index])"
+                      :disabled="!parameters.includes(parametersLabel[index])"
                   >
                   </v-switch>
                 </v-list-item-action>
@@ -66,14 +63,49 @@
 <script>
 export default {
   name: "aeris-datavalidation-options",
+  props: {
+    parametersLabel : {
+      type : Array,
+      default : () => []
+    },
+    parallelsLabel : {
+      type : Array,
+      default : () => []
+    },
+    addNewParameter : {
+      type : Function
+    },
+    removeParameter : {
+      type : Function
+    },
+    addNewParallel : {
+      type : Function
+    },
+    removeParallel : {
+      type : Function
+    },
+  },
   data() {
     return {
-      options: [],
+      parameters: [],
       parallels: [],
-      optionsLabel: ["options1", "options2", "options3"],
-      parallelsLabel: ["parallel1", "parallel2", "parallel3"],
     }
   },
+  watch: {
+    parameters : function (newOptions, oldOptons) {
+      if(oldOptons.length < newOptions.length)
+        this.addNewParameter(newOptions)
+      else if (newOptions.length < oldOptons.length)
+        this.removeParameter(newOptions, oldOptons)
+    },
+    parallels : function (newParalles, oldParalles) {
+      if(oldParalles.length < newParalles.length)
+        this.addNewParallel(newParalles)
+      else if ( newParalles.length < oldParalles.length )
+        this.removeParallel(newParalles, oldParalles)
+    },
+  },
+
 }
 </script>
 
