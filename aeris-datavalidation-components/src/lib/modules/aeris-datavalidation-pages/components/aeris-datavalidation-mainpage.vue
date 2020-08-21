@@ -4,23 +4,10 @@
         :displayParallelChart="displayParallelChart"
         :hideParallelChart="hideParallelChart"
     />
-    <AerisDatavalidationPortraitLayaout
-        padding="pa-8"
-        justify="center"
-        :nbrChildElement="2"
-        :cols="[mainChartGridSize, mainChartGridSize]"
-    >
-      <template v-slot:portrait1>
-        <AerisDatavalidationChart/>
-      </template>
-      <template v-slot:portrait2>
-        <AerisDatavalidationSelection/>
-      </template>
-    </AerisDatavalidationPortraitLayaout>
     <AerisDatavalidationLandScapeLayaout
         justify="center"
         padding="pa-8"
-        :cols="[7, 5]"
+        :cols="[mainChartGridSize, parallelChartGridSize]"
         :nbrChildElement="2"
     >
       <template v-slot:land1>
@@ -39,7 +26,7 @@
         </AerisDatavalidationPortraitLayaout>
       </template>
       <template v-slot:land2>
-        <AerisDatavalidationChart/>
+        <AerisDatavalidationChart v-if="0 < parallelChartGridSize"/>
       </template>
     </AerisDatavalidationLandScapeLayaout>
   </div>
