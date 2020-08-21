@@ -47,19 +47,15 @@ export default {
     },
     addNewParallel : function(newParallels) {
       let lastIndex = newParallels.length - 1
-      let newParallel = newParallels[lastIndex]
-      console.log("Added new parallel, value : ", newParallel)
+      let newParallelIndex = newParallels[lastIndex].split("parallel")[1]
+      let targetParameter = this.parametersLabel[newParallelIndex-1]
+      console.log("Test (addNewParallel) targetParameter : ", targetParameter)
     },
     removeParallel : function (newParallels, oldParrales) {
       let oldParallelsInterNewParallels = oldParrales.filter(value => !newParallels.includes(value))
       let deletedIndex = oldParallelsInterNewParallels[0].split("parallel")[1]
-      let targetParameter = this.parametersLabel[deletedIndex-1];
-
-      let deletedElement
-      let elementDeletedIndex = oldParrales.indexOf(deletedElement)
-      console.log("Test (removeParallel) elementDeletedIndex : ", deletedIndex)
-      console.log("Test targetParameter : ", targetParameter)
-      console.log("Test (removeParallel) elementDeletedIndex : ", elementDeletedIndex)
+      let targetParameter = this.parametersLabel[deletedIndex-1]
+      console.log("Test (removeParallel) targetParameter : ", targetParameter)
     },
   },
 }

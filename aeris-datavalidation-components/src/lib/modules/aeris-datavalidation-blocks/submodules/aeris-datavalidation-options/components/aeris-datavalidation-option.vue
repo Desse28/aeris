@@ -91,12 +91,28 @@ export default {
       parallels: [],
     }
   },
+  methods : {
+    disabledParallel : function (newOptions, oldOptons) {
+      let oldOptionsInterNewOptions = oldOptons.filter(value => !newOptions.includes(value))
+      let deletedElement = oldOptionsInterNewOptions[0]
+      let elementDeletedIndex = this.parametersLabel.indexOf(deletedElement)
+      let targetParallel = this.parallelsLabel[elementDeletedIndex];
+      const targetParallelIndex = this.parallels.indexOf(targetParallel);
+
+      if ( -1 < targetParallelIndex) {
+        this.parallels.splice(targetParallelIndex, 1);
+      }
+      console.log("Test disabledParallel : ",  this.parallels)
+    }
+  },
   watch: {
     parameters : function (newOptions, oldOptons) {
-      if(oldOptons.length < newOptions.length)
+      if(oldOptons.length < newOptions.length) {
         this.addNewParameter(newOptions)
-      else if (newOptions.length < oldOptons.length)
+      } else if (newOptions.length < oldOptons.length) {
+        this.disabledParallel(newOptions, oldOptons)
         this.removeParameter(newOptions, oldOptons)
+      }
     },
     parallels : function (newParalles, oldParalles) {
       if(oldParalles.length < newParalles.length)
