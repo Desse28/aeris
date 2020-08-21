@@ -12,6 +12,7 @@ import javax.validation.Valid;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/sessions")
@@ -26,6 +27,18 @@ public class SessionResource {
     private CommonService commonService;
 
     private static final String NOT_ALLOWED_TO_CREATE_SESSION = "You are not allowed to create a session";
+
+    @GetMapping(value = "/{id}")
+    public ResponseEntity<Optional<Session>> findById(@PathVariable String id) {
+        Optional<Session> session = null;
+
+        if ( this.commonService.isPI(request)) {
+            session = this.sessionDao.findById(id);
+            return ResponseEntity.status(HttpStatus.SC_OK).body(session);
+        }
+
+        return ResponseEntity.status(HttpStatus.SC_FORBIDDEN).body(session);
+    }
 
     @GetMapping(value = "/{piid}/{state}")
     public ResponseEntity<List<Session>> findSessionsByPiIdAndAndState(@PathVariable String piid, @PathVariable boolean state) {
