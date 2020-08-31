@@ -2,6 +2,7 @@ package com.aeris.datavalidationrest.instruments;
 
 import com.aeris.datavalidationrest.auth.LoginResource;
 import com.aeris.datavalidationrest.common.CommonService;
+import com.aeris.datavalidationrest.sessions.Session;
 import io.swagger.annotations.ApiParam;
 import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
@@ -16,6 +17,8 @@ import javax.validation.Valid;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 @CrossOrigin
 @RestController
@@ -34,6 +37,18 @@ public class InstrumentResource {
 
     Logger logger = LoggerFactory.getLogger(LoginResource.class);
 
+    @GetMapping(value = "/{id}")
+    public ResponseEntity<Optional<Instrument>> findById(@PathVariable String id) {
+        Optional<Instrument> instrument = null;
+
+        if ( this.commonService.isPI(request)) {
+            instrument = this.instrumentDao.findById(id);
+            return ResponseEntity.status(HttpStatus.SC_OK).body(instrument);
+        }
+
+        return ResponseEntity.status(HttpStatus.SC_FORBIDDEN).body(instrument);
+    }
+
     @GetMapping
     public ResponseEntity<List<Instrument>> findAll() {
         String responsibleId;
@@ -49,9 +64,9 @@ public class InstrumentResource {
     }
 
     @GetMapping("/{parameter_name}/{uuid}")
-    public ResponseEntity<List<String>> getParameterData(@ApiParam(value = "Air Temp")@PathVariable @Valid String parameter_name,
-                                   @ApiParam(value = "91440f71-9c3e-5d31-befc-2729873ce581") @PathVariable String uuid ) {
-        List<String> parameterData = new ArrayList<>();
+    public ResponseEntity<List<Map<String, String>>> getParameterData(@ApiParam(value = "Air Temp")@PathVariable @Valid String parameter_name,
+                                                                      @ApiParam(value = "91440f71-9c3e-5d31-befc-2729873ce581") @PathVariable String uuid ) {
+        List<Map<String, String>> parameterData = new ArrayList<>();
 
         if (this.commonService.isAdmin(request) || this.commonService.isPI(request)) {
             parameterData = this.instrumentService.getParameterData(parameter_name, uuid);

@@ -8,6 +8,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.io.Reader;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class InstrumentService {
@@ -20,7 +21,7 @@ public class InstrumentService {
     public static final String SEDOO_BASED_DATA_URL = "https://sedoo.aeris-data.fr/actris-datacenter-rest/rest/quicklook/download?uuid=";
 
 
-    public List<String> getParameterData(String parameterName, String uuid) {
+    public List<Map<String, String>> getParameterData(String parameterName, String uuid) {
         Reader reader;
         //List<Parameter> parameters;
         String url = SEDOO_BASED_DATA_URL + uuid + "&folder=" + FOLDER;
@@ -37,20 +38,33 @@ public class InstrumentService {
         return parseData(parameterName, data);
     }
 
-    public List<String> parseData(String parameterName, String data) {
-        int columnIndex;
-        List<String> result = new ArrayList<>();
+    public List<Map<String, String>> parseData(String parameterName, String data) {
+        String[] currentLine;
+        String dateName = "Date_Time";
+        Map<String, String> currentData;
+        String targetColumn, dateColumn;
+        int targetColumnIndex, dateColumnIndex;
         String[] dataLines = data.split("\n");
-        List<String> columns = Arrays.asList(dataLines[0].split(","));
+        String dateColumnName = "\"" + dateName + "\"";
+        List<Map<String, String>> result = new ArrayList<>();
+        String targetColumnName = "\"" + parameterName + "\"";
+        List<String> columns = Arrays.asList(dataLines[0].split(",")).stream().map(String::trim).collect(Collectors.toList());
 
-        if (columns.contains("\"" + parameterName + "\"")) {
-            columnIndex = columns.indexOf("\"" + parameterName + "\"");
-
+        if (columns.contains(targetColumnName)) {
+            dateColumnIndex = columns.indexOf(dateColumnName);
+            targetColumnIndex = columns.indexOf(targetColumnName);
             for (String line : dataLines) {
-                result.add(line.split(",")[columnIndex]);
+                currentData = new HashMap<>();
+                currentLine = line.split(",");
+                dateColumn =  currentLine[dateColumnIndex];
+                if(!dateColumn.contains(dateName)) {
+                    targetColumn = currentLine[targetColumnIndex].replace("\r","");
+                    currentData.put(dateName, dateColumn);
+                    currentData.put(parameterName, targetColumn);
+                    result.add(currentData);
+                }
             }
         }
-
         return result;
     }
 

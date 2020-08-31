@@ -29,19 +29,26 @@
         if(this.$store.state.common.authenticated ) {
           this.refresh();
         }
+      },
+      url : function () {
+        if(this.$store.state.common.authenticated ) {
+          this.refresh();
+        }
       }
     },
     methods: {
       refresh() {
-        this.getData();
+        if(this.url !== "")
+          this.getData();
       },
-      getData () {
+      getData() {
         api.getData(this.url)
             .then(response => {
-              this.callBack(response.data)
+              if(this.callBack)
+                this.callBack(response.data)
             })
             .catch(error => {
-              console.log("Test get flags (Error) : ")
+              console.log("Test getData (Error) : ")
               console.log(error)
               this.error = "Failed to load groundData" + error
             })
