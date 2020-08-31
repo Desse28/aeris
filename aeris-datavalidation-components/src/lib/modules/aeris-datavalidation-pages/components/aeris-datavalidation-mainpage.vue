@@ -70,21 +70,21 @@ const baseUrl = "http://localhost:9001/";
         AerisDatavalidationLandScapeLayaout,
       },
       data() {
-        return {
-        url : "",
-        uuid : "",
-        parallelsLabel: [],
-        parametersLabel : [],
-        firstChartParameters : [],
-        secondChartParameters : [],
-        mainChartGridSize : 12,
-        currentSession: null,
-        currentInstrument : null,
-        parallelChartGridSize : 0,
-        callBack : this.setCurrentSession,
-        currentUrl : baseUrl + "sessions/5f3d06f1f94fdd631a02655c",
-      }
-    },
+          return {
+          url : "",
+          uuid : "",
+          parallelsLabel: [],
+          parametersLabel : [],
+          firstChartParameters : [],
+          secondChartParameters : [],
+          mainChartGridSize : 12,
+          currentSession: null,
+          currentInstrument : null,
+          parallelChartGridSize : 0,
+          callBack : this.setCurrentSession,
+          currentUrl : baseUrl + "sessions/5f3d06f1f94fdd631a02655c",
+        }
+      },
       watch: {
         secondChartParameters : function() {
           if(this.secondChartParameters.length === 0)
@@ -114,8 +114,9 @@ const baseUrl = "http://localhost:9001/";
         addNewParameter : function (newOptions) {
           let lastIndex = newOptions.length - 1
           let newParameter = newOptions[lastIndex]
-          console.log("Test addNewParameter : ")
+
           if(newParameter) {
+            console.log("Test addNewParameter (after) : ", this.firstChartParameters)
             this.firstChartParameters = [...this.firstChartParameters, newParameter]
             this.secondChartParameters = this.secondChartParameters.filter(function(e) { return e !== newParameter })
           }
@@ -123,6 +124,7 @@ const baseUrl = "http://localhost:9001/";
         removeParameter : function (newOptions, oldOptons) {
           let oldOptionsInterNewOptions = oldOptons.filter(value => !newOptions.includes(value))
           let deletedElement = oldOptons.length === 0 ? newOptions : oldOptionsInterNewOptions[0]
+          console.log("Test removeParameter")
           if( deletedElement ) {
             this.firstChartParameters = this.firstChartParameters.filter(function(e) { return e !== deletedElement  })
             if(oldOptons.length !== 0)
@@ -143,11 +145,9 @@ const baseUrl = "http://localhost:9001/";
           }
         },
         removeParallel : function (newParallels, oldParrales) {
-          let deletedIndex;
-          let targetParameter;
-          let oldParallelsInterNewParallels;
-
-          console.log("Test removeParallel : ")
+          let deletedIndex
+          let targetParameter
+          let oldParallelsInterNewParallels
 
           if(newParallels && oldParrales) {
             oldParallelsInterNewParallels = oldParrales.filter(value => !newParallels.includes(value))
@@ -165,8 +165,8 @@ const baseUrl = "http://localhost:9001/";
           this.parallelChartGridSize = 12 - this.mainChartGridSize
         },
         hideParallelChart : function () {
-          this.mainChartGridSize = 12;
-          this.parallelChartGridSize = 12 - this.mainChartGridSize;
+          this.mainChartGridSize = 12
+          this.parallelChartGridSize = 12 - this.mainChartGridSize
         },
   },
 }

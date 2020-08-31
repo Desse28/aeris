@@ -89,7 +89,6 @@
         }
       },
       currentData : function(newData) {
-        console.log(newData)
         this.refreshChart(newData)
         this.setLayout()
       },
@@ -118,9 +117,11 @@
         let oldParametersInterNewParameters = oldsParameters.filter(value => !newParameters.includes(value))
         let parameterKey = oldParametersInterNewParameters[0]
         const targetParameterIndex = this.data.findIndex(element => element.name === parameterKey )
-
+        console.log("Test removeParameter (before) : ", this.data)
         if( -1 < targetParameterIndex )
-          this.data = this.data.slice(0, targetParameterIndex)
+          this.data.splice(targetParameterIndex, 1)
+          //this.data = this.data.splice(targetParameterIndex, 1)
+        console.log("Test removeParameter (after) : ", this.data)
 
       },
       initModeBar : function() {
