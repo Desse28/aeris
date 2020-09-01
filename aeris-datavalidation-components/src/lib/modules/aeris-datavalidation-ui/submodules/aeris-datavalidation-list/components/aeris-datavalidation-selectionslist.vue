@@ -11,37 +11,23 @@
       <v-subheader>Selections</v-subheader>
 
       <v-list-item-group
-          v-model="settings"
-          multiple
+          v-model="item"
+          color="primary"
       >
-        <v-list-item>
+
+        <v-list-item
+            v-for="(item, i) in items"
+            :key="i"
+        >
           <template v-slot:default="{ active }">
-            <v-list-item-action>
-              <v-checkbox
-                  :input-value="active"
-                  color="primary"
-              ></v-checkbox>
-            </v-list-item-action>
+            <v-checkbox
+                :input-value="active"
+                color="primary"
+            ></v-checkbox>
 
             <v-list-item-content>
-              <v-list-item-title>Selection1</v-list-item-title>
-              <v-list-item-subtitle>last update : 01/09/2020</v-list-item-subtitle>
-            </v-list-item-content>
-          </template>
-        </v-list-item>
-
-        <v-list-item>
-          <template v-slot:default="{ active }">
-            <v-list-item-action>
-              <v-checkbox
-                  :input-value="active"
-                  color="primary"
-              ></v-checkbox>
-            </v-list-item-action>
-
-            <v-list-item-content>
-              <v-list-item-title>Selection2</v-list-item-title>
-              <v-list-item-subtitle>last update : 01/09/2020</v-list-item-subtitle>
+              <v-list-item-title>{{item.text}}</v-list-item-title>
+              <v-list-item-subtitle>{{item.lastUpdate}}</v-list-item-subtitle>
             </v-list-item-content>
           </template>
         </v-list-item>
@@ -49,13 +35,22 @@
       </v-list-item-group>
     </v-list>
   </v-card>
+
 </template>
 <script>
 export default {
   name: "aeris-datavalidation-selectionslist",
-  data: () => ({
-    settings: [],
-  }),
+  data () {
+    return {
+      settings: [],
+      item: 1,
+      items: [
+        { text: 'Selection1', lastUpdate : '01/09/2020' },
+        { text: 'Selection2', lastUpdate : '01/08/2020' },
+        { text: 'Selection3', lastUpdate : '01/07/2020' },
+      ],
+    }
+  },
 }
 </script>
 

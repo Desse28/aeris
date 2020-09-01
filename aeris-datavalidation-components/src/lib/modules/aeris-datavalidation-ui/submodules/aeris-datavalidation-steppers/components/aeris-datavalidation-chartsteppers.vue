@@ -54,6 +54,13 @@
                 />
               </template>
             </AerisDatavalidationLandScapeLayaout>
+            <v-col cols="12">
+              <div class="my-2">
+                <v-btn >
+                  submit
+                </v-btn>
+              </div>
+            </v-col>
           </v-card>
         </div>
       </v-stepper-content>
@@ -63,12 +70,10 @@
 </template>
 
 <script>
+import AerisDatavalidationLandScapeLayaout from "./../../aeris-datavalidation-layouts/components/aeris-datavalidation-landscapelayout"
+import AerisDatavalidationSelectionsList from "./../../aeris-datavalidation-list/components/aeris-datavalidation-selectionslist"
 import AerisDatavalidationSelectionform from "./../../aeris-datavalidation-form/components/aeris-datavalidation-selectionform"
 
-import {
-  AerisDatavalidationSelectionsList,
-    AerisDatavalidationLandScapeLayaout
-} from "./../../../../aeris-datavalidation-components"
 export default {
   name: "aeris-datavalidation-chartsteppers",
   components: {
