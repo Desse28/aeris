@@ -43,7 +43,7 @@
                 :nbrChildElement="2"
             >
               <template v-slot:land1>
-                <AerisDatavalidationSelectionsList/>
+                <AerisDatavalidationSelectionsTable/>
               </template>
               <template v-slot:land2>
                 <AerisDatavalidationSelectionform
@@ -70,15 +70,15 @@
 </template>
 
 <script>
+import AerisDatavalidationSelectionsTable from "./../../aeris-datavalidation-tables/components/aeris-datavalidation-selectionstable"
 import AerisDatavalidationLandScapeLayaout from "./../../aeris-datavalidation-layouts/components/aeris-datavalidation-landscapelayout"
-import AerisDatavalidationSelectionsList from "./../../aeris-datavalidation-list/components/aeris-datavalidation-selectionslist"
 import AerisDatavalidationSelectionform from "./../../aeris-datavalidation-form/components/aeris-datavalidation-selectionform"
 
 export default {
   name: "aeris-datavalidation-chartsteppers",
   components: {
     AerisDatavalidationSelectionform,
-    AerisDatavalidationSelectionsList,
+    AerisDatavalidationSelectionsTable,
     AerisDatavalidationLandScapeLayaout,
 
   },
