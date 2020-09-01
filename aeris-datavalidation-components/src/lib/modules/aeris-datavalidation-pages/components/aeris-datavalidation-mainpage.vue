@@ -28,12 +28,18 @@
             >
                 <AerisDatavalidationChart
                     :uuid="uuid"
+                    :setCurrentData="setCurrentData"
                     :parameters="firstChartParameters"
+                    :selectionHandler="selectionHandler"
                 />
             </AerisDataValidationServices>
           </template>
           <template v-slot:portrait2>
-            <AerisDatavalidationSelection/>
+            <AerisDatavalidationSelection
+                :selection="selection"
+                :currentData="firtsChartData"
+                :qualityFlags="qualityFlags"
+            />
           </template>
         </AerisDatavalidationPortraitLayaout>
       </template>
@@ -70,9 +76,12 @@ const baseUrl = "http://localhost:9001/";
         AerisDatavalidationLandScapeLayaout,
       },
       data() {
-          return {
+        return {
           url : "",
           uuid : "",
+          selection : null,
+          qualityFlags : [],
+          firtsChartData : [],
           parallelsLabel: [],
           parametersLabel : [],
           firstChartParameters : [],
@@ -94,6 +103,7 @@ const baseUrl = "http://localhost:9001/";
       methods : {
         setCurrentSession : function (session) {
           let linkedParameters = session['linkedParameters']
+
           this.currentSession = session
           this.parametersLabel = Object.keys(linkedParameters).map((key) => linkedParameters[key].name)
           this.firstChartParameters = [...this.firstChartParameters, session['mainParameter'].name]
@@ -104,10 +114,12 @@ const baseUrl = "http://localhost:9001/";
         },
         setParallelsArray : function (parametersLabel) {
           let len = parametersLabel.length
-          this.parallelsLabel = Array(len).fill().map((_, i) => 'parallel' + (i + 1));
+          this.parallelsLabel = Array(len).fill().map((_, i) => 'parallel' + (i + 1))
         },
         setCurrentInstrument : function (instrument) {
-          this.currentSession = instrument;
+          let flags = instrument.flags
+          this.currentSession = instrument
+          this.qualityFlags =  Object.keys(flags).map((key) => flags[key].label)
           this.uuid = instrument.uuid;
           console.log("Test currentInstrument : ", instrument)
         },
@@ -116,7 +128,6 @@ const baseUrl = "http://localhost:9001/";
           let newParameter = newOptions[lastIndex]
 
           if(newParameter) {
-            console.log("Test addNewParameter (after) : ", this.firstChartParameters)
             this.firstChartParameters = [...this.firstChartParameters, newParameter]
             this.secondChartParameters = this.secondChartParameters.filter(function(e) { return e !== newParameter })
           }
@@ -124,7 +135,7 @@ const baseUrl = "http://localhost:9001/";
         removeParameter : function (newOptions, oldOptons) {
           let oldOptionsInterNewOptions = oldOptons.filter(value => !newOptions.includes(value))
           let deletedElement = oldOptons.length === 0 ? newOptions : oldOptionsInterNewOptions[0]
-          console.log("Test removeParameter")
+
           if( deletedElement ) {
             this.firstChartParameters = this.firstChartParameters.filter(function(e) { return e !== deletedElement  })
             if(oldOptons.length !== 0)
@@ -168,6 +179,14 @@ const baseUrl = "http://localhost:9001/";
           this.mainChartGridSize = 12
           this.parallelChartGridSize = 12 - this.mainChartGridSize
         },
+        setCurrentData : function (currentData) {
+          this.firtsChartData = currentData
+        },
+        selectionHandler : function(selection) {
+          if(selection) {
+            this.selection = selection
+          }
+        }
   },
 }
 </script>

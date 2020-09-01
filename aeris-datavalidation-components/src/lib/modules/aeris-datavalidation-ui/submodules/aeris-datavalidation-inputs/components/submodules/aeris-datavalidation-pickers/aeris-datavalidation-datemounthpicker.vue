@@ -35,6 +35,10 @@ export default {
     },
     setCurrentDate : {
       type : Function
+    },
+    currentDate : {
+      type : Date,
+      default : null
     }
   },
   data() {
@@ -46,6 +50,9 @@ export default {
   watch: {
     date(val) {
       this.setCurrentDate(val)
+    },
+    currentDate : function( currentDate) {
+      this.date = currentDate
     }
   }
 }

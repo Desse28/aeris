@@ -42,7 +42,15 @@
       parameters: {
         type : Array,
         default : () => [],
-      }
+      },
+      setCurrentData : {
+        type : Function,
+        default : () => null,
+      },
+      selectionHandler : {
+        type : Function,
+        default : () => null,
+      },
     },
     components: {
       Plotly,
@@ -50,11 +58,6 @@
     },
     data() {
       return {
-        data:[/*{
-          x: [1,2,3,4],
-          y: [10,15,13,17],
-          type:"scatter"
-        }*/],
         currentData: [],
         currentUuid : "",
         currentUrl : "",
@@ -63,9 +66,14 @@
         },
         flags: [],
         dataInfo: {},
-        chartId : "mainChart",
         modeBarButtons: [],
+        chartId : "mainChart",
         currentParameters : [],
+        data: [/*{
+          x: [1,2,3,4],
+          y: [10,15,13,17],
+          type:"scatter"
+        }*/],
         callBack : this.addNewParameterData
       }
     },
@@ -98,6 +106,7 @@
         this.currentUuid = this.uuid
         this.addNewParameter(this.parameters)
       }
+      document.getElementById( this.chartId ).on( 'plotly_selected', this.selectionHandler )
 
       this.initModeBar()
     },
@@ -117,12 +126,11 @@
         let oldParametersInterNewParameters = oldsParameters.filter(value => !newParameters.includes(value))
         let parameterKey = oldParametersInterNewParameters[0]
         const targetParameterIndex = this.data.findIndex(element => element.name === parameterKey )
-        console.log("Test removeParameter (before) : ", this.data)
-        if( -1 < targetParameterIndex )
-          this.data.splice(targetParameterIndex, 1)
-          //this.data = this.data.splice(targetParameterIndex, 1)
-        console.log("Test removeParameter (after) : ", this.data)
 
+        if( -1 < targetParameterIndex ) {
+          this.data.splice(targetParameterIndex, 1)
+          this.setCurrentData(this.data)
+        }
       },
       initModeBar : function() {
         this.modeBarButtons = [
@@ -176,6 +184,7 @@
           name: yaxis,
         }]
         this.currentUrl = ""
+        this.setCurrentData(this.data)
       },
       setLayout: function() {
         this.layout = {

@@ -3,24 +3,28 @@
     <v-row>
       <v-col cols="12" sm="6" md="6">
         <AerisDatavalidationDateMounthPicker
-          :date_label="date_label"
-          :setCurrentDate="setCurrentDate"
+            :date_label="date_label"
+            :currentDate="selectionDate"
+            :setCurrentDate="setCurrentDate"
         />
         <v-row>
           <v-col cols="6">
             <AerisDatavalidationTimePicker
               :time_label="start_label"
               :setCurrentTime="setStartTime"
+              :currentTime="selectionStartTime"
             />
           </v-col>
           <v-col cols="6">
             <AerisDatavalidationTimePicker
                 :time_label="end_label"
                 :setCurrentTime="setEndTime"
+                :currentTime="selectionEndTime"
             />
           </v-col>
           <v-col cols="12">
             <AerisDatavalidationSelect
+                :qualityFlags="qualityFlags"
                 :flag_message="flag_message"
                 :setQualityFlags="setQualityFlags"
             />
@@ -50,6 +54,24 @@ export default {
     AerisDatavalidationTimePicker,
     AerisDatavalidationSelect
   },
+  props: {
+    selectionDate : {
+      type : Date,
+      default : null
+    },
+    selectionStartTime : {
+      type : Date,
+      default : null
+    },
+    selectionEndTime : {
+      type : Date,
+      default : null
+    },
+    qualityFlags : {
+      type : Array,
+      default : () => [],
+    }
+  },
   data() {
     return {
       end_label : "End",
@@ -60,10 +82,10 @@ export default {
       startTime : null,
       endTime : null,
       currentDate: null,
-      qualityFlags : [],
+      qualityFlagsSelection : [],
     }
   },
-  methods:{
+  methods: {
     setCurrentDate : function(date) {
       this.currentDate = date;
     },
@@ -74,7 +96,7 @@ export default {
       this.endTime = time;
     },
     setQualityFlags: function(flags) {
-      this.qualityFlags = flags;
+      this.qualityFlagsSelection = flags;
       console.log("Test pickerDate : ", this.qualityFlags)
     },
     saveSelection : function () {

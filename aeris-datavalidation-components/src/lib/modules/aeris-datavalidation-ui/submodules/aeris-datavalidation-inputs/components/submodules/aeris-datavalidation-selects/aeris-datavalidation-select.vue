@@ -17,17 +17,25 @@ export default {
     },
     setQualityFlags : {
       type : Function
+    },
+    qualityFlags : {
+      type : Array,
+      default : () => [],
     }
   },
   data() {
     return {
-      items: ['foo', 'bar', 'fizz', 'buzz', 'buzz1', 'buzz2', 'buzz3', 'buzz4'],
+      items: [],
       value: [],
     }
   },
   watch: {
     value(val) {
       this.setQualityFlags(val)
+    },
+    qualityFlags : function(qualityFlags) {
+      console.log("Test setQualityFlag")
+      this.items = qualityFlags
     }
   },
 }

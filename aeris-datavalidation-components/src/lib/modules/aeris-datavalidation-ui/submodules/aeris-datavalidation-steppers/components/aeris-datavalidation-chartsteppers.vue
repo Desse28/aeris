@@ -1,6 +1,5 @@
 <template>
   <v-stepper v-model="e1">
-
     <v-stepper-header>
       <v-stepper-step
           step="1"
@@ -23,7 +22,12 @@
             color="grey lighten-1"
 
         >
-          <AerisDatavalidationSelectionform/>
+          <AerisDatavalidationSelectionform
+              :qualityFlags="qualityFlags"
+              :selectionDate="selectionDate"
+              :selectionEndTime="selectionEndTime"
+              :selectionStartTime="selectionStartTime"
+          />
         </v-card>
       </v-stepper-content>
 
@@ -54,6 +58,24 @@ export default {
   name: "aeris-datavalidation-chartsteppers",
   components: {
     AerisDatavalidationSelectionform
+  },
+  props: {
+    selectionDate : {
+      type : Date,
+      default : null
+    },
+    selectionStartTime : {
+      type : Date,
+      default : null
+    },
+    selectionEndTime : {
+      type : Date,
+      default : null
+    },
+    qualityFlags : {
+      type : Array,
+      default : () => [],
+    }
   },
   data () {
     return {

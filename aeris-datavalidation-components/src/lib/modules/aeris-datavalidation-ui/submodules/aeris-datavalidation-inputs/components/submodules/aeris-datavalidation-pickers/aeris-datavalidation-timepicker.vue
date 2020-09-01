@@ -39,7 +39,11 @@ export default {
     },
     setCurrentTime : {
       type : Function
-    }
+    },
+    currentTime : {
+      type : Date,
+      default : null
+    },
   },
   data() {
     return {
@@ -51,6 +55,9 @@ export default {
   watch: {
     time(val) {
       this.setCurrentTime(val)
+    },
+    currentTime : function (currentTime){
+      this.time = currentTime
     }
   }
 }

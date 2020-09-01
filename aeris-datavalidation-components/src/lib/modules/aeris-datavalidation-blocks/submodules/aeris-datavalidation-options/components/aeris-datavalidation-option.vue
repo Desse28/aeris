@@ -16,7 +16,7 @@
             <v-list>
               <v-list-item>
                 <v-list-item-content>
-                  <v-list-item-title>Options</v-list-item-title>
+                  <v-list-item-title>Parameter(s)</v-list-item-title>
                 </v-list-item-content>
               </v-list-item>
             </v-list>
