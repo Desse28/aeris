@@ -7,7 +7,8 @@ import AerisDatavalidationSelection from "./aeris-datavalidation-blocks/submodul
 import AerisDatavalidationChartSteppers from "./aeris-datavalidation-ui/submodules/aeris-datavalidation-steppers/components/aeris-datavalidation-chartsteppers";
 import AerisDatavalidationSimpleToolbar from "@/lib/modules/aeris-datavalidation-ui/submodules/aeris-datavalidation-toolbars/components/aeris-datavalidation-simpletoolbar";
 import AerisDatavalidationPortraitLayaout from "@/lib/modules/aeris-datavalidation-ui/submodules/aeris-datavalidation-layouts/components/aeris-datavalidation-potraitlayout";
-import AerisDatavalidationLandScapeLayaout from "@/lib/modules/aeris-datavalidation-ui/submodules/aeris-datavalidation-layouts/components/aeris-datavalidation-landscapelayout";
+import AerisDatavalidationLandScapeLayaout from "./aeris-datavalidation-ui/submodules/aeris-datavalidation-layouts/components/aeris-datavalidation-landscapelayout";
+import AerisDatavalidationSelectionsList from "./aeris-datavalidation-ui/submodules/aeris-datavalidation-list/components/aeris-datavalidation-selectionslist";
 
 export {
     AerisDatavalidationChart,
@@ -20,4 +21,5 @@ export {
     AerisDatavalidationChartSteppers,
     AerisDatavalidationPortraitLayaout,
     AerisDatavalidationLandScapeLayaout,
+    AerisDatavalidationSelectionsList,
 };

@@ -32,20 +32,30 @@
       </v-stepper-content>
 
       <v-stepper-content step="2">
-        <v-card
-            class="mb-12"
-            color="grey lighten-1"
-            height="200px"
-        ></v-card>
-
-        <v-btn
-            color="primary"
-            @click="e1 = 1"
-        >
-          Continue
-        </v-btn>
-
-        <v-btn text>Cancel</v-btn>
+        <div>
+          <v-card
+              color="grey lighten-1"
+          >
+            <AerisDatavalidationLandScapeLayaout
+                justify="center"
+                padding="pa-8"
+                :cols="[6, 6]"
+                :nbrChildElement="2"
+            >
+              <template v-slot:land1>
+                <AerisDatavalidationSelectionsList/>
+              </template>
+              <template v-slot:land2>
+                <AerisDatavalidationSelectionform
+                    :qualityFlags="qualityFlags"
+                    :selectionDate="selectionDate"
+                    :selectionEndTime="selectionEndTime"
+                    :selectionStartTime="selectionStartTime"
+                />
+              </template>
+            </AerisDatavalidationLandScapeLayaout>
+          </v-card>
+        </div>
       </v-stepper-content>
 
     </v-stepper-items>
@@ -54,10 +64,18 @@
 
 <script>
 import AerisDatavalidationSelectionform from "./../../aeris-datavalidation-form/components/aeris-datavalidation-selectionform"
+
+import {
+  AerisDatavalidationSelectionsList,
+    AerisDatavalidationLandScapeLayaout
+} from "./../../../../aeris-datavalidation-components"
 export default {
   name: "aeris-datavalidation-chartsteppers",
   components: {
-    AerisDatavalidationSelectionform
+    AerisDatavalidationSelectionform,
+    AerisDatavalidationSelectionsList,
+    AerisDatavalidationLandScapeLayaout,
+
   },
   props: {
     selectionDate : {
@@ -79,7 +97,7 @@ export default {
   },
   data () {
     return {
-      e1: 1,
+      e1: 2,
     }
   },
 }

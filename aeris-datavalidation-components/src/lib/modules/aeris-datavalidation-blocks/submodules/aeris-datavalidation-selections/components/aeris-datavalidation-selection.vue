@@ -57,18 +57,6 @@ export default {
         //endY = selection.range.x[1]
         startDate = new Date(startX)
         endDate   = new Date(endX)
-
-        //console.log("Test paramData (before) : ", this.currentData)
-        this.currentData.forEach((paramData) => {
-          console.log("Test paramData : ", paramData)
-          /*paramData.x = paramData.x.filter((xPoint) => {
-            currentDate = new Date(xPoint)
-            return startDate <= currentDate && currentDate <= endDate
-          })
-          paramData.y = paramData.y.filter((yPoint) => {
-            return startY <= yPoint && yPoint <= endY
-          })*/
-        })
         this.setSelectionDateTime(startDate, endDate)
       }
     },
