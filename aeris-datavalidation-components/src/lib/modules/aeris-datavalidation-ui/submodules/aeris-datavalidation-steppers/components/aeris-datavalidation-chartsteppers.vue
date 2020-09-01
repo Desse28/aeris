@@ -61,16 +61,16 @@ export default {
   },
   props: {
     selectionDate : {
-      type : Date,
-      default : null
+      type : String,
+      default : ""
     },
     selectionStartTime : {
-      type : Date,
-      default : null
+      type : String,
+      default : ""
     },
     selectionEndTime : {
-      type : Date,
-      default : null
+      type : String,
+      default : ""
     },
     qualityFlags : {
       type : Array,

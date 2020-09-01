@@ -41,13 +41,13 @@ export default {
       type : Function
     },
     currentTime : {
-      type : Date,
+      type : String,
       default : null
     },
   },
   data() {
     return {
-      time: null,
+      time: "",
       menu2: false,
       modal2: false,
     }

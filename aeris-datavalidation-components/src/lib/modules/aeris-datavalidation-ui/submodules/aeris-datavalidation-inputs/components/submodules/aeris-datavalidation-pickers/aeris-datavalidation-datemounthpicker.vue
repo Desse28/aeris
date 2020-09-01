@@ -37,8 +37,8 @@ export default {
       type : Function
     },
     currentDate : {
-      type : Date,
-      default : null
+      type : String,
+      default : ""
     }
   },
   data() {

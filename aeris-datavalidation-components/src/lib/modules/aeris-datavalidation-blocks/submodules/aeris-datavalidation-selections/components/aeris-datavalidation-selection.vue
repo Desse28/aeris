@@ -33,6 +33,20 @@ export default {
   },
   watch : {
     selection : function ( selection) {
+      this.selectionHandler(selection)
+    },
+  },
+  data() {
+    return {
+      data: "",
+      selectionDate : null,
+      selectionEndTime : null,
+      selectionStartTime : null,
+    }
+  },
+  methods : {
+    selectionHandler : function(selection) {
+      console.log("Test selection : ", selection)
       let startX, endX//, startY, endY
       let startDate, endDate//, currentDate
 
@@ -55,24 +69,31 @@ export default {
             return startY <= yPoint && yPoint <= endY
           })*/
         })
-        this.selectionDate = startDate
-        this.selectionStartTime = startDate
-        this.selectionEndTime = endDate
+        this.setSelectionDateTime(startDate, endDate)
       }
-    }
-  },
-  data() {
-    return {
-      data: "",
-      selectionDate : null,
-      selectionEndTime : null,
-      selectionStartTime : null,
-    }
-  },
-  methods : {
-    selectionHandler : function(selection) {
-      console.log("Test selection : ", selection)
-    }
+    },
+    setSelectionDateTime : function(startDate, endDate) {
+      this.selectionDate = this.getDateGoodFormat(startDate)
+      this.selectionStartTime = this.getTimeGoodFormat(startDate)
+      this.selectionEndTime = this.getTimeGoodFormat(endDate)
+    },
+    getDateGoodFormat : function(currentDate) {
+      let day = this.completNumber(currentDate.getDay())
+      let month = this.completNumber(currentDate.getMonth())
+      let year = currentDate.getFullYear()
+      return day + "/" + month + "/" + year
+    },
+    getTimeGoodFormat : function(currentTime) {
+      let hours = this.completNumber(currentTime.getHours())
+      let minutes = this.completNumber(currentTime.getMinutes())
+      let seconds = this.completNumber(currentTime.getSeconds())
+      return hours + ":" + minutes + ":" + seconds
+    },
+    completNumber : function(number) {
+      let result = Math.floor(number / 10) <= 0 ? "0" + number : number
+      console.log("Test completeNumber : ", Math.floor(number / 10) , number, result)
+      return result
+    },
   },
 }
 </script>

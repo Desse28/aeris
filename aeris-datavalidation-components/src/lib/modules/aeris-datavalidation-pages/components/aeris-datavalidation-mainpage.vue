@@ -180,12 +180,12 @@ const baseUrl = "http://localhost:9001/";
           this.parallelChartGridSize = 12 - this.mainChartGridSize
         },
         setCurrentData : function (currentData) {
-          this.firtsChartData = currentData
+          if(currentData)
+            this.firtsChartData = currentData
         },
         selectionHandler : function(selection) {
-          if(selection) {
+          if(selection)
             this.selection = selection
-          }
         }
   },
 }
