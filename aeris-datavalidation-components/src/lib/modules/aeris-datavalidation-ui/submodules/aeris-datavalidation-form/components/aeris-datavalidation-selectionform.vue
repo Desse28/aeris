@@ -6,12 +6,21 @@
           :sm="selectionFormCol[1]"
           :md="selectionFormCol[2]"
       >
-        <AerisDatavalidationDateMounthPicker
-            :date_label="date_label"
-            :currentDate="selectionDate"
-            :setCurrentDate="setCurrentDate"
-        />
         <v-row>
+          <v-col cols="6">
+            <AerisDatavalidationDateMounthPicker
+                :date_label="date_label"
+                :currentDate="selectionStartDate"
+                :setCurrentDate="setStartDate"
+            />
+          </v-col>
+          <v-col cols="6">
+            <AerisDatavalidationDateMounthPicker
+                :date_label="date_label"
+                :currentDate="selectionEndDate"
+                :setCurrentDate="setEndDate"
+            />
+          </v-col>
           <v-col cols="6">
             <AerisDatavalidationTimePicker
               :time_label="start_label"
@@ -59,7 +68,11 @@ export default {
     AerisDatavalidationSelect
   },
   props: {
-    selectionDate : {
+    selectionStartDate : {
+      type : String,
+      default : ""
+    },
+    selectionEndDate : {
       type : String,
       default : ""
     },
@@ -95,13 +108,17 @@ export default {
       flag_message : "Choose quality flag",
       startTime : null,
       endTime : null,
-      currentDate: null,
+      startDate: null,
+      endDate: null,
       qualityFlagsSelection : [],
     }
   },
   methods: {
-    setCurrentDate : function(date) {
-      this.currentDate = date;
+    setStartDate : function(date) {
+      this.startDate = date;
+    },
+    setEndDate : function(date) {
+      this.endDate = date;
     },
     setStartTime: function(time) {
       this.startTime = time;
@@ -115,7 +132,6 @@ export default {
     },
     formHandler : function () {
       this.callBack("Hello world")
-      console.log("Test pickerDate : ", this.pickerDate)
     },
   }
 }

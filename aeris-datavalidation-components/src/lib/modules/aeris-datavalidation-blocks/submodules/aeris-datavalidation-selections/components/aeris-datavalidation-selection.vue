@@ -2,7 +2,8 @@
   <div class="ma-8">
     <AerisDatavalidationChartSteppers
         :qualityFlags="qualityFlags"
-        :selectionDate="selectionDate"
+        :selectionStartDate="selectionStartDate"
+        :selectionEndDate="selectionEndDate"
         :selectionEndTime="selectionEndTime"
         :selectionStartTime="selectionStartTime"
     />
@@ -39,9 +40,10 @@ export default {
   data() {
     return {
       data: "",
-      selectionDate : null,
-      selectionEndTime : null,
-      selectionStartTime : null,
+      selectionStartDate : "",
+      selectionEndDate : "",
+      selectionEndTime : "",
+      selectionStartTime : "",
     }
   },
   methods : {
@@ -61,7 +63,8 @@ export default {
       }
     },
     setSelectionDateTime : function(startDate, endDate) {
-      this.selectionDate = this.getDateGoodFormat(startDate)
+      this.selectionStartDate = this.getDateGoodFormat(startDate)
+      this.selectionEndDate = this.getDateGoodFormat(endDate)
       this.selectionStartTime = this.getTimeGoodFormat(startDate)
       this.selectionEndTime = this.getTimeGoodFormat(endDate)
     },
@@ -79,7 +82,6 @@ export default {
     },
     completNumber : function(number) {
       let result = Math.floor(number / 10) <= 0 ? "0" + number : number
-      console.log("Test completeNumber : ", Math.floor(number / 10) , number, result)
       return result
     },
   },

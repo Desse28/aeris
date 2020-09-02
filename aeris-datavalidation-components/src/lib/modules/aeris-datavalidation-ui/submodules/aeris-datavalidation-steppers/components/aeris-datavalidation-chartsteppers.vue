@@ -20,11 +20,12 @@
         <v-card
             class="mb-12"
             color="grey lighten-1"
-
+            min-height="600"
         >
           <AerisDatavalidationSelectionform
               :qualityFlags="qualityFlags"
-              :selectionDate="selectionDate"
+              :selectionStartDate="selectionStartDate"
+              :selectionEndDate="selectionEndDate"
               :selectionEndTime="selectionEndTime"
               :selectionStartTime="selectionStartTime"
               :selectionFormCol="[12, 6, 6]"
@@ -51,7 +52,8 @@
               <template v-slot:land2>
                 <AerisDatavalidationSelectionform
                     :qualityFlags="qualityFlags"
-                    :selectionDate="selectionDate"
+                    :selectionStartDate="selectionStartDate"
+                    :selectionEndDate="selectionEndDate"
                     :selectionEndTime="selectionEndTime"
                     :selectionStartTime="selectionStartTime"
                     buttonLabel="Edit"
@@ -88,7 +90,11 @@ export default {
 
   },
   props: {
-    selectionDate : {
+    selectionStartDate : {
+      type : String,
+      default : ""
+    },
+    selectionEndDate : {
       type : String,
       default : ""
     },
@@ -107,7 +113,7 @@ export default {
   },
   data () {
     return {
-      e1: 2,
+      e1: 1,
     }
   },
   methods : {
