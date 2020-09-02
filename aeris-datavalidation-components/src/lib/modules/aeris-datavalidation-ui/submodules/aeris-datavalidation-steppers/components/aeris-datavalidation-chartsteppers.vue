@@ -28,6 +28,8 @@
               :selectionEndTime="selectionEndTime"
               :selectionStartTime="selectionStartTime"
               :selectionFormCol="[12, 6, 6]"
+              buttonLabel="Save"
+              :callBack="saveSelection"
           />
         </v-card>
       </v-stepper-content>
@@ -52,6 +54,8 @@
                     :selectionDate="selectionDate"
                     :selectionEndTime="selectionEndTime"
                     :selectionStartTime="selectionStartTime"
+                    buttonLabel="Edit"
+                    :callBack="editSelection"
                 />
               </template>
             </AerisDatavalidationLandScapeLayaout>
@@ -105,6 +109,14 @@ export default {
     return {
       e1: 2,
     }
+  },
+  methods : {
+    saveSelection : function (str) {
+      console.log("Test saveSelection : ", str)
+    },
+    editSelection : function (str) {
+      console.log("Test editSelection : ", str)
+    },
   },
 }
 </script>

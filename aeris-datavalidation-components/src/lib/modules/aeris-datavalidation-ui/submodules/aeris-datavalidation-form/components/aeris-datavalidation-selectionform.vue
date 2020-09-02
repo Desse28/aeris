@@ -35,8 +35,8 @@
           </v-col>
           <v-col cols="12">
             <div class="my-2">
-              <v-btn v-on:click="saveSelection">
-                {{save_label}}
+              <v-btn v-on:click="formHandler">
+                {{buttonLabel}}
               </v-btn>
             </div>
           </v-col>
@@ -78,13 +78,19 @@ export default {
     selectionFormCol : {
       type : Array,
       default : () => [12, 12, 12],
-    }
+    },
+    callBack : {
+      type : Function
+    },
+    buttonLabel : {
+      type : String,
+      default : "Submit"
+    },
   },
   data() {
     return {
       end_label : "End",
       date_label : "Date",
-      save_label : "Save",
       start_label : "Start",
       flag_message : "Choose quality flag",
       startTime : null,
@@ -107,7 +113,8 @@ export default {
       this.qualityFlagsSelection = flags;
       console.log("Test pickerDate : ", this.qualityFlags)
     },
-    saveSelection : function () {
+    formHandler : function () {
+      this.callBack("Hello world")
       console.log("Test pickerDate : ", this.pickerDate)
     },
   }
