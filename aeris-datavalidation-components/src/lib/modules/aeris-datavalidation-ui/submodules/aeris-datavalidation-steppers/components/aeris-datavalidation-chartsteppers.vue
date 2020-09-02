@@ -27,6 +27,7 @@
               :selectionDate="selectionDate"
               :selectionEndTime="selectionEndTime"
               :selectionStartTime="selectionStartTime"
+              :selectionFormCol="[12, 6, 6]"
           />
         </v-card>
       </v-stepper-content>

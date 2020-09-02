@@ -1,7 +1,11 @@
 <template>
   <div class="pa-8">
     <v-row>
-      <v-col cols="12" sm="6" md="6">
+      <v-col
+          :cols="selectionFormCol[0]"
+          :sm="selectionFormCol[1]"
+          :md="selectionFormCol[2]"
+      >
         <AerisDatavalidationDateMounthPicker
             :date_label="date_label"
             :currentDate="selectionDate"
@@ -70,6 +74,10 @@ export default {
     qualityFlags : {
       type : Array,
       default : () => [],
+    },
+    selectionFormCol : {
+      type : Array,
+      default : () => [12, 12, 12],
     }
   },
   data() {
