@@ -18,7 +18,13 @@
               v-on="on"
           ></v-text-field>
         </template>
-        <v-date-picker v-model="date" no-title scrollable>
+        <v-date-picker
+            v-model="date"
+            no-title scrollable
+            :value="date"
+            :max="maxDate"
+            :min="minDate"
+        >
           <v-btn text color="primary" @click="menu = false">Cancel</v-btn>
           <v-btn text color="primary" @click="$refs.menu.save(date)">OK</v-btn>
         </v-date-picker>
@@ -39,19 +45,27 @@ export default {
     currentDate : {
       type : String,
       default : ""
+    },
+    minDate : {
+      type : String,
+      default : ""
+    },
+    maxDate : {
+      type : String,
+      default : ""
     }
   },
   data() {
     return {
       menu: false,
-      date: null,
+      date: "",
     }
   },
   watch: {
     date(val) {
       this.setCurrentDate(val)
     },
-    currentDate : function( currentDate) {
+    currentDate : function(currentDate) {
       this.date = currentDate
     }
   }

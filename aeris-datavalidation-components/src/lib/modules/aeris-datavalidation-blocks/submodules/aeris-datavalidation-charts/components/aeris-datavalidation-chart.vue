@@ -84,6 +84,7 @@
             this.currentParameters = newParameters
           else
             this.addNewParameter(newParameters)
+          this.setLayout()
         } else {
           this.removeParameter(newParameters, oldsParameters)
         }
@@ -107,6 +108,12 @@
         this.addNewParameter(this.parameters)
       }
       document.getElementById( this.chartId ).on( 'plotly_selected', this.selectionHandler )
+
+      /*plotDiv.on('plotly_selecting', (eventData) => {
+        Plotly.d3.selectAll('.select-line,.select-outline-1,.select-outline-2')
+            .style('stroke', 'red');
+        console.log(eventData);
+      });*/
 
       this.initModeBar()
     },
@@ -190,7 +197,7 @@
         this.layout = {
           height : 900,
           showlegend : true,
-          selectdirection : 'any',
+          selectdirection : 'h',
           plot_bgcolor : "#ffffff",
           paper_bgcolor :  "#ffffff",
           title: this.getLayoutTitle(),
@@ -201,7 +208,7 @@
       },
       getLayoutTitle: function() {
         return {
-          text : this.dataInfo.resourceTitle.fr,
+          text :"Test graph", //this.dataInfo.resourceTitle.fr,
               x : 0.52,
               font : {
             color : 'rgb(13, 13, 13)',

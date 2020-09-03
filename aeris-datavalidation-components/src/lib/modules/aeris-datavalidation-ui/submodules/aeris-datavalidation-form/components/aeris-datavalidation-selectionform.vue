@@ -11,28 +11,28 @@
             <AerisDatavalidationDateMounthPicker
                 :date_label="date_label"
                 :currentDate="selectionStartDate"
-                :setCurrentDate="setStartDate"
+                :setCurrentDate="setSelectionStartDate"
             />
           </v-col>
           <v-col cols="6">
             <AerisDatavalidationDateMounthPicker
                 :date_label="date_label"
                 :currentDate="selectionEndDate"
-                :setCurrentDate="setEndDate"
+                :setCurrentDate="setSelectionEndDate"
             />
           </v-col>
           <v-col cols="6">
             <AerisDatavalidationTimePicker
               :time_label="start_label"
-              :setCurrentTime="setStartTime"
               :currentTime="selectionStartTime"
+              :setCurrentTime="setSelectionStartTime"
             />
           </v-col>
           <v-col cols="6">
             <AerisDatavalidationTimePicker
                 :time_label="end_label"
-                :setCurrentTime="setEndTime"
                 :currentTime="selectionEndTime"
+                :setCurrentTime="setSelectionEndTime"
             />
           </v-col>
           <v-col cols="12">
@@ -99,6 +99,18 @@ export default {
       type : String,
       default : "Submit"
     },
+    setSelectionStartTime : {
+      type : Function,
+    },
+    setSelectionEndTime : {
+      type : Function,
+    },
+    setSelectionStartDate : {
+      type : Function,
+    },
+    setSelectionEndDate : {
+      type : Function,
+    },
   },
   data() {
     return {
@@ -106,29 +118,16 @@ export default {
       date_label : "Date",
       start_label : "Start",
       flag_message : "Choose quality flag",
-      startTime : null,
-      endTime : null,
-      startDate: null,
-      endDate: null,
+      startTime : "",
+      endTime : "",
+      startDate: "",
+      endDate: "",
       qualityFlagsSelection : [],
     }
   },
   methods: {
-    setStartDate : function(date) {
-      this.startDate = date;
-    },
-    setEndDate : function(date) {
-      this.endDate = date;
-    },
-    setStartTime: function(time) {
-      this.startTime = time;
-    },
-    setEndTime: function(time) {
-      this.endTime = time;
-    },
     setQualityFlags: function(flags) {
       this.qualityFlagsSelection = flags;
-      console.log("Test pickerDate : ", this.qualityFlags)
     },
     formHandler : function () {
       this.callBack("Hello world")

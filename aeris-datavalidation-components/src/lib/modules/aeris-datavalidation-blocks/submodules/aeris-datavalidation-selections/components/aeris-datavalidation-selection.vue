@@ -6,6 +6,12 @@
         :selectionEndDate="selectionEndDate"
         :selectionEndTime="selectionEndTime"
         :selectionStartTime="selectionStartTime"
+        :saveSelection="saveSelection"
+        :editSelection="editSelection"
+        :setSelectionStartTime="setSelectionStartTime"
+        :setSelectionEndTime="setSelectionEndTime"
+        :setSelectionStartDate="setSelectionStartDate"
+        :setSelectionEndDate="setSelectionEndDate"
     />
   </div>
 </template>
@@ -44,22 +50,17 @@ export default {
       selectionEndDate : "",
       selectionEndTime : "",
       selectionStartTime : "",
+      test : false,
     }
   },
   methods : {
     selectionHandler : function(selection) {
       console.log("Test selection : ", selection)
-      let startX, endX//, startY, endY
-      let startDate, endDate//, currentDate
-
+      let startX, endX
       if(selection) {
         startX = selection.range.x[0]
         endX = selection.range.x[1]
-        //startY = selection.range.x[0]
-        //endY = selection.range.x[1]
-        startDate = new Date(startX)
-        endDate   = new Date(endX)
-        this.setSelectionDateTime(startDate, endDate)
+        this.setSelectionDateTime(new Date(startX), new Date(endX))
       }
     },
     setSelectionDateTime : function(startDate, endDate) {
@@ -68,21 +69,39 @@ export default {
       this.selectionStartTime = this.getTimeGoodFormat(startDate)
       this.selectionEndTime = this.getTimeGoodFormat(endDate)
     },
+    setSelectionStartDate : function(date) {
+      this.selectionStartDate = date
+    },
+    setSelectionEndDate : function(date) {
+      this.selectionEndDate = date
+    },
+    setSelectionStartTime : function(time) {
+      this.selectionStartTime = time
+    },
+    setSelectionEndTime: function(time) {
+      this.selectionEndTime = time
+    },
     getDateGoodFormat : function(currentDate) {
-      let day = this.completNumber(currentDate.getDay())
-      let month = this.completNumber(currentDate.getMonth())
+      let day = this.completeNumber(currentDate.getDay())
+      let month = this.completeNumber(currentDate.getMonth())
       let year = currentDate.getFullYear()
-      return day + "/" + month + "/" + year
+      return day + "-" + month + "-" + year
     },
     getTimeGoodFormat : function(currentTime) {
-      let hours = this.completNumber(currentTime.getHours())
-      let minutes = this.completNumber(currentTime.getMinutes())
-      let seconds = this.completNumber(currentTime.getSeconds())
+      let hours = this.completeNumber(currentTime.getHours())
+      let minutes = this.completeNumber(currentTime.getMinutes())
+      let seconds = this.completeNumber(currentTime.getSeconds())
       return hours + ":" + minutes + ":" + seconds
     },
-    completNumber : function(number) {
+    completeNumber : function(number) {
       let result = Math.floor(number / 10) <= 0 ? "0" + number : number
       return result
+    },
+    saveSelection : function (str) {
+      console.log("Test saveSelection : ", str)
+    },
+    editSelection : function (str) {
+      console.log("Test editSelection : ", str)
     },
   },
 }

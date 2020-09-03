@@ -24,13 +24,17 @@
         >
           <AerisDatavalidationSelectionform
               :qualityFlags="qualityFlags"
+              :selectionStartTime="selectionStartTime"
+              :selectionEndTime="selectionEndTime"
               :selectionStartDate="selectionStartDate"
               :selectionEndDate="selectionEndDate"
-              :selectionEndTime="selectionEndTime"
-              :selectionStartTime="selectionStartTime"
               :selectionFormCol="[12, 6, 6]"
               buttonLabel="Save"
               :callBack="saveSelection"
+              :setSelectionStartTime="setSelectionStartTime"
+              :setSelectionEndTime="setSelectionEndTime"
+              :setSelectionStartDate="setSelectionStartDate"
+              :setSelectionEndDate="setSelectionEndDate"
           />
         </v-card>
       </v-stepper-content>
@@ -52,12 +56,16 @@
               <template v-slot:land2>
                 <AerisDatavalidationSelectionform
                     :qualityFlags="qualityFlags"
+                    :selectionStartTime="selectionStartTime"
+                    :selectionEndTime="selectionEndTime"
                     :selectionStartDate="selectionStartDate"
                     :selectionEndDate="selectionEndDate"
-                    :selectionEndTime="selectionEndTime"
-                    :selectionStartTime="selectionStartTime"
                     buttonLabel="Edit"
                     :callBack="editSelection"
+                    :setSelectionStartTime="setSelectionStartTime"
+                    :setSelectionEndTime="setSelectionEndTime"
+                    :setSelectionStartDate="setSelectionStartDate"
+                    :setSelectionEndDate="setSelectionEndDate"
                 />
               </template>
             </AerisDatavalidationLandScapeLayaout>
@@ -109,20 +117,30 @@ export default {
     qualityFlags : {
       type : Array,
       default : () => [],
-    }
+    },
+    setSelectionStartTime : {
+      type : Function,
+    },
+    setSelectionEndTime : {
+      type : Function,
+    },
+    setSelectionStartDate : {
+      type : Function,
+    },
+    setSelectionEndDate : {
+      type : Function,
+    },
+    saveSelection : {
+      type : Function,
+    },
+    editSelection : {
+      type : Function,
+    },
   },
   data () {
     return {
       e1: 1,
     }
-  },
-  methods : {
-    saveSelection : function (str) {
-      console.log("Test saveSelection : ", str)
-    },
-    editSelection : function (str) {
-      console.log("Test editSelection : ", str)
-    },
   },
 }
 </script>
