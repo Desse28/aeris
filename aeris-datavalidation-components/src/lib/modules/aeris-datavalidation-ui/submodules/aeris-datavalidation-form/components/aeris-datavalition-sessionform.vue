@@ -9,8 +9,12 @@
           <v-row>
             <v-col cols="12" sm="12">
               <v-select
-                  :items="instrumentsId"
-                  label="InstrumentId"
+                  :items="instrumentsName"
+                  v-model="currentInstrument"
+                  name="instrument"
+                  item-text="name"
+                  label="Instrument name"
+                  return-object
                   required
               ></v-select>
             </v-col>
@@ -43,6 +47,8 @@ import {
   AerisDataValidationServices
 } from "@/lib/modules/aeris-datavalidation-components";
 
+const baseUrl = "http://localhost:9001/";
+
 export default {
   name: "aeris-datavalition-sessionform",
   components : {
@@ -53,10 +59,16 @@ export default {
       type : Function,
     },
   },
+  watch : {
+    currentInstrument : function(currentInstrument) {
+      console.log("Test currentIstrument : ", currentInstrument)
+    }
+  },
   data() {
     return {
-      currentUrl : "",
-      instrumentsId : ['InstrumentId1', 'InstrumentId2', 'InstrumentId3', 'InstrumentId4'],
+      currentUrl : baseUrl + "instruments/ids",
+      currentInstrument : "",
+      instrumentsName : [/*'InstrumentId1', 'InstrumentId2', 'InstrumentId3', 'InstrumentId4'*/],
       parameters : ['Air Temp', 'Cell Temp'],
       auxParameters : [],
       callBack : this.initNewSessionForm,
@@ -67,8 +79,13 @@ export default {
       console.log("Test create new session")
       this.setDialogue()
     },
-    initNewSessionForm : function () {
-      console.log("Test initNewSessionForm : ")
+    initNewSessionForm : function (instruments) {
+      let instrumentObj
+      instruments.forEach((instrument) => {
+        instrumentObj = JSON.parse(instrument)
+        this.instrumentsName.push(instrumentObj)
+      });
+      console.log("Test initNewSessionForm : ", instruments )
     }
   }
 }
