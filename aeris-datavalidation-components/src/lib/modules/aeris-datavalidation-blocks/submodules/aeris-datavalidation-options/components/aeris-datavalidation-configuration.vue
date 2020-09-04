@@ -1,6 +1,7 @@
 <template>
   <v-row justify="center">
     <v-dialog v-model="dialog" persistent max-width="600px">
+
       <template v-slot:activator="{ on, attrs }">
         <v-btn
             color="primary"
@@ -11,89 +12,73 @@
           Open Dialog
         </v-btn>
       </template>
+
       <v-card>
-        <v-card-title  class="d-flex justify-center">
-          <v-breadcrumbs :items="items">
-            <template v-slot:item="{ item }">
-              <v-breadcrumbs-item
-                  :href="item.href"
-                  :disabled="item.disabled"
-              >
-                {{ item.text.toUpperCase() }}
-              </v-breadcrumbs-item>
-            </template>
-          </v-breadcrumbs>
-        </v-card-title>
-        <v-card-text>
-          <v-container>
-            <v-row>
-              <v-col cols="12" sm="6" md="4">
-                <v-text-field label="Legal first name*" required></v-text-field>
-              </v-col>
-              <v-col cols="12" sm="6" md="4">
-                <v-text-field label="Legal middle name" hint="example of helper text only on focus"></v-text-field>
-              </v-col>
-              <v-col cols="12" sm="6" md="4">
-                <v-text-field
-                    label="Legal last name*"
-                    hint="example of persistent helper text"
-                    persistent-hint
-                    required
-                ></v-text-field>
-              </v-col>
-              <v-col cols="12">
-                <v-text-field label="Email*" required></v-text-field>
-              </v-col>
-              <v-col cols="12">
-                <v-text-field label="Password*" type="password" required></v-text-field>
-              </v-col>
-              <v-col cols="12" sm="6">
-                <v-select
-                    :items="['0-17', '18-29', '30-54', '54+']"
-                    label="Age*"
-                    required
-                ></v-select>
-              </v-col>
-              <v-col cols="12" sm="6">
-                <v-autocomplete
-                    :items="['Skiing', 'Ice hockey', 'Soccer', 'Basketball', 'Hockey', 'Reading', 'Writing', 'Coding', 'Basejump']"
-                    label="Interests"
-                    multiple
-                ></v-autocomplete>
-              </v-col>
-            </v-row>
-          </v-container>
-          <small>*indicates required field</small>
-        </v-card-text>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn color="blue darken-1" text @click="dialog = false">Close</v-btn>
-          <v-btn color="blue darken-1" text @click="dialog = false">Save</v-btn>
-        </v-card-actions>
+        <v-row class="text-center" align="start" justify="center">
+          <v-card-title>
+            <v-breadcrumbs
+                :items="items"
+            >
+              <template v-slot:item="{ item }">
+                <v-breadcrumbs-item
+                    :key="item.text"
+                    @click="configutionHandler(item.text)"
+                    :disabled="item.disabled"
+                >
+                  {{ item.text.toUpperCase() }}
+                </v-breadcrumbs-item>
+
+              </template>
+            </v-breadcrumbs>
+          </v-card-title>
+        </v-row>
+        <AerisDatavalidationSessionForm
+            v-if="targetItem === 'New session'"
+            :setDialogue="setDialogue"
+        />
+        <AerisDatavalidationSessionList
+            v-if="targetItem === 'Continue session'"
+            :setDialogue="setDialogue"
+        />
       </v-card>
     </v-dialog>
   </v-row>
 </template>
 <script>
+import AerisDatavalidationSessionForm from "./../../../../aeris-datavalidation-ui/submodules/aeris-datavalidation-form/components/aeris-datavalition-sessionform"
+import AerisDatavalidationSessionList from "./../../../../aeris-datavalidation-ui/submodules/aeris-datavalidation-lists/components/aeris-datavalidation-sessionlist"
 export default {
   name: "aeris-datavalidation-configuration",
+  components: {
+    AerisDatavalidationSessionForm,
+    AerisDatavalidationSessionList
+  },
   data() {
     return {
       dialog: true,
+      targetItem : "New session",
       items: [
         {
           text: 'New session',
           disabled: false,
-          href: 'breadcrumbs_dashboard',
+          href: '/new-session',
         },
         {
           text: 'Continue session',
-          disabled: true,
-          href: 'breadcrumbs_link_1',
+          disabled: false,
+          href: '/continue-session',
         },
       ],
     }
   },
+  methods : {
+    configutionHandler : function (targetItem) {
+      this.targetItem = targetItem
+    },
+    setDialogue : function () {
+      this.dialog = this.dialog !== true;
+    },
+  }
 }
 </script>
 
