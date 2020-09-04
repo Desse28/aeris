@@ -21,15 +21,25 @@
             <v-col cols="12" sm="12">
               <v-select
                   :items="parameters"
+                  v-model="mainParameter"
+                  name="parameter"
+                  item-text="name"
                   label="Main Parameter"
+                  return-object
                   required
+                  :disabled="parameters.length === 0"
               ></v-select>
             </v-col>
             <v-col cols="12" sm="12">
               <v-autocomplete
-                  :items="[...parameters, ...auxParameters]"
+                  :items="linkedParameters"
+                  v-model="linkedParametersSelection"
+                  item-text="name"
                   label="Linked Parameters"
+                  name="parameter"
+                  return-object
                   multiple
+                  :disabled="linkedParameters.length === 0"
               ></v-autocomplete>
             </v-col>
           </v-row>
@@ -47,7 +57,7 @@ import {
   AerisDataValidationServices
 } from "@/lib/modules/aeris-datavalidation-components";
 
-const baseUrl = "http://localhost:9001/";
+const baseUrl = "http://localhost:9001";
 
 export default {
   name: "aeris-datavalition-sessionform",
@@ -61,16 +71,21 @@ export default {
   },
   watch : {
     currentInstrument : function(currentInstrument) {
-      console.log("Test currentIstrument : ", currentInstrument)
+      let instrumentId = currentInstrument['_id']['$oid']
+      console.log("Test currentIstrument : ", currentInstrument['_id']['$oid'])
+      this.callBack = this.initNewSessionParameters
+      this.currentUrl = baseUrl + "/instruments/" + instrumentId
     }
   },
   data() {
     return {
-      currentUrl : baseUrl + "instruments/ids",
-      currentInstrument : "",
+      currentUrl : baseUrl + "/instruments/ids",
+      mainParameter : null,
+      currentInstrument : null,
+      linkedParametersSelection : [],
       instrumentsName : [/*'InstrumentId1', 'InstrumentId2', 'InstrumentId3', 'InstrumentId4'*/],
-      parameters : ['Air Temp', 'Cell Temp'],
-      auxParameters : [],
+      parameters : [/*'Air Temp', 'Cell Temp'*/],
+      linkedParameters : [],
       callBack : this.initNewSessionForm,
     }
   },
@@ -81,12 +96,22 @@ export default {
     },
     initNewSessionForm : function (instruments) {
       let instrumentObj
-      instruments.forEach((instrument) => {
-        instrumentObj = JSON.parse(instrument)
-        this.instrumentsName.push(instrumentObj)
-      });
-      console.log("Test initNewSessionForm : ", instruments )
-    }
+
+      if(instruments) {
+        instruments.forEach((instrument) => {
+          instrumentObj = JSON.parse(instrument)
+          this.instrumentsName.push(instrumentObj)
+        });
+      }
+
+    },
+    initNewSessionParameters : function(instrument) {
+      if(instrument) {
+        this.parameters = instrument.parameters
+        this.linkedParameters = [...instrument['parameters'], ...instrument['auxParameters']]
+        console.log("Test initNewSessionParameters : ", instrument, instrument['auxParameters'])
+      }
+    },
   }
 }
 </script>
