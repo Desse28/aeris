@@ -7,6 +7,7 @@
       <v-row justify="center">
         <v-col cols="12">
           <Plotly
+              :key="componentKey"
               :x="Date"
               :data="data"
               :id="chartId"
@@ -58,6 +59,7 @@
     },
     data() {
       return {
+        componentKey: 0,
         currentData: [],
         currentUuid : "",
         currentUrl : "",
@@ -67,14 +69,12 @@
         flags: [],
         dataInfo: {},
         modeBarButtons: [],
+        currentShape : null,
         chartId : "mainChart",
         currentParameters : [],
-        data: [/*{
-          x: [1,2,3,4],
-          y: [10,15,13,17],
-          type:"scatter"
-        }*/],
-        callBack : this.addNewParameterData
+        data: [],
+        callBack : this.addNewParameterData,
+        shapes : [],
       }
     },
     watch: {
@@ -107,17 +107,90 @@
         this.currentUuid = this.uuid
         this.addNewParameter(this.parameters)
       }
-      document.getElementById( this.chartId ).on( 'plotly_selected', this.selectionHandler )
-
-      /*plotDiv.on('plotly_selecting', (eventData) => {
-        Plotly.d3.selectAll('.select-line,.select-outline-1,.select-outline-2')
-            .style('stroke', 'red');
-        console.log(eventData);
-      });*/
-
       this.initModeBar()
     },
+    updated() {
+      document.getElementById( this.chartId ).on( 'plotly_click', this.clickHandler )
+      document.getElementById( this.chartId ).on( 'plotly_selected', this.addNewSelection)
+    },
     methods: {
+      addNewSelection : function(data) {
+        let x0, x1
+        if(data) {
+          x0 = data.range.x[0]
+          x1 = data.range.x[1]
+          if(!this.isSelectionExist(x0, x1)) {
+            this.layout.shapes.push(
+                {
+                  visible : true,
+                  type : 'rect',
+                  editable : false,
+                  layer : 'above',
+                  opacity : 0.28,
+                  fillcolor : 'rgb(204, 39, 39)',
+                  fillrule : 'evenodd',
+                  line : {
+                    width : 5,
+                    color : 'rgb(252, 12, 12)',
+                    dash : 'dot'
+                  },
+                  xsizemode : 'scaled',
+                  ysizemode : 'scaled',
+                  xref : 'x',
+                  x0 : x0,
+                  x1 : x1,
+                  yref : 'paper',
+                  y0 : 0,
+                  y1 : 1
+                }
+            )
+            this.componentKey += 1
+            this.selectionHandler(data)
+          }
+        }
+      },
+      isSelectionExist : function (x0, x1) {
+        for(let index in this.shapes) {
+          if(this.layout.shapes[index] && this.layout.shapes[index].x0 === x0 && this.layout.shapes[index].x1 === x1)
+            return true
+        }
+        return false
+      },
+      clickHandler : function (data) {
+        let targetPoint
+        if(data) {
+          targetPoint = data.points[0].x
+          this.setCurrentSelection(targetPoint)
+        }
+      },
+      setCurrentSelection : function(targetPoint) {
+        let targetSelection = this.getTargetSelection(targetPoint)
+        if(targetSelection) {
+          this.clearCurrentSelection()
+          targetSelection.line.color = 'rgb(84,217,27)'
+          this.currentShape = targetSelection
+          console.log("Test this.currentShape : ", this.currentShape)
+          this.componentKey += 1
+        }
+      },
+      getTargetSelection : function(targetPoint) {
+        let targetsSelection = []
+        this.layout.shapes.forEach((shape) => {
+          if(shape && new Date(shape.x0) <= new Date(targetPoint) &&
+              new Date(targetPoint) <= new Date(shape.x1)) {
+            targetsSelection.push(shape)
+          }
+        })
+        return targetsSelection[targetsSelection.length-1]
+      },
+      clearCurrentSelection : function() {
+        this.layout.shapes.forEach((shape) => {
+          if(shape.line.color === 'rgb(84,217,27)') {
+            shape.line.color = 'rgb(252, 12, 12)'
+          }
+        })
+        console.log("Test (clearCurrentSelection) : ", this.layout.shapes)
+      },
       addNewParameter : function (newParameters) {
         let lastIndex = newParameters.length - 1
         let newParameter = newParameters[lastIndex]
@@ -156,6 +229,21 @@
             'toImage',
             'sendDataToCloud',
           ],
+          [{
+            name: "Delete selection",
+            //icon: 'Plotly.Icons.disk',
+              click: () => {
+                let x0, x1
+                if( this.currentShape !== null) {
+                  x0 = this.currentShape.x0
+                  x1 = this.currentShape.x1
+                  if( this.currentShape) {
+                    this.layout.shapes = this.shapes.filter((e) =>{ return e.x0 !==  x0  && e.x1 !== x1})
+                    this.componentKey += 1
+                  }
+                }
+              }
+          }],
         ]
       },
       isDateKey: function(key) {
@@ -200,10 +288,12 @@
           selectdirection : 'h',
           plot_bgcolor : "#ffffff",
           paper_bgcolor :  "#ffffff",
+          dragmode : 'select',
           title: this.getLayoutTitle(),
           legend: this.getLayoutLegend(),
           xaxis : this.getLayoutXaxis("Time", "date"),
           yaxis : this.getLayoutYaxis("Values"),
+          shapes : this.shapes,
         }
       },
       getLayoutTitle: function() {

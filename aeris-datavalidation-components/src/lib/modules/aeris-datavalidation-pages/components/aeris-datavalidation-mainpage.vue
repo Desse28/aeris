@@ -51,6 +51,7 @@
         />
       </template>
     </AerisDatavalidationLandScapeLayaout>
+    <AerisDatavalidationConfiguration/>
   </div>
 </template>
 <script>
@@ -58,6 +59,7 @@ import {
   AerisDatavalidationChart,
   AerisDataValidationServices,
   AerisDatavalidationSelection,
+  AerisDatavalidationConfiguration,
   AerisDatavalidationSimpleToolbar,
   AerisDatavalidationPortraitLayaout,
   AerisDatavalidationLandScapeLayaout,
@@ -71,6 +73,7 @@ const baseUrl = "http://localhost:9001/";
         AerisDatavalidationChart,
         AerisDataValidationServices,
         AerisDatavalidationSelection,
+        AerisDatavalidationConfiguration,
         AerisDatavalidationSimpleToolbar,
         AerisDatavalidationPortraitLayaout,
         AerisDatavalidationLandScapeLayaout,

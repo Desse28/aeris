@@ -1,9 +1,11 @@
 import HelperRegisterModule from "./../../../../helper-register-module"
 
 import AerisDatavalidationOption from "./aeris-datavalidation-option";
+import AerisDatavalidationConfiguration from "./aeris-datavalidation-configuration";
 
 const components = [
     AerisDatavalidationOption,
+    AerisDatavalidationConfiguration,
 ];
 
 export default {

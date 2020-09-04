@@ -10,6 +10,7 @@ import AerisDatavalidationSimpleToolbar from "./aeris-datavalidation-ui/submodul
 import AerisDatavalidationPortraitLayaout from "./aeris-datavalidation-ui/submodules/aeris-datavalidation-layouts/components/aeris-datavalidation-potraitlayout";
 import AerisDatavalidationSelectionsTable from "./aeris-datavalidation-ui/submodules/aeris-datavalidation-tables/components/aeris-datavalidation-selectionstable";
 import AerisDatavalidationLandScapeLayaout from "./aeris-datavalidation-ui/submodules/aeris-datavalidation-layouts/components/aeris-datavalidation-landscapelayout";
+import AerisDatavalidationConfiguration from "./aeris-datavalidation-blocks/submodules/aeris-datavalidation-options/components/aeris-datavalidation-configuration"
 
 export {
     AerisDatavalidationChart,
@@ -18,6 +19,7 @@ export {
     AerisDataValidationServices,
     AerisDataValidationOptions,
     AerisDatavalidationSelection,
+    AerisDatavalidationConfiguration,
     AerisDatavalidationSimpleToolbar,
     AerisDatavalidationChartSteppers,
     AerisDatavalidationSelectionsList,

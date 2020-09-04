@@ -55,7 +55,6 @@ export default {
   },
   methods : {
     selectionHandler : function(selection) {
-      console.log("Test selection : ", selection)
       let startX, endX
       if(selection) {
         startX = selection.range.x[0]
