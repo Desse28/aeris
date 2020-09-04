@@ -12,8 +12,17 @@
         </v-btn>
       </template>
       <v-card>
-        <v-card-title>
-          <span class="headline">User Profile</span>
+        <v-card-title  class="d-flex justify-center">
+          <v-breadcrumbs :items="items">
+            <template v-slot:item="{ item }">
+              <v-breadcrumbs-item
+                  :href="item.href"
+                  :disabled="item.disabled"
+              >
+                {{ item.text.toUpperCase() }}
+              </v-breadcrumbs-item>
+            </template>
+          </v-breadcrumbs>
         </v-card-title>
         <v-card-text>
           <v-container>
@@ -71,6 +80,18 @@ export default {
   data() {
     return {
       dialog: true,
+      items: [
+        {
+          text: 'New session',
+          disabled: false,
+          href: 'breadcrumbs_dashboard',
+        },
+        {
+          text: 'Continue session',
+          disabled: true,
+          href: 'breadcrumbs_link_1',
+        },
+      ],
     }
   },
 }
