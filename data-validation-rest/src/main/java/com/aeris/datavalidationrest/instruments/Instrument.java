@@ -1,9 +1,9 @@
 package com.aeris.datavalidationrest.instruments;
 
 import com.aeris.datavalidationrest.flags.Flag;
-import com.aeris.datavalidationrest.parameters.Parameter;
 import io.swagger.annotations.ApiModelProperty;
 import org.springframework.data.annotation.Id;
+import com.aeris.datavalidationrest.parameters.Parameter;
 
 import javax.validation.constraints.NotNull;
 import java.util.List;
@@ -12,6 +12,9 @@ public class Instrument {
     @Id
     @ApiModelProperty(hidden = true)
     private String id;
+    @NotNull(message = "UUID cannot be null")
+    @ApiModelProperty( example = "PDM_NEPHE")
+    private String name;
     @NotNull(message = "UUID cannot be null")
     @ApiModelProperty( example = "91440f71-9c3e-5d31-befc-2729873ce581")
     private String uuid;
@@ -62,6 +65,14 @@ public class Instrument {
         this.id = id;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public String getUuid() {
         return uuid;
     }
@@ -106,8 +117,9 @@ public class Instrument {
     public String toString() {
         return "Instrument{" +
                 "id='" + id + '\'' +
+                ", name='" + name + '\'' +
                 ", uuid='" + uuid + '\'' +
-                ", piId=" + responsibleId +
+                ", responsibleId=" + responsibleId +
                 ", parameters=" + parameters +
                 ", auxParameters=" + auxParameters +
                 ", flags=" + flags +

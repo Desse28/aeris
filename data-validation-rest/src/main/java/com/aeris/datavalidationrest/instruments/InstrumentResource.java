@@ -2,7 +2,6 @@ package com.aeris.datavalidationrest.instruments;
 
 import com.aeris.datavalidationrest.auth.LoginResource;
 import com.aeris.datavalidationrest.common.CommonService;
-import com.aeris.datavalidationrest.sessions.Session;
 import io.swagger.annotations.ApiParam;
 import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
@@ -45,7 +44,6 @@ public class InstrumentResource {
             instrument = this.instrumentDao.findById(id);
             return ResponseEntity.status(HttpStatus.SC_OK).body(instrument);
         }
-
         return ResponseEntity.status(HttpStatus.SC_FORBIDDEN).body(instrument);
     }
 
@@ -61,6 +59,18 @@ public class InstrumentResource {
         }
 
         return ResponseEntity.status(HttpStatus.SC_FORBIDDEN).body(instruments);
+    }
+    @GetMapping("/ids")
+    public ResponseEntity<List<String>> findAllIds() {
+        String responsibleId;
+        List<String> instrumentsId = new ArrayList<>();
+
+        if (this.commonService.isAdmin(request) || this.commonService.isPI(request)) {
+            responsibleId = this.commonService.getCurrrentUserId(request);
+            instrumentsId = instrumentDao.findAllByResponsibleIdContains(responsibleId);
+            return ResponseEntity.status(HttpStatus.SC_OK).body(instrumentsId);
+        }
+        return ResponseEntity.status(HttpStatus.SC_FORBIDDEN).body(instrumentsId);
     }
 
     @GetMapping("/{parameter_name}/{uuid}")
