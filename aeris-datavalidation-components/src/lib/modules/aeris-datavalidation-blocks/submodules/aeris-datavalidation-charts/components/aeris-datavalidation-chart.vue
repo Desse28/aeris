@@ -64,6 +64,10 @@
         type : Array,
         default : () => [],
       },
+      dataInfo : {
+        type : Object,
+        default : () => null,
+      },
     },
     components: {
       Plotly,
@@ -79,7 +83,6 @@
           title: "My graph"
         },
         flags: [],
-        dataInfo: {},
         modeBarButtons: [],
         currentShape : null,
         chartId : "mainChart",
@@ -107,6 +110,13 @@
           this.currentParameters.forEach( (parameterName) => {
             this.currentUrl = baseUrl + "instruments/" + parameterName + "/" + this.currentUuid
           })
+        }
+      },
+      dataInfo : function() {
+        if (this.dataInfo) {
+          this.layout.title.text = "Current data set - "+ this.dataInfo.resourceTitle.fr
+          this.componentKey += 1
+          this.setEventsHandler()
         }
       },
       currentData : function(newData) {

@@ -30,6 +30,7 @@
             >
                 <AerisDatavalidationChart
                     :uuid="uuid"
+                    :dataInfo="dataInfo"
                     :targetShape="targetShape"
                     :setCurrentData="setCurrentData"
                     :setCurrentShape="setCurrentShape"
@@ -95,6 +96,7 @@ const baseUrl = "http://localhost:9001/";
         return {
           url : "",
           uuid : "",
+          dataInfo : null,
           requestData : null,
           typeOfRequest : "GET",
           selection : null,
@@ -150,7 +152,13 @@ const baseUrl = "http://localhost:9001/";
           this.currentInstrument = instrument
           this.qualityFlags = instrument.flags
           this.uuid = instrument.uuid;
+
+          this.callBack = this.setDataSetInfo
+          this.currentUrl = baseUrl + "instruments/infos/91440f71-9c3e-5d31-befc-2729873ce581"
           console.log("Test currentInstrument : ", instrument)
+        },
+        setDataSetInfo : function (dataInfo) {
+          this.dataInfo = dataInfo
         },
         addNewParameter : function (newOptions) {
           let lastIndex = newOptions.length - 1

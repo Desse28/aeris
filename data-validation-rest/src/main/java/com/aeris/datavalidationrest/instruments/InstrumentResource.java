@@ -1,6 +1,8 @@
 package com.aeris.datavalidationrest.instruments;
 
 import com.aeris.datavalidationrest.auth.LoginResource;
+import com.aeris.datavalidationrest.catalogue.datainfo.DataInfo;
+import com.aeris.datavalidationrest.catalogue.datainfo.DataInfoDao;
 import com.aeris.datavalidationrest.common.CommonService;
 import io.swagger.annotations.ApiParam;
 import org.apache.http.HttpStatus;
@@ -31,6 +33,8 @@ public class InstrumentResource {
     private InstrumentService instrumentService;
     @Autowired
     private CommonService commonService;
+    @Autowired
+    private DataInfoDao dataInfoDao;
 
     private static final String NOT_ALLOWED_TO_ADD_INSTRUMENT = "You are not allowed to add an instrument";
 
@@ -135,5 +139,10 @@ public class InstrumentResource {
         }
 
         return ResponseEntity.status(HttpStatus.SC_FORBIDDEN).body("Error Message");
+    }
+
+    @GetMapping(value = "infos/{id}")
+    public Optional<DataInfo> getDataInformation(@PathVariable String id) {
+        return dataInfoDao.findById(id);
     }
 }

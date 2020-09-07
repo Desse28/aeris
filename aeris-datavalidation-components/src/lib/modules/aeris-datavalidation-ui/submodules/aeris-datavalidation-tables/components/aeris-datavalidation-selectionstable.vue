@@ -6,7 +6,6 @@
             :items="selections"
             class="elevation-1"
             item-key="name"
-            show-select
             v-model="selected"
             hide-default-footer
             :page.sync="page"
