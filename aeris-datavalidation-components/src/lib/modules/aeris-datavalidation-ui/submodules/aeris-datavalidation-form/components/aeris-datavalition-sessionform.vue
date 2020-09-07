@@ -3,16 +3,19 @@
     <AerisDataValidationServices
         :url="currentUrl"
         :callBack="callBack"
+        :requestData="requestData"
+        :typeOfRequest="typeOfRequest"
     >
       <v-card-text>
         <v-container>
           <v-row>
             <v-col cols="12" sm="12">
               <v-select
-                  :items="instrumentsName"
-                  v-model="currentInstrument"
-                  name="instrument"
+                  :items="instruments"
+                  v-model="instrument"
+                  name="name"
                   item-text="name"
+                  item-value="name"
                   label="Instrument name"
                   return-object
                   required
@@ -22,7 +25,7 @@
               <v-select
                   :items="parameters"
                   v-model="mainParameter"
-                  name="parameter"
+                  name="mainParameter"
                   item-text="name"
                   label="Main Parameter"
                   return-object
@@ -36,7 +39,7 @@
                   v-model="linkedParametersSelection"
                   item-text="name"
                   label="Linked Parameters"
-                  name="parameter"
+                  name="linkedParameters"
                   return-object
                   multiple
                   :disabled="linkedParameters.length === 0"
@@ -45,10 +48,17 @@
           </v-row>
         </v-container>
       </v-card-text>
+      <v-card-actions>
+        <v-btn
+            type="submit"
+            color="blue darken-1"
+            :disabled="mainParameter === null || linkedParametersSelection.length === 0"
+            text @click="createSession"
+        >
+          Create
+        </v-btn>
+      </v-card-actions>
     </AerisDataValidationServices>
-    <v-card-actions>
-      <v-btn color="blue darken-1" text @click="createSession">Create</v-btn>
-    </v-card-actions>
   </div>
 </template>
 
@@ -68,48 +78,70 @@ export default {
     setDialogue : {
       type : Function,
     },
+    setCurrentSessionId : {
+      type : Function,
+    },
+    initNewSessionForm : {
+      type : Function,
+    },
+    initNewSessionParameters : {
+      type : Function,
+    },
+    instruments : {
+      type : Array,
+      default : () => [],
+    },
+    parameters : {
+      type : Array,
+      default : () => [],
+    },
+    linkedParameters : {
+      type : Array,
+      default : () => [],
+    },
+    setCurrentInstrument : {
+      type : Function,
+    },
+    currentInstrument : {
+      type : Object
+    },
   },
   watch : {
-    currentInstrument : function(currentInstrument) {
+    instrument : function(currentInstrument) {
       let instrumentId = currentInstrument['_id']['$oid']
-      console.log("Test currentIstrument : ", currentInstrument['_id']['$oid'])
+      this.setCurrentInstrument(currentInstrument)
       this.callBack = this.initNewSessionParameters
       this.currentUrl = baseUrl + "/instruments/" + instrumentId
     }
   },
   data() {
     return {
+      requestData : null,
+      typeOfRequest : "GET",
       currentUrl : baseUrl + "/instruments/ids",
       mainParameter : null,
-      currentInstrument : null,
       linkedParametersSelection : [],
-      instrumentsName : [/*'InstrumentId1', 'InstrumentId2', 'InstrumentId3', 'InstrumentId4'*/],
-      parameters : [/*'Air Temp', 'Cell Temp'*/],
-      linkedParameters : [],
+      instrument : this.currentInstrument,
       callBack : this.initNewSessionForm,
     }
   },
   methods : {
     createSession : function () {
-      console.log("Test create new session")
-      this.setDialogue()
-    },
-    initNewSessionForm : function (instruments) {
-      let instrumentObj
-
-      if(instruments) {
-        instruments.forEach((instrument) => {
-          instrumentObj = JSON.parse(instrument)
-          this.instrumentsName.push(instrumentObj)
-        });
+      let instrumentId = this.instrument['_id']['$oid']
+      this.requestData = {
+        instrumentId : instrumentId,
+        mainParameter : this.mainParameter,
+        linkedParameters : this.linkedParametersSelection,
       }
-
+      this.typeOfRequest = "POST"
+      this.callBack = this.createSessionResponse
+      this.currentUrl = baseUrl + "/sessions"
     },
-    initNewSessionParameters : function(instrument) {
-      if(instrument) {
-        this.parameters = instrument.parameters
-        this.linkedParameters = [...instrument['parameters'], ...instrument['auxParameters']]
-        console.log("Test initNewSessionParameters : ", instrument, instrument['auxParameters'])
+    createSessionResponse : function (data) {
+      let sessionId = data.id
+      if(sessionId) {
+        this.setCurrentSessionId(sessionId)
+        this.setDialogue()
       }
     },
   }

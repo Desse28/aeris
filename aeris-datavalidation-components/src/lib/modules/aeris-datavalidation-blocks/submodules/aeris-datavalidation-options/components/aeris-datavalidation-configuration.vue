@@ -1,18 +1,6 @@
 <template>
   <v-row justify="center">
     <v-dialog v-model="dialog" persistent max-width="600px">
-
-      <template v-slot:activator="{ on, attrs }">
-        <v-btn
-            color="primary"
-            dark
-            v-bind="attrs"
-            v-on="on"
-        >
-          Open Dialog
-        </v-btn>
-      </template>
-
       <v-card>
         <v-row class="text-center" align="start" justify="center">
           <v-card-title>
@@ -34,11 +22,20 @@
         </v-row>
         <AerisDatavalidationSessionForm
             v-if="targetItem === 'New session'"
+            :parameters="parameters"
+            :instruments="instruments"
+            :linkedParameters="linkedParameters"
             :setDialogue="setDialogue"
+            :currentInstrument="currentInstrument"
+            :initNewSessionForm="initNewSessionForm"
+            :setCurrentSessionId="setCurrentSessionId"
+            :setCurrentInstrument="setCurrentInstrument"
+            :initNewSessionParameters="initNewSessionParameters"
         />
-        <AerisDatavalidationSessionList
+        <AerisDatavalidationSessionsTable
             v-if="targetItem === 'Continue session'"
             :setDialogue="setDialogue"
+            :setCurrentSessionId="setCurrentSessionId"
         />
       </v-card>
     </v-dialog>
@@ -46,12 +43,18 @@
 </template>
 <script>
 import AerisDatavalidationSessionForm from "./../../../../aeris-datavalidation-ui/submodules/aeris-datavalidation-form/components/aeris-datavalition-sessionform"
-import AerisDatavalidationSessionList from "./../../../../aeris-datavalidation-ui/submodules/aeris-datavalidation-lists/components/aeris-datavalidation-sessionlist"
+import AerisDatavalidationSessionsTable from "./../../../../aeris-datavalidation-ui/submodules/aeris-datavalidation-tables/components/aeris-datavalidation-sessionstable"
+
 export default {
   name: "aeris-datavalidation-configuration",
+  props : {
+    setCurrentSessionId : {
+      type : Function,
+    },
+  },
   components: {
     AerisDatavalidationSessionForm,
-    AerisDatavalidationSessionList
+    AerisDatavalidationSessionsTable
   },
   data() {
     return {
@@ -69,6 +72,10 @@ export default {
           href: '/continue-session',
         },
       ],
+      parameters : [],
+      instruments : [],
+      linkedParameters : [],
+      currentInstrument : null,
     }
   },
   methods : {
@@ -77,6 +84,24 @@ export default {
     },
     setDialogue : function () {
       this.dialog = this.dialog !== true;
+    },
+    initNewSessionForm : function (instruments) {
+      let instrumentObj
+      if(instruments) {
+        instruments.forEach((instrument) => {
+          instrumentObj = JSON.parse(instrument)
+          this.instruments.push(instrumentObj)
+        });
+      }
+    },
+    initNewSessionParameters : function(instrument) {
+      if(instrument) {
+        this.parameters = instrument.parameters
+        this.linkedParameters = [...instrument['parameters'], ...instrument['auxParameters']]
+      }
+    },
+    setCurrentInstrument : function (instrument) {
+      this.currentInstrument = instrument
     },
   }
 }

@@ -1,17 +1,26 @@
 package com.aeris.datavalidationrest.sessions;
 
 import com.aeris.datavalidationrest.flags.Flag;
+import io.swagger.annotations.ApiModelProperty;
+import org.springframework.data.annotation.Id;
 
 import java.util.Date;
 import java.util.List;
 
 public class SessionSelection {
+    @ApiModelProperty( example = "2020-08-19T09:14:21.274Z" )
     private Date startDate;
+    @ApiModelProperty( example = "2020-08-19T09:14:21.274Z" )
     private Date endDate;
+    @ApiModelProperty(
+            example = "["+
+                        "{\"label\": \"Valid measurement\"}," +
+                        "{\"label\": \"Missing measurement\"}," +
+                    "]"
+    )
     private List<Flag> flags;
 
-    public SessionSelection() {
-    }
+    public SessionSelection() {}
 
     public Date getStartDate() {
         return startDate;
@@ -40,7 +49,7 @@ public class SessionSelection {
     @Override
     public String toString() {
         return "SessionSelection{" +
-                "startDate=" + startDate +
+                ", startDate=" + startDate +
                 ", endDate=" + endDate +
                 ", flags=" + flags +
                 '}';

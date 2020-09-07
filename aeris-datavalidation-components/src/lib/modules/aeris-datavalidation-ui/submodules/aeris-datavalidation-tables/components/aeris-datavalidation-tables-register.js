@@ -1,8 +1,10 @@
 import HelperRegisterModule from "./../../../../helper-register-module"
 
+import AerisDatavalidationSessionsTable from "./aeris-datavalidation-sessionstable";
 import AerisDatavalidationSelectionsTable from "./aeris-datavalidation-selectionstable";
 
 const components = [
+    AerisDatavalidationSessionsTable,
     AerisDatavalidationSelectionsTable,
 ];
 

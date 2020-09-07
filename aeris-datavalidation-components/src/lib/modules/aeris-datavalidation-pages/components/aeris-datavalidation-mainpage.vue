@@ -11,7 +11,7 @@
     <AerisDatavalidationLandScapeLayaout
         justify="center"
         padding="pa-8"
-        :cols="[mainChartGridSize, parallelChartGridSize]"
+        :cols="chartsCol"
         :nbrChildElement="2"
     >
       <template v-slot:land1>
@@ -25,20 +25,31 @@
             <AerisDataValidationServices
                 :url="currentUrl"
                 :callBack="callBack"
+                :requestData="requestData"
+                :typeOfRequest="typeOfRequest"
             >
                 <AerisDatavalidationChart
                     :uuid="uuid"
+                    :targetShape="targetShape"
                     :setCurrentData="setCurrentData"
+                    :setCurrentShape="setCurrentShape"
                     :parameters="firstChartParameters"
                     :selectionHandler="selectionHandler"
+                    :selectionPreconfData="selectionPreconfData"
                 />
             </AerisDataValidationServices>
           </template>
           <template v-slot:portrait2>
             <AerisDatavalidationSelection
                 :selection="selection"
+                :currentShape="targetShape"
+                :addSelection="addSelection"
                 :currentData="firtsChartData"
                 :qualityFlags="qualityFlags"
+                :sessionSelections="sessionSelections"
+                :setCurrentShapeX0="setCurrentShapeX0"
+                :setCurrentShapeX1="setCurrentShapeX1"
+                :setSelectionPreconfData="setSelectionPreconfData"
             />
           </template>
         </AerisDatavalidationPortraitLayaout>
@@ -51,7 +62,9 @@
         />
       </template>
     </AerisDatavalidationLandScapeLayaout>
-    <AerisDatavalidationConfiguration/>
+    <AerisDatavalidationConfiguration
+        :setCurrentSessionId="setCurrentSessionId"
+    />
   </div>
 </template>
 <script>
@@ -82,7 +95,10 @@ const baseUrl = "http://localhost:9001/";
         return {
           url : "",
           uuid : "",
+          requestData : null,
+          typeOfRequest : "GET",
           selection : null,
+          chartsCol : [12, 0],
           qualityFlags : [],
           firtsChartData : [],
           parallelsLabel: [],
@@ -92,9 +108,13 @@ const baseUrl = "http://localhost:9001/";
           mainChartGridSize : 12,
           currentSession: null,
           currentInstrument : null,
+          currentSessionId : "",
           parallelChartGridSize : 0,
-          callBack : this.setCurrentSession,
-          currentUrl : baseUrl + "sessions/5f3d06f1f94fdd631a02655c",
+          callBack : null,
+          currentUrl : "",
+          targetShape : null,
+          sessionSelections : null,
+          selectionPreconfData : [],
         }
       },
       watch: {
@@ -104,10 +124,17 @@ const baseUrl = "http://localhost:9001/";
         },
       },
       methods : {
+        setCurrentSessionId : function (sessionId) {
+          if(sessionId) {
+            this.currentSessionId = sessionId
+            this.callBack = this.setCurrentSession
+            this.currentUrl = baseUrl + "sessions/" + sessionId
+          }
+        },
         setCurrentSession : function (session) {
           let linkedParameters = session['linkedParameters']
-
           this.currentSession = session
+          this.sessionSelections = session.sessionSelections
           this.parametersLabel = Object.keys(linkedParameters).map((key) => linkedParameters[key].name)
           this.firstChartParameters = [...this.firstChartParameters, session['mainParameter'].name]
           this.callBack = this.setCurrentInstrument
@@ -120,9 +147,8 @@ const baseUrl = "http://localhost:9001/";
           this.parallelsLabel = Array(len).fill().map((_, i) => 'parallel' + (i + 1))
         },
         setCurrentInstrument : function (instrument) {
-          let flags = instrument.flags
-          this.currentSession = instrument
-          this.qualityFlags =  Object.keys(flags).map((key) => flags[key].label)
+          this.currentInstrument = instrument
+          this.qualityFlags = instrument.flags
           this.uuid = instrument.uuid;
           console.log("Test currentInstrument : ", instrument)
         },
@@ -175,12 +201,16 @@ const baseUrl = "http://localhost:9001/";
           }
         },
         displayParallelChart : function () {
+          this.chartsCol = [7, 5]
           this.mainChartGridSize = 7
           this.parallelChartGridSize = 12 - this.mainChartGridSize
+          console.log("Test hide parallel" )
         },
         hideParallelChart : function () {
+          this.chartsCol = [12, 0]
           this.mainChartGridSize = 12
           this.parallelChartGridSize = 12 - this.mainChartGridSize
+          console.log("Test hide parallel", this.mainChartGridSize, this.parallelChartGridSize )
         },
         setCurrentData : function (currentData) {
           if(currentData)
@@ -189,7 +219,43 @@ const baseUrl = "http://localhost:9001/";
         selectionHandler : function(selection) {
           if(selection)
             this.selection = selection
+        },
+        addSelection : function (currentSelection) {
+          let sessionSelections = this.currentSession['sessionSelections']
+          sessionSelections = sessionSelections.length === 0 ? [currentSelection] : [...this.currentSession, currentSelection]
+          this.currentSession['sessionSelections'] = sessionSelections
+          this.typeOfRequest = "PUT"
+          this.requestData = this.currentSession
+          this.callBack = this.updateSessionResponseHandler
+          this.currentUrl = baseUrl + "sessions/update"
+        },
+        updateSessionResponseHandler : function (data) {
+          console.log("Test updateSessionResponseHandler : ", data)
+        },
+        setCurrentShape : function(newCurrentShape) {
+          if(newCurrentShape) {
+            this.targetShape = newCurrentShape
+          }
+        },
+        setCurrentShapeX0 : function(x0) {
+          if(x0) {
+            const clone = JSON.parse(JSON.stringify(this.targetShape))
+            clone.x0 = x0
+            this.targetShape = clone
+          }
+        },
+        setCurrentShapeX1 : function(x1) {
+          if(x1) {
+            const clone = JSON.parse(JSON.stringify(this.targetShape))
+            clone.x1 = x1
+            this.targetShape = clone
+          }
+        },
+        setSelectionPreconfData : function(selectionPreconfData) {
+          console.log("Test preconfig,", selectionPreconfData)
+          //this.selectionPreconfData = selectionPreconfData
         }
+
   },
 }
 </script>

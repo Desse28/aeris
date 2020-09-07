@@ -9,6 +9,7 @@
           offset-y
           max-width="290px"
           min-width="290px"
+          :disabled="disabled"
       >
         <template v-slot:activator="{ on, attrs }">
           <v-text-field
@@ -44,6 +45,10 @@ export default {
       type : String,
       default : null
     },
+    disabled : {
+      type : Boolean,
+      default : false
+    }
   },
   data() {
     return {

@@ -35,6 +35,7 @@
               :setSelectionEndTime="setSelectionEndTime"
               :setSelectionStartDate="setSelectionStartDate"
               :setSelectionEndDate="setSelectionEndDate"
+              :qualityFlagsDefaultValue="qualityFlagsDefaultValue"
           />
         </v-card>
       </v-stepper-content>
@@ -51,7 +52,12 @@
                 :nbrChildElement="2"
             >
               <template v-slot:land1>
-                <AerisDatavalidationSelectionsTable/>
+                <AerisDatavalidationSelectionsTable
+                    :sessionSelections="sessionSelections"
+                    :setSelectionDateTime="setSelectionDateTime"
+                    :setSelectionPreconfData="setSelectionPreconfData"
+                    :setQualityFlagsDefaultValue="setQualityFlagsDefaultValue"
+                />
               </template>
               <template v-slot:land2>
                 <AerisDatavalidationSelectionform
@@ -66,6 +72,7 @@
                     :setSelectionEndTime="setSelectionEndTime"
                     :setSelectionStartDate="setSelectionStartDate"
                     :setSelectionEndDate="setSelectionEndDate"
+                    :qualityFlagsDefaultValue="qualityFlagsDefaultValue"
                 />
               </template>
             </AerisDatavalidationLandScapeLayaout>
@@ -136,11 +143,36 @@ export default {
     editSelection : {
       type : Function,
     },
+    sessionSelections : {
+      type : Array,
+      default : () => [],
+    },
+    setSelectionDateTime : {
+      type : Function,
+    },
+    qualityFlagsDefaultValue : {
+      type : Array,
+      default : () => [],
+    },
+    setQualityFlagsDefaultValue : {
+      type : Function,
+    },
+    resetSelection : {
+      type : Function,
+    },
+    setSelectionPreconfData : {
+      type : Function,
+    },
   },
   data () {
     return {
       e1: 1,
     }
   },
+  watch : {
+    e1 : function () {
+      this.resetSelection()
+    }
+  }
 }
 </script>

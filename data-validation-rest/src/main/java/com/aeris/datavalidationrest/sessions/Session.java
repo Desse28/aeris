@@ -13,13 +13,10 @@ public class Session {
     private String id;
     @ApiModelProperty(hidden=true)
     private String piId;
-    @NotNull(message = "State cannot be null")
     @ApiModelProperty( example = "false" )
     private boolean state;
-    @NotNull(message = "StartDate cannot be null")
     @ApiModelProperty( example = "2020-08-19T09:14:21.274Z" )
     private Date startDate;
-    @NotNull(message = "EndDate cannot be null")
     @ApiModelProperty( example = "2020-08-19T09:14:21.274Z" )
     private Date endDate;
     @NotNull(message = "InstrumentId cannot be null")

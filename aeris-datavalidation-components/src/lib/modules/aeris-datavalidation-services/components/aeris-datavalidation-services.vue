@@ -17,6 +17,14 @@
       callBack : {
         type : Function,
       },
+      typeOfRequest : {
+        type : String,
+        default: "GET"
+      },
+      requestData : {
+        type : Object,
+        default: null
+      },
     },
     data() {
       return {
@@ -38,8 +46,14 @@
     },
     methods: {
       refresh() {
-        if(this.url !== "")
-          this.getData();
+        if(this.url !== "") {
+          if(this.typeOfRequest === "GET")
+            this.getData()
+          else if(this.typeOfRequest === "POST")
+            this.postData()
+          else if(this.typeOfRequest === "PUT")
+            this.putData()
+        }
       },
       getData() {
         api.getData(this.url)
@@ -54,6 +68,32 @@
             })
             .finally(() => this.loading = false)
       },
+      postData() {
+        api.create(this.url, this.requestData)
+            .then(response => {
+              if(this.callBack)
+                this.callBack(response.data)
+            })
+            .catch(error => {
+              console.log("Test create (Error) : ")
+              console.log(error)
+              this.error = "Failed to load create" + error
+            })
+            .finally(() => this.loading = false)
+      },
+      putData() {
+        api.update(this.url, this.requestData)
+            .then(response => {
+              if(this.callBack)
+                this.callBack(response.data)
+            })
+            .catch(error => {
+              console.log("Test update (Error) : ")
+              console.log(error)
+              this.error = "Failed to load update" + error
+            })
+            .finally(() => this.loading = false)
+      }
     },
   }
 </script>

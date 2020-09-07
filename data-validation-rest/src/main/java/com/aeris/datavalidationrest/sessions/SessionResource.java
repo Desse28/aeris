@@ -1,7 +1,10 @@
 package com.aeris.datavalidationrest.sessions;
 
+import com.aeris.datavalidationrest.auth.LoginResource;
 import com.aeris.datavalidationrest.common.CommonService;
 import org.apache.http.HttpStatus;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,6 +30,8 @@ public class SessionResource {
     private SessionService sessionService;
     @Autowired
     private CommonService commonService;
+
+    Logger logger = LoggerFactory.getLogger(LoginResource.class);
 
     private static final String NOT_ALLOWED_TO_CREATE_SESSION = "You are not allowed to create a session";
 
@@ -81,18 +87,32 @@ public class SessionResource {
         return ResponseEntity.status(HttpStatus.SC_FORBIDDEN).body(sessions);
     }
 
+    @GetMapping("/ids")
+    public ResponseEntity<List<String>> findAllIds() {
+        String responsibleId;
+        List<String> sessionsId = new ArrayList<>();
+
+        if (this.commonService.isAdmin(request) || this.commonService.isPI(request)) {
+            responsibleId = this.commonService.getCurrrentUserId(request);
+            sessionsId = sessionDao.findAllByPiId(responsibleId);
+            return ResponseEntity.status(HttpStatus.SC_OK).body(sessionsId);
+        }
+        return ResponseEntity.status(HttpStatus.SC_FORBIDDEN).body(sessionsId);
+    }
+
     @PostMapping
-    public ResponseEntity<String> create(@RequestBody @Valid Session session) {
+    public ResponseEntity<Session> create(@RequestBody @Valid Session session) {
         String piid;
         Session newSession;
 
-        if(session == null)
-            return ResponseEntity.noContent().build();
+        logger.info("Test create session : ");
+        logger.info(session.toString());
 
         if (this.commonService.isPI(request)) {
             piid = this.commonService.getCurrrentUserId(request);
             session.setPiId(piid);
-
+            session.setStartDate(new Date());
+            session.setSessionSelections(new ArrayList<>());
             newSession = sessionDao.save(session);
 
             URI location = ServletUriComponentsBuilder
@@ -100,23 +120,20 @@ public class SessionResource {
                     .path("/{id}")
                     .buildAndExpand(newSession.getId())
                     .toUri();
-            return ResponseEntity.created(location).build();
+            return ResponseEntity.created(location)
+                    .body(newSession);
+
         }
 
-        return ResponseEntity.status(HttpStatus.SC_FORBIDDEN).body(NOT_ALLOWED_TO_CREATE_SESSION);
+        return ResponseEntity.status(HttpStatus.SC_FORBIDDEN).body(null);
     }
 
     @PutMapping(value = "/update")
     public ResponseEntity<String> update(@RequestBody Session session) {
-        String piid;
-
-        if(session == null)
-            return ResponseEntity.noContent().build();
-
         if (this.commonService.isPI(request)) {
-            piid = this.commonService.getCurrrentUserId(request);
-            session.setPiId(piid);
             sessionDao.save(session);
+            logger.info("Test update session : ");
+            logger.info(session.toString());
             return ResponseEntity.status(HttpStatus.SC_ACCEPTED).body("Update session (" + session.getId() + ")");
         }
 

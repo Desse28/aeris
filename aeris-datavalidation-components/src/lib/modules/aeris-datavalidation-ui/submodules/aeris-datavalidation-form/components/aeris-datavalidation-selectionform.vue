@@ -12,6 +12,7 @@
                 :date_label="date_label"
                 :currentDate="selectionStartDate"
                 :setCurrentDate="setSelectionStartDate"
+                :disabled="selectionStartDate === ''"
             />
           </v-col>
           <v-col cols="6">
@@ -19,6 +20,7 @@
                 :date_label="date_label"
                 :currentDate="selectionEndDate"
                 :setCurrentDate="setSelectionEndDate"
+                :disabled="selectionEndDate === ''"
             />
           </v-col>
           <v-col cols="6">
@@ -26,6 +28,7 @@
               :time_label="start_label"
               :currentTime="selectionStartTime"
               :setCurrentTime="setSelectionStartTime"
+              :disabled="selectionStartTime === ''"
             />
           </v-col>
           <v-col cols="6">
@@ -33,18 +36,30 @@
                 :time_label="end_label"
                 :currentTime="selectionEndTime"
                 :setCurrentTime="setSelectionEndTime"
+                :disabled="selectionEndTime === ''"
             />
           </v-col>
           <v-col cols="12">
             <AerisDatavalidationSelect
+                name="flags"
+                itemText="label"
                 :qualityFlags="qualityFlags"
                 :flag_message="flag_message"
                 :setQualityFlags="setQualityFlags"
+                :qualityFlagsDefaultValue="qualityFlagsDefaultValue"
             />
           </v-col>
           <v-col cols="12">
             <div class="my-2">
-              <v-btn v-on:click="formHandler">
+              <v-btn
+                  v-on:click="addSelection"
+                  :disabled="
+                  selectionStartDate === '' ||
+                  selectionEndDate === '' ||
+                  selectionStartTime === '' ||
+                  selectionEndTime === '' ||
+                  qualityFlagsSelection.length === 0"
+              >
                 {{buttonLabel}}
               </v-btn>
             </div>
@@ -111,6 +126,10 @@ export default {
     setSelectionEndDate : {
       type : Function,
     },
+    qualityFlagsDefaultValue : {
+      type : Array,
+      default : () => [],
+    },
   },
   data() {
     return {
@@ -129,10 +148,10 @@ export default {
     setQualityFlags: function(flags) {
       this.qualityFlagsSelection = flags;
     },
-    formHandler : function () {
-      this.callBack("Hello world")
+    addSelection : function () {
+      this.callBack(this.qualityFlagsSelection)
     },
-  }
+  },
 }
 </script>
 

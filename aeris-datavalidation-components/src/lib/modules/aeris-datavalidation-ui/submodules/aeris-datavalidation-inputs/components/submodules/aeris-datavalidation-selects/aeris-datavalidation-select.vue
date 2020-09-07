@@ -3,6 +3,9 @@
       v-model="value"
       :items="items"
       :label="flag_message"
+      :item-text="itemText"
+      :name="name"
+      return-object
       multiple
   >
   </v-select>
@@ -21,7 +24,19 @@ export default {
     qualityFlags : {
       type : Array,
       default : () => [],
-    }
+    },
+    name : {
+      type : String,
+      default : ""
+    },
+    itemText : {
+      type : String,
+      default : "name"
+    },
+    qualityFlagsDefaultValue : {
+      type : Array,
+      default : () => [],
+    },
   },
   data() {
     return {
@@ -34,8 +49,10 @@ export default {
       this.setQualityFlags(val)
     },
     qualityFlags : function(qualityFlags) {
-      console.log("Test setQualityFlag")
       this.items = qualityFlags
+    },
+    qualityFlagsDefaultValue : function () {
+      this.value = this.qualityFlagsDefaultValue
     }
   },
 }

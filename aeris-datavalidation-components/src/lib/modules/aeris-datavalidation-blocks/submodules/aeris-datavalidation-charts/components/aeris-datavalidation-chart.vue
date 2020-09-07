@@ -52,6 +52,18 @@
         type : Function,
         default : () => null,
       },
+      setCurrentShape : {
+        type : Function,
+        default : () => null,
+      },
+      targetShape : {
+        type : Object,
+        default : () => null,
+      },
+      selectionPreconfData : {
+        type : Array,
+        default : () => [],
+      },
     },
     components: {
       Plotly,
@@ -101,6 +113,15 @@
         this.refreshChart(newData)
         this.setLayout()
       },
+      targetShape : function () {
+        this.currentShape.x0 = this.targetShape.x0
+        this.currentShape.x1 = this.targetShape.x1
+        this.componentKey += 1
+        this.setEventsHandler()
+      },
+      selectionPreconfData : function () {
+        console.log("Test selectionPreconfDat : ", this.selectionPreconfData)
+      }
     },
     mounted() {
       if(this.parameters.length === 1) {
@@ -108,46 +129,58 @@
         this.addNewParameter(this.parameters)
       }
       this.initModeBar()
-    },
-    updated() {
-      document.getElementById( this.chartId ).on( 'plotly_click', this.clickHandler )
-      document.getElementById( this.chartId ).on( 'plotly_selected', this.addNewSelection)
+      this.setEventsHandler()
     },
     methods: {
+      setEventsHandler : function () {
+        this.$nextTick(() => {
+          document.getElementById( this.chartId ).on( 'plotly_click', this.clickHandler )
+          document.getElementById( this.chartId ).on( 'plotly_selected', this.addNewSelection)
+        });
+      },
       addNewSelection : function(data) {
         let x0, x1
         if(data) {
           x0 = data.range.x[0]
           x1 = data.range.x[1]
           if(!this.isSelectionExist(x0, x1)) {
-            this.layout.shapes.push(
-                {
-                  visible : true,
-                  type : 'rect',
-                  editable : false,
-                  layer : 'above',
-                  opacity : 0.28,
-                  fillcolor : 'rgb(204, 39, 39)',
-                  fillrule : 'evenodd',
-                  line : {
-                    width : 5,
-                    color : 'rgb(252, 12, 12)',
-                    dash : 'dot'
-                  },
-                  xsizemode : 'scaled',
-                  ysizemode : 'scaled',
-                  xref : 'x',
-                  x0 : x0,
-                  x1 : x1,
-                  yref : 'paper',
-                  y0 : 0,
-                  y1 : 1
-                }
-            )
-            this.componentKey += 1
+            this.drawSelection(x0, x1)
             this.selectionHandler(data)
           }
         }
+      },
+      drawSelection : function(x0, x1) {
+        this.clearCurrentSelection()
+        this.shapes = [
+          ...this.shapes,
+          {
+            visible : true,
+            type : 'rect',
+            editable : false,
+            layer : 'above',
+            opacity : 0.28,
+            fillcolor : 'rgb(204, 39, 39)',
+            fillrule : 'evenodd',
+            line : {
+              width : 5,
+              color : 'rgb(84,217,27)',
+              dash : 'dot'
+            },
+            xsizemode : 'scaled',
+            ysizemode : 'scaled',
+            xref : 'x',
+            x0 : x0,
+            x1 : x1,
+            yref : 'paper',
+            y0 : 0,
+            y1 : 1
+          }
+        ]
+        this.layout.shapes = this.shapes
+        this.componentKey += 1
+        this.setEventsHandler()
+        this.currentShape = this.shapes[this.shapes.length-1]
+        this.setCurrentShape(this.currentShape)
       },
       isSelectionExist : function (x0, x1) {
         for(let index in this.shapes) {
@@ -161,6 +194,7 @@
         if(data) {
           targetPoint = data.points[0].x
           this.setCurrentSelection(targetPoint)
+          this.setEventsHandler()
         }
       },
       setCurrentSelection : function(targetPoint) {
@@ -169,8 +203,9 @@
           this.clearCurrentSelection()
           targetSelection.line.color = 'rgb(84,217,27)'
           this.currentShape = targetSelection
-          console.log("Test this.currentShape : ", this.currentShape)
           this.componentKey += 1
+          this.selectionHandler(targetSelection)
+          this.setCurrentShape(targetSelection)
         }
       },
       getTargetSelection : function(targetPoint) {
@@ -189,7 +224,6 @@
             shape.line.color = 'rgb(252, 12, 12)'
           }
         })
-        console.log("Test (clearCurrentSelection) : ", this.layout.shapes)
       },
       addNewParameter : function (newParameters) {
         let lastIndex = newParameters.length - 1
@@ -231,20 +265,26 @@
           ],
           [{
             name: "Delete selection",
-            //icon: 'Plotly.Icons.disk',
+            //icon: 'Icons.disk',
               click: () => {
-                let x0, x1
-                if( this.currentShape !== null) {
-                  x0 = this.currentShape.x0
-                  x1 = this.currentShape.x1
-                  if( this.currentShape) {
-                    this.layout.shapes = this.shapes.filter((e) =>{ return e.x0 !==  x0  && e.x1 !== x1})
-                    this.componentKey += 1
-                  }
-                }
+                this.deleteSelection()
               }
           }],
         ]
+      },
+      deleteSelection : function () {
+        let x0, x1
+        if( this.currentShape !== null) {
+          x0 = this.currentShape.x0
+          x1 = this.currentShape.x1
+          if( this.currentShape) {
+            this.shapes = this.shapes.filter((e) =>{ return e.x0 !==  x0  && e.x1 !== x1})
+            this.layout.shapes = this.shapes
+            this.componentKey += 1
+            this.setEventsHandler()
+            this.selectionHandler({type : "clearForm"})
+          }
+        }
       },
       isDateKey: function(key) {
         return key === 'Date_Time'
@@ -280,6 +320,8 @@
         }]
         this.currentUrl = ""
         this.setCurrentData(this.data)
+        this.componentKey += 1
+        this.setEventsHandler()
       },
       setLayout: function() {
         this.layout = {
