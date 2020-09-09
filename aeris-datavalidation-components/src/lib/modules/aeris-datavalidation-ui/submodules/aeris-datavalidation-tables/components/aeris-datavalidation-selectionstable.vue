@@ -75,11 +75,13 @@ export default {
           sortable: false,
           value: 'name',
         },
-        { text: 'Creation date', value: 'startDate' },
+        { text: 'Start date', value: 'startDate' },
         { text: 'Actions', value: 'actions', sortable: false },
       ],
       selections: [],
       editedIndex: -1,
+
+
       editedItem: {
         name: '',
         lastUpdate: 0,

@@ -13,6 +13,14 @@
           :addNewParameter="addNewParameter"
           :removeParameter="removeParameter"
       />
+      <AerisDataValidationOptions
+          :parametersLabel="parametersLabel"
+          :parallelsLabel="parallelsLabel"
+          :addNewParallel="addNewParallel"
+          :removeParallel="removeParallel"
+          :addNewParameter="addNewParameter"
+          :removeParameter="removeParameter"
+      />
     </v-toolbar>
   </v-card>
 </template>

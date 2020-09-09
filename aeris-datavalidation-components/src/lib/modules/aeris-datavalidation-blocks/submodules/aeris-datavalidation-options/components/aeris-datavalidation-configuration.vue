@@ -1,41 +1,33 @@
 <template>
   <v-row justify="center">
-    <v-dialog v-model="dialog" persistent max-width="600px">
+    <v-dialog v-model="dialog" persistent max-width="1500px">
       <v-card>
         <v-row class="text-center" align="start" justify="center">
           <v-card-title>
-            <v-breadcrumbs
-                :items="items"
-            >
-              <template v-slot:item="{ item }">
-                <v-breadcrumbs-item
-                    :key="item.text"
-                    @click="configutionHandler(item.text)"
-                    :disabled="item.disabled"
-                >
-                  {{ item.text.toUpperCase() }}
-                </v-breadcrumbs-item>
-
-              </template>
-            </v-breadcrumbs>
+            <AerisDatavalidationTypography
+                :text="currentItem"
+                type="h5"
+            />
           </v-card-title>
         </v-row>
+        <AerisDatavalidationSessionsTable
+            v-if="currentItem === 'Continue session'"
+            :setCurrentSessionId="setCurrentSessionId"
+            :setDialogue="setDialogue"
+            :setCurrentItem="setCurrentItem"
+        />
         <AerisDatavalidationSessionForm
-            v-if="targetItem === 'New session'"
+            v-if="currentItem === 'New session'"
             :parameters="parameters"
             :instruments="instruments"
             :linkedParameters="linkedParameters"
-            :setDialogue="setDialogue"
             :currentInstrument="currentInstrument"
-            :initNewSessionForm="initNewSessionForm"
             :setCurrentSessionId="setCurrentSessionId"
+            :setDialogue="setDialogue"
+            :setCurrentItem="setCurrentItem"
+            :initNewSessionForm="initNewSessionForm"
             :setCurrentInstrument="setCurrentInstrument"
             :initNewSessionParameters="initNewSessionParameters"
-        />
-        <AerisDatavalidationSessionsTable
-            v-if="targetItem === 'Continue session'"
-            :setDialogue="setDialogue"
-            :setCurrentSessionId="setCurrentSessionId"
         />
       </v-card>
     </v-dialog>
@@ -44,6 +36,7 @@
 <script>
 import AerisDatavalidationSessionForm from "./../../../../aeris-datavalidation-ui/submodules/aeris-datavalidation-form/components/aeris-datavalition-sessionform"
 import AerisDatavalidationSessionsTable from "./../../../../aeris-datavalidation-ui/submodules/aeris-datavalidation-tables/components/aeris-datavalidation-sessionstable"
+import AerisDatavalidationTypography from "./../../../../aeris-datavalidation-ui/submodules/aeris-datavalidation-typographies/components/aeris-datavalidation-typography"
 
 export default {
   name: "aeris-datavalidation-configuration",
@@ -53,13 +46,14 @@ export default {
     },
   },
   components: {
+    AerisDatavalidationTypography,
     AerisDatavalidationSessionForm,
     AerisDatavalidationSessionsTable
   },
   data() {
     return {
       dialog: true,
-      targetItem : "New session",
+      currentItem : "Continue session",
       items: [
         {
           text: 'New session',
@@ -79,9 +73,6 @@ export default {
     }
   },
   methods : {
-    configutionHandler : function (targetItem) {
-      this.targetItem = targetItem
-    },
     setDialogue : function () {
       this.dialog = this.dialog !== true;
     },
@@ -103,6 +94,9 @@ export default {
     setCurrentInstrument : function (instrument) {
       this.currentInstrument = instrument
     },
+    setCurrentItem : function(item) {
+      this.currentItem = item
+    }
   }
 }
 </script>

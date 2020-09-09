@@ -7,6 +7,7 @@ import VueAxios from 'vue-axios'
 import {start_keycloack} from "../../plugins/keycloak.js"
 import app from "./App.vue"
 import common from "./../lib/modules/aeris-datavalidation-common/store/index"
+import myMixin from "./../lib/modules/aeris-datavalidation-common/mixin/index"
 import AerisDataValidationHomePage from "../lib/modules/aeris-datavalidation-pages/components/aeris-datavalidation-homepage"
 import AerisDataValidationMainPage from "../lib/modules/aeris-datavalidation-pages/components/aeris-datavalidation-mainpage"
 
@@ -43,6 +44,7 @@ new Vue({
   router,
   store,
   vuetify,
+  mixins: [myMixin],
   template: "<app/>",
   components: {
     app

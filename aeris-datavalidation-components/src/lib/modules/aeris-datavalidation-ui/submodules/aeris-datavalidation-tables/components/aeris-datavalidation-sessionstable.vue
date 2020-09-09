@@ -7,11 +7,10 @@
       <template>
         <v-data-table
             show-select
-            height="290"
-            item-key="name"
-            :items="sessions"
-            :page.sync="page"
+            item-key="startDate"
             v-model="selected"
+            :page.sync="page"
+            :items="sessions"
             :headers="headers"
             class="elevation-1"
             hide-default-footer
@@ -19,15 +18,36 @@
             :items-per-page="itemsPerPage"
             @page-count="pageCount = $event"
         >
+          <template v-slot:item.startDate="{ item }">
+            <div>{{getDateGoodFormat(item.startDate)}}</div>
+          </template>
+          <template v-slot:item.endDate="{ item }">
+            <h3 class="pa-4"
+                v-if="item.endDate === null"
+            >
+              /
+            </h3>
+            <h3 v-else
+                class="red accent-3"
+            >
+              {{getDateGoodFormat(item.endDate)}}
+            </h3>
+          </template>
+          <template v-slot:item.linkedParameters="{ item}">
+            <div
+                v-for="parameter in item.linkedParameters"
+                :key="item.linkedParameters.indexOf(parameter)"
+            >
+              <div>{{ parameter.name}}</div>
+            </div>
+          </template>
           <template v-slot:item.state="{ item }">
-            <h3
-                class="mr-2 green accent-2"
+            <h3 class="mr-2 green accent-2"
                 v-if="!item.state"
             >
               In progress
             </h3>
-            <h3
-                v-else
+            <h3 v-else
                 class="red accent-3"
             >
               Close
@@ -42,10 +62,17 @@
         <v-btn
             type="submit"
             color="blue darken-1"
-            :disabled="sessions.length === 0 || selected === null"
+            :disabled="continueButtonState"
             text @click="continueSession"
         >
           Continue
+        </v-btn>
+        <v-btn
+            type="submit"
+            color="blue darken-1"
+            text @click="createNewSession"
+        >
+          Create session
         </v-btn>
       </v-card-actions>
     </div>
@@ -53,12 +80,15 @@
 </template>
 
 <script>
-const baseUrl = "http://localhost:9001";
 import AerisDataValidationServices from "./../../../../aeris-datavalidation-services/components/aeris-datavalidation-services"
+
 export default {
   name: "aeris-datavalidation-selectionstable",
   props : {
     setDialogue : {
+      type : Function,
+    },
+    setCurrentItem : {
       type : Function,
     },
     setCurrentSessionId : {
@@ -70,22 +100,50 @@ export default {
   },
   watch : {
     selected : function (sessionObj) {
-      let sessionId = sessionObj[0]._id['$oid']
-      this.currentSessionId = sessionId
+      console.log("Test selected : ", sessionObj)
+      /* let sessionId
+      if(sessionObj[0]) {
+        sessionId = sessionObj[0]._id['$oid']
+        this.currentSessionId = sessionId
+      }*/
+      this.continueButtonState = this.selected.length === 0
     }
   },
   data () {
     return {
       singleSelect: true,
-      selected: null,
+      selected: [],
       headers: [
         {
-          text: 'Session',
+          text: 'Start date',
+          align: 'startDate',
+          sortable: false,
+          value: 'startDate',
+        },
+        {
+          text: 'End date',
           align: 'start',
           sortable: false,
-          value: 'name',
+          value: 'endDate',
         },
-        { text: 'Creation date', value: 'startDate.$date' },
+        {
+          text: 'InstrumentId',
+          align: 'start',
+          sortable: false,
+          value: 'instrumentId',
+        },
+        {
+          text: 'Main parameter',
+          align: 'start',
+          sortable: false,
+          value: 'mainParameter.name',
+        },
+        {
+          text: 'Linked parameters',
+          align: 'start',
+          sortable: false,
+          value: 'linkedParameters',
+        },
         { text: 'State', value: 'state', align: 'center',},
       ],
       sessions: [],
@@ -94,13 +152,21 @@ export default {
       itemsPerPage: 5,
       currentUrl : "",
       currentSessionId : null,
-      callBack : this.initSessionsTable,
+      callBack : null,
+      continueButtonState : true,
     }
   },
   mounted() {
-    this.currentUrl = baseUrl + "/sessions/ids"
+    this.callBack = ((data) => {
+      this.sessions = data
+    })
+    this.currentUrl = process.env.VUE_APP_ROOT_API + "/sessions"
+    this.continueButtonState = this.sessions.length === 0
   },
   methods: {
+    createNewSession : function() {
+      this.setCurrentItem("New session")
+    },
     continueSession : function() {
       this.setCurrentSessionId(this.currentSessionId)
       this.setDialogue()
@@ -109,26 +175,16 @@ export default {
       let result = Math.floor(number / 10) <= 0 ? "0" + number : number
       return result
     },
-    getDateGoodFormat : function(currentDate) {
-      let day = this.completeNumber(currentDate.getUTCDate())
-      let month = this.completeNumber(currentDate.getUTCMonth()+1)
-      let year = currentDate.getUTCFullYear()
-      return day + "-" + month + "-" + year
-    },
-    initSessionsTable : function (data) {
-      let session
-      if(data) {
-        data.forEach((sessionObj, index) => {
-          session = JSON.parse(sessionObj)
-          session.name = "Session" + (index+1)
-          session.startDate.$date = this.getDateGoodFormat(new Date(session.startDate.$date))
-          this.sessions.push(session)
-        })
+    getDateGoodFormat : function(date) {
+      let timePart, datePart
+      if (date) {
+        timePart = this.$root.getTimePickerTimeFormat(date)
+        datePart = this.$root.getDatePikerDateFormat(date, "fr")
+        return datePart + ", "+ timePart
       }
-    }
+    },
   },
 }
 </script>
-
 <style scoped>
 </style>

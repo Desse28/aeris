@@ -100,10 +100,10 @@
     },
     methods: {
       login : function() {
-        keycloak.login({ redirectUri: 'http://localhost:8080/data-validation-tool' })
+        keycloak.login({ redirectUri:  process.env.VUE_APP_ORIGN_URL + '/data-validation-tool' })
       },
       logout : function() {
-        keycloak.logout({ redirectUri: 'http://localhost:8080' })
+        keycloak.logout({ redirectUri: process.env.VUE_APP_ORIGN_URL })
       }
     },
   };

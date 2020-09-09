@@ -1,5 +1,8 @@
 <template>
   <div>
+    <AerisDatavalidationConfiguration
+        :setCurrentSessionId="setCurrentSessionId"
+    />
     <AerisDatavalidationSimpleToolbar
         :addNewParallel="addNewParallel"
         :removeParallel="removeParallel"
@@ -8,6 +11,7 @@
         :parametersLabel="parametersLabel"
         :parallelsLabel="parallelsLabel"
     />
+
     <AerisDatavalidationLandScapeLayaout
         justify="center"
         padding="pa-8"
@@ -58,14 +62,12 @@
       <template v-slot:land2>
         <AerisDatavalidationChart
             v-if="0 < parallelChartGridSize"
+            :dataInfo="dataInfo"
             :uuid="uuid"
             :parameters="secondChartParameters"
         />
       </template>
     </AerisDatavalidationLandScapeLayaout>
-    <AerisDatavalidationConfiguration
-        :setCurrentSessionId="setCurrentSessionId"
-    />
   </div>
 </template>
 <script>
@@ -118,6 +120,9 @@ const baseUrl = "http://localhost:9001/";
           sessionSelections : null,
           selectionPreconfData : [],
         }
+      },
+      mounted() {
+        console.log("Test env var : ", process.env.VUE_APP_ROOT_API)
       },
       watch: {
         secondChartParameters : function() {
@@ -229,13 +234,13 @@ const baseUrl = "http://localhost:9001/";
             this.selection = selection
         },
         addSelection : function (currentSelection) {
-          let sessionSelections = this.currentSession['sessionSelections']
-          sessionSelections = sessionSelections.length === 0 ? [currentSelection] : [...this.currentSession, currentSelection]
-          this.currentSession['sessionSelections'] = sessionSelections
+          this.currentSession['sessionSelections'] = this.currentSession['sessionSelections'].length === 0 ?
+              [currentSelection] : this.currentSession['sessionSelections'].concat([currentSelection])
           this.typeOfRequest = "PUT"
           this.requestData = this.currentSession
           this.callBack = this.updateSessionResponseHandler
           this.currentUrl = baseUrl + "sessions/update"
+          this.sessionSelections = this.currentSession['sessionSelections']
         },
         updateSessionResponseHandler : function (data) {
           console.log("Test updateSessionResponseHandler : ", data)

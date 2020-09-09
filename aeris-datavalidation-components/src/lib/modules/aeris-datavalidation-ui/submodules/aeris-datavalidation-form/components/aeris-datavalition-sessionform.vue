@@ -57,6 +57,13 @@
         >
           Create
         </v-btn>
+        <v-btn
+            type="submit"
+            color="blue darken-1"
+            text @click="continueSession"
+        >
+          Continue session
+        </v-btn>
       </v-card-actions>
     </AerisDataValidationServices>
   </div>
@@ -99,11 +106,14 @@ export default {
       type : Array,
       default : () => [],
     },
-    setCurrentInstrument : {
-      type : Function,
-    },
     currentInstrument : {
       type : Object
+    },
+    setCurrentItem : {
+      type : Function
+    },
+    setCurrentInstrument : {
+      type : Function,
     },
   },
   watch : {
@@ -126,6 +136,9 @@ export default {
     }
   },
   methods : {
+    continueSession : function () {
+      this.setCurrentItem("Continue session")
+    },
     createSession : function () {
       let instrumentId = this.instrument['_id']['$oid']
       this.requestData = {

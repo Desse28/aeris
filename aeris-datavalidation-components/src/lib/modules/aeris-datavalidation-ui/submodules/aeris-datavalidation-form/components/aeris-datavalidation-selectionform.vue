@@ -9,7 +9,7 @@
         <v-row>
           <v-col cols="6">
             <AerisDatavalidationDateMounthPicker
-                :date_label="date_label"
+                 date_label="Start date"
                 :currentDate="selectionStartDate"
                 :setCurrentDate="setSelectionStartDate"
                 :disabled="selectionStartDate === ''"
@@ -17,7 +17,7 @@
           </v-col>
           <v-col cols="6">
             <AerisDatavalidationDateMounthPicker
-                :date_label="date_label"
+                 date_label="End date"
                 :currentDate="selectionEndDate"
                 :setCurrentDate="setSelectionEndDate"
                 :disabled="selectionEndDate === ''"

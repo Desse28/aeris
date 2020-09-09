@@ -109,54 +109,54 @@ export default {
       this.selectionEndTime = this.getTimeGoodFormat(endDate)
     },
     setSelectionStartDate : function(date) {
-      let newX0
-      let datePortions
+      //let newX0
+      //let datePortions
       if(this.selectionStartDate !== date) {
         this.selectionStartDate = date
       }
       if(this.currentShape !== null) {
-        this.currentShape.x0.split(" ")
-        newX0 = date + " " + datePortions[1]
-        this.setCurrentShapeX0(newX0)
+        //datePortions = this.currentShape.x0.split(" ")
+        //newX0 = date + " " + datePortions[1]
+        //this.setCurrentShapeX0(newX0)
       }
     },
     setSelectionEndDate : function(date) {
-      let newX1
-      let datePortions
+      //let newX1
+      //let datePortions
       if(date !== this.selectionEndDate) {
         this.selectionEndDate = date
       }
 
       if(this.currentShape !== null) {
-        datePortions = this.currentShape.x1.split(" ")
-        newX1 = date + " " + datePortions[1]
-        this.setCurrentShapeX1(newX1)
+        //datePortions = this.currentShape.x1.split(" ")
+        //newX1 = date + " " + datePortions[1]
+        //this.setCurrentShapeX1(newX1)
       }
 
     },
     setSelectionStartTime : function(time) {
-      let newX0
-      let datePortions
+      //let newX0
+      //let datePortions
       if(this.selectionStartTime !== time) {
         this.selectionStartTime = time
       }
       if(this.currentShape !== null) {
-        datePortions = this.currentShape.x0.split(" ")
-        newX0 = datePortions[0] + " " + time + ":00"
+        //datePortions = this.currentShape.x0.split(" ")
+        //newX0 = datePortions[0] + " " + time + ":00"
         //this.setCurrentShapeX0(newX0)
-        console.log("Test time : ", newX0, ",", this.currentShape.x0)
+        //console.log("Test time : ", newX0, ",", this.currentShape.x0)
       }
     },
     setSelectionEndTime: function(time) {
-      let newX1
-      let datePortions
+      //let newX1
+      //let datePortions
       if(this.selectionEndTime !== time) {
         this.selectionEndTime = time
       }
       if( this.currentShape !== null) {
-        datePortions = this.currentShape.x1.split(" ")
-        newX1 = datePortions[0] + " " + time
-        console.log("Test time : ", newX1, ",",this.currentShape.x1)
+        //datePortions = this.currentShape.x1.split(" ")
+        //newX1 = datePortions[0] + " " + time
+        //console.log("Test time : ", newX1, ",",this.currentShape.x1)
         //this.setCurrentShapeX1(newX1)
       }
     },
@@ -180,11 +180,15 @@ export default {
       return result
     },
     saveSelection : function (qualityFlagsSelection) {
+      //"yyyy-MM-dd'T'HH:mm:ss.SSS"
+      let startDate = this.getBackEndDateFormat(new Date(this.selectionStartDate + " " + this.selectionStartTime))
+      let EndDate = this.getBackEndDateFormat(new Date(this.selectionEndDate + " " + this.selectionEndTime))
       let currentSelection = {
-        startDate : this.getBackEndDateFormat(new Date(this.selectionStartDate)),
-        endDate : this.getBackEndDateFormat(new Date(this.selectionEndDate)),
+        startDate : startDate,
+        endDate : EndDate,
         flags : qualityFlagsSelection
       }
+      console.log("Test currentSelection : ", currentSelection)
       this.addSelection(currentSelection)
     },
     editSelection : function (str) {

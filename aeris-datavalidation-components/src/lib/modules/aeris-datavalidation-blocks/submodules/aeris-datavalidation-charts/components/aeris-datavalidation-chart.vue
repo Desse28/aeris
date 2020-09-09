@@ -114,8 +114,18 @@
       },
       dataInfo : function() {
         if (this.dataInfo) {
-          this.layout.title.text = "Current data set - "+ this.dataInfo.resourceTitle.fr
-          this.componentKey += 1
+          let title =  {
+            text : "Current data set - "+ this.dataInfo.resourceTitle.fr,
+            x : 0.52,
+            font : {
+              color : 'rgb(13, 13, 13)',
+              family : '"Open Sans", verdana, arial, sans-serif',
+              size : 18,
+            }
+          }
+          this.layout.title = title
+          //this.layout.title.text = "Current data set - "+ this.dataInfo.resourceTitle.fr
+          //this.componentKey += 1
           this.setEventsHandler()
         }
       },
@@ -350,7 +360,7 @@
       },
       getLayoutTitle: function() {
         return {
-          text :"Test graph", //this.dataInfo.resourceTitle.fr,
+          text : this.dataInfo !== null ? "Current data set - "+ this.dataInfo.resourceTitle.fr : "Test graph",
               x : 0.52,
               font : {
             color : 'rgb(13, 13, 13)',
