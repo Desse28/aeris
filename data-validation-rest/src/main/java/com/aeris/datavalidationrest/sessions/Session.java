@@ -20,8 +20,8 @@ public class Session {
     @ApiModelProperty( example = "2020-08-19T09:14:21.274Z" )
     private Date endDate;
     @NotNull(message = "InstrumentId cannot be null")
-    @ApiModelProperty( example = "5f3cebf56aa6f0740378af21" )
-    private String instrumentId;
+    @ApiModelProperty( example = "PDM_NEPHE" )
+    private String instrumentName;
     @NotNull(message = "MainParameter cannot be null")
     @ApiModelProperty( example = "{\"name\": \"Pressure\"}")
     private Parameter mainParameter;
@@ -92,12 +92,12 @@ public class Session {
         this.endDate = endDate;
     }
 
-    public String getInstrumentId() {
-        return instrumentId;
+    public String getInstrumentName() {
+        return instrumentName;
     }
 
-    public void setInstrumentId(String instrumentId) {
-        this.instrumentId = instrumentId;
+    public void setInstrumentName(String instrumentName) {
+        this.instrumentName = instrumentName;
     }
 
     public Parameter getMainParameter() {
@@ -132,9 +132,9 @@ public class Session {
                 ", state=" + state +
                 ", startDate=" + startDate +
                 ", endDate=" + endDate +
-                ", instrumentId='" + instrumentId + '\'' +
+                ", instrumentName='" + instrumentName + '\'' +
                 ", mainParameter=" + mainParameter +
-                ", parameters=" + linkedParameters +
+                ", linkedParameters=" + linkedParameters +
                 ", sessionSelections=" + sessionSelections +
                 '}';
     }

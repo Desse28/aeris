@@ -22,16 +22,8 @@
             <div>{{getDateGoodFormat(item.startDate)}}</div>
           </template>
           <template v-slot:item.endDate="{ item }">
-            <h3 class="pa-4"
-                v-if="item.endDate === null"
-            >
-              /
-            </h3>
-            <h3 v-else
-                class="red accent-3"
-            >
-              {{getDateGoodFormat(item.endDate)}}
-            </h3>
+            <h3 class="pa-4" v-if="item.endDate === null">/</h3>
+            <h3 v-else class="red accent-3">{{getDateGoodFormat(item.endDate)}}</h3>
           </template>
           <template v-slot:item.linkedParameters="{ item}">
             <div
@@ -42,16 +34,8 @@
             </div>
           </template>
           <template v-slot:item.state="{ item }">
-            <h3 class="mr-2 green accent-2"
-                v-if="!item.state"
-            >
-              In progress
-            </h3>
-            <h3 v-else
-                class="red accent-3"
-            >
-              Close
-            </h3>
+            <h3 class="mr-2 green accent-2" v-if="!item.state"> In progress</h3>
+            <h3 v-else class="red accent-3">Close</h3>
           </template>
         </v-data-table>
       </template>

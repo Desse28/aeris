@@ -1,7 +1,7 @@
 <template>
   <v-row justify="center">
     <v-dialog v-model="dialog" persistent max-width="1500px">
-      <v-card>
+      <v-card min-height="500" max-height="900">
         <v-row class="text-center" align="start" justify="center">
           <v-card-title>
             <AerisDatavalidationTypography
