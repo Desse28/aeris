@@ -45,6 +45,18 @@
                   :disabled="linkedParameters.length === 0"
               ></v-autocomplete>
             </v-col>
+            <v-col cols="6">
+              <AerisDatavalidationDateMounthPicker
+                  date_label="Start date"
+                  :setCurrentDate="()=>{}"
+              />
+            </v-col>
+            <v-col cols="6">
+              <AerisDatavalidationDateMounthPicker
+                  date_label="End date"
+                  :setCurrentDate="()=>{}"
+              />
+            </v-col>
           </v-row>
         </v-container>
       </v-card-text>
@@ -71,15 +83,17 @@
 
 <script>
 import {
-  AerisDataValidationServices
+  AerisDataValidationServices,
 } from "@/lib/modules/aeris-datavalidation-components";
+import AerisDatavalidationDateMounthPicker from "./../../aeris-datavalidation-inputs/components/submodules/aeris-datavalidation-pickers/aeris-datavalidation-datemounthpicker"
 
 const baseUrl = "http://localhost:9001";
 
 export default {
   name: "aeris-datavalition-sessionform",
   components : {
-    AerisDataValidationServices
+    AerisDataValidationServices,
+    AerisDatavalidationDateMounthPicker
   },
   props : {
     setDialogue : {
