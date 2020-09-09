@@ -35,6 +35,11 @@ public class SessionResource {
 
     private static final String NOT_ALLOWED_TO_CREATE_SESSION = "You are not allowed to create a session";
 
+    @PostMapping
+    public ResponseEntity<Session> create(@RequestBody @Valid Session session) {
+        return sessionService.createNewSession(request, session);
+    }
+
     @GetMapping(value = "/{id}")
     public ResponseEntity<Optional<Session>> findById(@PathVariable String id) {
         Optional<Session> session = null;
@@ -98,34 +103,6 @@ public class SessionResource {
             return ResponseEntity.status(HttpStatus.SC_OK).body(sessionsId);
         }
         return ResponseEntity.status(HttpStatus.SC_FORBIDDEN).body(sessionsId);
-    }
-
-    @PostMapping
-    public ResponseEntity<Session> create(@RequestBody @Valid Session session) {
-        String piid;
-        Session newSession;
-
-        logger.info("Test create session : ");
-        logger.info(session.toString());
-
-        if (this.commonService.isPI(request)) {
-            piid = this.commonService.getCurrrentUserId(request);
-            session.setPiId(piid);
-            session.setStartDate(new Date());
-            session.setSessionSelections(new ArrayList<>());
-            newSession = sessionDao.save(session);
-
-            URI location = ServletUriComponentsBuilder
-                    .fromCurrentRequest()
-                    .path("/{id}")
-                    .buildAndExpand(newSession.getId())
-                    .toUri();
-            return ResponseEntity.created(location)
-                    .body(newSession);
-
-        }
-
-        return ResponseEntity.status(HttpStatus.SC_FORBIDDEN).body(null);
     }
 
     @PutMapping(value = "/update")
