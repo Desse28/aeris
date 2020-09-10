@@ -42,7 +42,7 @@
       <div class="text-center pt-2">
         <v-pagination v-model="page" :length="pageCount"></v-pagination>
       </div>
-      <v-card-actions>
+      <v-card-actions class="align-end">
         <v-btn
             type="submit"
             color="blue darken-1"
