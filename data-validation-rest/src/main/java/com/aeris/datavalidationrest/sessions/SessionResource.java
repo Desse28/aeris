@@ -8,13 +8,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.net.URI;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,11 +32,12 @@ public class SessionResource {
 
     private static final String NOT_ALLOWED_TO_CREATE_SESSION = "You are not allowed to create a session";
 
-    @PostMapping
+    @PostMapping(value ="/create")
     public ResponseEntity<Session> create(@RequestBody @Valid Session session) {
         return sessionService.createNewSession(request, session);
     }
 
+    //
     @GetMapping(value = "/{id}")
     public ResponseEntity<Optional<Session>> findById(@PathVariable String id) {
         Optional<Session> session = null;

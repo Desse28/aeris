@@ -2,6 +2,7 @@ package com.aeris.datavalidationrest.sessions;
 
 import com.aeris.datavalidationrest.auth.LoginResource;
 import com.aeris.datavalidationrest.common.CommonService;
+import com.aeris.datavalidationrest.parameters.Parameter;
 import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,6 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Service
 public class SessionService {
@@ -29,31 +31,23 @@ public class SessionService {
     Logger logger = LoggerFactory.getLogger(LoginResource.class);
 
     public ResponseEntity<Session> createNewSession(HttpServletRequest request, Session session) {
-        Session newSession = null;
+        Session newSession = session;
 
         this.setCurrentPiid(request);
 
         if(this.currentPiid != null) {
-            this.initCreationDate(session);
             session.setPiId(this.currentPiid);
             session.setSessionSelections(new ArrayList<>());
-            newSession = sessionDao.save(session);
-        }
 
+            if(!isSessionExist(session))
+                newSession = sessionDao.save(session);
+        }
         return createResponse(newSession);
     }
 
     public void setCurrentPiid(HttpServletRequest request) {
         if (this.commonService.isPI(request)) {
             this.currentPiid = this.commonService.getCurrrentUserId(request);
-        }
-    }
-
-    public void initCreationDate(Session session) {
-        Date currentDate;
-        if(session != null) {
-            currentDate = new Date();
-            session.setStartDate(currentDate);
         }
     }
 
@@ -70,6 +64,22 @@ public class SessionService {
             response = ResponseEntity.created(location).body(session);
         }
         return response;
+    }
+
+    public boolean isSessionExist(Session session) {
+        String name;
+        boolean exist = false;
+        Parameter mainParameter;
+        List<Parameter> linkedParameters;
+
+        if(session != null) {
+            name = session.getInstrumentName();
+            mainParameter = session.getMainParameter();
+            linkedParameters = session.getLinkedParameters();
+            exist = sessionDao.existsByInstrumentNameAndMainParameterAndLinkedParameters(name, mainParameter, linkedParameters);
+        }
+
+        return exist;
     }
 
     public boolean submitSession(Session session) {

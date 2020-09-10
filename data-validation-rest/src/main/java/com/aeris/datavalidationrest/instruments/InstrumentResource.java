@@ -40,6 +40,12 @@ public class InstrumentResource {
 
     Logger logger = LoggerFactory.getLogger(LoginResource.class);
 
+    @GetMapping("/names")
+    public ResponseEntity<List<String>> getAllNames() {
+        return instrumentService.findAllNames(request);
+    }
+    //
+
     @GetMapping(value = "/{id}")
     public ResponseEntity<Optional<Instrument>> findById(@PathVariable String id) {
         Optional<Instrument> instrument = null;
@@ -64,18 +70,7 @@ public class InstrumentResource {
 
         return ResponseEntity.status(HttpStatus.SC_FORBIDDEN).body(instruments);
     }
-    @GetMapping("/ids")
-    public ResponseEntity<List<String>> findAllIds() {
-        String responsibleId;
-        List<String> instrumentsId = new ArrayList<>();
 
-        if (this.commonService.isAdmin(request) || this.commonService.isPI(request)) {
-            responsibleId = this.commonService.getCurrrentUserId(request);
-            instrumentsId = instrumentDao.findAllByResponsibleIdContains(responsibleId);
-            return ResponseEntity.status(HttpStatus.SC_OK).body(instrumentsId);
-        }
-        return ResponseEntity.status(HttpStatus.SC_FORBIDDEN).body(instrumentsId);
-    }
 
     @GetMapping("/{parameter_name}/{uuid}")
     public ResponseEntity<List<Map<String, String>>> getParameterData(@ApiParam(value = "Air Temp")@PathVariable @Valid String parameter_name,

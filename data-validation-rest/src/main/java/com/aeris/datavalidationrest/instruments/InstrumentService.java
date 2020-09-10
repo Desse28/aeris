@@ -1,11 +1,16 @@
 package com.aeris.datavalidationrest.instruments;
 import com.aeris.datavalidationrest.auth.LoginResource;
+import com.aeris.datavalidationrest.catalogue.datainfo.DataInfoDao;
+import com.aeris.datavalidationrest.common.CommonService;
+import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.Reader;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -13,14 +18,41 @@ import java.util.stream.Collectors;
 @Service
 public class InstrumentService {
     @Autowired
+    private DataInfoDao dataInfoDao;
+    @Autowired
+    private CommonService commonService;
+    @Autowired
     private RestTemplate restTemplate;
-
-    Logger logger = LoggerFactory.getLogger(LoginResource.class);
+    @Autowired
+    private InstrumentDao instrumentDao;
 
     private static String FOLDER = "/GROUND-BASED/P2OA_Pic-Du-Midi/NEPHE/NEPHE_RAW/2019&image=PDM_NEPH_20190517.csv";
     public static final String SEDOO_BASED_DATA_URL = "https://sedoo.aeris-data.fr/actris-datacenter-rest/rest/quicklook/download?uuid=";
 
+    Logger logger = LoggerFactory.getLogger(LoginResource.class);
 
+    public ResponseEntity<List<String>> findAllNames(HttpServletRequest request) {
+        List<String> instrumentsNames = new ArrayList<>();
+        String responsibleId = this.getResponsibleId(request);
+        ResponseEntity response = ResponseEntity.status(HttpStatus.SC_FORBIDDEN).body(instrumentsNames);
+
+        if(responsibleId != null) {
+            instrumentsNames = instrumentDao.findAllByResponsibleIdContains(responsibleId);
+            response = ResponseEntity.status(HttpStatus.SC_OK).body(instrumentsNames);
+        }
+
+        return response;
+    }
+
+    public String getResponsibleId(HttpServletRequest request) {
+        String responsibleId = null;
+        if (this.commonService.isAdmin(request) || this.commonService.isPI(request)) {
+            responsibleId = this.commonService.getCurrrentUserId(request);
+        }
+        return responsibleId;
+    }
+
+    //
     public List<Map<String, String>> getParameterData(String parameterName, String uuid) {
         Reader reader;
         //List<Parameter> parameters;

@@ -18,16 +18,8 @@
         />
         <AerisDatavalidationSessionForm
             v-if="currentItem === 'New session'"
-            :parameters="parameters"
-            :instruments="instruments"
-            :linkedParameters="linkedParameters"
-            :currentInstrument="currentInstrument"
-            :setCurrentSessionId="setCurrentSessionId"
-            :setDialogue="setDialogue"
+            :initNewSession="initNewSession"
             :setCurrentItem="setCurrentItem"
-            :initNewSessionForm="initNewSessionForm"
-            :setCurrentInstrument="setCurrentInstrument"
-            :initNewSessionParameters="initNewSessionParameters"
         />
       </v-card>
     </v-dialog>
@@ -66,36 +58,18 @@ export default {
           href: '/continue-session',
         },
       ],
-      parameters : [],
-      instruments : [],
-      linkedParameters : [],
-      currentInstrument : null,
     }
   },
   methods : {
     setDialogue : function () {
       this.dialog = this.dialog !== true;
     },
-    initNewSessionForm : function (instruments) {
-      let instrumentObj
-      if(instruments) {
-        instruments.forEach((instrument) => {
-          instrumentObj = JSON.parse(instrument)
-          this.instruments.push(instrumentObj)
-        });
-      }
-    },
-    initNewSessionParameters : function(instrument) {
-      if(instrument) {
-        this.parameters = instrument.parameters
-        this.linkedParameters = [...instrument['parameters'], ...instrument['auxParameters']]
-      }
-    },
-    setCurrentInstrument : function (instrument) {
-      this.currentInstrument = instrument
-    },
     setCurrentItem : function(item) {
       this.currentItem = item
+    },
+    initNewSession : function (currentSession, currentInstrument) {
+      //this.dialog = true;
+      console.log("Test init new session : ", currentSession, currentInstrument)
     }
   }
 }
