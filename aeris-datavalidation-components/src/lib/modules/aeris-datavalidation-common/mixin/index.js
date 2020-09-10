@@ -28,12 +28,12 @@ export default {
         },
         getSpringDateFormat : function(date) {
             let currentDate = new Date(date)
-            let day = this.completeNumber(currentDate.getUTCDay())
-            let month = this.completeNumber(currentDate.getUTCMonth())
-            let year = currentDate.getUTCFullYear()
-            let hours = this.completeNumber(currentDate.getUTCHours())
-            let minutes = this.completeNumber(currentDate.getUTCMinutes())
-            let seconds =  this.completeNumber(currentDate.getUTCSeconds())
+            let day = this.completeNumber(currentDate.getDate())
+            let month = this.completeNumber(currentDate.getMonth()+1)
+            let year = currentDate.getFullYear()
+            let hours = this.completeNumber(currentDate.getHours())
+            let minutes = this.completeNumber(currentDate.getMinutes())
+            let seconds =  this.completeNumber(currentDate.getSeconds())
             return year + '-' + month + '-' + day + 'T' + hours + ':'+ minutes + ':' + seconds + 'Z'
         }
     }

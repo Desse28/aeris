@@ -10,8 +10,7 @@ import java.util.Optional;
 
 public interface SessionDao extends MongoRepository<Session, String> {
 
-    boolean existsByInstrumentNameAndMainParameterAndLinkedParameters(String instrumentName,
-                                                                      Parameter mainParameter,
+    boolean existsByInstrumentNameAndMainParameterAndLinkedParameters(String instrumentName, Parameter mainParameter,
                                                                       List<Parameter> linkedParameters);
     //
     void deleteById(String id);
