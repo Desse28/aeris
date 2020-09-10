@@ -22,8 +22,8 @@
             <div>{{getDateGoodFormat(item.startDate)}}</div>
           </template>
           <template v-slot:item.endDate="{ item }">
-            <h3 class="pa-4" v-if="item.endDate === null">/</h3>
-            <h3 v-else class="red accent-3">{{getDateGoodFormat(item.endDate)}}</h3>
+            <div class="pa-4" v-if="item.endDate === null">/</div>
+            <div v-else >{{getDateGoodFormat(item.endDate)}}</div>
           </template>
           <template v-slot:item.linkedParameters="{ item}">
             <div
@@ -56,7 +56,7 @@
             color="blue darken-1"
             text @click="createNewSession"
         >
-          Create session
+          Create new session
         </v-btn>
       </v-card-actions>
     </div>
@@ -111,10 +111,10 @@ export default {
           value: 'endDate',
         },
         {
-          text: 'InstrumentId',
+          text: 'Instrument name',
           align: 'start',
           sortable: false,
-          value: 'instrumentId',
+          value: 'instrumentName',
         },
         {
           text: 'Main parameter',

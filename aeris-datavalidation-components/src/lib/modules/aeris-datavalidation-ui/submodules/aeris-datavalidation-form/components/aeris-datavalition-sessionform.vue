@@ -217,9 +217,6 @@ export default {
       let startDateTime = this.$root.getSpringDateFormat(this.startDate + " " + this.startTime)
       let endDateTime = this.$root.getSpringDateFormat(this.endDate + " " + this.endTime)
 
-      console.log("Test startDateTime : ", startDateTime)
-      console.log("Test endDateTime : ", endDateTime)
-
       this.requestData = {
         endDate : endDateTime,
         startDate : startDateTime,
