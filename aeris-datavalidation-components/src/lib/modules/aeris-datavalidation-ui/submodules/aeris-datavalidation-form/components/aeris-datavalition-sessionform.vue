@@ -200,6 +200,7 @@ export default {
 
       this.callBack = (session) => {
         if(session) {
+          console.log("Test createNewSession : ", session)
           if(this.isExistSession(session)) {
             this.isSessionExist = true
             setTimeout(() => {
@@ -242,8 +243,14 @@ export default {
     },
     isExistSession : function (session) {
       let exist = false;
+      let isIdEmpty, isSameMainParameter, isSameInstrument
+
       if(session) {
-        exist = session.instrumentName === this.instrument.name
+        isIdEmpty = session.id === null
+        isSameMainParameter = session.mainParameter.name === this.requestData.mainParameter.name
+        isSameInstrument = session.instrumentName === this.requestData.instrumentName
+        console.log("Test session exist : ", isIdEmpty, isSameInstrument, isSameInstrument)
+        exist = isIdEmpty && isSameInstrument && isSameMainParameter
       }
       return exist;
     },

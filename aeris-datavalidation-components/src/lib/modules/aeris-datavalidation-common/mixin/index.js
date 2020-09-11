@@ -20,8 +20,9 @@ export default {
             return response
         },
         getTimePickerTimeFormat : function(date) {
+            console.log("Test getTimePickerTimeFormat : ", date)
             let currentTime = new Date(date)
-            let hours = this.completeNumber(currentTime.getHours())
+            let hours = this.completeNumber(currentTime.getUTCHours())
             let minutes = this.completeNumber(currentTime.getUTCMinutes())
             let seconds = this.completeNumber(currentTime.getUTCSeconds())
             return hours + ":" + minutes + ":" + seconds
