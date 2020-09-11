@@ -14,10 +14,8 @@ public interface SessionDao extends MongoRepository<Session, String> {
 
     @Query(value="{ 'piId' : ?0 }")
     Page<List<Session>> findAllByPiId(@PathVariable String piId, Pageable pageable);
-
     boolean existsByInstrumentNameAndMainParameterAndLinkedParameters(String instrumentName, Parameter mainParameter,
                                                                       List<Parameter> linkedParameters);
-
     //
     void deleteById(String id);
     Optional<Session> findById(String id);

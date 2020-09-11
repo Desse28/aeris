@@ -9,11 +9,11 @@ import java.util.Optional;
 
 
 public interface InstrumentDao extends MongoRepository<Instrument, String>  {
-
+    Optional<Instrument> findById(@PathVariable String id);
+    Optional<Instrument> findByName(@PathVariable String name);
     @Query(value="{ 'responsibleId' : ?0 }",fields="{ 'name' : 1}")
     List<String> findAllByResponsibleIdContains(@PathVariable String responsibleId);
     //
     void deleteById(@PathVariable String id);
-    Optional<Instrument> findById(@PathVariable String id);
     List<Instrument> findByResponsibleIdContains(@PathVariable String responsibleId);
 }

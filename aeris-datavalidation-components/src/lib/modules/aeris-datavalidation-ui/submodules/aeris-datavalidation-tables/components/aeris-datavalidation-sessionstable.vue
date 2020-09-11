@@ -23,8 +23,7 @@
             <div v-else >{{getDateGoodFormat(item.endDate)}}</div>
           </template>
           <template v-slot:item.linkedParameters="{ item}">
-            <div
-                v-for="parameter in item.linkedParameters"
+            <div v-for="parameter in item.linkedParameters"
                 :key="item.linkedParameters.indexOf(parameter)"
             >
               <div>{{ parameter.name}}</div>
@@ -40,18 +39,16 @@
         <v-pagination v-model="page" :length="pageCount"></v-pagination>
       </div>
       <v-card-actions class="align-end">
-        <v-btn
-            type="submit"
-            color="blue darken-1"
-            :disabled="continueButtonState"
-            text @click="continueSession"
+        <v-btn type="submit"
+               color="blue darken-1"
+               :disabled="disabledContinueButton"
+               text @click="continueSession"
         >
           Continue
         </v-btn>
-        <v-btn
-            type="submit"
-            color="blue darken-1"
-            text @click="createNewSession"
+        <v-btn type="submit"
+               color="blue darken-1"
+               text @click="createNewSession"
         >
           Create new session
         </v-btn>
@@ -66,32 +63,15 @@ import AerisDataValidationServices from "./../../../../aeris-datavalidation-serv
 export default {
   name: "aeris-datavalidation-selectionstable",
   props : {
-    setDialogue : {
+    initNewSession : {
       type : Function,
     },
     setCurrentItem : {
       type : Function,
     },
-    setCurrentSessionId : {
-      type : Function,
-    },
   },
   components : {
     AerisDataValidationServices,
-  },
-  watch : {
-    page : function () {
-      this.switchTablecurrentPage()
-    },
-    selected : function (sessionObj) {
-      console.log("Test selected : ", sessionObj)
-      /* let sessionId
-      if(sessionObj[0]) {
-        sessionId = sessionObj[0]._id['$oid']
-        this.currentSessionId = sessionId
-      }*/
-      this.continueButtonState = this.selected.length === 0
-    }
   },
   data () {
     return {
@@ -135,19 +115,23 @@ export default {
       pageCount: 0,
       itemsPerPage: 5,
       currentUrl : "",
-      currentSessionId : null,
       callBack : null,
-      continueButtonState : true,
     }
   },
+  watch : {
+    page : function () {
+      this.switchTablecurrentPage()
+    },
+  },
+  computed : {
+    disabledContinueButton : function() {
+      return  this.selected.length === 0
+    },
+  },
   mounted() {
-    this.initSessionTable()
+    this.switchTablecurrentPage()
   },
   methods: {
-    initSessionTable : function() {
-      this.switchTablecurrentPage()
-      this.continueButtonState = this.sessions.length === 0
-    },
     switchTablecurrentPage : function() {
       this.callBack = ((data) => {
         if(data) {
@@ -158,16 +142,17 @@ export default {
       })
       this.currentUrl = process.env.VUE_APP_ROOT_API + "/sessions?page=" + this.page + "&size=" + this.itemsPerPage
     },
-    createNewSession : function() {
-      this.setCurrentItem("New session")
-    },
     continueSession : function() {
-      this.setCurrentSessionId(this.currentSessionId)
-      this.setDialogue()
-    },
-    completeNumber : function(number) {
-      let result = Math.floor(number / 10) <= 0 ? "0" + number : number
-      return result
+      let session = this.selected[0]
+      let instrumentName = session.instrumentName
+
+      this.callBack = (instrument) => {
+        if(instrument) {
+          this.initNewSession(session, instrument)
+          this.currentUrl = ""
+        }
+      }
+      this.currentUrl = process.env.VUE_APP_ROOT_API + "/instruments?name=" + instrumentName
     },
     getDateGoodFormat : function(date) {
       let timePart, datePart
@@ -176,6 +161,9 @@ export default {
         datePart = this.$root.getDatePikerDateFormat(date, "fr")
         return datePart + ", "+ timePart
       }
+    },
+    createNewSession : function() {
+      this.setCurrentItem("New session")
     },
   },
 }

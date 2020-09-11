@@ -84,7 +84,7 @@
         <v-btn
             type="submit"
             color="blue darken-1"
-            :disabled="createSessionAuthorization"
+            :disabled="disabledCreateButton"
             text @click="createNewSession"
         >
           Create
@@ -146,7 +146,7 @@ export default {
     }
   },
   computed : {
-    createSessionAuthorization : function () {
+    disabledCreateButton : function () {
       let isMainParameterEmpty = this.mainParameter === null
       let isTimeEmpty = this.startTime === "" || this.endTime === ""
       let isDateEmpty = this.startDate === "" || this.endDate === ""

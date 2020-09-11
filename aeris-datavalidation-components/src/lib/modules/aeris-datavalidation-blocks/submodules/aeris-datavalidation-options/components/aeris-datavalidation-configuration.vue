@@ -12,8 +12,7 @@
         </v-row>
         <AerisDatavalidationSessionsTable
             v-if="currentItem === 'Continue session'"
-            :setCurrentSessionId="setCurrentSessionId"
-            :setDialogue="setDialogue"
+            :initNewSession="initNewSession"
             :setCurrentItem="setCurrentItem"
         />
         <AerisDatavalidationSessionForm
@@ -61,9 +60,6 @@ export default {
     }
   },
   methods : {
-    setDialogue : function () {
-      this.dialog = this.dialog !== true;
-    },
     setCurrentItem : function(item) {
       this.currentItem = item
     },

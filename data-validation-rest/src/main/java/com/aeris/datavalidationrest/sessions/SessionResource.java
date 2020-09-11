@@ -31,8 +31,6 @@ public class SessionResource {
 
     Logger logger = LoggerFactory.getLogger(LoginResource.class);
 
-    private static final String NOT_ALLOWED_TO_CREATE_SESSION = "You are not allowed to create a session";
-
     @PostMapping(value ="/create")
     public ResponseEntity<Session> create(@RequestBody @Valid Session session) {
         return sessionService.createNewSession(request, session);

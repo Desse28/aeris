@@ -41,22 +41,20 @@ public class InstrumentResource {
     Logger logger = LoggerFactory.getLogger(LoginResource.class);
 
     @GetMapping("/names")
-    public ResponseEntity<List<String>> getAllNames() {
-        return instrumentService.findAllNames(request);
+    public ResponseEntity<List<String>> findAllNames() {
+        return instrumentService.getAllNames(request);
+    }
+
+    @GetMapping(params = { "id" })
+    public ResponseEntity<Optional<Instrument>> findById(@RequestParam("id") String id) {
+        return instrumentService.getById(request, id);
+    }
+
+    @GetMapping(params = { "name" })
+    public ResponseEntity<Optional<Instrument>> findByName(@RequestParam("name") String name) {
+        return this.instrumentService.getByName(request, name);
     }
     //
-
-    @GetMapping(value = "/{id}")
-    public ResponseEntity<Optional<Instrument>> findById(@PathVariable String id) {
-        Optional<Instrument> instrument = null;
-
-        if ( this.commonService.isPI(request)) {
-            instrument = this.instrumentDao.findById(id);
-            return ResponseEntity.status(HttpStatus.SC_OK).body(instrument);
-        }
-        return ResponseEntity.status(HttpStatus.SC_FORBIDDEN).body(instrument);
-    }
-
     @GetMapping
     public ResponseEntity<List<Instrument>> findAll() {
         String responsibleId;
