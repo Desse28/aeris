@@ -249,7 +249,6 @@ export default {
         isIdEmpty = session.id === null
         isSameMainParameter = session.mainParameter.name === this.requestData.mainParameter.name
         isSameInstrument = session.instrumentName === this.requestData.instrumentName
-        console.log("Test session exist : ", isIdEmpty, isSameInstrument, isSameInstrument)
         exist = isIdEmpty && isSameInstrument && isSameMainParameter
       }
       return exist;

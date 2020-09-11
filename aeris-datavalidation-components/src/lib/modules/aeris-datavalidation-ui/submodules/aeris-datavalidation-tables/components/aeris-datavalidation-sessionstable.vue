@@ -7,16 +7,13 @@
       <template>
         <v-data-table
             show-select
-            item-key="startDate"
+            item-key="id"
             v-model="selected"
-            :page.sync="page"
             :items="sessions"
             :headers="headers"
             class="elevation-1"
             hide-default-footer
             :single-select="singleSelect"
-            :items-per-page="itemsPerPage"
-            @page-count="pageCount = $event"
         >
           <template v-slot:item.startDate="{ item }">
             <div>{{getDateGoodFormat(item.startDate)}}</div>
@@ -83,6 +80,9 @@ export default {
     AerisDataValidationServices,
   },
   watch : {
+    page : function () {
+      this.switchTablecurrentPage()
+    },
     selected : function (sessionObj) {
       console.log("Test selected : ", sessionObj)
       /* let sessionId
@@ -141,13 +141,23 @@ export default {
     }
   },
   mounted() {
-    this.callBack = ((data) => {
-      this.sessions = data
-    })
-    this.currentUrl = process.env.VUE_APP_ROOT_API + "/sessions"
-    this.continueButtonState = this.sessions.length === 0
+    this.initSessionTable()
   },
   methods: {
+    initSessionTable : function() {
+      this.switchTablecurrentPage()
+      this.continueButtonState = this.sessions.length === 0
+    },
+    switchTablecurrentPage : function() {
+      this.callBack = ((data) => {
+        if(data) {
+          this.page = data.number
+          this.sessions = data.content
+          this.pageCount = data.totalPages
+        }
+      })
+      this.currentUrl = process.env.VUE_APP_ROOT_API + "/sessions?page=" + this.page + "&size=" + this.itemsPerPage
+    },
     createNewSession : function() {
       this.setCurrentItem("New session")
     },

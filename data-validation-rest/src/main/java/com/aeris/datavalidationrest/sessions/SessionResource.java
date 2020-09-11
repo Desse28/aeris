@@ -6,6 +6,7 @@ import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,6 +36,11 @@ public class SessionResource {
     @PostMapping(value ="/create")
     public ResponseEntity<Session> create(@RequestBody @Valid Session session) {
         return sessionService.createNewSession(request, session);
+    }
+
+    @GetMapping(params = { "page", "size" })
+    public ResponseEntity<Page<List<Session>>> findByPiid(@RequestParam("page") int page, @RequestParam("size") int size) {
+       return sessionService.getPiSessions(request,page, size);
     }
 
     //
@@ -74,33 +80,6 @@ public class SessionResource {
         String piid;
         piid = this.commonService.getCurrrentUserId(request);
         return findSessionsByPiIdAndAndState(piid, true);
-    }
-
-    @GetMapping
-    public ResponseEntity<List<Session>> findAll() {
-        String piid;
-        List<Session> sessions = new ArrayList<>();
-
-        if ( this.commonService.isPI(request)) {
-            piid = this.commonService.getCurrrentUserId(request);
-            sessions = sessionDao.findByPiId(piid);
-            return ResponseEntity.status(HttpStatus.SC_OK).body(sessions);
-        }
-
-        return ResponseEntity.status(HttpStatus.SC_FORBIDDEN).body(sessions);
-    }
-
-    @GetMapping("/ids")
-    public ResponseEntity<List<String>> findAllIds() {
-        String responsibleId;
-        List<String> sessionsId = new ArrayList<>();
-
-        if (this.commonService.isAdmin(request) || this.commonService.isPI(request)) {
-            responsibleId = this.commonService.getCurrrentUserId(request);
-            sessionsId = sessionDao.findAllByPiId(responsibleId);
-            return ResponseEntity.status(HttpStatus.SC_OK).body(sessionsId);
-        }
-        return ResponseEntity.status(HttpStatus.SC_FORBIDDEN).body(sessionsId);
     }
 
     @PutMapping(value = "/update")
