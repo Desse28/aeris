@@ -2,6 +2,11 @@
   "message" : {
     "hello": "hello"
   },
+  "appbar" : {
+    "login" : "Login",
+    "logout" : "Logout",
+    "data_validation_tool" : "Data validation tool"
+  },
   "common": {
     "create": "Create",
     "end_date": "End date",

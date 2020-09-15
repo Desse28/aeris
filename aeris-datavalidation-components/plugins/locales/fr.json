@@ -2,6 +2,11 @@
   "message": {
     "hello": "Salut"
   },
+  "appbar" : {
+    "login" : "Se connecter",
+    "logout" : "Se déconnecter",
+    "data_validation_tool" : "Outil de validation des données"
+  },
   "common": {
     "create": "Créer",
     "continue": "Continuer",
@@ -30,6 +35,6 @@
     "view_selsection" : "Voir la sélection"
   },
   "chartconf" : {
-    "add-parameters": "Ajouter des paramètres"
+    "add-parameters": "Ajout des paramètres"
   }
 }

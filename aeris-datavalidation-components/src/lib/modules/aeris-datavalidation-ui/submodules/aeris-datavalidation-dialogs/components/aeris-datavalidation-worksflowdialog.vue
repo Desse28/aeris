@@ -6,10 +6,10 @@
     >
       <template v-slot:activator="{ on, attrs }">
         <v-btn class="ma-2" tile outlined color="blue" v-on="on" v-bind="attrs">
-          <v-icon left>mdi-selection-drag</v-icon>View selection
+          <v-icon left>mdi-selection-drag</v-icon>{{ $t("worksFlow.view_selsection") }}
         </v-btn>
         <v-btn class="ma-2" tile outlined color="blue" v-on="on" v-bind="attrs">
-          <v-icon left>mdi-send-check-outline</v-icon> Validation
+          <v-icon left>mdi-send-check-outline</v-icon> {{ $t("worksFlow.validation") }}
         </v-btn>
       </template>
 

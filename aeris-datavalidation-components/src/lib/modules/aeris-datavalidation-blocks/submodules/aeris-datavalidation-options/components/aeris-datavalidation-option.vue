@@ -7,7 +7,7 @@
     >
       <template v-slot:activator="{ on, attrs }">
         <v-btn class="ma-2" tile outlined color="blue" v-on="on" v-bind="attrs">
-          <v-icon left>mdi-plus-circle-outline</v-icon> Add parameter(s)
+          <v-icon left>mdi-plus-circle-outline</v-icon> {{ $t("chartconf.add-parameters") }}
         </v-btn>
       </template>
       <v-card>

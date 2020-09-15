@@ -30,7 +30,7 @@
                   link
           >
             <v-tab
-                v-if="!authenticated && item.text === 'Login'"
+                v-if="!authenticated && item.text === getLoginMessage"
                 v-on:click="login"
             >
               <v-list-item-content>
@@ -44,7 +44,7 @@
             </v-tab>
 
             <v-tab
-                v-else-if="authenticated && item.text === 'Logout'"
+                v-else-if="authenticated && item.text === getLogoutMessage"
                 v-on:click="logout"
             >
               <v-list-item-content>
@@ -58,7 +58,7 @@
             </v-tab>
 
             <v-tab
-                v-else-if="authenticated && item.text !== 'Login'"
+                v-else-if="authenticated && item.text !== getLoginMessage"
                 :to="item.to">
               <v-list-item-content>
                 <v-list-item-title>
@@ -99,12 +99,23 @@
     },
     data: function() {
       return {
-        items: [
-          { icon: 'mdi-chart-line', text: 'Data validation tool', to : "/data-validation-tool" },
-          { icon: 'mdi-login', text: 'Login', to : "" },
-          { icon: 'mdi-logout', text: 'Logout', to : "" },
-        ],
         authenticated : false,
+      }
+    },
+    computed : {
+      items : function () {
+        let items = [
+          {icon: 'mdi-chart-line', text: this.$t('appbar.data_validation_tool'), to: "/data-validation-tool"},
+          {icon: 'mdi-login', text: this.$t('appbar.login'), to: ""},
+          {icon: 'mdi-logout', text: this.$t('appbar.logout'), to: ""},
+        ];
+        return items
+      },
+      getLoginMessage : function () {
+        return this.$t('appbar.login')
+      },
+      getLogoutMessage : function () {
+        return this.$t('appbar.logout')
       }
     },
     methods: {
