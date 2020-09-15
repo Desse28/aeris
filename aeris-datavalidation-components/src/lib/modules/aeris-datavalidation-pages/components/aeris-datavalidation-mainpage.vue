@@ -3,6 +3,7 @@
     <AerisDatavalidationConfiguration
         :setCurrentSessionId="setCurrentSessionId"
     />
+
     <AerisDatavalidationSimpleToolbar
         :addNewParallel="addNewParallel"
         :removeParallel="removeParallel"
@@ -66,7 +67,6 @@
 <script>
 import {
   AerisDatavalidationChart,
-  AerisDataValidationServices,
   AerisDatavalidationSelection,
   AerisDatavalidationConfiguration,
   AerisDatavalidationSimpleToolbar,
@@ -80,7 +80,6 @@ const baseUrl = "http://localhost:9001/";
       name: "aeris-datavalidation-homepage",
       components: {
         AerisDatavalidationChart,
-        AerisDataValidationServices,
         AerisDatavalidationSelection,
         AerisDatavalidationConfiguration,
         AerisDatavalidationSimpleToolbar,

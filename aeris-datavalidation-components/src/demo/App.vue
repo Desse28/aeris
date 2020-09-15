@@ -22,6 +22,7 @@
         <v-list
                 class="d-flex flex-row"
                 color="primary"
+                max-height="60"
         >
           <v-list-item
                   v-for="item in items"
@@ -68,7 +69,11 @@
                 <v-icon>{{ item.icon }}</v-icon>
               </v-list-item-action>
             </v-tab>
-
+          </v-list-item>
+          <v-list-item>
+            <v-tab class="mt-4">
+              <AerisDatavalidationLangSwitcher/>
+            </v-tab>
           </v-list-item>
         </v-list>
       </v-app-bar>
@@ -80,6 +85,7 @@
 </template>
 <script>
   import {keycloak}  from '../../plugins/keycloak'
+  import AerisDatavalidationLangSwitcher from "./../lib/modules/aeris-datavalidation-ui/submodules/aeris-datavalidation-inputs/components/submodules/aeris-datavalidation-switchers/aeris-datavalidation-langswitcher"
 
   export default {
     name: 'App',
@@ -87,6 +93,9 @@
       '$store.state.common.authenticated': function() {
         this.authenticated = this.$store.state.common.authenticated
       }
+    },
+    components : {
+      AerisDatavalidationLangSwitcher
     },
     data: function() {
       return {

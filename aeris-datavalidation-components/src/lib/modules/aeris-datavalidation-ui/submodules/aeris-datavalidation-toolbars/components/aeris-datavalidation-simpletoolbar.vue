@@ -5,14 +5,7 @@
       tile
   >
     <v-toolbar dense class="d-flex justify-center">
-      <AerisDataValidationOptions
-          :parametersLabel="parametersLabel"
-          :parallelsLabel="parallelsLabel"
-          :addNewParallel="addNewParallel"
-          :removeParallel="removeParallel"
-          :addNewParameter="addNewParameter"
-          :removeParameter="removeParameter"
-      />
+      <AerisDatavalidationWorksFlowDialog/>
       <AerisDataValidationOptions
           :parametersLabel="parametersLabel"
           :parallelsLabel="parallelsLabel"
@@ -28,6 +21,8 @@
 import {
   AerisDataValidationOptions,
 } from "@/lib/modules/aeris-datavalidation-components";
+
+import AerisDatavalidationWorksFlowDialog from "./../../aeris-datavalidation-dialogs/components/aeris-datavalidation-worksflowdialog"
 
 export default {
   name: "aeris-datavalidation-simpletoolbar",
@@ -54,7 +49,8 @@ export default {
     },
   },
   components: {
-    AerisDataValidationOptions
+    AerisDataValidationOptions,
+    AerisDatavalidationWorksFlowDialog,
   },
 }
 </script>

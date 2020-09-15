@@ -1,5 +1,5 @@
 <template>
-  <div style="max-height: 100px; max-width: 100px">
+  <div style="max-height: 70px; max-width: 90px">
       <v-select
           v-model="$i18n.locale"
           :items="langs"
