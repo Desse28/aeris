@@ -37,8 +37,9 @@ import AerisDatavalidationLangSwitcher from "./../../../../aeris-datavalidation-
 export default {
   name: "aeris-datavalidation-configuration",
   props : {
-    setCurrentSessionId : {
+    newSession : {
       type : Function,
+      default: () => {}
     },
   },
   components: {
@@ -49,12 +50,12 @@ export default {
   },
   data() {
     return {
-      dialog: false,
+      dialog: true,
       currentItem : "Continue session",
     }
   },
   computed : {
-    getTitle : function(){
+    getTitle : function() {
       if(this.currentItem === "Continue session")
         return this.$t('session.continue_session')
       else if(this.currentItem === 'New session')
@@ -67,8 +68,10 @@ export default {
       this.currentItem = item
     },
     initNewSession : function (currentSession, currentInstrument) {
-      //this.dialog = false;
-      console.log("Test init new session : ", currentSession, currentInstrument)
+      if(currentSession && currentInstrument) {
+        this.newSession(currentSession, currentInstrument)
+        this.dialog = false;
+      }
     }
   }
 }

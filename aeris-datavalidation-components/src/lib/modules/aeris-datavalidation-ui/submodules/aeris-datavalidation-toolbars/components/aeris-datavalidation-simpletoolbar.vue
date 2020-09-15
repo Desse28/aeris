@@ -5,7 +5,11 @@
       tile
   >
     <v-toolbar dense class="d-flex justify-center">
-      <AerisDatavalidationWorksFlowDialog/>
+      <AerisDatavalidationWorksFlowDialog
+          :session="session"
+          :currentSelection="currentSelection"
+          :notifyNewSelection="notifyNewSelection"
+      />
       <AerisDataValidationOptions
           :parametersLabel="parametersLabel"
           :parallelsLabel="parallelsLabel"
@@ -27,6 +31,18 @@ import AerisDatavalidationWorksFlowDialog from "./../../aeris-datavalidation-dia
 export default {
   name: "aeris-datavalidation-simpletoolbar",
   props: {
+    session : {
+      type: Object,
+      default: null
+    },
+    currentSelection : {
+      type: Object,
+      default: null
+    },
+    notifyNewSelection : {
+      type: Function,
+      default: () => {}
+    },
     addNewParameter : {
       type : Function,
     },

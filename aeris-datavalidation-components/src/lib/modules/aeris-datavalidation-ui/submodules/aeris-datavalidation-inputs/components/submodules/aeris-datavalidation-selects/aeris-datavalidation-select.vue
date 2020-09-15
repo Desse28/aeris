@@ -18,7 +18,7 @@ export default {
       type : String,
       default : "Flags"
     },
-    setQualityFlags : {
+    setFlagsSelected : {
       type : Function
     },
     qualityFlags : {
@@ -45,8 +45,8 @@ export default {
     }
   },
   watch: {
-    value(val) {
-      this.setQualityFlags(val)
+    value(flags) {
+      this.setFlagsSelected(flags)
     },
     qualityFlags : function(qualityFlags) {
       this.items = qualityFlags

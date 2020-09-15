@@ -5,14 +5,21 @@
         width="900"
     >
       <template v-slot:activator="{ on, attrs }">
-        <v-btn class="ma-2" tile outlined color="blue"
-               v-on="on" v-bind="attrs"
+        <v-btn class="ma-2"
+               tile
+               outlined
+               color="blue"
+               v-on="on"
+               v-bind="attrs"
                v-on:click="setCurrentWorkflow('selection')"
         >
-          <v-icon left>mdi-selection-drag</v-icon>{{ $t("worksFlow.view_selsection") }}
+          <v-icon left>mdi-selection-drag</v-icon>{{ $t("worksFlow.view_selection") }}
         </v-btn>
-        <v-btn class="ma-2" tile outlined
-               color="blue" v-on="on" v-bind="attrs"
+        <v-btn class="ma-2"
+               tile
+               outlined
+               color="blue"
+               v-on="on" v-bind="attrs"
                v-on:click="setCurrentWorkflow('validation')"
         >
           <v-icon left>mdi-send-check-outline</v-icon> {{ $t("worksFlow.validation") }}
@@ -29,7 +36,11 @@
           <AerisDatavalidationSelectionform v-if="isSelectionCurrentView"/>
           <div v-else>
             <AerisDatavalidationSelectionsTable/>
-            <AerisDatavalidationSelectionform/>
+            <AerisDatavalidationSelectionform
+                :session="session"
+                :currentSelection="currentSelection"
+                :notifyNewSelection="notifyNewSelection"
+            />
           </div>
         <v-divider></v-divider>
 
@@ -66,6 +77,20 @@ export default {
     AerisDatavalidationSelectionform,
     AerisDatavalidationSelectionsTable
   },
+  props : {
+    session : {
+      type: Object,
+      default: null
+    },
+    currentSelection : {
+      type: Object,
+      default: null
+    },
+    notifyNewSelection : {
+      type: Function,
+      default: () => {}
+    }
+  },
   data() {
     return {
       dialog: false,
@@ -74,15 +99,14 @@ export default {
   },
   computed : {
     isSelectionCurrentView : function () {
-      return this.currentWorkFlow === this.$t('worksFlow.view_selsection')
+      return this.currentWorkFlow === this.$t('worksFlow.view_selection')
     }
   },
   methods : {
     setCurrentWorkflow : function (targetButton) {
-      if(targetButton === "selection")
-        this.currentWorkFlow = this.$t('worksFlow.view_selsection')
-      else if(targetButton === 'validation')
-        this.currentWorkFlow = this.$t('worksFlow.validation')
+      let validation = this.$t('worksFlow.validation')
+      let selection = this.$t('worksFlow.view_selection')
+      this.currentWorkFlow = targetButton === "selection" ? selection : validation
     }
   },
 }

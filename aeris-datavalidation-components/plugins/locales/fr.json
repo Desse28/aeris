@@ -32,7 +32,7 @@
   },
   "worksFlow": {
     "validation": "Validation",
-    "view_selsection" : "Voir la sélection"
+    "view_selection" : "Sélection"
   },
   "chartconf" : {
     "add-parameters": "Ajout des paramètres"

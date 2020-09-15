@@ -68,6 +68,7 @@ public class WebSecurityConfig extends KeycloakWebSecurityConfigurerAdapter {
                 .antMatchers("/sessions/*/*").permitAll()
                 .antMatchers("/instruments/*").permitAll()
                 .antMatchers("/instruments/*/*").permitAll()
+                .antMatchers("/instruments/*/*/*").permitAll()
                 //.antMatchers("/flags*").hasRole("user")
                 .anyRequest()
                 .authenticated();

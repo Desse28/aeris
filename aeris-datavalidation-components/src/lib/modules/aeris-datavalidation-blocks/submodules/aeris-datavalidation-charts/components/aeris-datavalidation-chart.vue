@@ -31,36 +31,10 @@
     AerisDataValidationServices,
   } from "./../../../../aeris-datavalidation-components"
 
-  const baseUrl = "http://localhost:9001/"
-
   export default {
     name: "aeris-datavalidation-chart",
     props: {
-      uuid : {
-        type : String,
-        default : ""
-      },
       parameters: {
-        type : Array,
-        default : () => [],
-      },
-      setCurrentData : {
-        type : Function,
-        default : () => null,
-      },
-      selectionHandler : {
-        type : Function,
-        default : () => null,
-      },
-      setCurrentShape : {
-        type : Function,
-        default : () => null,
-      },
-      targetShape : {
-        type : Object,
-        default : () => null,
-      },
-      selectionPreconfData : {
         type : Array,
         default : () => [],
       },
@@ -68,6 +42,14 @@
         type : Object,
         default : () => null,
       },
+      currentSession : {
+        type : Object,
+        default : () => null
+      },
+      currentInstrument : {
+        type : Object,
+        default : () => null
+      }
     },
     components: {
       Plotly,
@@ -75,26 +57,28 @@
     },
     data() {
       return {
-        componentKey: 0,
-        currentData: [],
-        currentUuid : "",
-        currentUrl : "",
-        layout: {
-          title: "My graph"
-        },
+        data: [],
         flags: [],
+        layout: {},
+        shapes : [],
+        currentUrl : "",
+        currentData: [],
+        componentKey: 0,
+        currentUuid : "",
+        callBack : null,
         modeBarButtons: [],
         currentShape : null,
         chartId : "mainChart",
         currentParameters : [],
-        data: [],
-        callBack : this.addNewParameterData,
-        shapes : [],
       }
     },
     watch: {
-      parameters : function (newParameters, oldsParameters) {
-        if(oldsParameters.length < newParameters.length) {
+      currentInstrument : function () {
+        if(!this.isCurrentSessionEmpty && !this.isCurrentInstrumentEmpty)
+          this.initCurrentChart()
+      },
+      //parameters : function (newParameters, oldsParameters) {
+        /*if(oldsParameters.length < newParameters.length) {
           if(oldsParameters.length === 0)
             this.currentParameters = newParameters
           else
@@ -102,20 +86,12 @@
           this.setLayout()
         } else {
           this.removeParameter(newParameters, oldsParameters)
-        }
-      },
-      uuid : function(newUuid) {
-        this.currentUuid = newUuid
-        if(this.currentUuid !== "" && 0 < this.currentParameters.length) {
-          this.currentParameters.forEach( (parameterName) => {
-            this.currentUrl = baseUrl + "instruments/" + parameterName + "/" + this.currentUuid
-          })
-        }
-      },
+        }*/
+      //},
       dataInfo : function() {
         if (this.dataInfo) {
           let title =  {
-            text : "Current data set - "+ this.dataInfo.resourceTitle.fr,
+            text : "Current data set - "+ "test",//this.dataInfo.resourceTitle.fr,
             x : 0.52,
             font : {
               color : 'rgb(13, 13, 13)',
@@ -124,42 +100,92 @@
             }
           }
           this.layout.title = title
-          //this.layout.title.text = "Current data set - "+ this.dataInfo.resourceTitle.fr
-          //this.componentKey += 1
           this.setEventsHandler()
         }
       },
-      currentData : function(newData) {
-        this.refreshChart(newData)
-        this.setLayout()
-      },
-      targetShape : function () {
-        this.currentShape.x0 = this.targetShape.x0
-        this.currentShape.x1 = this.targetShape.x1
-        this.componentKey += 1
-        this.setEventsHandler()
-      },
-      selectionPreconfData : function () {
-        console.log("Test selectionPreconfDat : ", this.selectionPreconfData)
-      }
     },
-    mounted() {
-      if(this.parameters.length === 1) {
-        this.currentUuid = this.uuid
-        this.addNewParameter(this.parameters)
+    computed : {
+      isCurrentSessionEmpty : function () {
+        console.log("Test isCurrentSessionEmpty")
+        return this.currentSession === null;
+      },
+      isCurrentInstrumentEmpty : function () {
+        return this.currentInstrument === null;
       }
-      this.initModeBar()
-      this.setEventsHandler()
     },
     methods: {
-      setEventsHandler : function () {
+      initCurrentChart : function() {
+        let targetParameter
+        if(this.currentSession && this.currentInstrument) {
+          targetParameter = [this.currentSession['mainParameter'].name]
+          this.addNewParameter(targetParameter)
+          //this.initModeBar()
+          //this.setEventsHandler()
+        }
+      },
+      addNewParameter : function (parameters) {
+        let uri
+        let startDate = this.currentSession.startDate;
+        let endDate = this.currentSession.endDate;
+        let parameterName = parameters[parameters.length - 1]
+
+        this.callBack = (data) => {
+          console.log("Test add newParameter, ", data)
+          if(data) {
+            this.refreshChart(data.parameterData)
+          }
+        }
+
+        uri = "/instruments/" + parameterName + "/" + startDate + "/" + endDate
+        this.currentUrl = process.env.VUE_APP_ROOT_API + uri
+      },
+      refreshChart: function(newData) {
+        let dataContent = {}
+        let currentContent = null
+        const newDataKeys = Object.keys(newData[0])
+
+        newData.forEach((data) => {
+          newDataKeys.forEach((key) => {
+            if( ! (key in dataContent) )
+              dataContent[key] = []
+
+            currentContent = data[key]
+            dataContent[key].push(currentContent)
+          });
+        });
+
+        this.setData( newDataKeys, dataContent)
+      },
+      setData(newDataKeys, dataContent) {
+        const xaxis = newDataKeys[0]
+        const yaxis = newDataKeys[1]
+
+        this.data = [...this.data, {
+          x: dataContent[xaxis],
+          y: dataContent[yaxis],
+          name: yaxis,
+        }]
+        //this.currentUrl = ""
+        //this.componentKey += 1
+        //this.setEventsHandler()
+      },
+      addEventsHandler : function () {
         this.$nextTick(() => {
           document.getElementById( this.chartId ).on( 'plotly_click', this.clickHandler )
-          document.getElementById( this.chartId ).on( 'plotly_selected', this.addNewSelection)
+          //document.getElementById( this.chartId ).on( 'plotly_selected', this.addNewSelection)
         });
       },
-      addNewSelection : function(data) {
-        let x0, x1
+      clickHandler : function (data) {
+        console.log("Test click : ",data )
+        /*let targetPoint
+        if(data) {
+          targetPoint = data.points[0].x
+          this.setCurrentSelection(targetPoint)
+          this.setEventsHandler()
+        }*/
+      },
+      //addNewSelection : function(data) {
+        /*let x0, x1
         if(data) {
           x0 = data.range.x[0]
           x1 = data.range.x[1]
@@ -167,10 +193,11 @@
             this.drawSelection(x0, x1)
             this.selectionHandler(data)
           }
-        }
-      },
+        }*/
+      //},
       drawSelection : function(x0, x1) {
-        this.clearCurrentSelection()
+        console.log(x0, x1)
+        //this.clearCurrentSelection()
         this.shapes = [
           ...this.shapes,
           {
@@ -196,29 +223,22 @@
             y1 : 1
           }
         ]
-        this.layout.shapes = this.shapes
-        this.componentKey += 1
-        this.setEventsHandler()
-        this.currentShape = this.shapes[this.shapes.length-1]
-        this.setCurrentShape(this.currentShape)
+        //this.layout.shapes = this.shapes
+        //this.componentKey += 1
+        //this.setEventsHandler()
+        //this.currentShape = this.shapes[this.shapes.length-1]
+        //this.setCurrentShape(this.currentShape)
       },
       isSelectionExist : function (x0, x1) {
-        for(let index in this.shapes) {
+        console.log(x0, x1)
+        /*for(let index in this.shapes) {
           if(this.layout.shapes[index] && this.layout.shapes[index].x0 === x0 && this.layout.shapes[index].x1 === x1)
             return true
         }
-        return false
+        return false*/
       },
-      clickHandler : function (data) {
-        let targetPoint
-        if(data) {
-          targetPoint = data.points[0].x
-          this.setCurrentSelection(targetPoint)
-          this.setEventsHandler()
-        }
-      },
-      setCurrentSelection : function(targetPoint) {
-        let targetSelection = this.getTargetSelection(targetPoint)
+      //setCurrentSelection : function(targetPoint) {
+        /*let targetSelection = this.getTargetSelection(targetPoint)
         if(targetSelection) {
           this.clearCurrentSelection()
           targetSelection.line.color = 'rgb(84,217,27)'
@@ -226,45 +246,35 @@
           this.componentKey += 1
           this.selectionHandler(targetSelection)
           this.setCurrentShape(targetSelection)
-        }
-      },
-      getTargetSelection : function(targetPoint) {
-        let targetsSelection = []
+        }*/
+      //},
+      //getTargetSelection : function(targetPoint) {
+        /*let targetsSelection = []
         this.layout.shapes.forEach((shape) => {
           if(shape && new Date(shape.x0) <= new Date(targetPoint) &&
               new Date(targetPoint) <= new Date(shape.x1)) {
             targetsSelection.push(shape)
           }
         })
-        return targetsSelection[targetsSelection.length-1]
-      },
+        return targetsSelection[targetsSelection.length-1]*/
+      //},
       clearCurrentSelection : function() {
-        this.layout.shapes.forEach((shape) => {
+        /*this.layout.shapes.forEach((shape) => {
           if(shape.line.color === 'rgb(84,217,27)') {
             shape.line.color = 'rgb(252, 12, 12)'
           }
-        })
-      },
-      addNewParameter : function (newParameters) {
-        let lastIndex = newParameters.length - 1
-        let newParameter = newParameters[lastIndex]
-
-        if(newParameters)
-          this.currentUrl = baseUrl + "instruments/" + newParameter + "/" + this.currentUuid
-      },
-      addNewParameterData : function (parameterData) {
-        if(parameterData)
-          this.refreshChart(parameterData)
+        })*/
       },
       removeParameter : function (newParameters, oldsParameters) {
-        let oldParametersInterNewParameters = oldsParameters.filter(value => !newParameters.includes(value))
+        console.log(newParameters, oldsParameters)
+        /*let oldParametersInterNewParameters = oldsParameters.filter(value => !newParameters.includes(value))
         let parameterKey = oldParametersInterNewParameters[0]
         const targetParameterIndex = this.data.findIndex(element => element.name === parameterKey )
 
         if( -1 < targetParameterIndex ) {
           this.data.splice(targetParameterIndex, 1)
           this.setCurrentData(this.data)
-        }
+        }*/
       },
       initModeBar : function() {
         this.modeBarButtons = [
@@ -305,43 +315,6 @@
             this.selectionHandler({type : "clearForm"})
           }
         }
-      },
-      isDateKey: function(key) {
-        return key === 'Date_Time'
-      },
-      getDate: function(value) {
-        return value.split("/").join("-")
-      },
-      refreshChart: function(newData) {
-        let dataContent = {}
-        let currentContent = null
-        const newDataKeys = Object.keys(newData[0])
-
-        newData.forEach((data) => {
-          newDataKeys.forEach((key) => {
-              if( ! (key in dataContent) )
-                dataContent[key] = []
-
-              currentContent = this.isDateKey( key ) ? this.getDate(data[key]) : data[key]
-              dataContent[key].push(currentContent)
-          });
-        });
-
-        this.setData( newDataKeys, dataContent)
-      },
-      setData(newDataKeys, dataContent) {
-        const xaxis = newDataKeys[0]
-        const yaxis = newDataKeys[1]
-
-        this.data = [...this.data, {
-          x: dataContent[xaxis],
-          y: dataContent[yaxis],
-          name: yaxis,
-        }]
-        this.currentUrl = ""
-        this.setCurrentData(this.data)
-        this.componentKey += 1
-        this.setEventsHandler()
       },
       setLayout: function() {
         this.layout = {
