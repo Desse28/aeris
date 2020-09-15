@@ -26,12 +26,6 @@
             :cols="[12, 12]"
         >
           <template v-slot:portrait1>
-            <AerisDataValidationServices
-                :url="currentUrl"
-                :callBack="callBack"
-                :requestData="requestData"
-                :typeOfRequest="typeOfRequest"
-            >
                 <AerisDatavalidationChart
                     :uuid="uuid"
                     :dataInfo="dataInfo"
@@ -42,7 +36,6 @@
                     :selectionHandler="selectionHandler"
                     :selectionPreconfData="selectionPreconfData"
                 />
-            </AerisDataValidationServices>
           </template>
           <template v-slot:portrait2>
             <AerisDatavalidationSelection
@@ -96,7 +89,6 @@ const baseUrl = "http://localhost:9001/";
       },
       data() {
         return {
-          url : "",
           uuid : "",
           dataInfo : null,
           requestData : null,
@@ -114,8 +106,6 @@ const baseUrl = "http://localhost:9001/";
           currentInstrument : null,
           currentSessionId : "",
           parallelChartGridSize : 0,
-          callBack : null,
-          currentUrl : "",
           targetShape : null,
           sessionSelections : null,
           selectionPreconfData : [],

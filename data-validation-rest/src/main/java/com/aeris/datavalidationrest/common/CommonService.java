@@ -8,6 +8,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -48,5 +52,11 @@ public class CommonService {
         AccessToken scAccessToken = getAccessToken(request);
         String userId = scAccessToken.getSubject();
         return userId;
+    }
+
+    public Date strToDate(String str, String dateFormat) throws ParseException {
+        DateFormat format = new SimpleDateFormat(dateFormat);
+        Date date = format.parse(str);
+        return date;
     }
 }

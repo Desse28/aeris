@@ -1,0 +1,28 @@
+{
+  "message": {
+    "hello": "Salut"
+  },
+  "common": {
+    "create": "Créer",
+    "continue": "Continuer",
+    "end_date": "Date de fin",
+    "end_time": "Heure de fin",
+    "start_date": "Date de début",
+    "start_time": "Heure de début"
+  },
+  "session": {
+    "state": "État",
+    "new_session": "Nouvelle session",
+    "create_button" : "@:common.create",
+    "linked_parameters": "Paramètres liés",
+    "main_parameter": "Paramètre principal",
+    "session_exist" : "Cette session existe",
+    "instrument_name": "Nom de l'instrument",
+    "continue_session" : "Continuer la session",
+    "end_date_input_label" : "@:common.end_date",
+    "end_time_input_label" : "@:common.end_time",
+    "start_time_input_label" : "@:common.start_time",
+    "start_date_input_label" : "@:common.start_date",
+    "create_new_session": "Créer une nouvelle session"
+  }
+}

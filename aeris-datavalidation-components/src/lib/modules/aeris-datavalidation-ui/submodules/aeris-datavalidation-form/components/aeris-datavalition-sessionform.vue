@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-alert type="error" v-if="isSessionExist">
-      This session exist
+      {{ $t("session.session_exist") }}
     </v-alert>
     <AerisDataValidationServices
         :url="currentUrl"
@@ -23,7 +23,7 @@
                 name="name"
                 item-text="name"
                 item-value="name"
-                label="Instrument name"
+                :label="$t('session.instrument_name')"
                 return-object
                 required
             ></v-select>
@@ -34,7 +34,7 @@
                 v-model="mainParameter"
                 name="mainParameter"
                 item-text="name"
-                label="Main Parameter"
+                :label="$t('session.main_parameter')"
                 return-object
                 required
                 :disabled="parametersAuthorization"
@@ -45,7 +45,7 @@
                 :items="parameters"
                 v-model="linkedParameters"
                 item-text="name"
-                label="Linked Parameters"
+                :label="$t('session.linked_parameters')"
                 name="linkedParameters"
                 return-object
                 multiple
@@ -54,26 +54,26 @@
           </template>
           <template v-slot:portrait4>
               <AerisDatavalidationDateMounthPicker
-                  date_label="Start date"
+                  :date_label="$t('session.start_date_input_label')"
                   :setCurrentDate="setStartDate"
               />
           </template>
           <template v-slot:portrait5>
               <AerisDatavalidationDateMounthPicker
-                  date_label="End date"
+                  :date_label="$t('session.end_date_input_label')"
                   :setCurrentDate="setEndDate"
               />
           </template>
           <template v-slot:portrait6>
             <AerisDatavalidationTimePicker
-                time_label="Start time"
+                :time_label="$t('session.start_time_input_label')"
                 :setCurrentTime="setStartTime"
                 :disabled="false"
             />
           </template>
           <template v-slot:portrait7>
             <AerisDatavalidationTimePicker
-                time_label="End time"
+                :time_label="$t('session.end_time_input_label')"
                 :setCurrentTime="setEndTime"
                 :disabled="false"
             />
@@ -87,14 +87,14 @@
             :disabled="disabledCreateButton"
             text @click="createNewSession"
         >
-          Create
+          {{ $t("session.create_button") }}
         </v-btn>
         <v-btn
             type="submit"
             color="blue darken-1"
             text @click="continueSession"
         >
-          Continue session
+          {{ $t("session.continue_session") }}
         </v-btn>
       </v-card-actions>
     </AerisDataValidationServices>
@@ -160,13 +160,14 @@ export default {
   watch : {
     instrument : function(instrumentIdObj) {
       let instrumentId = instrumentIdObj['_id']['$oid']
+
       this.callBack = (data) => {
         if(data) {
           this.currentInstrument = data
           this.parameters = this.currentInstrument.parameters
         }
       }
-      this.currentUrl = process.env.VUE_APP_ROOT_API + "/instruments/" + instrumentId
+      this.currentUrl = process.env.VUE_APP_ROOT_API + "/instruments?id=" + instrumentId
     },
   },
   mounted() {

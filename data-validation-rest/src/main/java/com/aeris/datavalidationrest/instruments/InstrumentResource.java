@@ -1,137 +1,82 @@
 package com.aeris.datavalidationrest.instruments;
 
-import com.aeris.datavalidationrest.auth.LoginResource;
 import com.aeris.datavalidationrest.catalogue.datainfo.DataInfo;
 import com.aeris.datavalidationrest.catalogue.datainfo.DataInfoDao;
-import com.aeris.datavalidationrest.common.CommonService;
+import com.aeris.datavalidationrest.parameters.Parameter;
 import io.swagger.annotations.ApiParam;
-import org.apache.http.HttpStatus;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @CrossOrigin
 @RestController
 @RequestMapping("/instruments")
 public class InstrumentResource {
     @Autowired
-    private HttpServletRequest request;
-    @Autowired
-    private InstrumentDao instrumentDao;
-    @Autowired
     private InstrumentService instrumentService;
-    @Autowired
-    private CommonService commonService;
     @Autowired
     private DataInfoDao dataInfoDao;
 
-    private static final String NOT_ALLOWED_TO_ADD_INSTRUMENT = "You are not allowed to add an instrument";
+    @PostMapping
+    public ResponseEntity<Instrument> insert(@RequestBody @Valid Instrument instrument) {
+        if(instrument == null)
+            return ResponseEntity.noContent().build();
+        else
+            return instrumentService.insertNewInstrument(instrument);
+    }
 
-    Logger logger = LoggerFactory.getLogger(LoginResource.class);
+    @GetMapping
+    public ResponseEntity<List<Instrument>> findAll() {
+        return this.instrumentService.getAll();
+    }
 
     @GetMapping("/names")
     public ResponseEntity<List<String>> findAllNames() {
-        return instrumentService.getAllNames(request);
+        return instrumentService.getAllNames();
     }
 
     @GetMapping(params = { "id" })
     public ResponseEntity<Optional<Instrument>> findById(@RequestParam("id") String id) {
-        return instrumentService.getById(request, id);
+        return instrumentService.getById(id);
     }
 
     @GetMapping(params = { "name" })
     public ResponseEntity<Optional<Instrument>> findByName(@RequestParam("name") String name) {
-        return this.instrumentService.getByName(request, name);
-    }
-    //
-    @GetMapping
-    public ResponseEntity<List<Instrument>> findAll() {
-        String responsibleId;
-        List<Instrument> instruments = new ArrayList<>();
-
-        if (this.commonService.isAdmin(request) || this.commonService.isPI(request)) {
-            responsibleId = this.commonService.getCurrrentUserId(request);
-            instruments = instrumentDao.findByResponsibleIdContains(responsibleId);
-            return ResponseEntity.status(HttpStatus.SC_OK).body(instruments);
-        }
-
-        return ResponseEntity.status(HttpStatus.SC_FORBIDDEN).body(instruments);
-    }
-
-
-    @GetMapping("/{parameter_name}/{uuid}")
-    public ResponseEntity<List<Map<String, String>>> getParameterData(@ApiParam(value = "Air Temp")@PathVariable @Valid String parameter_name,
-                                                                      @ApiParam(value = "91440f71-9c3e-5d31-befc-2729873ce581") @PathVariable String uuid ) {
-        List<Map<String, String>> parameterData = new ArrayList<>();
-
-        if (this.commonService.isAdmin(request) || this.commonService.isPI(request)) {
-            parameterData = this.instrumentService.getParameterData(parameter_name, uuid);
-            return ResponseEntity.status(HttpStatus.SC_OK).body(parameterData);
-        }
-
-        return ResponseEntity.status(HttpStatus.SC_FORBIDDEN).body(parameterData);
-
-    }
-
-    @PostMapping
-    public ResponseEntity<String> add(@RequestBody @Valid Instrument instrument) {
-        Instrument instrumentAdded;
-
-        if(instrument == null)
-            return ResponseEntity.noContent().build();
-
-        if (this.commonService.isAdmin(request)) {
-            instrumentAdded = instrumentDao.save(instrument);
-
-            URI location = ServletUriComponentsBuilder
-                    .fromCurrentRequest()
-                    .path("/{id}")
-                    .buildAndExpand(instrumentAdded.getId())
-                    .toUri();
-
-            return ResponseEntity.created(location).build();
-        }
-
-        return ResponseEntity.status(HttpStatus.SC_FORBIDDEN).body(NOT_ALLOWED_TO_ADD_INSTRUMENT);
+        return this.instrumentService.getByName(name);
     }
 
     @PutMapping(value = "/update")
     public ResponseEntity<String> update(@RequestBody Instrument instrument) {
-
         if(instrument == null)
             return ResponseEntity.noContent().build();
-
-        if (this.commonService.isAdmin(request)) {
-            instrumentDao.save(instrument);
-            return ResponseEntity.status(HttpStatus.SC_ACCEPTED).body("Update instrument");
-        }
-
-        return ResponseEntity.status(HttpStatus.SC_FORBIDDEN).body("Error Message");
+        else
+            return this.instrumentService.updateInstrument(instrument);
     }
 
     @DeleteMapping(value = "/{id}")
     public  ResponseEntity<String> delete(@PathVariable String id) {
-
         if(id == null)
             return ResponseEntity.noContent().build();
+        else
+            return this.instrumentService.deleteInstrument(id);
+    }
 
-        if (this.commonService.isAdmin(request)) {
-            instrumentDao.deleteById(id);
-            return ResponseEntity.status(HttpStatus.SC_OK).body("Delete instrument");
-        }
+    @PostMapping(value = "/{uuid}")
+    public ResponseEntity<String> importParameters(@RequestBody @Valid String uuid) {
+        if(uuid == null)
+            return ResponseEntity.noContent().build();
+        else
+            return instrumentService.importParameters(uuid);
+    }
 
-        return ResponseEntity.status(HttpStatus.SC_FORBIDDEN).body("Error Message");
+    @GetMapping(value = "/{name}/{startDate}/{endDate}")
+    public Parameter findParameterDataByPeriod(@ApiParam(value = "Air Temp") @PathVariable String name,
+                                  @ApiParam(value = "2019-05-16T22:00:00.000+00:00") @PathVariable String startDate,
+                                  @ApiParam(value = "2019-05-16T22:02:01.000+00:00") @PathVariable String endDate) {
+        return this.instrumentService.getParameterDataByPeriod(name, startDate,  endDate);
     }
 
     @GetMapping(value = "infos/{id}")

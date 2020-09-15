@@ -10,7 +10,7 @@
             item-key="id"
             v-model="selected"
             :items="sessions"
-            :headers="headers"
+            :headers="tableHeaders"
             class="elevation-1"
             hide-default-footer
             :single-select="singleSelect"
@@ -50,7 +50,7 @@
                color="blue darken-1"
                text @click="createNewSession"
         >
-          Create new session
+          {{ $t("session.create_new_session") }}
         </v-btn>
       </v-card-actions>
     </div>
@@ -77,39 +77,6 @@ export default {
     return {
       singleSelect: true,
       selected: [],
-      headers: [
-        {
-          text: 'Start date',
-          align: 'startDate',
-          sortable: false,
-          value: 'startDate',
-        },
-        {
-          text: 'End date',
-          align: 'start',
-          sortable: false,
-          value: 'endDate',
-        },
-        {
-          text: 'Instrument name',
-          align: 'start',
-          sortable: false,
-          value: 'instrumentName',
-        },
-        {
-          text: 'Main parameter',
-          align: 'start',
-          sortable: false,
-          value: 'mainParameter.name',
-        },
-        {
-          text: 'Linked parameters',
-          align: 'start',
-          sortable: false,
-          value: 'linkedParameters',
-        },
-        { text: 'State', value: 'state', align: 'center',},
-      ],
       sessions: [],
       page: 1,
       pageCount: 0,
@@ -126,6 +93,42 @@ export default {
   computed : {
     disabledContinueButton : function() {
       return  this.selected.length === 0
+    },
+    tableHeaders : function (){
+      let headers = [
+        {
+          text: this.$t('session.start_date_input_label'),
+          align: 'startDate',
+          sortable: false,
+          value: 'startDate',
+        },
+        {
+          text: this.$t('session.end_date_input_label'),
+          align: 'start',
+          sortable: false,
+          value: 'endDate',
+        },
+        {
+          text: this.$t('session.instrument_name'),
+          align: 'start',
+          sortable: false,
+          value: 'instrumentName',
+        },
+        {
+          text:  this.$t('session.main_parameter'),
+          align: 'start',
+          sortable: false,
+          value: 'mainParameter.name',
+        },
+        {
+          text: this.$t('session.linked_parameters'),
+          align: 'start',
+          sortable: false,
+          value: 'linkedParameters',
+        },
+        { text: this.$t('session.state'), value: 'state', align: 'center',},
+      ]
+      return headers
     },
   },
   mounted() {

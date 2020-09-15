@@ -15,7 +15,6 @@ public class GroundData {
     @JsonProperty("Date_Time")
     @CsvBindByName( column = "Date_Time", required = true )
     private String dateTime;
-
     @JsonProperty("0°σspR")
     @Field("0°σspR")
     @CsvBindByName( column = "0°σspR", required = true )

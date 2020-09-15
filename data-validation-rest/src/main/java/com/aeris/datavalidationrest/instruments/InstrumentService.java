@@ -2,37 +2,36 @@ package com.aeris.datavalidationrest.instruments;
 import com.aeris.datavalidationrest.auth.LoginResource;
 import com.aeris.datavalidationrest.catalogue.datainfo.DataInfoDao;
 import com.aeris.datavalidationrest.common.CommonService;
+import com.aeris.datavalidationrest.parameters.Parameter;
+import com.aeris.datavalidationrest.parameters.ParameterService;
 import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.Reader;
+import java.net.URI;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 public class InstrumentService {
     @Autowired
     private DataInfoDao dataInfoDao;
     @Autowired
+    private HttpServletRequest request;
+    @Autowired
     private CommonService commonService;
     @Autowired
-    private RestTemplate restTemplate;
-    @Autowired
     private InstrumentDao instrumentDao;
-
-    private static String FOLDER = "/GROUND-BASED/P2OA_Pic-Du-Midi/NEPHE/NEPHE_RAW/2019&image=PDM_NEPH_20190517.csv";
-    public static final String SEDOO_BASED_DATA_URL = "https://sedoo.aeris-data.fr/actris-datacenter-rest/rest/quicklook/download?uuid=";
+    @Autowired
+    private ParameterService parameterService;
 
     Logger logger = LoggerFactory.getLogger(LoginResource.class);
 
-    public ResponseEntity<Optional<Instrument>> getByName(HttpServletRequest request, String name) {
+    public ResponseEntity<Optional<Instrument>> getByName(String name) {
         Optional<Instrument> instrument;
         ResponseEntity<Optional<Instrument>> response;
 
@@ -46,7 +45,7 @@ public class InstrumentService {
         return response;
     }
 
-    public ResponseEntity<Optional<Instrument>> getById(HttpServletRequest request, String id) {
+    public ResponseEntity<Optional<Instrument>> getById(String id) {
         Optional<Instrument> instrument;
         ResponseEntity<Optional<Instrument>> response;
 
@@ -59,10 +58,14 @@ public class InstrumentService {
         return response;
     }
 
-    public ResponseEntity<List<String>> getAllNames(HttpServletRequest request) {
+    public Parameter getParameterDataByPeriod(String parameterName, String startDate, String endDate) {
+            return this.parameterService.getParameterDataByPeriod(parameterName, startDate, endDate);
+    }
+
+    public ResponseEntity<List<String>> getAllNames() {
         ResponseEntity response;
         List<String> instrumentsNames = new ArrayList<>();
-        String responsibleId = this.getResponsibleId(request);
+        String responsibleId = this.getResponsibleId();
 
         if(responsibleId != null) {
             instrumentsNames = instrumentDao.findAllByResponsibleIdContains(responsibleId);
@@ -74,7 +77,61 @@ public class InstrumentService {
         return response;
     }
 
-    public String getResponsibleId(HttpServletRequest request) {
+    public ResponseEntity<List<Instrument>> getAll() {
+        ResponseEntity<List<Instrument>> response;
+        String responsibleId = this.getResponsibleId();
+        List<Instrument> instruments = new ArrayList<>();
+
+        if(responsibleId != null) {
+            instruments = instrumentDao.findByResponsibleIdContains(responsibleId);
+            response = ResponseEntity.status(HttpStatus.SC_OK).body(instruments);
+        } else {
+            response = ResponseEntity.status(HttpStatus.SC_FORBIDDEN).body(instruments);
+        }
+        return response;
+    }
+
+    public ResponseEntity<Instrument> insertNewInstrument(Instrument instrument) {
+        Instrument instrumentAdded;
+        ResponseEntity<Instrument> response;
+
+        if (this.commonService.isAdmin(request)) {
+            instrumentAdded = instrumentDao.save(instrument);
+            response = getCreateResponse(instrumentAdded);
+        } else {
+            response = ResponseEntity.status(HttpStatus.SC_FORBIDDEN).body(null);
+        }
+
+        return response;
+    }
+
+    public ResponseEntity<String> updateInstrument(Instrument instrument) {
+        ResponseEntity<String> response;
+
+        if (this.commonService.isAdmin(request)) {
+            instrumentDao.save(instrument);
+            response = ResponseEntity.status(HttpStatus.SC_ACCEPTED).body("Update instrument");
+        } else {
+            response = ResponseEntity.status(HttpStatus.SC_FORBIDDEN).body("Error Message");
+        }
+
+        return response;
+    }
+
+    public  ResponseEntity<String> deleteInstrument(String id) {
+        ResponseEntity<String> response;
+
+        if (this.commonService.isAdmin(request)) {
+            instrumentDao.deleteById(id);
+            return ResponseEntity.status(HttpStatus.SC_OK).body("Delete instrument");
+        } else {
+            response = ResponseEntity.status(HttpStatus.SC_FORBIDDEN).body("Error Message");
+        }
+
+        return response;
+    }
+
+    public String getResponsibleId() {
         String responsibleId = null;
 
         if (this.commonService.isAdmin(request) || this.commonService.isPI(request)) {
@@ -84,52 +141,25 @@ public class InstrumentService {
         return responsibleId;
     }
 
-    //
-    public List<Map<String, String>> getParameterData(String parameterName, String uuid) {
-        Reader reader;
-        //List<Parameter> parameters;
-        String url = SEDOO_BASED_DATA_URL + uuid + "&folder=" + FOLDER;
-        String data = restTemplate.getForObject( url, String.class);
-        data = data.replace("\uFEFF", "");
+    public  ResponseEntity<Instrument> getCreateResponse(Instrument instrument) {
+        URI location;
+        ResponseEntity<Instrument> response;
 
-        //reader = new StringReader(data);
-        /*CsvToBean csvToBean = new CsvToBeanBuilder<Parameter>(reader)
-                .withType(Parameter.class)
-                .withIgnoreLeadingWhiteSpace(true)
-                .build();*/
-        //parameters = csvToBean.parse();
-
-        return parseData(parameterName, data);
-    }
-
-    public List<Map<String, String>> parseData(String parameterName, String data) {
-        String[] currentLine;
-        String dateName = "Date_Time";
-        Map<String, String> currentData;
-        String targetColumn, dateColumn;
-        int targetColumnIndex, dateColumnIndex;
-        String[] dataLines = data.split("\n");
-        String dateColumnName = "\"" + dateName + "\"";
-        List<Map<String, String>> result = new ArrayList<>();
-        String targetColumnName = "\"" + parameterName + "\"";
-        List<String> columns = Arrays.asList(dataLines[0].split(",")).stream().map(String::trim).collect(Collectors.toList());
-
-        if (columns.contains(targetColumnName)) {
-            dateColumnIndex = columns.indexOf(dateColumnName);
-            targetColumnIndex = columns.indexOf(targetColumnName);
-            for (String line : dataLines) {
-                currentData = new HashMap<>();
-                currentLine = line.split(",");
-                dateColumn =  currentLine[dateColumnIndex];
-                if(!dateColumn.contains(dateName)) {
-                    targetColumn = currentLine[targetColumnIndex].replace("\r","");
-                    currentData.put(dateName, dateColumn);
-                    currentData.put(parameterName, targetColumn);
-                    result.add(currentData);
-                }
-            }
+        if (instrument != null) {
+            location = ServletUriComponentsBuilder
+                    .fromCurrentRequest()
+                    .path("/{id}")
+                    .buildAndExpand(instrument.getId())
+                    .toUri();
+            response = ResponseEntity.created(location).body(instrument);
+        } else {
+            response = ResponseEntity.status(HttpStatus.SC_FORBIDDEN).body(null);
         }
-        return result;
+        return response;
     }
 
+    public ResponseEntity<String> importParameters(String uuid) {
+        ResponseEntity<String> response = this.parameterService.importParameters(uuid);
+        return response;
+    }
 }
