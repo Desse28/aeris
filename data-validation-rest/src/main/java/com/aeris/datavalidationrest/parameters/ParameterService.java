@@ -55,9 +55,11 @@ public class ParameterService {
             this.startDate = this.commonService.strToDate(strStartDate, dateFormat);
             this.endDate = this.commonService.strToDate(strEndDate, dateFormat);
             response = this.paramerDao.findByName(parameterName);
-            response.setParameterData(response.getParameterData().stream()
-                    .filter(s -> s.getDate().after(startDate) && s.getDate().before(endDate))
-                    .collect(Collectors.toList()));
+            if(response != null) {
+                response.setParameterData(response.getParameterData().stream()
+                        .filter(s -> s.getDate().after(startDate) && s.getDate().before(endDate))
+                        .collect(Collectors.toList()));
+            }
         } catch (ParseException e) {
             e.printStackTrace();
         }
@@ -160,6 +162,8 @@ public class ParameterService {
                 saveParameter(parameterData, "0°σspB");
                 parameterData.setValue(parameters.getNinetyDegσspG());
                 saveParameter(parameterData, "90°σspG");
+                parameterData.setValue(parameters.getNinetyDegσspR());
+                saveParameter(parameterData, "90°σspR");
                 parameterData.setValue(parameters.getNinetyDegσspB());
                 saveParameter(parameterData, "90°σspB");
                 parameterData.setValue(parameters.getAirTemp());

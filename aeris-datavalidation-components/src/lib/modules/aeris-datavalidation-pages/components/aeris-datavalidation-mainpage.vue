@@ -29,6 +29,7 @@
           <template v-slot:portrait1>
                 <AerisDatavalidationChart
                     :dataInfo="dataInfo"
+                    :isMainChart="true"
                     :currentSession="currentSession"
                     :parameters="firstChartParameters"
                     :currentInstrument="currentInstrument"
@@ -40,6 +41,7 @@
         <AerisDatavalidationChart
             v-if="!isSecondChartParametersEmpty"
             :dataInfo="dataInfo"
+            :isMainChart="false"
             :currentSession="currentSession"
             :parameters="secondChartParameters"
             :currentInstrument="currentInstrument"
@@ -95,20 +97,15 @@ import {
             return 5
         }
       },
-      watch : {
-        firstChartParameters : function () {
-          console.log("Test watch firstChartParameters : ", this.firstChartParameters)
-        },
-        secondChartParameters : function () {
-          console.log("Test watch secondChartParameters : ", this.secondChartParameters)
-        }
-      },
       methods : {
         newSession : function(currentSession, currentInstrument) {
+          let mainParameter
           if(currentSession && currentInstrument) {
             this.currentSession = currentSession
             this.currentInstrument = currentInstrument
             this.initParametersLabel()
+            mainParameter = this.currentSession['mainParameter'].name
+            this.firstChartParameters = [mainParameter]
           }
         },
         initParametersLabel : function() {
@@ -122,28 +119,24 @@ import {
           }
         },
         addNewParameter : function(newParameter) {
-          console.log("Test addNewParameter")
           if(newParameter) {
             this.firstChartParameters = [...this.firstChartParameters, newParameter]
             this.secondChartParameters = this.secondChartParameters.filter(function(e) { return e !== newParameter })
           }
         },
         removeParameter : function(deletedElement) {
-          console.log("Test removeParameter : ", deletedElement)
           if( deletedElement ) {
             this.firstChartParameters = this.firstChartParameters.filter(function(e) { return e !== deletedElement  })
             this.secondChartParameters = this.secondChartParameters.filter(function(e) { return e !== deletedElement })
           }
         },
         addNewParallel : function(targetParameter) {
-          console.log("Test addNewParallel")
           if(targetParameter) {
             this.firstChartParameters = this.firstChartParameters.filter(function(e) { return e !== targetParameter })
             this.secondChartParameters = [...this.secondChartParameters, targetParameter]
           }
         },
         removeParallel : function (targetParameter) {
-          console.log("Test removeParallel : ", targetParameter)
           if(targetParameter) {
             this.addNewParameter(targetParameter)
           }

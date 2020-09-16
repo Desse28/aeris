@@ -33,7 +33,7 @@ public class GroundData {
     @JsonProperty("90°σspR")
     @Field("90°σspR")
     @CsvBindByName( column = "90°σspR", required = true )
-    private double σspR;
+    private double ninetyDegσspR ;
 
     @JsonProperty("90°σspG")
     @Field("90°σspG")
@@ -68,7 +68,7 @@ public class GroundData {
     public GroundData() {
     }
 
-    public GroundData(String dateTime, double zeroDegσspR, double zeroDegσspG, double zeroDegσspB, double σspR,
+    public GroundData(String dateTime, double zeroDegσspR, double zeroDegσspG, double zeroDegσspB, double ninetyDegσspR,
                       double ninetyDegσspG, double ninetyDegσspB, double airTemp, double cellTemp, double rH,
                       double pressure) {
 
@@ -76,7 +76,7 @@ public class GroundData {
         this.zeroDegσspR = zeroDegσspR;
         this.zeroDegσspG = zeroDegσspG;
         this.zeroDegσspB = zeroDegσspB;
-        this.σspR = σspR;
+        this.ninetyDegσspR = ninetyDegσspR;
         this.ninetyDegσspG = ninetyDegσspG;
         this.ninetyDegσspB = ninetyDegσspB;
         this.airTemp = airTemp;
@@ -125,12 +125,12 @@ public class GroundData {
         this.zeroDegσspB = zeroDegσspB;
     }
 
-    public double getΣspR() {
-        return σspR;
+    public double getNinetyDegσspR() {
+        return ninetyDegσspR;
     }
 
-    public void setΣspR(double σspR) {
-        this.σspR = σspR;
+    public void setNinetyDegσspR(double ninetyDegσspR) {
+        this.ninetyDegσspR = ninetyDegσspR;
     }
 
     public double getNinetyDegσspG() {
@@ -189,7 +189,7 @@ public class GroundData {
                 ", zeroDegσspR=" + zeroDegσspR +
                 ", zeroDegσspG=" + zeroDegσspG +
                 ", zeroDegσspB=" + zeroDegσspB +
-                ", σspR=" + σspR +
+                ", ninetyDegσspR=" + ninetyDegσspR +
                 ", ninetyDegσspG=" + ninetyDegσspG +
                 ", ninetyDegσspB=" + ninetyDegσspB +
                 ", airTemp=" + airTemp +

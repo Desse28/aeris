@@ -49,6 +49,10 @@
       currentInstrument : {
         type : Object,
         default : () => null
+      },
+      isMainChart : {
+        type: Boolean,
+        default: () => false
       }
     },
     components: {
@@ -73,21 +77,20 @@
       }
     },
     watch: {
-      currentInstrument : function () {
-        if(!this.isCurrentSessionEmpty && !this.isCurrentInstrumentEmpty)
-          this.initCurrentChart()
-      },
-      //parameters : function (newParameters, oldsParameters) {
-        /*if(oldsParameters.length < newParameters.length) {
-          if(oldsParameters.length === 0)
-            this.currentParameters = newParameters
-          else
-            this.addNewParameter(newParameters)
-          this.setLayout()
-        } else {
+      parameters : function (newParameters, oldsParameters) {
+        let paramName
+        console.log("Test watch parameter", newParameters, oldsParameters)
+
+        if(this.data.length === 0) {
+          paramName= newParameters[0]
+          this.initCurrentChart(paramName)
+        } else if(oldsParameters.length < newParameters.length) {
+          paramName = newParameters[newParameters.length - 1]
+          this.addNewParameter(paramName)
+        } else if(newParameters.length < oldsParameters.length) {
           this.removeParameter(newParameters, oldsParameters)
-        }*/
-      //},
+        }
+      },
       dataInfo : function() {
         if (this.dataInfo) {
           let title =  {
@@ -100,60 +103,74 @@
             }
           }
           this.layout.title = title
-          //this.setEventsHandler()
         }
       },
     },
-    computed : {
-      isCurrentSessionEmpty : function () {
-        console.log("Test isCurrentSessionEmpty")
-        return this.currentSession === null;
-      },
-      isCurrentInstrumentEmpty : function () {
-        return this.currentInstrument === null;
-      }
+    mounted() {
+      this.initCurrentChart(this.parameters[0])
     },
     methods: {
-      initCurrentChart : function() {
-        let targetParameter
-        if(this.currentSession && this.currentInstrument) {
-          targetParameter = [this.currentSession['mainParameter'].name]
-          this.addNewParameter(targetParameter)
-          this.initModeBar()
-          this.addEventsHandler()
+      initCurrentChart : function(parameterName) {
+        if(this.currentSession && this.currentInstrument && parameterName) {
+          if(0 < this.parameters.length)
+            this.addNewParameter(parameterName)
+
+          if(this.isMainChart) {
+            this.initModeBar()
+            this.addEventsHandler()
+          }
+          this.setLayout()
         }
       },
-      addNewParameter : function (parameters) {
+      initdefaultParameters : function (parameterName) {
+        let currentParameterIndex
+        if(parameterName && this.parameters) {
+          currentParameterIndex = this.parameters.indexOf(parameterName)
+          if(currentParameterIndex + 1 < this.parameters.length)
+            this.addNewParameter(this.parameters[currentParameterIndex + 1])
+        }
+      },
+      addNewParameter : function (parameterName) {
         let uri
         let startDate = this.currentSession.startDate;
         let endDate = this.currentSession.endDate;
-        let parameterName = parameters[parameters.length - 1]
 
         this.callBack = (data) => {
-          console.log("Test add newParameter, ", data)
           if(data) {
-            this.refreshChart(data.parameterData)
+            this.updateChart(data.parameterData, parameterName)
+            //this.refresh()
+            this.initdefaultParameters(parameterName)
           }
         }
-
         uri = "/instruments/" + parameterName + "/" + startDate + "/" + endDate
         this.currentUrl = process.env.VUE_APP_ROOT_API + uri
       },
-      refreshChart: function(newData) {
+      removeParameter : function (newParameters, oldsParameters) {
+        let intersection = oldsParameters.filter(value => !newParameters.includes(value))
+        let parameterName = intersection[0]
+        const targetParameterIndex = this.data.findIndex(element => element.name === parameterName)
+        if(-1 < targetParameterIndex ) {
+          this.data.splice(targetParameterIndex, 1)
+          //this.refresh()
+        }
+      },
+      updateChart: function(newData, parameterName) {
         let dataContent = {}
+        let currentKey= ""
         let currentContent = null
-        const newDataKeys = Object.keys(newData[0])
+        let newDataKeys = Object.keys(newData[0])
 
         newData.forEach((data) => {
           newDataKeys.forEach((key) => {
-            if( ! (key in dataContent) )
-              dataContent[key] = []
+            currentKey = key === "value" ? parameterName : key
+            if(! (currentKey in dataContent))
+              dataContent[currentKey] = []
 
             currentContent = data[key]
-            dataContent[key].push(currentContent)
+            dataContent[currentKey].push(currentContent)
           });
         });
-
+        newDataKeys = [newDataKeys[0], currentKey]
         this.setData( newDataKeys, dataContent)
       },
       setData(newDataKeys, dataContent) {
@@ -165,9 +182,11 @@
           y: dataContent[yaxis],
           name: yaxis,
         }]
-        //this.currentUrl = ""
-        //this.componentKey += 1
-        //this.setEventsHandler()
+      },
+      refresh : function() {
+        this.currentUrl = ""
+        this.componentKey += 1
+        this.addEventsHandler()
       },
       addEventsHandler : function () {
         this.$nextTick(() => {
@@ -264,17 +283,6 @@
             shape.line.color = 'rgb(252, 12, 12)'
           }
         })*/
-      },
-      removeParameter : function (newParameters, oldsParameters) {
-        console.log(newParameters, oldsParameters)
-        /*let oldParametersInterNewParameters = oldsParameters.filter(value => !newParameters.includes(value))
-        let parameterKey = oldParametersInterNewParameters[0]
-        const targetParameterIndex = this.data.findIndex(element => element.name === parameterKey )
-
-        if( -1 < targetParameterIndex ) {
-          this.data.splice(targetParameterIndex, 1)
-          this.setCurrentData(this.data)
-        }*/
       },
       initModeBar : function() {
         this.modeBarButtons = [
