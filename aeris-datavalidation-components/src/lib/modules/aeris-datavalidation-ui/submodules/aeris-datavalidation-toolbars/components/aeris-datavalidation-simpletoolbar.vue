@@ -11,8 +11,8 @@
           :notifyNewSelection="notifyNewSelection"
       />
       <AerisDataValidationOptions
-          :parametersLabel="parametersLabel"
-          :parallelsLabel="parallelsLabel"
+          :linkedParameters="linkedParameters"
+          :auxParameters="auxParameters"
           :addNewParallel="addNewParallel"
           :removeParallel="removeParallel"
           :addNewParameter="addNewParameter"
@@ -55,11 +55,11 @@ export default {
     removeParameter: {
       type : Function,
     },
-    parametersLabel : {
+    linkedParameters: {
       type : Array,
       default : () => [],
     },
-    parallelsLabel : {
+    auxParameters : {
       type : Array,
       default : () => [],
     },

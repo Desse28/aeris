@@ -9,14 +9,14 @@
         :removeParallel="removeParallel"
         :addNewParameter="addNewParameter"
         :removeParameter="removeParameter"
-        :parametersLabel="parametersLabel"
-        :parallelsLabel="parallelsLabel"
+        :linkedParameters ="linkedParameters"
+        :auxParameters="auxParameters"
     />
 
     <AerisDatavalidationLandScapeLayaout
         justify="center"
         padding="pa-8"
-        :cols="chartsCol"
+        :cols="[getFirsChartCol, getSecondChartCol]"
         :nbrChildElement="2"
     >
       <template v-slot:land1>
@@ -38,7 +38,7 @@
       </template>
       <template v-slot:land2>
         <AerisDatavalidationChart
-            v-if="0 < parallelChartGridSize"
+            v-if="!isSecondChartParametersEmpty"
             :dataInfo="dataInfo"
             :currentSession="currentSession"
             :parameters="secondChartParameters"
@@ -70,93 +70,72 @@ import {
         return {
           dataInfo : null,
           selection : null,
-          chartsCol : [12, 0],
-          firtsChartData : [],
-          parallelsLabel: [],
-          parametersLabel : [],
-          firstChartParameters : [],
-          secondChartParameters : [],
-          mainChartGridSize : 12,
+          auxParameters: [],
+          linkedParameters : [],
           currentSession: null,
           currentInstrument : null,
-          parallelChartGridSize : 0,
+          firstChartParameters : [],
+          secondChartParameters : [],
         }
       },
-      watch: {
-        secondChartParameters : function() {
-          if(this.secondChartParameters.length === 0)
-            this.hideParallelChart()
+      computed : {
+        isSecondChartParametersEmpty : function() {
+          return this.secondChartParameters.length === 0
         },
+        getFirsChartCol : function () {
+          if( this.secondChartParameters.length === 0)
+            return 12
+          else
+            return 7
+        },
+        getSecondChartCol : function () {
+          if( this.secondChartParameters.length === 0)
+            return 0
+          else
+            return 5
+        }
       },
       methods : {
         newSession : function(currentSession, currentInstrument) {
           if(currentSession && currentInstrument) {
             this.currentSession = currentSession
             this.currentInstrument = currentInstrument
+            this.initParametersLabel()
           }
         },
-        //
-        addNewParameter : function (newOptions) {
-          console.log(newOptions)
-          /*let lastIndex = newOptions.length - 1
-          let newParameter = newOptions[lastIndex]
-
+        initParametersLabel : function () {
+          let auxParameters = this.currentInstrument['auxParameters']
+          if(auxParameters) {
+            auxParameters.forEach((parameter)=> {
+              this.secondChartParameters.push(parameter.name)
+            })
+            this.auxParameters = auxParameters
+            this.linkedParameters = this.currentSession.linkedParameters
+          }
+        },
+        addNewParameter : function (newParameter) {
           if(newParameter) {
             this.firstChartParameters = [...this.firstChartParameters, newParameter]
             this.secondChartParameters = this.secondChartParameters.filter(function(e) { return e !== newParameter })
-          }*/
+          }
         },
-        removeParameter : function (newOptions, oldOptons) {
-          console.log(newOptions, oldOptons)
-          /*let oldOptionsInterNewOptions = oldOptons.filter(value => !newOptions.includes(value))
-          let deletedElement = oldOptons.length === 0 ? newOptions : oldOptionsInterNewOptions[0]
-
+        removeParameter : function (deletedElement) {
           if( deletedElement ) {
             this.firstChartParameters = this.firstChartParameters.filter(function(e) { return e !== deletedElement  })
-            if(oldOptons.length !== 0)
-              this.secondChartParameters = this.secondChartParameters.filter(function(e) { return e !== deletedElement })
-          }*/
+            this.secondChartParameters = this.secondChartParameters.filter(function(e) { return e !== deletedElement })
+          }
         },
-        addNewParallel : function( newParallels ) {
-          console.log(newParallels)
-          /*let lastIndex = newParallels.length - 1
-          let newParallelIndex = newParallels[lastIndex].split("parallel")[1]
-          let targetParameter = this.parametersLabel[newParallelIndex-1]
-
-          if(1 <= newParallels.length)
-            this.displayParallelChart()
-
+        addNewParallel : function( targetParameter ) {
           if(targetParameter) {
             this.removeParameter(targetParameter, [])
             this.secondChartParameters = [...this.secondChartParameters, targetParameter]
-          }*/
+          }
         },
-        removeParallel : function (newParallels, oldParrales) {
-          console.log(newParallels, oldParrales)
-          /*let deletedIndex
-          let targetParameter
-          let oldParallelsInterNewParallels
-
-          if(newParallels && oldParrales) {
-            oldParallelsInterNewParallels = oldParrales.filter(value => !newParallels.includes(value))
-            deletedIndex = oldParallelsInterNewParallels[0].split("parallel")[1]
-            targetParameter = this.parametersLabel[deletedIndex-1]
-
-            if(targetParameter) {
-              this.addNewParameter([targetParameter])
-              this.secondChartParameters = this.secondChartParameters.filter(function(e) { return e !== targetParameter })
-            }
-          }*/
-        },
-        displayParallelChart : function () {
-          /*this.chartsCol = [7, 5]
-          this.mainChartGridSize = 7
-          this.parallelChartGridSize = 12 - this.mainChartGridSize*/
-        },
-        hideParallelChart : function () {
-          /*this.chartsCol = [12, 0]
-          this.mainChartGridSize = 12
-          this.parallelChartGridSize = 12 - this.mainChartGridSize*/
+        removeParallel : function (targetParameter) {
+          console.log("Test removeParallel : ", targetParameter)
+          if(targetParameter) {
+            this.addNewParameter(targetParameter)
+          }
         },
   },
 }

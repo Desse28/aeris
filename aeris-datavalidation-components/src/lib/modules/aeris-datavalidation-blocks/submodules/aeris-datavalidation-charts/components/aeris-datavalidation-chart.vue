@@ -100,7 +100,7 @@
             }
           }
           this.layout.title = title
-          this.setEventsHandler()
+          //this.setEventsHandler()
         }
       },
     },
@@ -119,8 +119,8 @@
         if(this.currentSession && this.currentInstrument) {
           targetParameter = [this.currentSession['mainParameter'].name]
           this.addNewParameter(targetParameter)
-          //this.initModeBar()
-          //this.setEventsHandler()
+          this.initModeBar()
+          this.addEventsHandler()
         }
       },
       addNewParameter : function (parameters) {

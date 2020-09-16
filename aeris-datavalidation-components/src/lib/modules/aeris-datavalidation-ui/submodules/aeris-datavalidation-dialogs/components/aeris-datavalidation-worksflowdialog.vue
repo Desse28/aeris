@@ -94,7 +94,7 @@ export default {
   data() {
     return {
       dialog: false,
-      currentWorkFlow : this.$t('worksFlow.view_selsection')
+      currentWorkFlow : this.$t('worksFlow.view_selection')
     }
   },
   computed : {
