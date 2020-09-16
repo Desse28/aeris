@@ -95,17 +95,16 @@ export default {
   watch: {
     parameters : function (newParameters, oldParameters) {
       if(oldParameters.length < newParameters.length) {
-        this.flushNewParameter(newParameters)
+        this.flushNewParallel(newParameters)
       } else if (newParameters.length < oldParameters.length) {
-        this.disabledParallel(newParameters, oldParameters)
-        this.flushRemoveParameter(newParameters, oldParameters)
+        this.flushRemoveParallel(newParameters, oldParameters)
       }
     },
     parallels : function (newParalles, oldParalles) {
       if(oldParalles.length < newParalles.length)
-        this.flushNewParallel(newParalles)
+        this.flushNewParameter(newParalles)
       else if(newParalles.length < oldParalles.length )
-        this.flushRemoveParallel(newParalles, oldParalles)
+        this.disabledParallel(newParalles, oldParalles)
     },
     auxParameters: function () {
       this.auxParameters.forEach((parameter)=> {
@@ -115,15 +114,12 @@ export default {
       this.pushLayering(this.auxParameters.length)
     },
     linkedParameters: function () {
-      let startLen = this.parametersLabel.length + 1
-      let endLen = startLen + this.auxParameters.length
 
       this.linkedParameters.forEach((parameter)=> {
         this.parametersLabel.unshift(parameter.name)
       })
 
       this.pushLayering(this.linkedParameters.length)
-      this.turnLayering(startLen, endLen)
     }
   },
   methods : {
@@ -135,48 +131,44 @@ export default {
       }
     },
     turnLayering : function(start, end) {
-      console.log("Test turnLayering : ", start, end)
       for(let i = start; i < end; i++) {
         this.parallels.push("Layering" + i)
       }
     },
-    disabledParallel : function (newParameters, oldParameters) {
-      let intersection = oldParameters.filter(value => !newParameters.includes(value))
-      let deletedElement = intersection[0]
-      let elementDeletedIndex = this.parametersLabel.indexOf(deletedElement)
-      let targetParallel = this.parallelsLabel[elementDeletedIndex];
-      const targetParallelIndex = this.parallels.indexOf(targetParallel);
-
-      if ( -1 < targetParallelIndex) {
-        this.parallels.splice(targetParallelIndex, 1);
-        this.removeParallel(this.parallels)
-      }
-    },
-    flushNewParameter : function (parameters) {
-      let newParameter = parameters[parameters.length - 1]
-      this.addNewParallel(newParameter)
-    },
-    flushRemoveParameter : function (newParameters, oldParameters) {
-      let intersection = oldParameters.filter(value => !newParameters.includes(value))
-      let deletedElement = oldParameters.length === 0 ? newParameters : intersection[0]
-      this.removeParameter(deletedElement)
-    },
-    flushNewParallel : function(parallels) {
-      let lastIndex = parallels.length - 1
-      let newParallelIndex = parallels[lastIndex].split("parallel")[1]
-      let targetParameter = this.parametersLabel[newParallelIndex-1]
-      this.addNewParallel(targetParameter)
-    },
-    flushRemoveParallel : function (newParallels, oldParrales) {
+    disabledParallel : function (newParallels, oldParrales) {
       let deletedIndex
       let targetParameter
       let intersection
 
       if(newParallels && oldParrales) {
         intersection = oldParrales.filter(value => !newParallels.includes(value))
-        deletedIndex = intersection[0].split("parallel")[1]
+        deletedIndex = intersection[0].split("Layering")[1]
         targetParameter = this.parametersLabel[deletedIndex - 1]
-        this.removeParallel(targetParameter)
+        this.addNewParallel(targetParameter)
+      }
+    },
+    flushNewParameter : function (parallels) {
+      let lastIndex = parallels.length - 1
+      let newParallelIndex = parallels[lastIndex].split("Layering")[1]
+      let targetParameter = this.parametersLabel[newParallelIndex-1]
+      this.addNewParameter(targetParameter)
+    },
+    flushRemoveParameter : function (newParameters, oldParameters) {
+      let intersection = oldParameters.filter(value => !newParameters.includes(value))
+      let deletedElement = oldParameters.length === 0 ? newParameters : intersection[0]
+      this.removeParameter(deletedElement)
+    },
+    flushNewParallel : function(parameters) {
+      let newParameter = parameters[parameters.length - 1]
+      this.addNewParallel(newParameter)
+    },
+    flushRemoveParallel: function (newParameters, oldParameters) {
+      let intersection = oldParameters.filter(value => !newParameters.includes(value))
+      let deletedElement = intersection[0]
+      const targetParallelIndex = this.parametersLabel.indexOf(deletedElement);
+      if(-1 < targetParallelIndex) {
+        this.parallels.splice(targetParallelIndex, 1);
+        this.removeParameter(deletedElement)
       }
     },
 },

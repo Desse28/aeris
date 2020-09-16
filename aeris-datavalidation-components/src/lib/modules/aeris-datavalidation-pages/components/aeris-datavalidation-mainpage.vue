@@ -95,6 +95,14 @@ import {
             return 5
         }
       },
+      watch : {
+        firstChartParameters : function () {
+          console.log("Test watch firstChartParameters : ", this.firstChartParameters)
+        },
+        secondChartParameters : function () {
+          console.log("Test watch secondChartParameters : ", this.secondChartParameters)
+        }
+      },
       methods : {
         newSession : function(currentSession, currentInstrument) {
           if(currentSession && currentInstrument) {
@@ -103,7 +111,7 @@ import {
             this.initParametersLabel()
           }
         },
-        initParametersLabel : function () {
+        initParametersLabel : function() {
           let auxParameters = this.currentInstrument['auxParameters']
           if(auxParameters) {
             auxParameters.forEach((parameter)=> {
@@ -113,21 +121,24 @@ import {
             this.linkedParameters = this.currentSession.linkedParameters
           }
         },
-        addNewParameter : function (newParameter) {
+        addNewParameter : function(newParameter) {
+          console.log("Test addNewParameter")
           if(newParameter) {
             this.firstChartParameters = [...this.firstChartParameters, newParameter]
             this.secondChartParameters = this.secondChartParameters.filter(function(e) { return e !== newParameter })
           }
         },
-        removeParameter : function (deletedElement) {
+        removeParameter : function(deletedElement) {
+          console.log("Test removeParameter : ", deletedElement)
           if( deletedElement ) {
             this.firstChartParameters = this.firstChartParameters.filter(function(e) { return e !== deletedElement  })
             this.secondChartParameters = this.secondChartParameters.filter(function(e) { return e !== deletedElement })
           }
         },
-        addNewParallel : function( targetParameter ) {
+        addNewParallel : function(targetParameter) {
+          console.log("Test addNewParallel")
           if(targetParameter) {
-            this.removeParameter(targetParameter, [])
+            this.firstChartParameters = this.firstChartParameters.filter(function(e) { return e !== targetParameter })
             this.secondChartParameters = [...this.secondChartParameters, targetParameter]
           }
         },
