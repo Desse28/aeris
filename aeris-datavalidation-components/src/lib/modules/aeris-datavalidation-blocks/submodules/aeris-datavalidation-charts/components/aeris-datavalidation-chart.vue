@@ -31,9 +31,19 @@
     AerisDataValidationServices,
   } from "./../../../../aeris-datavalidation-components"
 
+  const SELECTION_BORDER_COLOR = 'rgb(84,217,27)'
+  const SELECTION_BACKGROUND_COLOR = 'rgb(204, 39, 39)'
+  const TARGET_SELECTION_BORDER_COLOR = 'rgb(84,217,27)'
+
   export default {
     name: "aeris-datavalidation-chart",
     props: {
+      startDate : {
+        type: String
+      },
+      endDate : {
+        type: String
+      },
       parameters: {
         type : Array,
         default : () => [],
@@ -41,6 +51,10 @@
       dataInfo : {
         type : Object,
         default : () => null,
+      },
+      isMainChart : {
+        type: Boolean,
+        default: () => false
       },
       currentSession : {
         type : Object,
@@ -50,10 +64,6 @@
         type : Object,
         default : () => null
       },
-      isMainChart : {
-        type: Boolean,
-        default: () => false
-      }
     },
     components: {
       Plotly,
@@ -64,14 +74,14 @@
         data: [],
         flags: [],
         layout: {},
-        shapes : [],
+        selections : [],
         currentUrl : "",
         currentData: [],
         componentKey: 0,
         currentUuid : "",
         callBack : null,
         modeBarButtons: [],
-        currentShape : null,
+        currentSelection : null,
         chartId : "mainChart",
         currentParameters : [],
       }
@@ -80,7 +90,6 @@
       parameters : function (newParameters, oldsParameters) {
         let paramName
         console.log("Test watch parameter", newParameters, oldsParameters)
-
         if(this.data.length === 0) {
           paramName= newParameters[0]
           this.initCurrentChart(paramName)
@@ -132,9 +141,6 @@
       },
       addNewParameter : function (parameterName) {
         let uri
-        let startDate = this.currentSession.startDate;
-        let endDate = this.currentSession.endDate;
-
         this.callBack = (data) => {
           if(data) {
             this.updateChart(data.parameterData, parameterName)
@@ -142,7 +148,8 @@
             this.initdefaultParameters(parameterName)
           }
         }
-        uri = "/instruments/" + parameterName + "/" + startDate + "/" + endDate
+
+        uri = "/instruments/" + parameterName + "/" + this.startDate + "/" + this.endDate
         this.currentUrl = process.env.VUE_APP_ROOT_API + uri
       },
       removeParameter : function (newParameters, oldsParameters) {
@@ -190,53 +197,91 @@
       },
       addEventsHandler : function () {
         this.$nextTick(() => {
-          document.getElementById( this.chartId ).on( 'plotly_click', this.clickHandler )
-          //document.getElementById( this.chartId ).on( 'plotly_selected', this.addNewSelection)
+          document.getElementById( this.chartId ).on( 'plotly_click', this.clickHandler)
+          document.getElementById( this.chartId ).on( 'plotly_selected', this.addNewSelection)
         });
       },
       clickHandler : function (data) {
-        console.log("Test click : ",data )
-        /*let targetPoint
+        let targetPoint
         if(data) {
           targetPoint = data.points[0].x
           this.setCurrentSelection(targetPoint)
-          this.setEventsHandler()
-        }*/
+          //this.setEventsHandler()
+        }
       },
-      //addNewSelection : function(data) {
-        /*let x0, x1
-        if(data) {
-          x0 = data.range.x[0]
-          x1 = data.range.x[1]
-          if(!this.isSelectionExist(x0, x1)) {
-            this.drawSelection(x0, x1)
-            this.selectionHandler(data)
+      setCurrentSelection : function(targetPoint) {
+        let targetSelection = this.getTargetSelection(targetPoint)
+        if(targetSelection) {
+          this.clearCurrentSelection()
+          targetSelection.line.color = TARGET_SELECTION_BORDER_COLOR
+          this.currentSelection = targetSelection
+          //this.componentKey += 1
+          //this.selectionHandler(targetSelection)
+
+        }
+      },
+      getTargetSelection : function(targetPoint) {
+        let targetPointDate
+        let selectionStartDate, selectionEndDate
+        let targetsSelection = []
+
+        this.selections.forEach((selection) => {
+          targetPointDate = new Date(targetPoint)
+          selectionStartDate = new Date(selection.x0)
+          selectionEndDate = new Date(selection.x1)
+
+          if(selectionStartDate <= targetPointDate && targetPointDate <= selectionEndDate) {
+            targetsSelection.push(selection)
           }
-        }*/
-      //},
-      drawSelection : function(x0, x1) {
-        console.log(x0, x1)
-        //this.clearCurrentSelection()
-        this.shapes = [
-          ...this.shapes,
+        })
+        return targetsSelection[targetsSelection.length-1]
+      },
+      addNewSelection : function(data) {
+        let startDate, endDate
+        if(data) {
+          startDate = data.range.x[0]
+          endDate = data.range.x[1]
+
+          if(!this.isSelectionExist(startDate, endDate)) {
+            this.drawSelection(startDate, endDate)
+            //this.selectionHandler(data)
+          }
+        }
+      },
+      isSelectionExist : function (startDate, endDate) {
+        let currentSelection
+
+        for(let index in this.selections) {
+          currentSelection = this.selections[index]
+          if(currentSelection && currentSelection.x0 === startDate && currentSelection.x1 === endDate )
+            return true
+        }
+
+        return false
+      },
+      drawSelection : function(startDate, endDate) {
+        this.clearCurrentSelection()
+
+        this.selections = [
+          ...this.selections,
           {
             visible : true,
             type : 'rect',
             editable : false,
             layer : 'above',
             opacity : 0.28,
-            fillcolor : 'rgb(204, 39, 39)',
+            fillcolor : SELECTION_BACKGROUND_COLOR,
             fillrule : 'evenodd',
             line : {
               width : 5,
-              color : 'rgb(84,217,27)',
+              color : SELECTION_BORDER_COLOR,
               dash : 'dot'
             },
             xsizemode : 'scaled',
             ysizemode : 'scaled',
             xref : 'x',
-            x0 : x0,
-            x1 : x1,
+            x0 : startDate,
+            x1 : endDate,
             yref : 'paper',
             y0 : 0,
             y1 : 1
@@ -246,43 +291,28 @@
         //this.componentKey += 1
         //this.setEventsHandler()
         //this.currentShape = this.shapes[this.shapes.length-1]
-        //this.setCurrentShape(this.currentShape)
       },
-      isSelectionExist : function (x0, x1) {
-        console.log(x0, x1)
-        /*for(let index in this.shapes) {
-          if(this.layout.shapes[index] && this.layout.shapes[index].x0 === x0 && this.layout.shapes[index].x1 === x1)
-            return true
-        }
-        return false*/
-      },
-      //setCurrentSelection : function(targetPoint) {
-        /*let targetSelection = this.getTargetSelection(targetPoint)
-        if(targetSelection) {
-          this.clearCurrentSelection()
-          targetSelection.line.color = 'rgb(84,217,27)'
-          this.currentShape = targetSelection
-          this.componentKey += 1
-          this.selectionHandler(targetSelection)
-          this.setCurrentShape(targetSelection)
-        }*/
-      //},
-      //getTargetSelection : function(targetPoint) {
-        /*let targetsSelection = []
+      clearCurrentSelection : function() {
         this.layout.shapes.forEach((shape) => {
-          if(shape && new Date(shape.x0) <= new Date(targetPoint) &&
-              new Date(targetPoint) <= new Date(shape.x1)) {
-            targetsSelection.push(shape)
+          if(shape.line.color === SELECTION_BORDER_COLOR) {
+            shape.line.color = SELECTION_BORDER_COLOR
           }
         })
-        return targetsSelection[targetsSelection.length-1]*/
-      //},
-      clearCurrentSelection : function() {
-        /*this.layout.shapes.forEach((shape) => {
-          if(shape.line.color === 'rgb(84,217,27)') {
-            shape.line.color = 'rgb(252, 12, 12)'
+      },
+      deleteSelection :function() {
+        let startDate, endDate
+        if(this.currentShape !== null) {
+          startDate = this.currentShape.x0
+          endDate = this.currentShape.x1
+          if(this.currentShape) {
+            this.selections = this.selections.filter((selection) => {
+              return selection.x0 !== startDate  && selection.x1 !== endDate
+            })
+            this.layout.shapes = this.selections
+            //this.componentKey += 1
+            //this.addEventsHandler()
           }
-        })*/
+        }
       },
       initModeBar : function() {
         this.modeBarButtons = [
@@ -310,20 +340,6 @@
           }],
         ]
       },
-      deleteSelection : function () {
-        let x0, x1
-        if( this.currentShape !== null) {
-          x0 = this.currentShape.x0
-          x1 = this.currentShape.x1
-          if( this.currentShape) {
-            this.shapes = this.shapes.filter((e) =>{ return e.x0 !==  x0  && e.x1 !== x1})
-            this.layout.shapes = this.shapes
-            this.componentKey += 1
-            this.setEventsHandler()
-            this.selectionHandler({type : "clearForm"})
-          }
-        }
-      },
       setLayout: function() {
         this.layout = {
           height : 900,
@@ -336,7 +352,7 @@
           legend: this.getLayoutLegend(),
           xaxis : this.getLayoutXaxis("Time", "date"),
           yaxis : this.getLayoutYaxis("Values"),
-          shapes : this.shapes,
+          shapes : this.selections,
         }
       },
       getLayoutTitle: function() {

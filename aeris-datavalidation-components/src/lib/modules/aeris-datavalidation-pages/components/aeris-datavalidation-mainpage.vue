@@ -28,8 +28,10 @@
         >
           <template v-slot:portrait1>
                 <AerisDatavalidationChart
-                    :dataInfo="dataInfo"
+                    :endDate="endDate"
                     :isMainChart="true"
+                    :dataInfo="dataInfo"
+                    :startDate="startDate"
                     :currentSession="currentSession"
                     :parameters="firstChartParameters"
                     :currentInstrument="currentInstrument"
@@ -40,8 +42,10 @@
       <template v-slot:land2>
         <AerisDatavalidationChart
             v-if="!isSecondChartParametersEmpty"
-            :dataInfo="dataInfo"
+            :endDate="endDate"
             :isMainChart="false"
+            :dataInfo="dataInfo"
+            :startDate="startDate"
             :currentSession="currentSession"
             :parameters="secondChartParameters"
             :currentInstrument="currentInstrument"
@@ -70,6 +74,8 @@ import {
       },
       data() {
         return {
+          endDate: "",
+          startDate: "",
           dataInfo : null,
           selection : null,
           auxParameters: [],
@@ -84,13 +90,13 @@ import {
         isSecondChartParametersEmpty : function() {
           return this.secondChartParameters.length === 0
         },
-        getFirsChartCol : function () {
+        getFirsChartCol : function() {
           if( this.secondChartParameters.length === 0)
             return 12
           else
             return 7
         },
-        getSecondChartCol : function () {
+        getSecondChartCol : function() {
           if( this.secondChartParameters.length === 0)
             return 0
           else
@@ -99,13 +105,13 @@ import {
       },
       methods : {
         newSession : function(currentSession, currentInstrument) {
-          let mainParameter
           if(currentSession && currentInstrument) {
             this.currentSession = currentSession
             this.currentInstrument = currentInstrument
+            this.startDate = this.currentSession.startDate;
+            this.endDate = this.currentSession.endDate;
             this.initParametersLabel()
-            mainParameter = this.currentSession['mainParameter'].name
-            this.firstChartParameters = [mainParameter]
+            this.firstChartParameters = [this.currentSession['mainParameter'].name]
           }
         },
         initParametersLabel : function() {
@@ -125,7 +131,7 @@ import {
           }
         },
         removeParameter : function(deletedElement) {
-          if( deletedElement ) {
+          if(deletedElement) {
             this.firstChartParameters = this.firstChartParameters.filter(function(e) { return e !== deletedElement  })
             this.secondChartParameters = this.secondChartParameters.filter(function(e) { return e !== deletedElement })
           }
@@ -136,7 +142,7 @@ import {
             this.secondChartParameters = [...this.secondChartParameters, targetParameter]
           }
         },
-        removeParallel : function (targetParameter) {
+        removeParallel : function(targetParameter) {
           if(targetParameter) {
             this.addNewParameter(targetParameter)
           }
