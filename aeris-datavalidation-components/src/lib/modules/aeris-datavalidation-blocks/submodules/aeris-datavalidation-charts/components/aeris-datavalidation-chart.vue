@@ -89,7 +89,6 @@
     watch: {
       parameters : function (newParameters, oldsParameters) {
         let paramName
-        console.log("Test watch parameter", newParameters, oldsParameters)
         if(this.data.length === 0) {
           paramName= newParameters[0]
           this.initCurrentChart(paramName)
@@ -116,7 +115,8 @@
       },
     },
     mounted() {
-      this.initCurrentChart(this.parameters[0])
+      let paraName= this.parameters[0]
+      this.initCurrentChart(paraName)
     },
     methods: {
       initCurrentChart : function(parameterName) {
@@ -196,28 +196,27 @@
         this.addEventsHandler()
       },
       addEventsHandler : function () {
-        this.$nextTick(() => {
-          document.getElementById( this.chartId ).on( 'plotly_click', this.clickHandler)
-          document.getElementById( this.chartId ).on( 'plotly_selected', this.addNewSelection)
-        });
-      },
-      clickHandler : function (data) {
-        let targetPoint
-        if(data) {
-          targetPoint = data.points[0].x
-          this.setCurrentSelection(targetPoint)
-          //this.setEventsHandler()
+        if(this.isMainChart) {
+          this.$nextTick(() => {
+            document.getElementById( this.chartId ).on( 'plotly_click', this.clickHandler)
+            document.getElementById( this.chartId ).on( 'plotly_selected', this.addNewSelection)
+          });
         }
       },
-      setCurrentSelection : function(targetPoint) {
-        let targetSelection = this.getTargetSelection(targetPoint)
+      clickHandler : function (data) {
+        let targetPoint, targetSelection
+        if(data) {
+          targetPoint = data.points[0].x
+          targetSelection =  this.getTargetSelection(targetPoint)
+          if(targetSelection !== null)
+            this.setCurrentSelection(targetSelection)
+        }
+      },
+      setCurrentSelection : function(targetSelection) {
         if(targetSelection) {
           this.clearCurrentSelection()
           targetSelection.line.color = TARGET_SELECTION_BORDER_COLOR
           this.currentSelection = targetSelection
-          //this.componentKey += 1
-          //this.selectionHandler(targetSelection)
-
         }
       },
       getTargetSelection : function(targetPoint) {
@@ -234,7 +233,7 @@
             targetsSelection.push(selection)
           }
         })
-        return targetsSelection[targetsSelection.length-1]
+        return targetsSelection.length === 0 ? null : targetsSelection[targetsSelection.length-1]
       },
       addNewSelection : function(data) {
         let startDate, endDate
@@ -244,7 +243,6 @@
 
           if(!this.isSelectionExist(startDate, endDate)) {
             this.drawSelection(startDate, endDate)
-            //this.selectionHandler(data)
           }
         }
       },
@@ -287,10 +285,9 @@
             y1 : 1
           }
         ]
-        //this.layout.shapes = this.shapes
-        //this.componentKey += 1
-        //this.setEventsHandler()
-        //this.currentShape = this.shapes[this.shapes.length-1]
+        this.layout.shapes = this.selections
+        this.currentSelection = this.selections[this.selections.length-1]
+        this.refresh()
       },
       clearCurrentSelection : function() {
         this.layout.shapes.forEach((shape) => {
@@ -309,8 +306,6 @@
               return selection.x0 !== startDate  && selection.x1 !== endDate
             })
             this.layout.shapes = this.selections
-            //this.componentKey += 1
-            //this.addEventsHandler()
           }
         }
       },
