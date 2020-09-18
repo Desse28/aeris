@@ -35,7 +35,7 @@
   const SELECTION_BACKGROUND_COLOR = 'rgb(204, 39, 39)'
   const TARGET_SELECTION_BORDER_COLOR = 'rgb(27,90,217)'
 
-  let lockIcon = {
+  let trashIcon = {
     'width': 500,
     'height': 500,
     'path':"M296 432h16a8 8 0 0 0 8-8V152a8 8 0 0 0-8-8h-16a8 8 0 0 0-8 8v272a8 8 0 0 0 8 8zm-160 0h16a8 8 0 0 0 8-8V152a8 " +
@@ -365,6 +365,13 @@
           [
             'pan2d',
             'select2d',
+            {
+              name: "Delete selection",
+              icon: trashIcon,
+              click: () => {
+                this.deleteSelection()
+              }
+            },
             'autoScale2d',
             'resetScale2d',
           ],
@@ -377,13 +384,6 @@
             'toImage',
             'sendDataToCloud',
           ],
-          [{
-            name: "Delete selection",
-            icon: lockIcon,
-              click: () => {
-                this.deleteSelection()
-              }
-          }],
         ]
       },
       setLayout: function() {
