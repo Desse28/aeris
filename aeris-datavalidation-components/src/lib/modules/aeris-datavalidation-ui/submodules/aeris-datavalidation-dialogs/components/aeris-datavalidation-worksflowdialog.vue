@@ -31,11 +31,6 @@
           />
           <div v-else>
             <AerisDatavalidationSelectionsTable/>
-            <AerisDatavalidationSelectionform
-                :session="session"
-                :selection="selection"
-                :notifySelection="notifySelection"
-            />
           </div>
         <v-divider></v-divider>
 

@@ -243,13 +243,19 @@
         this.addEventsHandler()
       },
       addEventsHandler : function () {
-
         if(this.isMainChart) {
           this.$nextTick(() => {
             document.getElementById( this.chartId ).on( 'plotly_click', this.clickHandler)
             document.getElementById( this.chartId ).on( 'plotly_selected', this.addNewSelection)
+            document.getElementById( this.chartId ).on( 'plotly_relayout', this.zoomHandler)
           });
         }
+      },
+      zoomHandler : function(data) {
+        let xStartAxis = data['xaxis.range[0]']
+        let xEndAxis = data['xaxis.range[1]']
+        //xaxis->range
+        console.log("Test zoom handler", xStartAxis, xEndAxis)
       },
       clickHandler : function (data) {
         let targetPoint, targetSelection
