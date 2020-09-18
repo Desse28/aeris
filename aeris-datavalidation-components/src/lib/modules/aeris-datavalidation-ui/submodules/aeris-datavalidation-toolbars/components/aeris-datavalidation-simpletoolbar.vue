@@ -7,8 +7,8 @@
     <v-toolbar dense class="d-flex justify-center">
       <AerisDatavalidationWorksFlowDialog
           :session="session"
-          :currentSelection="currentSelection"
-          :notifyNewSelection="notifyNewSelection"
+          :selection="selection"
+          :notifySelection="notifySelection"
       />
       <AerisDataValidationOptions
           :linkedParameters="linkedParameters"
@@ -35,11 +35,11 @@ export default {
       type: Object,
       default: null
     },
-    currentSelection : {
+    selection : {
       type: Object,
       default: null
     },
-    notifyNewSelection : {
+    notifySelection : {
       type: Function,
       default: () => {}
     },

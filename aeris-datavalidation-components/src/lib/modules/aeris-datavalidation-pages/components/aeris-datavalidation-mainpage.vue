@@ -9,8 +9,10 @@
         :removeParallel="removeParallel"
         :addNewParameter="addNewParameter"
         :removeParameter="removeParameter"
+        :notifySelection=" notifySelection"
         :linkedParameters ="linkedParameters"
         :auxParameters="auxParameters"
+        :selection="selection"
     />
 
     <AerisDatavalidationLandScapeLayaout
@@ -31,8 +33,10 @@
                     :endDate="endDate"
                     :isMainChart="true"
                     :dataInfo="dataInfo"
+                    :selection="selection"
                     :startDate="startDate"
                     :currentSession="currentSession"
+                    :notifySelection="notifySelection"
                     :parameters="firstChartParameters"
                     :currentInstrument="currentInstrument"
                 />
@@ -104,6 +108,14 @@ import {
         }
       },
       methods : {
+        notifySelection : function(startDate, endDate) {
+          if(this.selection === null ) {
+            this.selection = {startDate: startDate, endDate: endDate}
+          } else {
+            console.log("Test selection in main page : ", startDate, endDate)
+          }
+
+        },
         newSession : function(currentSession, currentInstrument) {
           if(currentSession && currentInstrument) {
             this.currentSession = currentSession

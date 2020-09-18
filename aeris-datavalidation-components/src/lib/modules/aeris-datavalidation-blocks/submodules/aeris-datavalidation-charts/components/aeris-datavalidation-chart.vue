@@ -33,7 +33,7 @@
 
   const SELECTION_BORDER_COLOR = 'rgb(84,217,27)'
   const SELECTION_BACKGROUND_COLOR = 'rgb(204, 39, 39)'
-  const TARGET_SELECTION_BORDER_COLOR = 'rgb(84,217,27)'
+  const TARGET_SELECTION_BORDER_COLOR = 'rgb(27,90,217)'
 
   export default {
     name: "aeris-datavalidation-chart",
@@ -55,6 +55,14 @@
       isMainChart : {
         type: Boolean,
         default: () => false
+      },
+      selection: {
+        type: Object,
+        default : () => null
+      },
+      notifySelection: {
+        type : Function,
+        default: () => {}
       },
       currentSession : {
         type : Object,
@@ -97,6 +105,19 @@
           this.addNewParameter(paramName)
         } else if(newParameters.length < oldsParameters.length) {
           this.removeParameter(newParameters, oldsParameters)
+        }
+      },
+      selection: function() {
+        if(this.selection && this.currentSelection !== null) {
+          console.log("Test in chart selection : ", this.selection.startDate !== this.currentSelection.x0, this.selection.endDate !== this.currentSelection.x1)
+          if(this.selection.startDate !== this.currentSelection.x0
+              && this.selection.endDate !== this.currentSelection.x1) {
+            //this.setCurrentSelectionPeriod(this.selection.startDate, this.selection.endDate)
+            //this.drawSelection(this.selection.startDate, this.selection.endDate)
+            setTimeout(function() {
+              console.log("Test date : ", this.selection.startDate, this.selection.endDate)
+            }, 10000);
+          }
         }
       },
       dataInfo : function() {
@@ -196,6 +217,7 @@
         this.addEventsHandler()
       },
       addEventsHandler : function () {
+
         if(this.isMainChart) {
           this.$nextTick(() => {
             document.getElementById( this.chartId ).on( 'plotly_click', this.clickHandler)
@@ -211,6 +233,7 @@
           if(targetSelection !== null)
             this.setCurrentSelection(targetSelection)
         }
+        this.refresh()
       },
       setCurrentSelection : function(targetSelection) {
         if(targetSelection) {
@@ -225,14 +248,14 @@
         let targetsSelection = []
 
         this.selections.forEach((selection) => {
-          targetPointDate = new Date(targetPoint)
+          targetPointDate = new Date(targetPoint.x)
           selectionStartDate = new Date(selection.x0)
           selectionEndDate = new Date(selection.x1)
-
           if(selectionStartDate <= targetPointDate && targetPointDate <= selectionEndDate) {
             targetsSelection.push(selection)
           }
         })
+
         return targetsSelection.length === 0 ? null : targetsSelection[targetsSelection.length-1]
       },
       addNewSelection : function(data) {
@@ -240,7 +263,6 @@
         if(data) {
           startDate = data.range.x[0]
           endDate = data.range.x[1]
-
           if(!this.isSelectionExist(startDate, endDate)) {
             this.drawSelection(startDate, endDate)
           }
@@ -258,8 +280,10 @@
         return false
       },
       drawSelection : function(startDate, endDate) {
-        this.clearCurrentSelection()
+        let newStartDate = this.takeOfDateMilliseconds(startDate);
+        let newEndDate = this.takeOfDateMilliseconds(endDate);
 
+        this.clearCurrentSelection()
         this.selections = [
           ...this.selections,
           {
@@ -272,14 +296,14 @@
             fillrule : 'evenodd',
             line : {
               width : 5,
-              color : SELECTION_BORDER_COLOR,
+              color : TARGET_SELECTION_BORDER_COLOR,
               dash : 'dot'
             },
             xsizemode : 'scaled',
             ysizemode : 'scaled',
             xref : 'x',
-            x0 : startDate,
-            x1 : endDate,
+            x0 : newStartDate,
+            x1 : newEndDate,
             yref : 'paper',
             y0 : 0,
             y1 : 1
@@ -288,11 +312,28 @@
         this.layout.shapes = this.selections
         this.currentSelection = this.selections[this.selections.length-1]
         this.refresh()
+        console.log("Before notify in chart : ")
+        this.notifySelection(newStartDate, newEndDate)
+      },
+      setCurrentSelectionPeriod : function(newStartDate, newEndDate) {
+        if(newStartDate && newEndDate) {
+          //this.currentSelection.x0 = newStartDate
+          //this.currentSelection.x1 = newEndDate
+          //this.layout.shapes = this.selections
+          //this.refresh()
+          console.log("Test setCurrentSelectionPeriod : ", newStartDate, newEndDate, this.currentSelection)
+        } else {
+          console.log("In else of setCurrentSelectionPeriod")
+        }
+      },
+      takeOfDateMilliseconds : function(date) {
+        let dateFragment = date.split(".")
+        return dateFragment[0]
       },
       clearCurrentSelection : function() {
-        this.layout.shapes.forEach((shape) => {
-          if(shape.line.color === SELECTION_BORDER_COLOR) {
-            shape.line.color = SELECTION_BORDER_COLOR
+        this.selections.forEach((selection) => {
+          if(selection.line.color === TARGET_SELECTION_BORDER_COLOR) {
+            selection.line.color = SELECTION_BORDER_COLOR
           }
         })
       },

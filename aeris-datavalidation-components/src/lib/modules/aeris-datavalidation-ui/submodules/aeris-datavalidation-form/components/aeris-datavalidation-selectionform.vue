@@ -6,7 +6,7 @@
           <v-col cols="6">
             <AerisDatavalidationDateMounthPicker
                 date_label="Start date"
-                currentDate=""
+                :currentDate="startDate"
                 :setCurrentDate="setStartDate"
                 :disabled="false"
             />
@@ -14,7 +14,7 @@
           <v-col cols="6">
             <AerisDatavalidationDateMounthPicker
                 date_label="End date"
-                currentDate=""
+                :currentDate="endDate"
                 :setCurrentDate="setEndDate"
                 :disabled="false"
             />
@@ -22,7 +22,7 @@
           <v-col cols="6">
             <AerisDatavalidationTimePicker
                 time_label="Start time"
-                currentTime=""
+                :currentTime="startTime"
                 :setCurrentTime="setStartTime"
                 :disabled="false"
             />
@@ -30,7 +30,7 @@
           <v-col cols="6">
             <AerisDatavalidationTimePicker
                 time_label="End time"
-                :currentTime="''"
+                :currentTime="endTime"
                 :setCurrentTime="setEndTime"
                 :disabled="false"
             />
@@ -77,11 +77,11 @@ export default {
       type: Object,
       default: null
     },
-    currentSelection : {
+    selection: {
       type: Object,
-      default: null
+      default: null,
     },
-    notifyNewSelection : {
+    notifySelection : {
       type: Function,
       default: () => {}
     }
@@ -92,29 +92,78 @@ export default {
       startTime: "",
       endDate: "",
       endTime: "",
-      selectedFlags: []
+      selectedFlags: [],
     }
   },
   watch : {
-    currentSelection : function () {
-      //
+    selection: function () {
+      let selectionDate = this.getSelectionDate()
+      if(selectionDate) {
+        if((this.startDate !== selectionDate.startDate || this.startTime !== selectionDate.startTime) ||
+            this.endDate !== selectionDate.endDate || this.endTime !== selectionDate.endTime) {
+          this.setCurrentDate(selectionDate)
+        }
+      }
     }
   },
+  mounted() {
+    this.initSelectionForm()
+  },
   methods: {
+    initSelectionForm : function() {
+      let selectionDate = this.getSelectionDate()
+      if(selectionDate !== null) {
+        this.setCurrentDate(selectionDate)
+      }
+    },
+    getSelectionDate : function () {
+      let startDate, startTime, endDate, endTime
+
+      if(this.selection) {
+        endDate= this.$root.getDatePikerDateFormat(this.selection.endDate, "en")
+        startDate= this.$root.getDatePikerDateFormat(this.selection.startDate, "en")
+        startTime= this.$root.getTimePickerTimeFormat(this.selection.startDate)
+        endTime= this.$root.getTimePickerTimeFormat(this.selection.endDate)
+        return {startDate : startDate, startTime : startTime, endDate: endDate, endTime : endTime}
+      }
+      return null;
+    },
+    setCurrentDate : function(currentDate) {
+      if(currentDate) {
+        this.startDate = currentDate.startDate
+        this.startTime = currentDate.startTime
+        this.endDate = currentDate.endDate
+        this.endTime = currentDate.endTime
+      }
+    },
     setStartDate : function(startDate) {
       this.startDate = startDate
+      this.notifyDateChange()
     },
     setStartTime : function (startTime) {
       this.startTime = startTime
+      this.notifyDateChange()
     },
     setEndDate : function(endDate) {
       this.endDate = endDate
+      this.notifyDateChange()
     },
     setEndTime : function (endTime) {
       this.endTime = endTime
+      this.notifyDateChange()
     },
     setFlagsSelected : function (flags) {
       this.selectedFlags = flags
+    },
+    notifyDateChange : function() {
+      let startDate, endDate
+      if(this.startDate !== "" && this.startTime !== "" &&
+          this.endDate !== "" && this.endTime !== "") {
+        startDate = this.startDate + " " + this.startTime
+        endDate = this.endDate + " " + this.endTime
+        console.log("Before notify in form : ")
+        this.notifySelection(startDate, endDate)
+      }
     },
     saveSelection : function() {
       //Here submit selection

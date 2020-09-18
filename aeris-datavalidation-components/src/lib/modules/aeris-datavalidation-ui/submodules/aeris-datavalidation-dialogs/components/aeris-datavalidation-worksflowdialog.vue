@@ -9,16 +9,6 @@
                tile
                outlined
                color="blue"
-               v-on="on"
-               v-bind="attrs"
-               v-on:click="setCurrentWorkflow('selection')"
-        >
-          <v-icon left>mdi-selection-drag</v-icon>{{ $t("worksFlow.view_selection") }}
-        </v-btn>
-        <v-btn class="ma-2"
-               tile
-               outlined
-               color="blue"
                v-on="on" v-bind="attrs"
                v-on:click="setCurrentWorkflow('validation')"
         >
@@ -33,13 +23,18 @@
         <v-card-title class="headline grey lighten-2" v-else>
           Validation
         </v-card-title>
-          <AerisDatavalidationSelectionform v-if="isSelectionCurrentView"/>
+          <AerisDatavalidationSelectionform
+              v-if="isSelectionCurrentView"
+              :session="session"
+              :selection="selection"
+              :notifySelection="notifySelection"
+          />
           <div v-else>
             <AerisDatavalidationSelectionsTable/>
             <AerisDatavalidationSelectionform
                 :session="session"
-                :currentSelection="currentSelection"
-                :notifyNewSelection="notifyNewSelection"
+                :selection="selection"
+                :notifySelection="notifySelection"
             />
           </div>
         <v-divider></v-divider>
@@ -82,13 +77,20 @@ export default {
       type: Object,
       default: null
     },
-    currentSelection : {
+    selection : {
       type: Object,
       default: null
     },
-    notifyNewSelection : {
+    notifySelection : {
       type: Function,
       default: () => {}
+    }
+  },
+  watch : {
+    selection: function () {
+      if(this.selection) {
+        this.dialog = true
+      }
     }
   },
   data() {

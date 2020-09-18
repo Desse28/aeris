@@ -21,9 +21,9 @@ export default {
         },
         getTimePickerTimeFormat : function(date) {
             let currentTime = new Date(date)
-            let hours = this.completeNumber(currentTime.getUTCHours())
-            let minutes = this.completeNumber(currentTime.getUTCMinutes())
-            let seconds = this.completeNumber(currentTime.getUTCSeconds())
+            let hours = this.completeNumber(currentTime.getHours())
+            let minutes = this.completeNumber(currentTime.getMinutes())
+            let seconds = this.completeNumber(currentTime.getSeconds())
             return hours + ":" + minutes + ":" + seconds
         },
         getSpringDateFormat : function(date) {
