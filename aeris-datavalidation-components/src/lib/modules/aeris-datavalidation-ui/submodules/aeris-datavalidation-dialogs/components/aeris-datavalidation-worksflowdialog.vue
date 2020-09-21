@@ -84,7 +84,7 @@ export default {
   watch : {
     selection: function () {
       if(this.selection) {
-        this.dialog = true
+        //this.dialog = true
       }
     }
   },

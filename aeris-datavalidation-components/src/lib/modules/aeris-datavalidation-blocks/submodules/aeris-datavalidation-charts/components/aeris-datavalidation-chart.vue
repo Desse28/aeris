@@ -2,6 +2,7 @@
   <div>
     <AerisDataValidationServices
         :url="currentUrl"
+
         :callBack="callBack"
     >
       <v-row justify="center">
@@ -10,7 +11,7 @@
               :key="componentKey"
               :x="Date"
               :data="data"
-              :id="chartId"
+              :id="getChartId"
               :layout="layout"
               :scrollZoom="true"
               :displaylogo="false"
@@ -25,6 +26,7 @@
 </template>
 
 <script>
+  import $ from "jquery";
   import { Plotly } from 'vue-plotly'
 
   import {
@@ -118,8 +120,16 @@
         callBack : null,
         modeBarButtons: [],
         currentSelection : null,
-        chartId : "mainChart",
+        chartId : "",
         currentParameters : [],
+      }
+    },
+    computed: {
+      getChartId : function () {
+        if(this.isMainChart)
+          return "mainChart1"
+        else
+          return "mainChart2"
       }
     },
     watch: {
@@ -137,14 +147,9 @@
       },
       selection: function() {
         if(this.selection && this.currentSelection !== null) {
-          console.log("Test in chart selection : ", this.selection.startDate !== this.currentSelection.x0, this.selection.endDate !== this.currentSelection.x1)
           if(this.selection.startDate !== this.currentSelection.x0
-              && this.selection.endDate !== this.currentSelection.x1) {
-            //this.setCurrentSelectionPeriod(this.selection.startDate, this.selection.endDate)
-            //this.drawSelection(this.selection.startDate, this.selection.endDate)
-            setTimeout(function() {
-              console.log("Test date : ", this.selection.startDate, this.selection.endDate)
-            }, 10000);
+              || this.selection.endDate !== this.currentSelection.x1) {
+            this.setCurrentSelectionPeriod(this.selection.startDate, this.selection.endDate)
           }
         }
       },
@@ -165,6 +170,7 @@
     },
     mounted() {
       let paraName= this.parameters[0]
+      this.chartId = this.getChartId
       this.initCurrentChart(paraName)
     },
     methods: {
@@ -193,7 +199,6 @@
         this.callBack = (data) => {
           if(data) {
             this.updateChart(data.parameterData, parameterName)
-            //this.refresh()
             this.initdefaultParameters(parameterName)
           }
         }
@@ -247,9 +252,9 @@
       addEventsHandler : function () {
         if(this.isMainChart) {
           this.$nextTick(() => {
-            document.getElementById( this.chartId ).on( 'plotly_click', this.clickHandler)
             document.getElementById( this.chartId ).on( 'plotly_selected', this.addNewSelection)
-            document.getElementById( this.chartId ).on( 'plotly_relayout', this.zoomHandler)
+            //document.getElementById( this.chartId ).on( 'plotly_relayout', this.zoomHandler)
+            this.addSelectionEvent()
           });
         }
       },
@@ -259,47 +264,36 @@
         //xaxis->range
         console.log("Test zoom handler", xStartAxis, xEndAxis)
       },
-      clickHandler : function (data) {
-        let targetPoint, targetSelection
-        if(data) {
-          targetPoint = data.points[0].x
-          targetSelection =  this.getTargetSelection(targetPoint)
-          if(targetSelection !== null)
-            this.setCurrentSelection(targetSelection)
-        }
-        this.refresh()
-      },
-      setCurrentSelection : function(targetSelection) {
-        if(targetSelection) {
-          this.clearCurrentSelection()
-          targetSelection.line.color = TARGET_SELECTION_BORDER_COLOR
-          this.currentSelection = targetSelection
-        }
-      },
-      getTargetSelection : function(targetPoint) {
-        let targetPointDate
-        let selectionStartDate, selectionEndDate
-        let targetsSelection = []
-
-        this.selections.forEach((selection) => {
-          targetPointDate = new Date(targetPoint.x)
-          selectionStartDate = new Date(selection.x0)
-          selectionEndDate = new Date(selection.x1)
-          if(selectionStartDate <= targetPointDate && targetPointDate <= selectionEndDate) {
-            targetsSelection.push(selection)
-          }
-        })
-
-        return targetsSelection.length === 0 ? null : targetsSelection[targetsSelection.length-1]
-      },
       addNewSelection : function(data) {
         let startDate, endDate
-        if(data) {
+        if(data && 0 < data.points.length) {
           startDate = data.range.x[0]
           endDate = data.range.x[1]
           if(!this.isSelectionExist(startDate, endDate)) {
             this.drawSelection(startDate, endDate)
           }
+        }
+      },
+      addSelectionEvent: function () {
+        let children =  $('#' + this.chartId).find( '.shapelayer' )[2].children
+        if(children) {
+            children.forEach((selection, index) => {
+              $(selection).attr('id', 'selection' + index );
+              $(selection).css("pointer-events", "bounding-box");
+              if( index === children.length - 1)
+                $(document).on('click', '#selection' + index, this.switchSelection);
+            })
+        }
+      },
+      switchSelection : function(event) {
+        let child = event.target;
+        let parent = child.parentNode;
+        let index = Array.prototype.indexOf.call(parent.children, child);
+        if(index !== -1 && this.currentSelection !== this.selections[index]) {
+          this.clearCurrentSelection()
+          this.currentSelection = this.selections[index]
+          this.currentSelection.line.color = TARGET_SELECTION_BORDER_COLOR
+          this.refresh()
         }
       },
       isSelectionExist : function (startDate, endDate) {
@@ -346,18 +340,13 @@
         this.layout.shapes = this.selections
         this.currentSelection = this.selections[this.selections.length-1]
         this.refresh()
-        console.log("Before notify in chart : ")
         this.notifySelection(newStartDate, newEndDate)
       },
       setCurrentSelectionPeriod : function(newStartDate, newEndDate) {
         if(newStartDate && newEndDate) {
-          //this.currentSelection.x0 = newStartDate
-          //this.currentSelection.x1 = newEndDate
-          //this.layout.shapes = this.selections
-          //this.refresh()
-          console.log("Test setCurrentSelectionPeriod : ", newStartDate, newEndDate, this.currentSelection)
-        } else {
-          console.log("In else of setCurrentSelectionPeriod")
+          this.currentSelection.x0 = newStartDate
+          this.currentSelection.x1 = newEndDate
+          this.refresh()
         }
       },
       takeOfDateMilliseconds : function(date) {
@@ -371,17 +360,16 @@
           }
         })
       },
-      deleteSelection :function() {
+      deleteCurrentSelection :function() {
         let startDate, endDate
-        if(this.currentShape !== null) {
-          startDate = this.currentShape.x0
-          endDate = this.currentShape.x1
-          if(this.currentShape) {
-            this.selections = this.selections.filter((selection) => {
-              return selection.x0 !== startDate  && selection.x1 !== endDate
-            })
-            this.layout.shapes = this.selections
-          }
+        if(this.currentSelection !== null) {
+          startDate = this.currentSelection.x0
+          endDate = this.currentSelection.x1
+          this.selections = this.selections.filter((selection) => {
+            return selection.x0 !== startDate  && selection.x1 !== endDate
+          })
+          this.layout.shapes = this.selections
+          this.refresh()
         }
       },
       initModeBar : function() {
@@ -392,14 +380,14 @@
               name: "Delete selection",
               icon: TRASH_ICON,
               click: () => {
-                this.deleteSelection()
+                this.deleteCurrentSelection()
               }
             },
             {
               name: "Link chart",
               icon: LINK_ICON,
               click: () => {
-                this.deleteSelection()
+                this.deleteCurrentSelection()
               }
             },
             'pan2d',

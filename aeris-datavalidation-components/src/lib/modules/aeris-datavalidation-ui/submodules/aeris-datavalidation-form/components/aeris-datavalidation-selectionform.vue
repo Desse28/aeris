@@ -98,6 +98,7 @@ export default {
   watch : {
     selection: function () {
       let selectionDate = this.getSelectionDate()
+
       if(selectionDate) {
         if((this.startDate !== selectionDate.startDate || this.startTime !== selectionDate.startTime) ||
             this.endDate !== selectionDate.endDate || this.endTime !== selectionDate.endTime) {
@@ -109,6 +110,7 @@ export default {
   mounted() {
     this.initSelectionForm()
   },
+
   methods: {
     initSelectionForm : function() {
       let selectionDate = this.getSelectionDate()
@@ -137,20 +139,28 @@ export default {
       }
     },
     setStartDate : function(startDate) {
-      this.startDate = startDate
-      this.notifyDateChange()
+      if(this.startDate !== startDate) {
+        this.startDate = startDate
+        this.notifyDateChange()
+      }
     },
     setStartTime : function (startTime) {
-      this.startTime = startTime
-      this.notifyDateChange()
+      if(this.startTime !== startTime) {
+        this.startTime = startTime
+        this.notifyDateChange()
+      }
     },
     setEndDate : function(endDate) {
-      this.endDate = endDate
-      this.notifyDateChange()
+      if(this.endDate !== endDate) {
+        this.endDate = endDate
+        this.notifyDateChange()
+      }
     },
     setEndTime : function (endTime) {
-      this.endTime = endTime
-      this.notifyDateChange()
+      if(this.endTime !== endTime) {
+        this.endTime = endTime
+        this.notifyDateChange()
+      }
     },
     setFlagsSelected : function (flags) {
       this.selectedFlags = flags
@@ -161,7 +171,6 @@ export default {
           this.endDate !== "" && this.endTime !== "") {
         startDate = this.startDate + " " + this.startTime
         endDate = this.endDate + " " + this.endTime
-        console.log("Before notify in form : ")
         this.notifySelection(startDate, endDate)
       }
     },

@@ -109,12 +109,7 @@ import {
       },
       methods : {
         notifySelection : function(startDate, endDate) {
-          if(this.selection === null ) {
-            this.selection = {startDate: startDate, endDate: endDate}
-          } else {
-            console.log("Test selection in main page : ", startDate, endDate)
-          }
-
+          this.selection = {startDate: startDate, endDate: endDate}
         },
         newSession : function(currentSession, currentInstrument) {
           if(currentSession && currentInstrument) {
