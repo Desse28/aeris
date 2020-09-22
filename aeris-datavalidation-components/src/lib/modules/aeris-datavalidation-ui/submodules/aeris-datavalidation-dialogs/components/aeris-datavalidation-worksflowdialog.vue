@@ -10,29 +10,27 @@
                outlined
                color="blue"
                v-on="on" v-bind="attrs"
-               v-on:click="setCurrentWorkflow('validation')"
+               v-on:click="switchCurrentView($t('worksFlow.validation'))"
         >
           <v-icon left>mdi-send-check-outline</v-icon> {{ $t("worksFlow.validation") }}
         </v-btn>
       </template>
 
       <v-card>
-        <v-card-title class="headline grey lighten-2" v-if="isSelectionCurrentView">
-          {{$t('session.selection')}}
+        <v-card-title class="headline grey lighten-2" v-if="currentViewIsSelection">
+          {{$t('worksFlow.view_selection')}}
         </v-card-title>
         <v-card-title class="headline grey lighten-2" v-else>
           Validation
         </v-card-title>
           <AerisDatavalidationSelectionform
-              v-if="isSelectionCurrentView"
+              v-if="currentViewIsSelection"
               :session="session"
               :selection="selection"
               :qualityFlags="qualityFlags"
               :notifySelection="notifySelection"
           />
-          <div v-else>
-            <AerisDatavalidationSelectionsTable/>
-          </div>
+        <AerisDatavalidationSelectionsTable  v-else />
         <v-divider></v-divider>
 
         <v-card-actions>
@@ -40,18 +38,18 @@
           <v-btn
               color="primary"
               text
-              @click="dialog = false"
-              v-if="isSelectionCurrentView"
+              @click="switchCurrentView($t('worksFlow.validation'))"
+              v-if="currentViewIsSelection"
           >
-            Validation
+            {{$t('worksFlow.validation')}}
           </v-btn>
           <v-btn
               color="primary"
               text
-              @click="dialog = false"
+              @click="switchCurrentView($t('worksFlow.view_selection'))"
               v-else
           >
-            Selection
+            {{$t('worksFlow.view_selection')}}
           </v-btn>
         </v-card-actions>
       </v-card>
@@ -89,6 +87,7 @@ export default {
   watch : {
     selection: function () {
       if(this.selection && this.selection.startDate !== "" && this.selection.endDate !== "") {
+        this.switchCurrentView( this.$t('worksFlow.view_selection'))
         this.dialog = true
       }
     }
@@ -96,19 +95,20 @@ export default {
   data() {
     return {
       dialog: false,
-      currentWorkFlow : this.$t('worksFlow.view_selection')
+      currentView : this.$t('worksFlow.view_selection')
     }
   },
   computed : {
-    isSelectionCurrentView : function () {
-      return this.currentWorkFlow === this.$t('worksFlow.view_selection')
+    currentViewIsSelection : function () {
+      return this.currentView === this.$t('worksFlow.view_selection')
     }
   },
   methods : {
-    setCurrentWorkflow : function (targetButton) {
-      let validation = this.$t('worksFlow.validation')
-      let selection = this.$t('worksFlow.view_selection')
-      this.currentWorkFlow = targetButton === "selection" ? selection : validation
+    switchCurrentView : function(viewName) {
+      if(viewName) {
+        this.currentView = viewName
+        this.dialog = true
+      }
     }
   },
 }

@@ -45,15 +45,6 @@ export default {
       type : Array,
       default : () => [],
     },
-    setSelectionDateTime : {
-      type : Function,
-    },
-    setQualityFlagsDefaultValue : {
-      type : Function,
-    },
-    setSelectionPreconfData : {
-      type : Function,
-    },
   },
   watch : {
     sessionSelections : function () {
