@@ -8,6 +8,7 @@
       <AerisDatavalidationWorksFlowDialog
           :session="session"
           :selection="selection"
+          :qualityFlags="qualityFlags"
           :notifySelection="notifySelection"
       />
       <AerisDataValidationOptions
@@ -34,6 +35,10 @@ export default {
     session : {
       type: Object,
       default: null
+    },
+    qualityFlags : {
+      type: Array,
+      default: () => []
     },
     selection : {
       type: Object,

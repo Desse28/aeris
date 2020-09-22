@@ -1,7 +1,7 @@
 <template>
   <v-select
       v-model="value"
-      :items="items"
+      :items="qualityFlags"
       :label="flag_message"
       :item-text="itemText"
       :name="name"

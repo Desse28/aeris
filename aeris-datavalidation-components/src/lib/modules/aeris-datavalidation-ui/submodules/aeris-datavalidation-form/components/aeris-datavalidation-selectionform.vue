@@ -39,7 +39,7 @@
             <AerisDatavalidationSelect
                 name="flags"
                 itemText="label"
-                :qualityFlags="[]"
+                :qualityFlags="qualityFlags"
                 flag_message="Choose quality flag"
                 :setFlagsSelected="setFlagsSelected"
             />
@@ -76,6 +76,10 @@ export default {
     session : {
       type: Object,
       default: null
+    },
+    qualityFlags : {
+      type: Array,
+      default: () => []
     },
     selection: {
       type: Object,
@@ -173,7 +177,9 @@ export default {
       }
     },
     setFlagsSelected : function (flags) {
-      this.selectedFlags = flags
+      if(this.selectedFlags !== flags) {
+        this.selectedFlags = flags
+      }
     },
     notifyDateChange : function() {
       let startDate, endDate

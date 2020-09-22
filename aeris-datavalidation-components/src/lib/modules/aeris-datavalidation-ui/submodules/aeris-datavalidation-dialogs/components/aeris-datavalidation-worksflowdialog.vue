@@ -27,6 +27,7 @@
               v-if="isSelectionCurrentView"
               :session="session"
               :selection="selection"
+              :qualityFlags="qualityFlags"
               :notifySelection="notifySelection"
           />
           <div v-else>
@@ -67,10 +68,14 @@ export default {
     AerisDatavalidationSelectionform,
     AerisDatavalidationSelectionsTable
   },
-  props : {
+  props: {
     session : {
       type: Object,
       default: null
+    },
+    qualityFlags : {
+      type: Array,
+      default: () => []
     },
     selection : {
       type: Object,

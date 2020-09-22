@@ -12,6 +12,7 @@
         :notifySelection=" notifySelection"
         :linkedParameters ="linkedParameters"
         :auxParameters="auxParameters"
+        :qualityFlags="qualityFlags"
         :selection="selection"
     />
 
@@ -82,6 +83,7 @@ import {
           startDate: "",
           dataInfo : null,
           selection : null,
+          qualityFlags : [],
           auxParameters: [],
           linkedParameters : [],
           currentSession: null,
@@ -115,8 +117,9 @@ import {
           if(currentSession && currentInstrument) {
             this.currentSession = currentSession
             this.currentInstrument = currentInstrument
-            this.startDate = this.currentSession.startDate;
-            this.endDate = this.currentSession.endDate;
+            this.qualityFlags = currentInstrument.flags
+            this.startDate = this.currentSession.startDate
+            this.endDate = this.currentSession.endDate
             this.initParametersLabel()
             this.firstChartParameters = [this.currentSession['mainParameter'].name]
           }
