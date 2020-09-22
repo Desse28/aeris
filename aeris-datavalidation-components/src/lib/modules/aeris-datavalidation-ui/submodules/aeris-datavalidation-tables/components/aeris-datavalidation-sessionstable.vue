@@ -95,7 +95,7 @@ export default {
       return  this.selected.length === 0
     },
     tableHeaders : function() {
-      let headers = [
+      return [
         {
           text: this.$t('session.start_date_input_label'),
           align: 'startDate',
@@ -115,7 +115,7 @@ export default {
           value: 'instrumentName',
         },
         {
-          text:  this.$t('session.main_parameter'),
+          text: this.$t('session.main_parameter'),
           align: 'start',
           sortable: false,
           value: 'mainParameter.name',
@@ -126,9 +126,8 @@ export default {
           sortable: false,
           value: 'linkedParameters',
         },
-        { text: this.$t('session.state'), value: 'state', align: 'center',},
+        {text: this.$t('session.state'), value: 'state', align: 'center',},
       ]
-      return headers
     },
   },
   mounted() {

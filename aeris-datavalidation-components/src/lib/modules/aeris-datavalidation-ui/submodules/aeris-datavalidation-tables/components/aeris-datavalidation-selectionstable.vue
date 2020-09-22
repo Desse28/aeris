@@ -14,6 +14,20 @@
             height="400"
             :disabled="selections.length === 0"
         >
+          <template v-slot:item.startDate="{ item }">
+            <div>{{getDateGoodFormat(item.startDate)}}</div>
+          </template>
+          <template v-slot:item.endDate="{ item }">
+            <div class="pa-4" v-if="item.endDate === null">/</div>
+            <div v-else >{{getDateGoodFormat(item.endDate)}}</div>
+          </template>
+          <template v-slot:item.flags="{ item}">
+            <div v-for="flag in item.flags"
+                 :key="item.flags.indexOf(flag)"
+            >
+              <div>{{ flag.label}}</div>
+            </div>
+          </template>
           <template v-slot:item.actions="{ item }">
             <v-icon
                 small
@@ -41,7 +55,7 @@
 export default {
   name: "aeris-datavalidation-selectionstable",
   props : {
-    sessionSelections : {
+    selections : {
       type : Array,
       default : () => [],
     },
@@ -49,7 +63,6 @@ export default {
   data () {
     return {
       selected: [],
-      selections: [],
       editedIndex: -1,
       editedItem: {
         name: '',
@@ -66,28 +79,27 @@ export default {
   },
   computed : {
     tableHeaders : function() {
-      let headers = [
-          {
-            text: this.$t('session.start_date_input_label'),
-            align: 'start',
-            sortable: false,
-            value: 'startDate',
-          },
-          {
-            text: this.$t('session.end_date_input_label'),
-            align: 'start',
-            sortable: false,
-            value: 'endDate',
-          },
-          {
-            text: this.$t('session.flags'),
-            align: 'start',
-            sortable: false,
-            value: 'flags',
-          },
-          { text: 'Actions', value: 'actions', sortable: false },
+      return [
+        {
+          text: this.$t('session.start_date_input_label'),
+          align: 'start',
+          sortable: false,
+          value: 'startDate',
+        },
+        {
+          text: this.$t('session.end_date_input_label'),
+          align: 'start',
+          sortable: false,
+          value: 'endDate',
+        },
+        {
+          text: this.$t('session.flags'),
+          align: 'start',
+          sortable: false,
+          value: 'flags',
+        },
+        {text: 'Actions', value: 'actions', sortable: false},
       ]
-      return headers
     }
   },
   methods: {
@@ -98,6 +110,14 @@ export default {
       //const index = this.selections.indexOf(item)
       //confirm('Are you sure you want to delete this item?') && this.selections.splice(index, 1)
       console.log("Test delete selection", selection)
+    },
+    getDateGoodFormat : function(date) {
+      let timePart, datePart
+      if (date) {
+        timePart = this.$root.getTimePickerTimeFormat(date)
+        datePart = this.$root.getDatePikerDateFormat(date, "fr")
+        return datePart + ", "+ timePart
+      }
     },
   },
 }

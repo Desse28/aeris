@@ -30,7 +30,10 @@
               :qualityFlags="qualityFlags"
               :notifySelection="notifySelection"
           />
-        <AerisDatavalidationSelectionsTable  v-else />
+        <AerisDatavalidationSelectionsTable
+            v-else
+            :selections="session.sessionSelections"
+        />
         <v-divider></v-divider>
 
         <v-card-actions>
@@ -42,14 +45,6 @@
               v-if="currentViewIsSelection"
           >
             {{$t('worksFlow.validation')}}
-          </v-btn>
-          <v-btn
-              color="primary"
-              text
-              @click="switchCurrentView($t('worksFlow.view_selection'))"
-              v-else
-          >
-            {{$t('worksFlow.view_selection')}}
           </v-btn>
         </v-card-actions>
       </v-card>
