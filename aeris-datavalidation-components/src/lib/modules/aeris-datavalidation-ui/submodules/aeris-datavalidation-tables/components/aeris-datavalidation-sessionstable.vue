@@ -94,7 +94,7 @@ export default {
     disabledContinueButton : function() {
       return  this.selected.length === 0
     },
-    tableHeaders : function (){
+    tableHeaders : function() {
       let headers = [
         {
           text: this.$t('session.start_date_input_label'),

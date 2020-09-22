@@ -2,7 +2,7 @@
   <div>
       <template>
         <v-data-table
-            :headers="headers"
+            :headers="tableHeaders"
             :items="selections"
             class="elevation-1"
             item-key="name"
@@ -24,7 +24,7 @@
             </v-icon>
             <v-icon
                 small
-                @click="deleteItem(item)"
+                @click="deleteSelection(item)"
             >
               mdi-delete
             </v-icon>
@@ -46,33 +46,11 @@ export default {
       default : () => [],
     },
   },
-  watch : {
-    sessionSelections : function () {
-      this.selections = this.sessionSelections
-      this.selections.forEach((selection, index) => {
-        selection.name = "Selection" + (index + 1)
-        selection.startDate = this.getDateGoodFormat(new Date(selection.startDate))
-        this.setSelectionPreconfData([selection.startDate, selection.endDate])
-      })
-    }
-  },
   data () {
     return {
       selected: [],
-      headers: [
-        {
-          text: 'Selection',
-          align: 'start',
-          sortable: false,
-          value: 'name',
-        },
-        { text: 'Start date', value: 'startDate' },
-        { text: 'Actions', value: 'actions', sortable: false },
-      ],
       selections: [],
       editedIndex: -1,
-
-
       editedItem: {
         name: '',
         lastUpdate: 0,
@@ -86,27 +64,40 @@ export default {
       itemsPerPage: 5,
     }
   },
+  computed : {
+    tableHeaders : function() {
+      let headers = [
+          {
+            text: this.$t('session.start_date_input_label'),
+            align: 'start',
+            sortable: false,
+            value: 'startDate',
+          },
+          {
+            text: this.$t('session.end_date_input_label'),
+            align: 'start',
+            sortable: false,
+            value: 'endDate',
+          },
+          {
+            text: this.$t('session.flags'),
+            align: 'start',
+            sortable: false,
+            value: 'flags',
+          },
+          { text: 'Actions', value: 'actions', sortable: false },
+      ]
+      return headers
+    }
+  },
   methods: {
     editSelection (selection) {
-      this.setSelectionDateTime(new Date(selection.startDate), new Date(selection.endDate))
-      this.setQualityFlagsDefaultValue(selection.flags)
-      console.log("Test editItem : ", selection)
-      //this.editedIndex = this.selections.indexOf(item)
-      //this.editedItem = Object.assign({}, item)
+      console.log("Test edit selection , ", selection)
     },
-    deleteItem (item) {
-      const index = this.selections.indexOf(item)
-      confirm('Are you sure you want to delete this item?') && this.selections.splice(index, 1)
-    },
-    completeNumber : function(number) {
-      let result = Math.floor(number / 10) <= 0 ? "0" + number : number
-      return result
-    },
-    getDateGoodFormat : function(currentDate) {
-      let day = this.completeNumber(currentDate.getUTCDay())
-      let month = this.completeNumber(currentDate.getUTCMonth())
-      let year = currentDate.getUTCFullYear()
-      return day + "-" + month + "-" + year
+    deleteSelection (selection) {
+      //const index = this.selections.indexOf(item)
+      //confirm('Are you sure you want to delete this item?') && this.selections.splice(index, 1)
+      console.log("Test delete selection", selection)
     },
   },
 }

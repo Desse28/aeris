@@ -17,6 +17,7 @@
   },
   "session": {
     "state": "State",
+    "flags" : "Flags",
     "selection": "Selection",
     "new_session": "New session",
     "quality_flags" : "Quality flags",

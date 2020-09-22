@@ -17,6 +17,7 @@
   },
   "session": {
     "state": "État",
+    "flags" : "Drapeaux",
     "selection": "Sélection",
     "new_session": "Nouvelle session",
     "create_button" : "@:common.create",
