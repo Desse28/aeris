@@ -17,18 +17,23 @@
   },
   "session": {
     "state": "État",
+    "selection": "Sélection",
     "new_session": "Nouvelle session",
     "create_button" : "@:common.create",
+    "quality_flags": "Drapeaux de qualité",
     "linked_parameters": "Paramètres liés",
     "main_parameter": "Paramètre principal",
-    "session_exist" : "Cette session existe",
+    "session_exist" : "La session existe",
     "instrument_name": "Nom de l'instrument",
+    "selection_exists" : "Cette selection existe",
     "continue_session" : "Continuer la session",
     "end_date_input_label" : "@:common.end_date",
     "end_time_input_label" : "@:common.end_time",
+    "recorded_selection":  "Sélection enregistrée",
     "start_time_input_label" : "@:common.start_time",
     "start_date_input_label" : "@:common.start_date",
-    "create_new_session": "Créer une nouvelle session"
+    "create_new_session": "Créer une nouvelle session",
+    "choose_quality_flag": "Choisissez le drapeau de qualité"
   },
   "worksFlow": {
     "validation": "Validation",

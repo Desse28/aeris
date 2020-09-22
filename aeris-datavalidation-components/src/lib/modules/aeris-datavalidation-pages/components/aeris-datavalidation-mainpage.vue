@@ -13,6 +13,7 @@
         :linkedParameters ="linkedParameters"
         :auxParameters="auxParameters"
         :qualityFlags="qualityFlags"
+        :session="currentSession"
         :selection="selection"
     />
 

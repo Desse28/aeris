@@ -18,7 +18,7 @@
 
       <v-card>
         <v-card-title class="headline grey lighten-2" v-if="isSelectionCurrentView">
-          Selection
+          {{$t('session.selection')}}
         </v-card-title>
         <v-card-title class="headline grey lighten-2" v-else>
           Validation

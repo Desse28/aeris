@@ -201,7 +201,6 @@ export default {
 
       this.callBack = (session) => {
         if(session) {
-          console.log("Test createNewSession : ", session)
           if(this.isExistSession(session)) {
             this.isSessionExist = true
             setTimeout(() => {
