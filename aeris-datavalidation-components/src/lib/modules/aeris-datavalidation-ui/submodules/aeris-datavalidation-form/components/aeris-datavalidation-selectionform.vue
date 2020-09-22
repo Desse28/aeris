@@ -97,13 +97,17 @@ export default {
   },
   watch : {
     selection: function () {
-      let selectionDate = this.getSelectionDate()
-
-      if(selectionDate) {
-        if((this.startDate !== selectionDate.startDate || this.startTime !== selectionDate.startTime) ||
-            this.endDate !== selectionDate.endDate || this.endTime !== selectionDate.endTime) {
-          this.setCurrentDate(selectionDate)
+      let selectionDate
+      if(this.selection.startDate !== "" && this.selection.endDate !== "") {
+        selectionDate = this.getSelectionDate()
+        if(selectionDate) {
+          if((this.startDate !== selectionDate.startDate || this.startTime !== selectionDate.startTime) ||
+              this.endDate !== selectionDate.endDate || this.endTime !== selectionDate.endTime) {
+            this.setCurrentDate(selectionDate)
+          }
         }
+      } else {
+        this.resetDate()
       }
     }
   },
@@ -137,6 +141,12 @@ export default {
         this.endDate = currentDate.endDate
         this.endTime = currentDate.endTime
       }
+    },
+    resetDate : function () {
+      this.startDate = ""
+      this.startTime = ""
+      this.endDate = ""
+      this.endTime = ""
     },
     setStartDate : function(startDate) {
       if(this.startDate !== startDate) {

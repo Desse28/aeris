@@ -286,15 +286,28 @@
         }
       },
       switchSelection : function(event) {
-        let child = event.target;
+        let startDate, endDate
+        let child = event.target
         let parent = child.parentNode;
         let index = Array.prototype.indexOf.call(parent.children, child);
+
         if(index !== -1 && this.currentSelection !== this.selections[index]) {
-          this.clearCurrentSelection()
-          this.currentSelection = this.selections[index]
-          this.currentSelection.line.color = TARGET_SELECTION_BORDER_COLOR
-          this.refresh()
+          this.setCurrentSelection(index)
+        } else if(index !== -1 && this.currentSelection === this.selections[index]) {
+          startDate = this.currentSelection.x0
+          endDate = this.currentSelection.x1
+          this.notifySelection(startDate, endDate)
         }
+      },
+      setCurrentSelection : function(index) {
+        let startDate, endDate
+        this.clearCurrentSelection()
+        this.currentSelection = this.selections[index]
+        this.currentSelection.line.color = TARGET_SELECTION_BORDER_COLOR
+        startDate = this.currentSelection.x0
+        endDate = this.currentSelection.x1
+        this.refresh()
+        this.notifySelection(startDate, endDate)
       },
       isSelectionExist : function (startDate, endDate) {
         let currentSelection
@@ -369,7 +382,11 @@
             return selection.x0 !== startDate  && selection.x1 !== endDate
           })
           this.layout.shapes = this.selections
+          startDate = ""
+          endDate = ""
           this.refresh()
+          this.currentSelection = null
+          this.notifySelection(startDate, endDate)
         }
       },
       initModeBar : function() {
@@ -390,17 +407,15 @@
                 this.deleteCurrentSelection()
               }
             },
+            'zoomIn2d',
+            'zoomOut2d',
+          ],
+          [
             'pan2d',
             'autoScale2d',
             'resetScale2d',
           ],
           [
-            'zoom2d',
-            'zoomIn2d',
-            'zoomOut2d',
-          ],
-          [
-            'toImage',
             'sendDataToCloud',
           ],
         ]

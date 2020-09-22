@@ -83,8 +83,8 @@ export default {
   },
   watch : {
     selection: function () {
-      if(this.selection) {
-        //this.dialog = true
+      if(this.selection && this.selection.startDate !== "" && this.selection.endDate !== "") {
+        this.dialog = true
       }
     }
   },
