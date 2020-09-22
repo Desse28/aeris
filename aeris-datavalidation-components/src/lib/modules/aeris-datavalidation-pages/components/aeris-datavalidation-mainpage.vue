@@ -37,6 +37,7 @@
                     :dataInfo="dataInfo"
                     :selection="selection"
                     :startDate="startDate"
+                    :defaultSelections="selections"
                     :currentSession="currentSession"
                     :notifySelection="notifySelection"
                     :parameters="firstChartParameters"
@@ -82,6 +83,7 @@ import {
         return {
           endDate: "",
           startDate: "",
+          selections: [],
           dataInfo : null,
           selection : null,
           qualityFlags : [],
@@ -122,6 +124,7 @@ import {
             this.startDate = this.currentSession.startDate
             this.endDate = this.currentSession.endDate
             this.initParametersLabel()
+            this.selections = currentSession.sessionSelections
             this.firstChartParameters = [this.currentSession['mainParameter'].name]
           }
         },

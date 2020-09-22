@@ -1,5 +1,8 @@
 <template>
   <div>
+    <v-alert type="success">
+      I'm a success alert.
+    </v-alert>
       <template>
         <v-data-table
             :headers="tableHeaders"
@@ -59,19 +62,14 @@ export default {
       type : Array,
       default : () => [],
     },
+    notifyEditMode: {
+      type : Function,
+      default: ()=>{}
+    }
   },
   data () {
     return {
       selected: [],
-      editedIndex: -1,
-      editedItem: {
-        name: '',
-        lastUpdate: 0,
-      },
-      defaultItem: {
-        name: '',
-        lastUpdate: 0,
-      },
       page: 1,
       pageCount: 0,
       itemsPerPage: 5,
@@ -103,13 +101,13 @@ export default {
     }
   },
   methods: {
-    editSelection (selection) {
-      console.log("Test edit selection , ", selection)
+    editSelection (item) {
+      this.notifyEditMode(item)
     },
-    deleteSelection (selection) {
+    deleteSelection (item) {
       //const index = this.selections.indexOf(item)
       //confirm('Are you sure you want to delete this item?') && this.selections.splice(index, 1)
-      console.log("Test delete selection", selection)
+      console.log("Test delete selection", item)
     },
     getDateGoodFormat : function(date) {
       let timePart, datePart

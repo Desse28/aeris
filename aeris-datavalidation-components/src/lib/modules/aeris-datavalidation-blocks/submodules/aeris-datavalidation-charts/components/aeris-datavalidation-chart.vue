@@ -2,7 +2,6 @@
   <div>
     <AerisDataValidationServices
         :url="currentUrl"
-
         :callBack="callBack"
     >
       <v-row justify="center">
@@ -94,6 +93,10 @@
         type : Function,
         default: () => {}
       },
+      defaultSelections: {
+        type: Array,
+        default: () => []
+      },
       currentSession : {
         type : Object,
         default : () => null
@@ -184,6 +187,7 @@
             this.addEventsHandler()
           }
           this.setLayout()
+          this.initDefaultSelections()
         }
       },
       initdefaultParameters : function (parameterName) {
@@ -193,6 +197,15 @@
           if(currentParameterIndex + 1 < this.parameters.length)
             this.addNewParameter(this.parameters[currentParameterIndex + 1])
         }
+      },
+      initDefaultSelections: function() {
+        setTimeout(() => {
+          if(this.defaultSelections) {
+            this.defaultSelections.forEach((selection)=> {
+              this.drawSelection(selection.startDate, selection.endDate)
+            })
+          }
+        }, 100);
       },
       addNewParameter : function (parameterName) {
         let uri
@@ -266,7 +279,7 @@
       },
       addNewSelection : function(data) {
         let startDate, endDate
-        if(data && 0 < data.points.length) {
+        if(data /*&& 0 < data.points.length*/) {
           startDate = data.range.x[0]
           endDate = data.range.x[1]
           if(!this.isSelectionExist(startDate, endDate)) {
@@ -353,7 +366,7 @@
         this.layout.shapes = this.selections
         this.currentSelection = this.selections[this.selections.length-1]
         this.refresh()
-        this.notifySelection(newStartDate, newEndDate)
+        //this.notifySelection(newStartDate, newEndDate)
       },
       setCurrentSelectionPeriod : function(newStartDate, newEndDate) {
         if(newStartDate && newEndDate) {

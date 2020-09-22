@@ -10,9 +10,9 @@
                outlined
                color="blue"
                v-on="on" v-bind="attrs"
-               v-on:click="switchCurrentView($t('worksFlow.validation'))"
+               v-on:click="switchCurrentView($t('session.selections'))"
         >
-          <v-icon left>mdi-send-check-outline</v-icon> {{ $t("worksFlow.validation") }}
+          <v-icon left>mdi-send-check-outline</v-icon> {{ $t("session.selections") }}
         </v-btn>
       </template>
 
@@ -21,7 +21,7 @@
           {{$t('worksFlow.view_selection')}}
         </v-card-title>
         <v-card-title class="headline grey lighten-2" v-else>
-          Validation
+          {{ $t("session.selections") }}
         </v-card-title>
           <AerisDatavalidationSelectionform
               v-if="currentViewIsSelection"
@@ -32,6 +32,7 @@
           />
         <AerisDatavalidationSelectionsTable
             v-else
+            :notifyEditMode="notifyEditMode"
             :selections="session.sessionSelections"
         />
         <v-divider></v-divider>
@@ -41,10 +42,18 @@
           <v-btn
               color="primary"
               text
-              @click="switchCurrentView($t('worksFlow.validation'))"
+              @click="switchCurrentView($t('session.selections'))"
               v-if="currentViewIsSelection"
           >
-            {{$t('worksFlow.validation')}}
+            {{$t('session.selections')}}
+          </v-btn>
+          <v-btn
+              color="primary"
+              text
+              @click="submitSelection"
+              v-else
+          >
+            {{$t('session.submit_selections')}}
           </v-btn>
         </v-card-actions>
       </v-card>
@@ -104,6 +113,13 @@ export default {
         this.currentView = viewName
         this.dialog = true
       }
+    },
+    notifyEditMode : function(item) {
+      this.currentView = this.$t('worksFlow.view_selection')
+      console.log("Test edit mode", item)
+    },
+    submitSelection : function() {
+      //Here submit all selections
     }
   },
 }
