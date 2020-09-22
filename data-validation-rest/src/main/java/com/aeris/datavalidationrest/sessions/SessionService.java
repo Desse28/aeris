@@ -14,13 +14,13 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.domain.Sort.Order;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 import java.net.URI;
+import java.util.Optional;
 
 @Service
 public class SessionService {
@@ -28,16 +28,15 @@ public class SessionService {
     @Autowired
     private SessionDao sessionDao;
     @Autowired
-    private CommonService commonService;
+    private HttpServletRequest request;
     @Autowired
-    private RestTemplate restTemplate;
+    private CommonService commonService;
 
     Logger logger = LoggerFactory.getLogger(LoginResource.class);
 
-    public ResponseEntity<Session> createNewSession(HttpServletRequest request, Session session) {
+    public ResponseEntity<Session> createNewSession(Session session) {
         Session newSession = session;
-
-        this.setCurrentPiid(request);
+        this.setCurrentPiid();
 
         if(this.currentPiid != null) {
             session.setPiId(this.currentPiid);
@@ -47,12 +46,6 @@ public class SessionService {
                 newSession = sessionDao.save(session);
         }
         return createResponse(newSession);
-    }
-
-    public void setCurrentPiid(HttpServletRequest request) {
-        if (this.commonService.isPI(request)) {
-            this.currentPiid = this.commonService.getCurrrentUserId(request);
-        }
     }
 
     public  ResponseEntity<Session> createResponse(Session session) {
@@ -67,6 +60,63 @@ public class SessionService {
                     .toUri();
             response = ResponseEntity.created(location).body(session);
         }
+        return response;
+    }
+
+    public ResponseEntity<Optional<Session>> getById(String id) {
+        Optional<Session> session = null;
+
+        if ( this.commonService.isPI(request)) {
+            session = this.sessionDao.findById(id);
+            return ResponseEntity.status(HttpStatus.SC_OK).body(session);
+        }
+
+        return ResponseEntity.status(HttpStatus.SC_FORBIDDEN).body(session);
+    }
+
+    public ResponseEntity<String> updateSession(Session session) {
+        ResponseEntity<String> response;
+
+        if(this.commonService.isPI(request)) {
+            sessionDao.save(session);
+            response = ResponseEntity.status(HttpStatus.SC_ACCEPTED).body("Update session (" + session.getId() + ")");
+        } else {
+            response = ResponseEntity.status(HttpStatus.SC_FORBIDDEN).body("Error Message");
+        }
+
+        return response;
+    }
+
+    public ResponseEntity<String> deleteSessionById(String id) {
+        ResponseEntity<String> response;
+
+        if(id == null)
+            return ResponseEntity.noContent().build();
+
+        if (this.commonService.isPI(request)) {
+            sessionDao.deleteById(id);
+            response = ResponseEntity.status(HttpStatus.SC_OK).body("Delete session");
+        } else {
+            response = ResponseEntity.status(HttpStatus.SC_FORBIDDEN).body("Error Message");
+        }
+
+        return response;
+    }
+
+    public ResponseEntity<String>  submitSession(Session session) {
+        ResponseEntity<String> response;
+
+        if( session == null)
+            return ResponseEntity.noContent().build();
+
+        if(this.commonService.isPI(request)) {
+            session.setState(true);
+            sessionDao.save(session);
+            response = ResponseEntity.status(HttpStatus.SC_OK).body("Submit session");
+        } else {
+            response = ResponseEntity.status(HttpStatus.SC_FORBIDDEN).body("Error Message");
+        }
+
         return response;
     }
 
@@ -86,20 +136,28 @@ public class SessionService {
         return exist;
     }
 
-    public ResponseEntity<Page<List<Session>>> getPiSessions(HttpServletRequest request, int pageNumber, int size) {
+    public ResponseEntity<Page<List<Session>>> getPiSessions(int pageNumber, int size) {
         Page<List<Session>> page;
         SpringDataPageable pageable;
-        ResponseEntity<Page<List<Session>>> response = ResponseEntity.status(HttpStatus.SC_FORBIDDEN).body(null);
+        ResponseEntity<Page<List<Session>>> response;
 
-        this.setCurrentPiid(request);
+        this.setCurrentPiid();
 
         if(this.currentPiid != null) {
             pageable = this.getPageable(pageNumber, size);
             page = sessionDao.findAllByPiId(currentPiid, pageable);
             response = ResponseEntity.status(HttpStatus.SC_OK).body(page);
+        } else {
+            response = ResponseEntity.status(HttpStatus.SC_FORBIDDEN).body(null);
         }
 
         return response;
+    }
+
+    public void setCurrentPiid() {
+        if (this.commonService.isPI(request)) {
+            this.currentPiid = this.commonService.getCurrrentUserId(request);
+        }
     }
 
     public SpringDataPageable getPageable(int page, int size) {
@@ -112,9 +170,5 @@ public class SessionService {
         pageable.setPagenumber(page);
 
         return pageable;
-    }
-
-    public boolean submitSession(Session session) {
-        return true;
     }
 }

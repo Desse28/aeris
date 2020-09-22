@@ -12,14 +12,9 @@ import java.util.Optional;
 
 public interface SessionDao extends MongoRepository<Session, String> {
 
-    @Query(value="{ 'piId' : ?0 }")
-    Page<List<Session>> findAllByPiId(@PathVariable String piId, Pageable pageable);
-    boolean existsByInstrumentNameAndMainParameterAndLinkedParameters(String instrumentName, Parameter mainParameter,
-                                                                      List<Parameter> linkedParameters);
-    //
     void deleteById(String id);
     Optional<Session> findById(String id);
-    List<Session> findByPiId(String piId);
-    List<Session> findAllByPiIdAndAndState(String piId, boolean state);
-    //@Query(value="{ 'piId' : ?0 }",fields="{ 'startDate' : 1, 'state' : 1}")
+    @Query(value="{ 'piId' : ?0 }")
+    Page<List<Session>> findAllByPiId(@PathVariable String piId, Pageable pageable);
+    boolean existsByInstrumentNameAndMainParameterAndLinkedParameters(String instrumentName, Parameter mainParameter, List<Parameter> linkedParameters);
 }
