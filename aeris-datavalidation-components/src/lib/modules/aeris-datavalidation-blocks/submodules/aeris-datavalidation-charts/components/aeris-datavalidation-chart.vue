@@ -284,6 +284,7 @@
           endDate = data.range.x[1]
           if(!this.isSelectionExist(startDate, endDate)) {
             this.drawSelection(startDate, endDate)
+            this.notifySelection(startDate, endDate)
           }
         }
       },
@@ -366,7 +367,6 @@
         this.layout.shapes = this.selections
         this.currentSelection = this.selections[this.selections.length-1]
         this.refresh()
-        //this.notifySelection(newStartDate, newEndDate)
       },
       setCurrentSelectionPeriod : function(newStartDate, newEndDate) {
         if(newStartDate && newEndDate) {

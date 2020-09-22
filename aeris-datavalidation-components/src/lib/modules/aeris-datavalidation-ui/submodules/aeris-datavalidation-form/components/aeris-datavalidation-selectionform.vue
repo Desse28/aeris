@@ -59,10 +59,18 @@
             <v-col cols="12">
               <div class="my-2">
                 <v-btn
+                    v-if="isSelectionMode"
                     v-on:click="saveSelection"
                     :disabled="false"
                 >
-                  Save
+                  {{$t('session.save')}}
+                </v-btn>
+                <v-btn
+                    v-else
+                    v-on:click="editSelection"
+                    :disabled="false"
+                >
+                  {{$t('session.edit')}}
                 </v-btn>
               </div>
             </v-col>
@@ -99,6 +107,10 @@ export default {
     selection: {
       type: Object,
       default: null,
+    },
+    isSelectionMode: {
+      type: Boolean,
+      default:()=>true,
     },
     notifySelection : {
       type: Function,
@@ -234,6 +246,9 @@ export default {
           this.existSelection = false
         }, 2000);
       }
+    },
+    editSelection : function() {
+      console.log("Mode edit selection")
     },
     initRequestData : function (selectionStartDate, selectionEndDate) {
       let selection = {

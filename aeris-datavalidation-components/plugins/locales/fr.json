@@ -17,7 +17,9 @@
   },
   "session": {
     "state": "État",
+    "edit": "Éditer",
     "flags" : "Drapeaux",
+    "save": "Enregistrer",
     "selection": "Sélection",
     "selections": "Sélections",
     "new_session": "Nouvelle session",

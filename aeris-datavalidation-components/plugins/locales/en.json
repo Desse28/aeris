@@ -16,6 +16,8 @@
     "start_time": "Start time"
   },
   "session": {
+    "edit": "Edit",
+    "save": "Save",
     "state": "State",
     "flags" : "Flags",
     "selection": "Selection",

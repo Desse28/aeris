@@ -17,18 +17,22 @@
       </template>
 
       <v-card>
+        <v-card-title class="headline grey lighten-2" v-if="currentViewIsEdit">
+          {{$t('session.edit')}}
+        </v-card-title>
         <v-card-title class="headline grey lighten-2" v-if="currentViewIsSelection">
           {{$t('worksFlow.view_selection')}}
         </v-card-title>
-        <v-card-title class="headline grey lighten-2" v-else>
+        <v-card-title class="headline grey lighten-2" v-if="currentViewIsSelections">
           {{ $t("session.selections") }}
         </v-card-title>
           <AerisDatavalidationSelectionform
-              v-if="currentViewIsSelection"
+              v-if="currentViewIsSelection || currentViewIsEdit"
               :session="session"
               :selection="selection"
               :qualityFlags="qualityFlags"
               :notifySelection="notifySelection"
+              :isSelectionMode="isSelectionMode"
           />
         <AerisDatavalidationSelectionsTable
             v-else
@@ -43,7 +47,7 @@
               color="primary"
               text
               @click="switchCurrentView($t('session.selections'))"
-              v-if="currentViewIsSelection"
+              v-if="currentViewIsSelection || currentViewIsEdit"
           >
             {{$t('session.selections')}}
           </v-btn>
@@ -93,18 +97,26 @@ export default {
       if(this.selection && this.selection.startDate !== "" && this.selection.endDate !== "") {
         this.switchCurrentView( this.$t('worksFlow.view_selection'))
         this.dialog = true
+        this.isSelectionMode = true;
       }
     }
   },
   data() {
     return {
       dialog: false,
+      isSelectionMode: true,
       currentView : this.$t('worksFlow.view_selection')
     }
   },
   computed : {
     currentViewIsSelection : function () {
       return this.currentView === this.$t('worksFlow.view_selection')
+    },
+    currentViewIsSelections : function() {
+      return this.currentView === this.$t('session.selections')
+    },
+    currentViewIsEdit: function() {
+      return this.currentView === this.$t('session.edit')
     }
   },
   methods : {
@@ -115,7 +127,8 @@ export default {
       }
     },
     notifyEditMode : function(item) {
-      this.currentView = this.$t('worksFlow.view_selection')
+      this.isSelectionMode = false;
+      this.currentView = this.$t('session.edit')
       console.log("Test edit mode", item)
     },
     submitSelection : function() {
