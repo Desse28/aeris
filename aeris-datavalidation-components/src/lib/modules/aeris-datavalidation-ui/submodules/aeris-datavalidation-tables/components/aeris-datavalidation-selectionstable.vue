@@ -101,8 +101,8 @@ export default {
     }
   },
   methods: {
-    editSelection (item) {
-      this.notifyEditMode(item)
+    editSelection (selection) {
+      this.notifyEditMode(selection)
     },
     deleteSelection (item) {
       //const index = this.selections.indexOf(item)
@@ -112,7 +112,7 @@ export default {
     getDateGoodFormat : function(date) {
       let timePart, datePart
       if (date) {
-        timePart = this.$root.getTimePickerTimeFormat(date)
+        timePart = this.$root.getTimePickerTimeFormat(date, true)
         datePart = this.$root.getDatePikerDateFormat(date, "fr")
         return datePart + ", "+ timePart
       }

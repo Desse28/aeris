@@ -54,6 +54,7 @@
                   :qualityFlags="qualityFlags"
                   :flag_message="$t('session.choose_quality_flag')"
                   :setFlagsSelected="setFlagsSelected"
+                  :defaultQualityFlags="defaultQualityFlags"
               />
             </v-col>
             <v-col cols="12">
@@ -108,6 +109,9 @@ export default {
       type: Object,
       default: null,
     },
+    sessionSelection : {
+      type : Object,
+    },
     isSelectionMode: {
       type: Boolean,
       default:()=>true,
@@ -130,43 +134,74 @@ export default {
       selectedFlags: [],
       isRecorded: false,
       existSelection : false,
+      defaultQualityFlags: null,
+      currentSessionSelection: null,
     }
   },
   watch : {
     selection: function () {
       let selectionDate
       if(this.selection.startDate !== "" && this.selection.endDate !== "") {
-        selectionDate = this.getSelectionDate()
+        selectionDate = this.getSelectionDate(this.selection, false)
         if(selectionDate) {
-          if((this.startDate !== selectionDate.startDate || this.startTime !== selectionDate.startTime) ||
-              this.endDate !== selectionDate.endDate || this.endTime !== selectionDate.endTime) {
+          if((this.startDate !== selectionDate.startDate ||
+              this.startTime !== selectionDate.startTime) ||
+              this.endDate !== selectionDate.endDate ||
+              this.endTime !== selectionDate.endTime)
+          {
             this.setCurrentDate(selectionDate)
           }
+          if(this.isSelectionMode)
+            this.defaultQualityFlags = []
+          else
+            this.initDefaultParameters()
         }
       } else {
         this.resetDate()
       }
-    }
+    },
+    sessionSelection: {
+      immediate: true,
+      handler(selection) {
+        if(selection !== null ) {
+          this.currentSessionSelection = selection
+          this.defaultQualityFlags = selection.flags
+        }
+      },
+    },
   },
   mounted() {
-    this.initSelectionForm()
-  },
+    if(this.isSelectionMode) {
+      this.initSelectionForm()
+    } else {
+      this.initDefaultParameters()
+    }
 
+  },
   methods: {
     initSelectionForm : function() {
-      let selectionDate = this.getSelectionDate()
+      let selectionDate = this.getSelectionDate(this.selection, false)
       if(selectionDate !== null) {
         this.setCurrentDate(selectionDate)
       }
     },
-    getSelectionDate : function () {
+    initDefaultParameters : function() {
+      let selectionDate
+      if(this.currentSessionSelection) {
+        this.defaultQualityFlags = this.currentSessionSelection.flags
+        selectionDate = this.getSelectionDate(this.currentSessionSelection, true)
+        this.setCurrentDate(selectionDate)
+        this.notifyDateChange()
+      }
+    },
+    getSelectionDate : function (selection, isUtcFormat) {
       let startDate, startTime, endDate, endTime
 
       if(this.selection) {
-        endDate= this.$root.getDatePikerDateFormat(this.selection.endDate, "en")
-        startDate= this.$root.getDatePikerDateFormat(this.selection.startDate, "en")
-        startTime= this.$root.getTimePickerTimeFormat(this.selection.startDate)
-        endTime= this.$root.getTimePickerTimeFormat(this.selection.endDate)
+        endDate= this.$root.getDatePikerDateFormat(selection.endDate, "en")
+        startDate= this.$root.getDatePikerDateFormat(selection.startDate, "en")
+        startTime= this.$root.getTimePickerTimeFormat(selection.startDate, isUtcFormat)
+        endTime= this.$root.getTimePickerTimeFormat(selection.endDate, isUtcFormat)
         return {startDate : startDate, startTime : startTime, endDate: endDate, endTime : endTime}
       }
       return null;
@@ -267,7 +302,7 @@ export default {
           return true
       }
       return false
-    }
+    },
   },
 }
 </script>

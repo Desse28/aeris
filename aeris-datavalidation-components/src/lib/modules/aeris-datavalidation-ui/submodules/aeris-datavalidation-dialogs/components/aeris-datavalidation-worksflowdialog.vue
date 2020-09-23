@@ -33,10 +33,11 @@
               :qualityFlags="qualityFlags"
               :notifySelection="notifySelection"
               :isSelectionMode="isSelectionMode"
+              :sessionSelection="sessionSelection"
           />
         <AerisDatavalidationSelectionsTable
             v-else
-            :notifyEditMode="notifyEditMode"
+            :notifyEditMode="activeEditMode"
             :selections="session.sessionSelections"
         />
         <v-divider></v-divider>
@@ -92,20 +93,24 @@ export default {
       default: () => {}
     }
   },
-  watch : {
-    selection: function () {
-      if(this.selection && this.selection.startDate !== "" && this.selection.endDate !== "") {
-        this.switchCurrentView( this.$t('worksFlow.view_selection'))
-        this.dialog = true
-        this.isSelectionMode = true;
-      }
-    }
-  },
   data() {
     return {
       dialog: false,
       isSelectionMode: true,
+      sessionSelection: null,
       currentView : this.$t('worksFlow.view_selection')
+    }
+  },
+  watch : {
+    selection: function () {
+      if(this.selection && this.selection.startDate !== "" && this.selection.endDate !== "") {
+        this.dialog = true
+        if(this.$root.isSelectionExist( this.session, this.selection.startDate, this.selection.endDate)) {
+          this.activeEditMode(this.$root.getTargetSelection(this.session, this.selection.startDate, this.selection.endDate))
+        } else {
+          this.activeSelectionMode()
+        }
+      }
     }
   },
   computed : {
@@ -120,16 +125,20 @@ export default {
     }
   },
   methods : {
+    activeEditMode : function(selection) {
+      this.isSelectionMode = false
+      this.switchCurrentView(this.$t('session.edit'))
+      this.sessionSelection = selection
+    },
+    activeSelectionMode : function() {
+      this.isSelectionMode = true;
+      this.switchCurrentView( this.$t('worksFlow.view_selection'))
+    },
     switchCurrentView : function(viewName) {
       if(viewName) {
         this.currentView = viewName
         this.dialog = true
       }
-    },
-    notifyEditMode : function(item) {
-      this.isSelectionMode = false;
-      this.currentView = this.$t('session.edit')
-      console.log("Test edit mode", item)
     },
     submitSelection : function() {
       //Here submit all selections

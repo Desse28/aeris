@@ -61,8 +61,10 @@ export default {
     time(val) {
       this.setCurrentTime(val)
     },
-    currentTime : function (currentTime){
-      this.time = currentTime
+    currentTime : function (currentTime) {
+      if(this.time !== currentTime) {
+        this.time = currentTime
+      }
     }
   }
 }

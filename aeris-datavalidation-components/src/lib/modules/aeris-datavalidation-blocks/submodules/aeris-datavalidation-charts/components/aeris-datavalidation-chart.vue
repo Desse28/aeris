@@ -149,10 +149,15 @@
         }
       },
       selection: function() {
+
         if(this.selection && this.currentSelection !== null) {
           if(this.selection.startDate !== this.currentSelection.x0
               || this.selection.endDate !== this.currentSelection.x1) {
-            this.setCurrentSelectionPeriod(this.selection.startDate, this.selection.endDate)
+            if(this.isDefaultSelection(this.selection.startDate, this.selection.endDate)) {
+              this.changeCurrentSelection(this.selection.startDate, this.selection.endDate)
+            } else {
+              this.setCurrentSelectionPeriod(this.selection.startDate, this.selection.endDate)
+            }
           }
         }
       },
@@ -206,6 +211,44 @@
             })
           }
         }, 1000);
+      },
+      isDefaultSelection : function(startDate, endDate) {
+        let selection, selectionStartDate, selectionEndDate
+        if(this.defaultSelections) {
+          for(let index in this.defaultSelections) {
+            selection = this.defaultSelections[index]
+            selectionStartDate = this.$root.takeOfDateMilliseconds(selection.startDate);
+            selectionEndDate = this.$root.takeOfDateMilliseconds(selection.endDate);
+            if(selectionStartDate.replace("T", " ") === startDate &&
+                selectionEndDate.replace("T", " ") === endDate) {
+              return true
+            }
+          }
+        }
+        return false
+      },
+      changeCurrentSelection : function(startDate, endDate) {
+        let targetSelectionIndex = this.getSelectionIndex(startDate, endDate)
+        if(targetSelectionIndex !== - 1) {
+          this.setCurrentSelection(targetSelectionIndex, true)
+        }
+        console.log("Test changeCurrentSelection : ", targetSelectionIndex)
+      },
+      getSelectionIndex : function(startDate, endDate) {
+        let selection
+
+        if(this.selections) {
+          for(let index in this.selections) {
+            selection = this.selections[index]
+
+            if(selection.x0.replace("T", " ") === startDate &&
+                selection.x1.replace("T", " ") === endDate) {
+              return index
+            }
+          }
+        }
+
+        return -1
       },
       addNewParameter : function (parameterName) {
         let uri
@@ -305,14 +348,14 @@
         let index = Array.prototype.indexOf.call(parent.children, child);
 
         if(index !== -1 && this.currentSelection !== this.selections[index]) {
-          this.setCurrentSelection(index)
+          this.setCurrentSelection(index, false)
         } else if(index !== -1 && this.currentSelection === this.selections[index]) {
           startDate = this.currentSelection.x0
           endDate = this.currentSelection.x1
           this.notifySelection(startDate, endDate)
         }
       },
-      setCurrentSelection : function(index) {
+      setCurrentSelection : function(index, isDefault) {
         let startDate, endDate
         this.clearCurrentSelection()
         this.currentSelection = this.selections[index]
@@ -320,12 +363,13 @@
         startDate = this.currentSelection.x0
         endDate = this.currentSelection.x1
         this.refresh()
-        this.notifySelection(startDate, endDate)
+        if(!isDefault)
+          this.notifySelection(startDate, endDate)
       },
       isSelectionExist : function (startDate, endDate) {
         let currentSelection, currentStartDate, currentEndDate
-        let newStartDate = this.takeOfDateMilliseconds(startDate);
-        let newEndDate = this.takeOfDateMilliseconds(endDate);
+        let newStartDate = this.$root.takeOfDateMilliseconds(startDate);
+        let newEndDate = this.$root.takeOfDateMilliseconds(endDate);
 
         for(let index in this.selections) {
           currentSelection = this.selections[index]
@@ -338,8 +382,8 @@
         return false
       },
       drawSelection : function(startDate, endDate, isDefault) {
-        let newStartDate = this.takeOfDateMilliseconds(startDate);
-        let newEndDate = this.takeOfDateMilliseconds(endDate);
+        let newStartDate = this.$root.takeOfDateMilliseconds(startDate);
+        let newEndDate = this.$root.takeOfDateMilliseconds(endDate);
 
         this.clearCurrentSelection()
         this.selections = [
@@ -379,10 +423,6 @@
           this.currentSelection.x1 = newEndDate
           this.refresh()
         }
-      },
-      takeOfDateMilliseconds : function(date) {
-        let dateFragment = date.split(".")
-        return dateFragment[0]
       },
       clearCurrentSelection : function() {
         this.selections.forEach((selection) => {

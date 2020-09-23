@@ -33,7 +33,7 @@ export default {
       type : String,
       default : "name"
     },
-    qualityFlagsDefaultValue : {
+    defaultQualityFlags : {
       type : Array,
       default : () => [],
     },
@@ -51,9 +51,12 @@ export default {
     qualityFlags : function(qualityFlags) {
       this.items = qualityFlags
     },
-    qualityFlagsDefaultValue : function () {
-      this.value = this.qualityFlagsDefaultValue
-    }
+    defaultQualityFlags: {
+      immediate: true,
+      handler(flags) {
+        this.value = flags
+      },
+    },
   },
 }
 </script>
