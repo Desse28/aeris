@@ -202,10 +202,10 @@
         setTimeout(() => {
           if(this.defaultSelections) {
             this.defaultSelections.forEach((selection)=> {
-              this.drawSelection(selection.startDate, selection.endDate)
+              this.drawSelection(selection.startDate, selection.endDate, true)
             })
           }
-        }, 100);
+        }, 1000);
       },
       addNewParameter : function (parameterName) {
         let uri
@@ -283,8 +283,7 @@
           startDate = data.range.x[0]
           endDate = data.range.x[1]
           if(!this.isSelectionExist(startDate, endDate)) {
-            this.drawSelection(startDate, endDate)
-            this.notifySelection(startDate, endDate)
+            this.drawSelection(startDate, endDate, false)
           }
         }
       },
@@ -324,17 +323,21 @@
         this.notifySelection(startDate, endDate)
       },
       isSelectionExist : function (startDate, endDate) {
-        let currentSelection
+        let currentSelection, currentStartDate, currentEndDate
+        let newStartDate = this.takeOfDateMilliseconds(startDate);
+        let newEndDate = this.takeOfDateMilliseconds(endDate);
 
         for(let index in this.selections) {
           currentSelection = this.selections[index]
-          if(currentSelection && currentSelection.x0 === startDate && currentSelection.x1 === endDate )
+          currentStartDate = currentSelection.x0
+          currentEndDate = currentSelection.x1
+          if(currentSelection && currentStartDate === newStartDate && currentEndDate === newEndDate )
             return true
         }
 
         return false
       },
-      drawSelection : function(startDate, endDate) {
+      drawSelection : function(startDate, endDate, isDefault) {
         let newStartDate = this.takeOfDateMilliseconds(startDate);
         let newEndDate = this.takeOfDateMilliseconds(endDate);
 
@@ -367,6 +370,8 @@
         this.layout.shapes = this.selections
         this.currentSelection = this.selections[this.selections.length-1]
         this.refresh()
+        if(!isDefault)
+          this.notifySelection(startDate, endDate)
       },
       setCurrentSelectionPeriod : function(newStartDate, newEndDate) {
         if(newStartDate && newEndDate) {
