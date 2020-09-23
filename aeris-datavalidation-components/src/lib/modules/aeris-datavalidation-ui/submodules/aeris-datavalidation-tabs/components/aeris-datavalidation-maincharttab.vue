@@ -6,14 +6,7 @@
         class="elevation-2"
         dark
         :centered="centered"
-        :grow="grow"
-        :vertical="vertical"
-        :right="right"
-        :prev-icon="prevIcon ? 'mdi-arrow-left-bold-box-outline' : undefined"
-        :next-icon="nextIcon ? 'mdi-arrow-right-bold-box-outline' : undefined"
-        :icons-and-text="icons"
     >
-      <v-tabs-slider></v-tabs-slider>
 
       <v-tab
           v-for="i in tabs"
@@ -119,7 +112,7 @@ export default {
     return {
       tab: null,
       icons: false,
-      centered: false,
+      centered: true,
       grow: false,
       vertical: false,
       prevIcon: false,

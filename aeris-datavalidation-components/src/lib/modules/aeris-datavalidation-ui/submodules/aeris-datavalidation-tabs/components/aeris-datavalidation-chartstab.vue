@@ -5,13 +5,6 @@
         background-color="deep-purple accent-4"
         class="elevation-2"
         dark
-        :centered="centered"
-        :grow="grow"
-        :vertical="vertical"
-        :right="right"
-        :prev-icon="prevIcon ? 'mdi-arrow-left-bold-box-outline' : undefined"
-        :next-icon="nextIcon ? 'mdi-arrow-right-bold-box-outline' : undefined"
-        :icons-and-text="icons"
     >
       <v-tabs-slider></v-tabs-slider>
 
@@ -124,12 +117,6 @@ export default {
       tab: null,
       text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
       icons: false,
-      centered: false,
-      grow: false,
-      vertical: false,
-      prevIcon: false,
-      nextIcon: false,
-      right: false,
       tabs: 2,
     }
   },

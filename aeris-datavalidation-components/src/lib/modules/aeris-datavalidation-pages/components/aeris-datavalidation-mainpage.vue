@@ -27,7 +27,7 @@
             padding="pa-0"
             justify="center"
             :nbrChildElement="1"
-            :cols="[11]"
+            :cols="[12]"
         >
           <template v-slot:portrait1>
             <AerisDatavalidationMainChartTab
@@ -102,7 +102,7 @@ import {
         },
         getFirsChartCol : function() {
           if( this.secondChartParameters.length === 0)
-            return 11
+            return 12
           else
             return 7
         },
