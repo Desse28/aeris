@@ -189,6 +189,7 @@ export default {
       let selectionDate
       if(this.currentSessionSelection) {
         this.defaultQualityFlags = this.currentSessionSelection.flags
+        console.log("Default flags : ", this.defaultQualityFlags)
         selectionDate = this.getSelectionDate(this.currentSessionSelection, true)
         this.setCurrentDate(selectionDate)
         this.notifyDateChange()

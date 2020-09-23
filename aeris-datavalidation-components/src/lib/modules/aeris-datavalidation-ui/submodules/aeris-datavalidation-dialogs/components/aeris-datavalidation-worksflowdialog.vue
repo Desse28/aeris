@@ -103,10 +103,12 @@ export default {
   },
   watch : {
     selection: function () {
+      let targetSelection
       if(this.selection && this.selection.startDate !== "" && this.selection.endDate !== "") {
         this.dialog = true
         if(this.$root.isSelectionExist( this.session, this.selection.startDate, this.selection.endDate)) {
-          this.activeEditMode(this.$root.getTargetSelection(this.session, this.selection.startDate, this.selection.endDate))
+          targetSelection = this.$root.getTargetSelection(this.session, this.selection.startDate, this.selection.endDate)
+          this.activeEditMode(targetSelection)
         } else {
           this.activeSelectionMode()
         }

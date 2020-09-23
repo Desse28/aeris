@@ -138,6 +138,7 @@
     watch: {
       parameters : function (newParameters, oldsParameters) {
         let paramName
+        console.log("Test params : ", this.parameters)
         if(this.data.length === 0) {
           paramName= newParameters[0]
           this.initCurrentChart(paramName)

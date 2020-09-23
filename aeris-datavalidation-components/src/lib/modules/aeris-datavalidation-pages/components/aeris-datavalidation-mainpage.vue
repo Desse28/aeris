@@ -3,7 +3,6 @@
     <AerisDatavalidationConfiguration
         :newSession="newSession"
     />
-
     <AerisDatavalidationSimpleToolbar
         :addNewParallel="addNewParallel"
         :removeParallel="removeParallel"
@@ -19,42 +18,42 @@
 
     <AerisDatavalidationLandScapeLayaout
         justify="center"
-        padding="pa-8"
+        padding="pa-3"
         :cols="[getFirsChartCol, getSecondChartCol]"
         :nbrChildElement="2"
     >
       <template v-slot:land1>
         <AerisDatavalidationPortraitLayaout
-            padding="pa-8"
+            padding="pa-0"
             justify="center"
             :nbrChildElement="1"
-            :cols="[12]"
+            :cols="[11]"
         >
           <template v-slot:portrait1>
-                <AerisDatavalidationChart
-                    :endDate="endDate"
-                    :isMainChart="true"
-                    :dataInfo="dataInfo"
-                    :selection="selection"
-                    :startDate="startDate"
-                    :defaultSelections="selections"
-                    :currentSession="currentSession"
-                    :notifySelection="notifySelection"
-                    :parameters="firstChartParameters"
-                    :currentInstrument="currentInstrument"
-                />
+            <AerisDatavalidationMainChartTab
+                :endDate="endDate"
+                :isMainChart="true"
+                :dataInfo="dataInfo"
+                :selection="selection"
+                :startDate="startDate"
+                :defaultSelections="selections"
+                :currentSession="currentSession"
+                :notifySelection="notifySelection"
+                :parameters="firstChartParameters"
+                :currentInstrument="currentInstrument"
+            />
           </template>
         </AerisDatavalidationPortraitLayaout>
       </template>
       <template v-slot:land2>
-        <AerisDatavalidationChart
-            v-if="!isSecondChartParametersEmpty"
+        <AerisDatavalidationChartsTab
+            :isSecondChartParametersEmpty="!isSecondChartParametersEmpty"
             :endDate="endDate"
             :isMainChart="false"
             :dataInfo="dataInfo"
             :startDate="startDate"
             :currentSession="currentSession"
-            :parameters="secondChartParameters"
+            :secondChartParameters="secondChartParameters"
             :currentInstrument="currentInstrument"
         />
       </template>
@@ -63,17 +62,19 @@
 </template>
 <script>
 import {
-  AerisDatavalidationChart,
+  AerisDatavalidationChartsTab,
+  AerisDatavalidationMainChartTab,
   AerisDatavalidationConfiguration,
   AerisDatavalidationSimpleToolbar,
   AerisDatavalidationPortraitLayaout,
-  AerisDatavalidationLandScapeLayaout,
+  AerisDatavalidationLandScapeLayaout
 } from "./../../aeris-datavalidation-components"
 
     export default {
       name: "aeris-datavalidation-homepage",
       components: {
-        AerisDatavalidationChart,
+        AerisDatavalidationChartsTab,
+        AerisDatavalidationMainChartTab,
         AerisDatavalidationConfiguration,
         AerisDatavalidationSimpleToolbar,
         AerisDatavalidationPortraitLayaout,
@@ -101,7 +102,7 @@ import {
         },
         getFirsChartCol : function() {
           if( this.secondChartParameters.length === 0)
-            return 12
+            return 11
           else
             return 7
         },
