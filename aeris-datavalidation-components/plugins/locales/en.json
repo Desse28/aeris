@@ -38,7 +38,8 @@
     "end_date_input_label" : "@:common.end_date",
     "end_time_input_label" : "@:common.end_time",
     "start_date_input_label" : "@:common.start_date",
-    "start_time_input_label" : "@:common.start_time"
+    "start_time_input_label" : "@:common.start_time",
+    "can_not_edit" : "Selection not edited, because an identical selection exists"
   },
   "worksFlow": {
     "validation": "Validation",

@@ -98,20 +98,44 @@ export default {
       dialog: false,
       isSelectionMode: true,
       sessionSelection: null,
+      isResetSelection: false,
       currentView : this.$t('worksFlow.view_selection')
     }
   },
   watch : {
+    dialog : function() {
+      let startDate, endDate
+      if(!this.dialog) {
+        if(this.sessionSelection !== null && this.currentView === this.$t('session.edit')) {
+          startDate = this.$root.takeOfDateMilliseconds(this.sessionSelection.startDate)
+          endDate = this.$root.takeOfDateMilliseconds(this.sessionSelection.endDate)
+          if(this.$root.isSelectionExist(this.session, startDate, endDate)) {
+            console.log("Test dialog (notifySelection) , ", startDate, ", ", endDate)
+            this.isResetSelection = true
+            this.notifySelection(startDate, endDate)
+          }
+        }
+        this.currentView = this.$t('session.selections')
+      }
+    },
     selection: function () {
       let targetSelection
-      if(this.selection && this.selection.startDate !== "" && this.selection.endDate !== "") {
+      let startDate = this.selection.startDate
+      let endDate = this.selection.endDate
+      if(!this.isResetSelection) {
         this.dialog = true
-        if(this.$root.isSelectionExist( this.session, this.selection.startDate, this.selection.endDate)) {
-          targetSelection = this.$root.getTargetSelection(this.session, this.selection.startDate, this.selection.endDate)
-          this.activeEditMode(targetSelection)
-        } else {
-          this.activeSelectionMode()
+        if(this.selection && startDate !== "" && endDate !== "") {
+          if(this.currentView === this.$t('session.edit'))
+            return
+          if(this.$root.isSelectionExist( this.session, startDate, endDate)) {
+            targetSelection = this.$root.getTargetSelection(this.session, startDate, endDate)
+            this.activeEditMode(targetSelection)
+          } else {
+            this.activeSelectionMode()
+          }
         }
+      } else {
+        this.isResetSelection = false
       }
     }
   },
@@ -128,12 +152,14 @@ export default {
   },
   methods : {
     activeEditMode : function(selection) {
-      this.isSelectionMode = false
-      this.switchCurrentView(this.$t('session.edit'))
-      this.sessionSelection = selection
+      if(selection !== null) {
+        this.isSelectionMode = false
+        this.switchCurrentView(this.$t('session.edit'))
+        this.sessionSelection = selection
+      }
     },
     activeSelectionMode : function() {
-      this.isSelectionMode = true;
+      this.isSelectionMode = true
       this.switchCurrentView( this.$t('worksFlow.view_selection'))
     },
     switchCurrentView : function(viewName) {

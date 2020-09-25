@@ -12,6 +12,9 @@
       <v-alert type="error" v-if="existSelection">
         {{ $t("session.selection_exists") }}
       </v-alert>
+      <v-alert type="warning" v-if="isEditSelectionExist">
+        {{ $t("session.can_not_edit") }}
+      </v-alert>
       <v-row>
         <v-col :cols="12" :sm="12" :md="12">
           <v-row>
@@ -135,6 +138,7 @@ export default {
       isRecorded: false,
       existSelection : false,
       defaultQualityFlags: null,
+      isEditSelectionExist: false,
       currentSessionSelection: null,
     }
   },
@@ -151,14 +155,16 @@ export default {
           {
             this.setCurrentDate(selectionDate)
           }
-          if(this.isSelectionMode)
-            this.defaultQualityFlags = []
-          else
-            this.initDefaultParameters()
         }
       } else {
         this.resetDate()
       }
+
+      if(this.isSelectionMode)
+        this.defaultQualityFlags = []
+      else
+        this.defaultQualityFlags = this.currentSessionSelection.flags
+
     },
     sessionSelection: {
       immediate: true,
@@ -171,17 +177,20 @@ export default {
     },
   },
   mounted() {
-    if(this.isSelectionMode) {
-      this.initSelectionForm()
-    } else {
-      this.initDefaultParameters()
-    }
-
+    this.initForm()
   },
   methods: {
+    initForm : function() {
+      if(this.isSelectionMode) {
+        this.initSelectionForm()
+      } else {
+        this.initDefaultParameters()
+      }
+    },
     initSelectionForm : function() {
       let selectionDate = this.getSelectionDate(this.selection, false)
       if(selectionDate !== null) {
+        this.defaultQualityFlags = []
         this.setCurrentDate(selectionDate)
       }
     },
@@ -189,7 +198,6 @@ export default {
       let selectionDate
       if(this.currentSessionSelection) {
         this.defaultQualityFlags = this.currentSessionSelection.flags
-        console.log("Default flags : ", this.defaultQualityFlags)
         selectionDate = this.getSelectionDate(this.currentSessionSelection, true)
         this.setCurrentDate(selectionDate)
         this.notifyDateChange()
@@ -264,36 +272,77 @@ export default {
       let selectionEndDate = this.$root.getSpringDateFormat(this.endDate + " " + this.endTime)
 
       if(!this.isSelectionExist(selectionStartDate, selectionEndDate)) {
-        this.typeOfRequest = "PUT"
-        this.initRequestData(selectionStartDate, selectionEndDate)
-        this.callBack = (selection) => {
-          if(selection) {
-            this.isRecorded = true
-              setTimeout(() => {
-                this.isRecorded = false
-              }, 2000);
-          }
-          this.currentUrl=""
-        }
-        this.currentUrl = process.env.VUE_APP_ROOT_API + "/sessions/update"
+        this.createNewSelection(selectionStartDate, selectionEndDate)
+        this.submitSelection()
       } else {
-        this.existSelection=true
-        setTimeout(() => {
-          this.existSelection = false
-        }, 2000);
+        this.activeExistSelectionAlert()
       }
     },
-    editSelection : function() {
-      console.log("Mode edit selection")
-    },
-    initRequestData : function (selectionStartDate, selectionEndDate) {
+    createNewSelection : function(selectionStartDate, selectionEndDate) {
       let selection = {
         startDate : selectionStartDate,
         endDate : selectionEndDate,
         flags : this.selectedFlags,
       }
       this.session.sessionSelections.push(selection)
+    },
+    editSelection : function() {
+      let startDate = this.startDate + " " + this.startTime
+      let endDate = this.endDate + " " + this.endTime
+
+      if(this.session) {
+        this.setTargetSelection(startDate, endDate)
+        this.submitSelection()
+      }
+    },
+    setTargetSelection : function(startDate, endDate) {
+      let selectionStartDate, selectionEndDate
+
+      this.session.sessionSelections.forEach((selection) => {
+        selectionStartDate = this.$root.takeOfDateMilliseconds(selection.startDate).replace('T', ' ')
+        selectionEndDate = this.$root.takeOfDateMilliseconds(selection.endDate).replace('T', ' ')
+
+        if(selectionStartDate === startDate && selectionEndDate === endDate) {
+          this.activeNoEditAlert()
+          return
+        }
+
+        if(this.currentSessionSelection.startDate === selection.startDate &&
+            this.currentSessionSelection.endDate === selection.endDate) {
+          selection.flags = this.selectedFlags
+          selection.startDate = this.$root.getSpringDateFormat(startDate)
+          selection.endDate = this.$root.getSpringDateFormat(endDate)
+        }
+      })
+    },
+    submitSelection : function() {
+      this.typeOfRequest = "PUT"
       this.requestData = this.session
+      this.callBack = (selection) => {
+        if(selection) {
+          this.activeIsRecordedAlert()
+        }
+        this.currentUrl=""
+      }
+      this.currentUrl = process.env.VUE_APP_ROOT_API + "/sessions/update"
+    },
+    activeIsRecordedAlert : function () {
+      this.isRecorded = true
+      setTimeout(() => {
+        this.isRecorded = false
+      }, 2000);
+    },
+    activeExistSelectionAlert : function () {
+      this.existSelection=true
+      setTimeout(() => {
+        this.existSelection = false
+      }, 2000);
+    },
+    activeNoEditAlert : function () {
+      this.isEditSelectionExist = true
+      setTimeout(() => {
+        this.isEditSelectionExist = false
+      }, 2000);
     },
     isSelectionExist: function(selectionStartDate, selectionEndDate) {
       let selections = this.session.sessionSelections

@@ -1,5 +1,5 @@
 <template>
-  <div  v-if="isSecondChartParametersEmpty">
+  <div  v-if="isSecondChartParametersEmpty" class="mr-1">
     <v-tabs
         v-model="tab"
         background-color="deep-purple accent-4"

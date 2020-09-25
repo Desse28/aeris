@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="ml-6">
     <v-tabs
         v-model="tab"
         background-color="deep-purple accent-4"

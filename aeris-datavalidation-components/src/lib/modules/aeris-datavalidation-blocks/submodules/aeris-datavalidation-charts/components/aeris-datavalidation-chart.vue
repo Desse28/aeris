@@ -138,7 +138,6 @@
     watch: {
       parameters : function (newParameters, oldsParameters) {
         let paramName
-        console.log("Test params : ", this.parameters)
         if(this.data.length === 0) {
           paramName= newParameters[0]
           this.initCurrentChart(paramName)
@@ -211,7 +210,7 @@
               this.drawSelection(selection.startDate, selection.endDate, true)
             })
           }
-        }, 1000);
+        }, 1000)
       },
       isDefaultSelection : function(startDate, endDate) {
         let selection, selectionStartDate, selectionEndDate
@@ -233,7 +232,6 @@
         if(targetSelectionIndex !== - 1) {
           this.setCurrentSelection(targetSelectionIndex, true)
         }
-        console.log("Test changeCurrentSelection : ", targetSelectionIndex)
       },
       getSelectionIndex : function(startDate, endDate) {
         let selection
@@ -335,10 +333,13 @@
         let children =  $('#' + this.chartId).find( '.shapelayer' )[2].children
         if(children) {
             children.forEach((selection, index) => {
-              $(selection).attr('id', 'selection' + index );
-              $(selection).css("pointer-events", "bounding-box");
-              if( index === children.length - 1)
-                $(document).on('click', '#selection' + index, this.switchSelection);
+              if($(selection).attr('id') === undefined) {
+                console.log("test addSelectionEvent : ", $(selection).attr('id'))
+                $(selection).attr('id', 'selection' + index );
+                $(selection).css("pointer-events", "bounding-box");
+                //if( index === children.length - 1)
+                  $(document).on('click', '#selection' + index, this.switchSelection);
+              }
             })
         }
       },
@@ -491,7 +492,7 @@
           legend: this.getLayoutLegend(),
           xaxis : this.getLayoutXaxis("Time", "date"),
           yaxis : this.getLayoutYaxis("Values"),
-          shapes : this.selections,
+          shapes : this.selections
         }
       },
       getLayoutTitle: function() {

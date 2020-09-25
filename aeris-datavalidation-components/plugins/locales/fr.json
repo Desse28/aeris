@@ -38,7 +38,8 @@
     "start_time_input_label" : "@:common.start_time",
     "start_date_input_label" : "@:common.start_date",
     "create_new_session": "Créer une nouvelle session",
-    "choose_quality_flag": "Choisissez le drapeau de qualité"
+    "choose_quality_flag": "Choisissez le drapeau de qualité",
+    "can_not_edit" : "Sélection non éditée, car une sélection identique existe"
   },
   "worksFlow": {
     "validation": "Validation",

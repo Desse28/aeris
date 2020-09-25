@@ -40,14 +40,16 @@ export default {
         isSelectionExist : function(session, startDate, endDate) {
             let selection, selections
             let shortStartDate, shortEndDate
+            let newStartDate = this.takeOfDateMilliseconds(startDate.replace('T', ' '))
+            let newEndDate = this.takeOfDateMilliseconds(endDate.replace('T', ' '))
             if(session) {
                 selections = session.sessionSelections
                 if(selections) {
                     for(let index in selections) {
                         selection = selections[index]
-                        shortStartDate = this.takeOfDateMilliseconds(selection.startDate)
-                        shortEndDate = this.takeOfDateMilliseconds(selection.endDate)
-                        if(startDate === shortStartDate && endDate === shortEndDate)
+                        shortStartDate = this.takeOfDateMilliseconds(selection.startDate).replace('T', ' ')
+                        shortEndDate = this.takeOfDateMilliseconds(selection.endDate).replace('T', ' ')
+                        if(newStartDate === shortStartDate && newEndDate === shortEndDate)
                             return true
                     }
                 }

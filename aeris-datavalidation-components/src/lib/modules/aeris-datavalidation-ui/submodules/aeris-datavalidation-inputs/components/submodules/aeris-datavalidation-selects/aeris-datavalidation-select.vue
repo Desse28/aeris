@@ -53,9 +53,9 @@ export default {
     },
     defaultQualityFlags: {
       immediate: true,
-      handler(flags, oldFlags) {
+      handler(flags) {
         if(flags)
-          this.value = flags.length > 0 ? flags : oldFlags
+          this.value = flags
       },
     },
   },
