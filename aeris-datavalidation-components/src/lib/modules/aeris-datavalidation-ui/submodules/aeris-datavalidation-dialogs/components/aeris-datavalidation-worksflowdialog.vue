@@ -42,23 +42,16 @@
         />
         <v-divider></v-divider>
 
-        <v-card-actions>
+        <v-card-actions
+            v-if="currentViewIsSelection || currentViewIsEdit"
+        >
           <v-spacer></v-spacer>
           <v-btn
               color="primary"
               text
               @click="switchCurrentView($t('session.selections'))"
-              v-if="currentViewIsSelection || currentViewIsEdit"
           >
             {{$t('session.selections')}}
-          </v-btn>
-          <v-btn
-              color="primary"
-              text
-              @click="submitSelection"
-              v-else
-          >
-            {{$t('session.submit_selections')}}
           </v-btn>
         </v-card-actions>
       </v-card>
@@ -168,9 +161,6 @@ export default {
         this.dialog = true
       }
     },
-    submitSelection : function() {
-      //Here submit all selections
-    }
   },
 }
 </script>

@@ -6,6 +6,7 @@ import AerisDatavalidationChartsTab from "./aeris-datavalidation-ui/submodules/a
 import AerisDataValidationOptions from "./aeris-datavalidation-blocks/submodules/aeris-datavalidation-options/components/aeris-datavalidation-option";
 import AerisDatavalidationSessionList from "./aeris-datavalidation-ui/submodules/aeris-datavalidation-lists/components/aeris-datavalidation-sessionlist";
 import AerisDatavalidationMainChartTab from "./aeris-datavalidation-ui/submodules/aeris-datavalidation-tabs/components/aeris-datavalidation-maincharttab";
+import AerisDatavalidationDeleteDialog from "./aeris-datavalidation-ui/submodules/aeris-datavalidation-dialogs/components/aeris-datavalidation-deletedialog";
 import AerisDatavalidationChart from "@/lib/modules/aeris-datavalidation-blocks/submodules/aeris-datavalidation-charts/components/aeris-datavalidation-chart";
 import AerisDatavalidationSelection from "./aeris-datavalidation-blocks/submodules/aeris-datavalidation-selections/components/aeris-datavalidation-selection";
 import AerisDatavalidationSessionsTable from "./aeris-datavalidation-ui/submodules/aeris-datavalidation-tables/components/aeris-datavalidation-sessionstable";
@@ -30,6 +31,7 @@ export {
     AerisDatavalidationSelection,
     AerisDatavalidationTypography,
     AerisDatavalidationSessionList,
+    AerisDatavalidationDeleteDialog,
     AerisDatavalidationMainChartTab,
     AerisDataValidationPageNotFound,
     AerisDatavalidationLangSwitcher,

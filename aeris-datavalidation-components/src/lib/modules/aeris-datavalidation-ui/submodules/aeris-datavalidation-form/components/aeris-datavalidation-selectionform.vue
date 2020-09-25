@@ -326,6 +326,15 @@ export default {
       }
       this.currentUrl = process.env.VUE_APP_ROOT_API + "/sessions/update"
     },
+    isSelectionExist: function(selectionStartDate, selectionEndDate) {
+      let selections = this.session.sessionSelections
+      for(const index in selections) {
+        if(selections[index].startDate === selectionStartDate &&
+            selections[index].endDate === selectionEndDate)
+          return true
+      }
+      return false
+    },
     activeIsRecordedAlert : function () {
       this.isRecorded = true
       setTimeout(() => {
@@ -343,15 +352,6 @@ export default {
       setTimeout(() => {
         this.isEditSelectionExist = false
       }, 2000);
-    },
-    isSelectionExist: function(selectionStartDate, selectionEndDate) {
-      let selections = this.session.sessionSelections
-      for(const index in selections) {
-        if(selections[index].startDate === selectionStartDate &&
-            selections[index].endDate === selectionEndDate)
-          return true
-      }
-      return false
     },
   },
 }
