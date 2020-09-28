@@ -8,8 +8,10 @@
       <AerisDatavalidationWorksFlowDialog
           :session="session"
           :selection="selection"
+          :isDeleteMode="isDeleteMode"
           :qualityFlags="qualityFlags"
           :notifySelection="notifySelection"
+          :notifyDeleteSelection="notifyDeleteSelection"
       />
       <AerisDataValidationOptions
           :linkedParameters="linkedParameters"
@@ -43,6 +45,14 @@ export default {
     selection : {
       type: Object,
       default: null
+    },
+    isDeleteMode: {
+      type: Boolean,
+      default: () => false
+    },
+    notifyDeleteSelection: {
+      type: Function,
+      default : () => {}
     },
     notifySelection : {
       type: Function,

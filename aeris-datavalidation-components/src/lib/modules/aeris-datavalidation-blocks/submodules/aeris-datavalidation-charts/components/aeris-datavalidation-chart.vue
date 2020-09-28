@@ -3,7 +3,12 @@
     <AerisDataValidationServices
         :url="currentUrl"
         :callBack="callBack"
+        :requestData="requestData"
+        :typeOfRequest="typeOfRequest"
     >
+      <v-alert type="error" v-if="deleteAlert">
+        {{$t('session.choose_selection_message')}}
+      </v-alert>
       <v-row justify="center">
         <v-col cols="12">
           <Plotly
@@ -85,6 +90,14 @@
         type: Boolean,
         default: () => false
       },
+      deleteStep: {
+        type: Number,
+        default: () => 0
+      },
+      isDeleteMode: {
+        type: Boolean,
+        default: () => false
+      },
       selection: {
         type: Object,
         default : () => null
@@ -92,6 +105,10 @@
       notifySelection: {
         type : Function,
         default: () => {}
+      },
+      notifyDeleteSelection: {
+        type: Function,
+        default : () => {}
       },
       defaultSelections: {
         type: Array,
@@ -115,11 +132,14 @@
         data: [],
         flags: [],
         layout: {},
+        deleteAlert: false,
         selections : [],
         currentUrl : "",
         currentData: [],
         componentKey: 0,
         currentUuid : "",
+        requestData: null,
+        typeOfRequest: "",
         callBack : null,
         modeBarButtons: [],
         currentSelection : null,
@@ -136,6 +156,11 @@
       }
     },
     watch: {
+      deleteStep : function() {
+        if(this.deleteStep === 2) {
+          this.deleteCurrentSelection()
+        }
+      },
       parameters : function (newParameters, oldsParameters) {
         let paramName
         if(this.data.length === 0) {
@@ -150,10 +175,10 @@
       },
       selection: function() {
 
-        if(this.selection && this.currentSelection !== null) {
-          if(this.selection.startDate !== this.currentSelection.x0
-              || this.selection.endDate !== this.currentSelection.x1) {
-            if(this.isDefaultSelection(this.selection.startDate, this.selection.endDate)) {
+        if(this.selection && this.currentSelection !== null || this.isDeleteMode) {
+          if(this.isDeleteMode || this.selection.startDate !== this.currentSelection.x0 ||
+              this.selection.endDate !== this.currentSelection.x1) {
+            if(this.isDeleteMode || this.isDefaultSelection(this.selection.startDate, this.selection.endDate)) {
               this.changeCurrentSelection(this.selection.startDate, this.selection.endDate)
             } else {
               this.setCurrentSelectionPeriod(this.selection.startDate, this.selection.endDate)
@@ -229,6 +254,7 @@
       },
       changeCurrentSelection : function(startDate, endDate) {
         let targetSelectionIndex = this.getSelectionIndex(startDate, endDate)
+
         if(targetSelectionIndex !== - 1) {
           this.setCurrentSelection(targetSelectionIndex, true)
         }
@@ -239,9 +265,8 @@
         if(this.selections) {
           for(let index in this.selections) {
             selection = this.selections[index]
-
-            if(selection.x0.replace("T", " ") === startDate &&
-                selection.x1.replace("T", " ") === endDate) {
+            if(selection.x0.replace("T", " ") === startDate.replace("T", " ") &&
+                selection.x1.replace("T", " ") === endDate.replace("T", " ")) {
               return index
             }
           }
@@ -251,6 +276,8 @@
       },
       addNewParameter : function (parameterName) {
         let uri
+        this.typeOfRequest = "GET"
+
         this.callBack = (data) => {
           if(data) {
             this.updateChart(data.parameterData, parameterName)
@@ -433,6 +460,49 @@
           }
         })
       },
+      deleteTargetSelection : function() {
+        let index
+        if(this.currentSelection === null) {
+          this.deleteAlert = true
+          setTimeout(() => {
+            this.deleteAlert = false
+          }, 1000)
+        } else {
+          index = this.getTargetSelectionIndex()
+          if(index !== -1) {
+            this.currentSession.sessionSelections.splice(index, 1)
+            this.updateSession()
+          }
+        }
+      },
+      getTargetSelectionIndex : function () {
+        let targetIndex = -1
+        let selectionCurs, selectionCursStartDate, selectionCursEndDate
+        for(let index in this.currentSession.sessionSelections) {
+          selectionCurs = this.currentSession.sessionSelections[index]
+          selectionCursStartDate = this.$root.takeOfDateMilliseconds(selectionCurs.startDate)
+          selectionCursEndDate = this.$root.takeOfDateMilliseconds(selectionCurs.endDate)
+
+          if(selectionCursStartDate === this.currentSelection.x0 &&
+              selectionCursEndDate === this.currentSelection.x1) {
+            targetIndex = index
+            break
+          }
+        }
+        return targetIndex
+      },
+      updateSession : function() {
+        this.typeOfRequest = "PUT"
+        this.requestData = this.currentSession
+        this.callBack = (selection) => {
+          if(selection) {
+            console.log("delete : ", selection)
+            this.deleteCurrentSelection()
+          }
+          this.currentUrl=""
+        }
+        this.currentUrl = process.env.VUE_APP_ROOT_API + "/sessions/update"
+      },
       deleteCurrentSelection :function() {
         let startDate, endDate
         if(this.currentSelection !== null) {
@@ -446,7 +516,8 @@
           endDate = ""
           this.refresh()
           this.currentSelection = null
-          this.notifySelection(startDate, endDate)
+          if(this.deleteStep !== 2)
+            this.notifySelection(startDate, endDate)
         }
       },
       initModeBar : function() {
@@ -457,7 +528,7 @@
               name: "Delete selection",
               icon: TRASH_ICON,
               click: () => {
-                this.deleteCurrentSelection()
+                this.deleteTargetSelection()
               }
             },
             {

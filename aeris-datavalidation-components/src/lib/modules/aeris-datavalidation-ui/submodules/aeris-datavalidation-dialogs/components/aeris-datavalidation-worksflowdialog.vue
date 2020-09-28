@@ -38,7 +38,10 @@
         <AerisDatavalidationSelectionsTable
             v-else
             :notifyEditMode="activeEditMode"
-            :selections="session.sessionSelections"
+            :session="session"
+            :selection="selection"
+            :notifySelection="notifySelection"
+            :notifyDeleteSelection="notifyDeleteSelection"
         />
         <v-divider></v-divider>
 
@@ -81,10 +84,18 @@ export default {
       type: Object,
       default: null
     },
+    isDeleteMode: {
+      type: Boolean,
+      default: () => false
+    },
     notifySelection : {
       type: Function,
       default: () => {}
-    }
+    },
+    notifyDeleteSelection: {
+      type: Function,
+      default : () => {}
+    },
   },
   data() {
     return {
@@ -103,7 +114,6 @@ export default {
           startDate = this.$root.takeOfDateMilliseconds(this.sessionSelection.startDate)
           endDate = this.$root.takeOfDateMilliseconds(this.sessionSelection.endDate)
           if(this.$root.isSelectionExist(this.session, startDate, endDate)) {
-            console.log("Test dialog (notifySelection) , ", startDate, ", ", endDate)
             this.isResetSelection = true
             this.notifySelection(startDate, endDate)
           }
@@ -115,7 +125,8 @@ export default {
       let targetSelection
       let startDate = this.selection.startDate
       let endDate = this.selection.endDate
-      if(!this.isResetSelection) {
+
+      if(!this.isResetSelection && !this.isDeleteMode) {
         this.dialog = true
         if(this.selection && startDate !== "" && endDate !== "") {
           if(this.currentView === this.$t('session.edit'))

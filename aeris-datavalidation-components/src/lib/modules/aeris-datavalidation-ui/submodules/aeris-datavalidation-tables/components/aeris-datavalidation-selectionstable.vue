@@ -1,102 +1,129 @@
 <template>
   <div>
-    <v-alert type="success">
-      I'm a success alert.
-    </v-alert>
-    <AerisDatavalidationDeleteDialog
-        :dialog="dialog"
-        :ok="$t('session.yes')"
-        :cancel="$t('session.no')"
-        :okCallBack="validateDelete"
-        :cancelCallBack="cancelDelete"
-        :title="$t('session.delete_title')"
-        :message="$t('session.delete_message')"
-    />
-    <template>
-      <v-data-table
-          :headers="tableHeaders"
-          :items="selections"
-          class="elevation-1"
-          item-key="name"
-          v-model="selected"
-          hide-default-footer
-          :page.sync="page"
-          :items-per-page="itemsPerPage"
-          @page-count="pageCount = $event"
-          height="400"
-          :disabled="selections.length === 0"
-      >
-        <template v-slot:item.startDate="{ item }">
-          <div>{{getDateGoodFormat(item.startDate)}}</div>
-        </template>
-        <template v-slot:item.endDate="{ item }">
-          <div class="pa-4" v-if="item.endDate === null">/</div>
-          <div v-else >{{getDateGoodFormat(item.endDate)}}</div>
-        </template>
-        <template v-slot:item.flags="{ item}">
-          <div v-for="flag in item.flags"
-               :key="item.flags.indexOf(flag)"
-          >
-            <div>{{ flag.label}}</div>
-          </div>
-        </template>
-        <template v-slot:item.actions="{ item }">
-          <v-icon
-              small
-              class="mr-2"
-              @click="editSelection(item)"
-          >
-            mdi-pencil
-          </v-icon>
-          <v-icon
-              small
-              @click="setDeleteItem(item)"
-          >
-            mdi-delete
-          </v-icon>
-        </template>
-      </v-data-table>
-    </template>
-    <div class="text-center pt-2" :disabled="selections.length === 0">
-      <v-pagination v-model="page" :length="pageCount"></v-pagination>
-    </div>
-    <v-card-actions>
-      <v-btn
-          color="primary"
-          text
-          @click="submitSelection"
-      >
-        {{$t('session.submit_selections')}}
-      </v-btn>
-    </v-card-actions>
+    <AerisDataValidationServices
+        :url="currentUrl"
+        :callBack="callBack"
+        :requestData="requestData"
+        :typeOfRequest="typeOfRequest"
+    >
+      <v-alert type="success" v-if="submittedSelections">
+        {{$t('session.submitted_selections')}}
+      </v-alert>
+      <AerisDatavalidationDeleteDialog
+          :dialog="dialog"
+          :ok="$t('session.yes')"
+          :cancel="$t('session.no')"
+          :okCallBack="validateDelete"
+          :cancelCallBack="cancelDelete"
+          :title="$t('session.delete_title')"
+          :message="$t('session.delete_message')"
+      />
+      <template>
+        <v-data-table
+            :headers="tableHeaders"
+            :items="getSelections"
+            class="elevation-1"
+            item-key="name"
+            v-model="selected"
+            hide-default-footer
+            :page.sync="page"
+            :items-per-page="itemsPerPage"
+            @page-count="pageCount = $event"
+            height="400"
+            :disabled="getSelectionsLen === 0"
+        >
+          <template v-slot:item.startDate="{ item }">
+            <div>{{getDateGoodFormat(item.startDate)}}</div>
+          </template>
+          <template v-slot:item.endDate="{ item }">
+            <div class="pa-4" v-if="item.endDate === null">/</div>
+            <div v-else >{{getDateGoodFormat(item.endDate)}}</div>
+          </template>
+          <template v-slot:item.flags="{ item}">
+            <div v-for="flag in item.flags"
+                 :key="item.flags.indexOf(flag)"
+            >
+              <div>{{ flag.label}}</div>
+            </div>
+          </template>
+          <template v-slot:item.actions="{ item }">
+            <v-icon
+                small
+                class="mr-2"
+                @click="editSelection(item)"
+            >
+              mdi-pencil
+            </v-icon>
+            <v-icon
+                small
+                @click="setDeleteItem(item)"
+            >
+              mdi-delete
+            </v-icon>
+          </template>
+        </v-data-table>
+      </template>
+      <div class="text-center pt-2" :disabled="getSelectionsLen === 0">
+        <v-pagination v-model="page" :length="pageCount"></v-pagination>
+      </div>
+      <v-card-actions>
+        <v-btn
+            color="primary"
+            text
+            @click="submitSelection"
+        >
+          {{$t('session.submit_selections')}}
+        </v-btn>
+      </v-card-actions>
+    </AerisDataValidationServices>
   </div>
 </template>
 
 <script>
+import AerisDataValidationServices from "./../../../../aeris-datavalidation-services/components/aeris-datavalidation-services"
 import AerisDatavalidationDeleteDialog from "./../../aeris-datavalidation-dialogs/components/aeris-datavalidation-deletedialog"
 export default {
   name: "aeris-datavalidation-selectionstable",
   components : {
+    AerisDataValidationServices,
     AerisDatavalidationDeleteDialog,
   },
   props : {
-    selections : {
-      type : Array,
-      default : () => [],
+    session : {
+      type : Object,
+      default: () => null
+    },
+    selection : {
+      type : Object,
+      default : () => null,
     },
     notifyEditMode: {
       type : Function,
       default: ()=>{}
-    }
+    },
+    notifySelection: {
+      type : Function,
+      default: ()=>{}
+    },
+    notifyDeleteSelection: {
+      type: Function,
+      default : () => {}
+    },
   },
   data () {
     return {
-      selected: [],
       page: 1,
       pageCount: 0,
+      selected: [],
       dialog: false,
+      callBack : null,
       itemsPerPage: 5,
+      currentUrl : "",
       deleteItem: null,
+      requestData: null,
+      typeOfRequest: "",
+      isChartSignal: true,
+      submittedSelections: false,
     }
   },
   computed : {
@@ -122,15 +149,33 @@ export default {
         },
         {text: 'Actions', value: 'actions', sortable: false},
       ]
+    },
+    getSelections : function () {
+      if(this.session)
+        return this.session.sessionSelections
+      else
+        return []
+    },
+    getSelectionsLen : function () {
+      if(this.session)
+        return this.session.sessionSelections.length
+      else
+        return 0
     }
   },
   methods: {
     editSelection (selection) {
       this.notifyEditMode(selection)
     },
-    setDeleteItem (item) {
+    setDeleteItem (selection) {
+      let startDate, endDate
       this.dialog = true
-      this.deleteItem = item
+      this.deleteItem = selection
+      startDate = this.$root.takeOfDateMilliseconds(selection.startDate)
+      endDate = this.$root.takeOfDateMilliseconds(selection.endDate)
+      this.isChartSignal = false
+      this.notifyDeleteSelection(true)
+      this.notifySelection(startDate, endDate)
     },
     getDateGoodFormat : function(date) {
       let timePart, datePart
@@ -142,14 +187,42 @@ export default {
     },
     cancelDelete : function () {
       this.dialog = false
+      this.notifyDeleteSelection(false)
     },
     validateDelete : function () {
+      this.notifyDeleteSelection(true)
       this.dialog = false
-      console.log("Test delete selection", this.deleteItem)
+      this.removeTargetSelection()
+      this.updateSession()
+      this.resetDeleteDefaultState()
+    },
+    removeTargetSelection : function () {
+      let index
+      if(this.deleteItem !== null) {
+        index = this.session.sessionSelections.indexOf(this.deleteItem)
+        this.session.sessionSelections.splice(index, 1)
+      }
+    },
+    resetDeleteDefaultState: function () {
+      setTimeout(() => {
+        this.isChartSignal = true
+        this.notifyDeleteSelection(false)
+      }, 500)
+    },
+    updateSession : function() {
+      this.typeOfRequest = "PUT"
+      this.requestData = this.session
+      this.callBack = (selection) => {
+        if(selection) {
+          console.log("delete : ", selection)
+        }
+        this.currentUrl=""
+      }
+      this.currentUrl = process.env.VUE_APP_ROOT_API + "/sessions/update"
     },
     submitSelection : function() {
       //Here submit all selections
-    }
+    },
   },
 }
 </script>

@@ -30,10 +30,12 @@
               :dataInfo="dataInfo"
               :selection="selection"
               :startDate="startDate"
-              :defaultSelections="defaultSelections"
+              :deleteStep="deleteStep"
+              :parameters="parameters"
+              :isDeleteMode="isDeleteMode"
               :currentSession="currentSession"
               :notifySelection="notifySelection"
-              :parameters="parameters"
+              :defaultSelections="defaultSelections"
               :currentInstrument="currentInstrument"
           />
         </v-card>
@@ -79,6 +81,14 @@ export default {
       type: Boolean,
       default: () => false
     },
+    deleteStep: {
+      type: Number,
+      default: () => 0
+    },
+    isDeleteMode: {
+      type: Boolean,
+      default: () => false
+    },
     selection: {
       type: Object,
       default : () => null
@@ -86,6 +96,10 @@ export default {
     notifySelection: {
       type : Function,
       default: () => {}
+    },
+    notifyDeleteSelection: {
+      type: Function,
+      default : () => {}
     },
     defaultSelections: {
       type: Array,

@@ -9,9 +9,11 @@
         :addNewParameter="addNewParameter"
         :removeParameter="removeParameter"
         :notifySelection=" notifySelection"
+        :notifyDeleteSelection="notifyDeleteSelection"
         :linkedParameters ="linkedParameters"
         :auxParameters="auxParameters"
         :qualityFlags="qualityFlags"
+        :isDeleteMode="isDeleteMode"
         :session="currentSession"
         :selection="selection"
     />
@@ -36,11 +38,14 @@
                 :dataInfo="dataInfo"
                 :selection="selection"
                 :startDate="startDate"
+                :deleteStep="deleteStep"
+                :isDeleteMode="isDeleteMode"
                 :defaultSelections="selections"
                 :currentSession="currentSession"
-                :notifySelection="notifySelection"
                 :parameters="firstChartParameters"
                 :currentInstrument="currentInstrument"
+                :notifySelection="notifySelection"
+                :notifyDeleteSelection="notifyDeleteSelection"
             />
           </template>
         </AerisDatavalidationPortraitLayaout>
@@ -84,11 +89,13 @@ import {
         return {
           endDate: "",
           startDate: "",
+          deleteStep : 0,
           selections: [],
           dataInfo : null,
           selection : null,
           qualityFlags : [],
           auxParameters: [],
+          isDeleteMode : false,
           linkedParameters : [],
           currentSession: null,
           currentInstrument : null,
@@ -116,6 +123,15 @@ import {
       methods : {
         notifySelection : function(startDate, endDate) {
           this.selection = {startDate: startDate, endDate: endDate}
+        },
+        notifyDeleteSelection : function (state) {
+          this.isDeleteMode = state
+
+          if(this.deleteStep === 2)
+            this.deleteStep = 0
+
+          if(state)
+            this.deleteStep = this.deleteStep + 1
         },
         newSession : function(currentSession, currentInstrument) {
           if(currentSession && currentInstrument) {
