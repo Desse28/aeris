@@ -22,11 +22,11 @@
             </v-list>
             <v-divider></v-divider>
             <v-list>
-              <v-list-item v-for="label in parametersLabel" :key="label">
+              <v-list-item v-for="label in parametersLabel" :key="label.name">
                 <v-list-item-action>
                   <v-switch v-model="parameters" :value="label" color="blue"></v-switch>
                 </v-list-item-action>
-                <v-list-item-title>{{label}}</v-list-item-title>
+                <v-list-item-title>{{label.name}}</v-list-item-title>
               </v-list-item>
             </v-list>
           </v-col>
@@ -60,6 +60,7 @@
   </div>
 </template>
 <script>
+
 export default {
   name: "aeris-datavalidation-options",
   props: {
@@ -86,8 +87,8 @@ export default {
   },
   data() {
     return {
-      parameters: [],
       parallels: [],
+      parameters: [],
       parallelsLabel: [],
       parametersLabel : [],
     }
@@ -108,17 +109,15 @@ export default {
     },
     auxParameters: function () {
       this.auxParameters.forEach((parameter)=> {
-        this.parametersLabel.push(parameter.name)
-        this.parameters.push(parameter.name)
+        this.parametersLabel.push(parameter)
+        this.parameters.push(parameter)
       })
       this.pushLayering(this.auxParameters.length)
     },
     linkedParameters: function () {
-
       this.linkedParameters.forEach((parameter)=> {
-        this.parametersLabel.unshift(parameter.name)
+        this.parametersLabel.unshift(parameter)
       })
-
       this.pushLayering(this.linkedParameters.length)
     }
   },
@@ -170,7 +169,7 @@ export default {
         this.parallels.splice(targetParallelIndex, 1);
         this.removeParameter(deletedElement)
       }
-    },
+    }
 },
 
 }

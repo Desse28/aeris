@@ -207,10 +207,10 @@
       this.initCurrentChart(paraName)
     },
     methods: {
-      initCurrentChart : function(parameterName) {
-        if(this.currentSession && this.currentInstrument && parameterName) {
+      initCurrentChart : function(parameter) {
+        if(this.currentSession && this.currentInstrument && parameter) {
           if(0 < this.parameters.length)
-            this.addNewParameter(parameterName)
+            this.addNewParameter(parameter)
 
           if(this.isMainChart) {
             this.initModeBar()
@@ -274,18 +274,18 @@
 
         return -1
       },
-      addNewParameter : function (parameterName) {
+      addNewParameter : function (parameter) {
         let uri
         this.typeOfRequest = "GET"
 
         this.callBack = (data) => {
           if(data) {
-            this.updateChart(data.parameterData, parameterName)
-            this.initdefaultParameters(parameterName)
+            this.updateChart(data.parameterData, parameter)
+            this.initdefaultParameters(parameter)
           }
         }
 
-        uri = "/instruments/" + parameterName + "/" + this.startDate + "/" + this.endDate
+        uri = "/instruments/" + parameter.name + "/" + this.startDate + "/" + this.endDate
         this.currentUrl = process.env.VUE_APP_ROOT_API + uri
       },
       removeParameter : function (newParameters, oldsParameters) {
@@ -297,7 +297,7 @@
           //this.refresh()
         }
       },
-      updateChart: function(newData, parameterName) {
+      updateChart: function(newData, parameter) {
         let dataContent = {}
         let currentKey= ""
         let currentContent = null
@@ -305,7 +305,7 @@
 
         newData.forEach((data) => {
           newDataKeys.forEach((key) => {
-            currentKey = key === "value" ? parameterName : key
+            currentKey = key === "value" ? parameter.name : key
             if(! (currentKey in dataContent))
               dataContent[currentKey] = []
 
@@ -314,9 +314,9 @@
           });
         });
         newDataKeys = [newDataKeys[0], currentKey]
-        this.setData( newDataKeys, dataContent)
+        this.setData( newDataKeys, dataContent, parameter.color)
       },
-      setData(newDataKeys, dataContent) {
+      setData(newDataKeys, dataContent, color) {
         const xaxis = newDataKeys[0]
         const yaxis = newDataKeys[1]
 
@@ -324,6 +324,13 @@
           x: dataContent[xaxis],
           y: dataContent[yaxis],
           name: yaxis,
+          line: {
+            color: color,
+            width: 2,
+            dash: "solid",
+            shape: "linear",
+            simplify: true
+          }
         }]
       },
       refresh : function() {
