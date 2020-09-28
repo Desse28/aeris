@@ -289,9 +289,17 @@
         this.currentUrl = process.env.VUE_APP_ROOT_API + uri
       },
       removeParameter : function (newParameters, oldsParameters) {
-        let intersection = oldsParameters.filter(value => !newParameters.includes(value))
-        let parameterName = intersection[0]
-        const targetParameterIndex = this.data.findIndex(element => element.name === parameterName)
+        let parameterName
+        let targetParameterIndex
+        let parametersName = Object.values(newParameters)
+
+        let intersection = oldsParameters.filter(param => {
+          return !parametersName.includes(param.name)
+        })
+
+        parameterName = intersection[0].name
+        targetParameterIndex = this.data.findIndex(param => param.name === parameterName)
+
         if(-1 < targetParameterIndex ) {
           this.data.splice(targetParameterIndex, 1)
           //this.refresh()

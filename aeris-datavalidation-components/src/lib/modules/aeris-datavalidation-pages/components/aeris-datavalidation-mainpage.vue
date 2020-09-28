@@ -204,8 +204,10 @@ import {
               return param.name !== deletedElement.name
             })
             this.secondChartParameters = this.secondChartParameters.filter(function(param) {
+              console.log("Test remove parameter, name1 : ", param.name, ", name2 : ", deletedElement.name)
               return param.name !== deletedElement.name
             })
+            console.log("Test after remove parameter : ", this.secondChartParameters)
           }
         },
         addNewParallel : function(targetParameter) {
