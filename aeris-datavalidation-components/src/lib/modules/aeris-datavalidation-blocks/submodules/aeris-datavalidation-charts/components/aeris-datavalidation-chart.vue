@@ -472,6 +472,8 @@
           if(index !== -1) {
             this.currentSession.sessionSelections.splice(index, 1)
             this.updateSession()
+          } else {
+            this.deleteCurrentSelection()
           }
         }
       },

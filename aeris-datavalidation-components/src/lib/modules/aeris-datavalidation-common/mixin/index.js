@@ -42,14 +42,19 @@ export default {
             let shortStartDate, shortEndDate
             let newStartDate = this.takeOfDateMilliseconds(startDate.replace('T', ' '))
             let newEndDate = this.takeOfDateMilliseconds(endDate.replace('T', ' '))
+
             if(session) {
                 selections = session.sessionSelections
                 if(selections) {
                     for(let index in selections) {
                         selection = selections[index]
-                        shortStartDate = this.takeOfDateMilliseconds(selection.startDate).replace('T', ' ')
-                        shortEndDate = this.takeOfDateMilliseconds(selection.endDate).replace('T', ' ')
-                        if(newStartDate === shortStartDate && newEndDate === shortEndDate)
+                        shortStartDate = this.takeOfDateMilliseconds(selection.startDate)
+                                            .replace('T', ' ').replace('Z', ' ')
+                        shortEndDate = this.takeOfDateMilliseconds(selection.endDate)
+                                        .replace('T', ' ').replace('Z', ' ')
+
+                        if(newStartDate.trim() === shortStartDate.trim() &&
+                            newEndDate.trim() === shortEndDate.trim())
                             return true
                     }
                 }

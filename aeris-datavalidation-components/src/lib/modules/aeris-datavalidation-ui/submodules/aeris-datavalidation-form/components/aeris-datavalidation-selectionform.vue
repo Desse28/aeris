@@ -117,9 +117,13 @@ export default {
     },
     isSelectionMode: {
       type: Boolean,
-      default:()=>true,
+      default:() =>true,
     },
     notifySelection : {
+      type: Function,
+      default: () => {}
+    },
+    switchCurrentView : {
       type: Function,
       default: () => {}
     }
@@ -321,6 +325,7 @@ export default {
       this.callBack = (selection) => {
         if(selection) {
           this.activeIsRecordedAlert()
+          this.switchCurrentView(this.$t('session.edit'))
         }
         this.currentUrl=""
       }

@@ -34,6 +34,7 @@
               :notifySelection="notifySelection"
               :isSelectionMode="isSelectionMode"
               :sessionSelection="sessionSelection"
+              :switchCurrentView="switchCurrentView"
           />
         <AerisDatavalidationSelectionsTable
             v-else
@@ -128,9 +129,12 @@ export default {
 
       if(!this.isResetSelection && !this.isDeleteMode) {
         this.dialog = true
+
         if(this.selection && startDate !== "" && endDate !== "") {
+
           if(this.currentView === this.$t('session.edit'))
             return
+
           if(this.$root.isSelectionExist( this.session, startDate, endDate)) {
             targetSelection = this.$root.getTargetSelection(this.session, startDate, endDate)
             this.activeEditMode(targetSelection)
@@ -138,6 +142,7 @@ export default {
             this.activeSelectionMode()
           }
         }
+
       } else {
         this.isResetSelection = false
       }
@@ -160,6 +165,8 @@ export default {
         this.isSelectionMode = false
         this.switchCurrentView(this.$t('session.edit'))
         this.sessionSelection = selection
+      } else {
+        this.switchCurrentView(this.$t('session.edit'))
       }
     },
     activeSelectionMode : function() {
@@ -171,6 +178,8 @@ export default {
         this.currentView = viewName
         this.dialog = true
       }
+      if( this.currentView !== this.$t('worksFlow.view_selection'))
+        this.isSelectionMode = false
     },
   },
 }
