@@ -526,13 +526,15 @@
       },
       deleteCurrentSelection :function() {
         let startDate, endDate
+        const cloneLayout = JSON.parse(JSON.stringify(this.layout))
         if(this.currentSelection !== null) {
           startDate = this.currentSelection.x0
           endDate = this.currentSelection.x1
           this.selections = this.selections.filter((selection) => {
             return selection.x0 !== startDate  && selection.x1 !== endDate
           })
-          this.layout.shapes = this.selections
+          cloneLayout.shapes = this.selections
+          this.layout = cloneLayout
           startDate = ""
           endDate = ""
           this.refresh()
