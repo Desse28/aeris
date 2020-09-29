@@ -12,7 +12,6 @@
       <v-row justify="center">
         <v-col cols="12">
           <Plotly
-              :key="componentKey"
               :x="Date"
               :data="data"
               :id="getChartId"
@@ -20,6 +19,7 @@
               :scrollZoom="true"
               :displaylogo="false"
               :displayModeBar="true"
+              :responsive="true"
               :modeBarButtons=" modeBarButtons"
           >
           </Plotly>
@@ -136,7 +136,6 @@
         selections : [],
         currentUrl : "",
         currentData: [],
-        componentKey: 0,
         currentUuid : "",
         requestData: null,
         typeOfRequest: "",
@@ -162,13 +161,13 @@
         }
       },
       parameters : function (newParameters, oldsParameters) {
-        let paramName
+        let parameter
         if(this.data.length === 0) {
-          paramName= newParameters[0]
-          this.initCurrentChart(paramName)
+          parameter = newParameters[0]
+          this.initCurrentChart(parameter)
         } else if(oldsParameters.length < newParameters.length) {
-          paramName = newParameters[newParameters.length - 1]
-          this.addNewParameter(paramName)
+          parameter = newParameters[newParameters.length - 1]
+          this.addNewParameter(parameter)
         } else if(newParameters.length < oldsParameters.length) {
           this.removeParameter(newParameters, oldsParameters)
         }
@@ -220,10 +219,10 @@
           this.initDefaultSelections()
         }
       },
-      initdefaultParameters : function (parameterName) {
+      initdefaultParameters : function (parameter) {
         let currentParameterIndex
-        if(parameterName && this.parameters) {
-          currentParameterIndex = this.parameters.indexOf(parameterName)
+        if(parameter && this.parameters) {
+          currentParameterIndex = this.parameters.indexOf(parameter)
           if(currentParameterIndex + 1 < this.parameters.length)
             this.addNewParameter(this.parameters[currentParameterIndex + 1])
         }
@@ -277,24 +276,20 @@
       addNewParameter : function (parameter) {
         let uri
         this.typeOfRequest = "GET"
-
         this.callBack = (data) => {
           if(data) {
             this.updateChart(data.parameterData, parameter)
             this.initdefaultParameters(parameter)
           }
         }
-
         uri = "/instruments/" + parameter.name + "/" + this.startDate + "/" + this.endDate
         this.currentUrl = process.env.VUE_APP_ROOT_API + uri
       },
       removeParameter : function (newParameters, oldsParameters) {
-        let parameterName
-        let targetParameterIndex
-        let parametersName = Object.values(newParameters)
+        let parameterName, targetParameterIndex
 
         let intersection = oldsParameters.filter(param => {
-          return !parametersName.includes(param.name)
+          return !newParameters.some(newParam => newParam.name === param.name)
         })
 
         parameterName = intersection[0].name
@@ -302,7 +297,7 @@
 
         if(-1 < targetParameterIndex ) {
           this.data.splice(targetParameterIndex, 1)
-          //this.refresh()
+          this.refresh()
         }
       },
       updateChart: function(newData, parameter) {
@@ -340,10 +335,11 @@
             simplify: true
           }
         }]
+        this.refresh()
       },
       refresh : function() {
         this.currentUrl = ""
-        this.componentKey += 1
+        this.$forceUpdate()
         this.addEventsHandler()
       },
       addEventsHandler : function () {
@@ -374,22 +370,22 @@
       addSelectionEvent: function () {
         let children =  $('#' + this.chartId).find( '.shapelayer' )[2].children
         if(children) {
+          $('document').ready(() => {
             children.forEach((selection, index) => {
               if($(selection).attr('id') === undefined) {
-                console.log("test addSelectionEvent : ", $(selection).attr('id'))
-                $(selection).attr('id', 'selection' + index );
-                $(selection).css("pointer-events", "bounding-box");
-                //if( index === children.length - 1)
-                  $(document).on('click', '#selection' + index, this.switchSelection);
+                $(selection).attr('id', 'selection' + index )
+                $(selection).css("pointer-events", "bounding-box")
+                $(document).on('click', '#selection' + index, this.switchSelection)
               }
             })
+          });
         }
       },
       switchSelection : function(event) {
         let startDate, endDate
         let child = event.target
-        let parent = child.parentNode;
-        let index = Array.prototype.indexOf.call(parent.children, child);
+        let parent = child.parentNode
+        let index = Array.prototype.indexOf.call(parent.children, child)
 
         if(index !== -1 && this.currentSelection !== this.selections[index]) {
           this.setCurrentSelection(index, false)
@@ -401,19 +397,23 @@
       },
       setCurrentSelection : function(index, isDefault) {
         let startDate, endDate
+        const cloneLayout = JSON.parse(JSON.stringify(this.layout))
+
         this.clearCurrentSelection()
         this.currentSelection = this.selections[index]
         this.currentSelection.line.color = TARGET_SELECTION_BORDER_COLOR
         startDate = this.currentSelection.x0
         endDate = this.currentSelection.x1
+        cloneLayout.shapes = this.selections
+        this.layout = cloneLayout
         this.refresh()
         if(!isDefault)
           this.notifySelection(startDate, endDate)
       },
       isSelectionExist : function (startDate, endDate) {
         let currentSelection, currentStartDate, currentEndDate
-        let newStartDate = this.$root.takeOfDateMilliseconds(startDate);
-        let newEndDate = this.$root.takeOfDateMilliseconds(endDate);
+        let newStartDate = this.$root.takeOfDateMilliseconds(startDate)
+        let newEndDate = this.$root.takeOfDateMilliseconds(endDate)
 
         for(let index in this.selections) {
           currentSelection = this.selections[index]
@@ -426,10 +426,12 @@
         return false
       },
       drawSelection : function(startDate, endDate, isDefault) {
-        let newStartDate = this.$root.takeOfDateMilliseconds(startDate);
-        let newEndDate = this.$root.takeOfDateMilliseconds(endDate);
+        const cloneLayout = JSON.parse(JSON.stringify(this.layout))
+        let newStartDate = this.$root.takeOfDateMilliseconds(startDate)
+        let newEndDate = this.$root.takeOfDateMilliseconds(endDate)
 
         this.clearCurrentSelection()
+
         this.selections = [
           ...this.selections,
           {
@@ -455,9 +457,11 @@
             y1 : 1
           }
         ]
-        this.layout.shapes = this.selections
+        cloneLayout.shapes = this.selections
+        this.layout = cloneLayout
         this.currentSelection = this.selections[this.selections.length-1]
-        this.refresh()
+        //this.refresh()
+        this.addSelectionEvent()
         if(!isDefault)
           this.notifySelection(startDate, endDate)
       },

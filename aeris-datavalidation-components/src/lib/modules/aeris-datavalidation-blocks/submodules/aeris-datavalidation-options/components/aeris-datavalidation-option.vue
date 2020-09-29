@@ -98,7 +98,6 @@ export default {
       if(oldParameters.length < newParameters.length) {
         this.flushNewParallel(newParameters)
       } else if (newParameters.length < oldParameters.length) {
-        console.log("Test flushRemoveParallel")
         this.flushRemoveParallel(newParameters, oldParameters)
       }
     },
@@ -155,10 +154,11 @@ export default {
     },
     flushRemoveParameter : function (newParameters, oldParameters) {
       let deletedElement
-      let parametersName = Object.values(newParameters)
+
       let intersection = oldParameters.filter(param => {
-        !parametersName.includes(param.name)
+        return !newParameters.some(newParam => newParam.name === param.name)
       })
+
       deletedElement = oldParameters.length === 0 ? newParameters : intersection[0]
       this.removeParameter(deletedElement)
     },
@@ -168,11 +168,10 @@ export default {
     },
     flushRemoveParallel: function (newParameters, oldParameters) {
       let targetParallelIndex = -1
-      let deletedElement, intersection
-      let parametersName = newParameters.map(param => param.name);
+      let deletedElement
 
-      intersection = oldParameters.filter(param => {
-        return !parametersName.includes(param.name)
+      let intersection = oldParameters.filter(param => {
+        return !newParameters.some(newParam => newParam.name === param.name)
       })
 
       deletedElement = intersection[0]
