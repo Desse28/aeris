@@ -132,17 +132,17 @@
         data: [],
         flags: [],
         layout: {},
-        deleteAlert: false,
+        chartId : "",
         selections : [],
         currentUrl : "",
         currentData: [],
-        currentUuid : "",
-        requestData: null,
-        typeOfRequest: "",
         callBack : null,
+        currentUuid : "",
+        typeOfRequest: "",
+        requestData: null,
+        deleteAlert: false,
         modeBarButtons: [],
         currentSelection : null,
-        chartId : "",
         currentParameters : [],
       }
     },
@@ -184,7 +184,7 @@
         }
       },
       dataInfo : function() {
-        if (this.dataInfo) {
+        if(this.dataInfo) {
           let title =  {
             text : "Current data set - "+ "test",//this.dataInfo.resourceTitle.fr,
             x : 0.52,
@@ -204,36 +204,93 @@
       this.initCurrentChart(paraName)
     },
     methods: {
-      isSelectionEmpty : function() {
-        return !(this.selection && this.currentSelection !== null || this.isDeleteMode)
-      },
-      isDateChange : function() {
-        return (this.isDeleteMode || this.selection.startDate !== this.currentSelection.x0 ||
-            this.selection.endDate !== this.currentSelection.x1)
-      },
-      isSaveSelection : function() {
-        return (this.isDeleteMode || this.isDefaultSelection(this.selection.startDate, this.selection.endDate))
-      },
       initCurrentChart : function(parameter) {
         if(this.currentSession && this.currentInstrument && parameter) {
-          if(0 < this.parameters.length)
+          if(0 < this.parameters.length) {
             this.addNewParameter(parameter)
 
-          if(this.isMainChart) {
-            this.initModeBar()
-            this.addEventsHandler()
+            if(this.isMainChart) {
+              this.initModeBar()
+              this.addEventsHandler()
+            }
+
+            this.setLayout()
+            this.initDefaultSelections()
           }
-          this.setLayout()
-          this.initDefaultSelections()
         }
       },
-      initdefaultParameters : function (parameter) {
-        let currentParameterIndex
-        if(parameter && this.parameters) {
-          currentParameterIndex = this.parameters.indexOf(parameter)
-          if(currentParameterIndex + 1 < this.parameters.length)
-            this.addNewParameter(this.parameters[currentParameterIndex + 1])
+      addNewParameter : function (parameter) {
+        let uri, nextIndex
+        this.typeOfRequest = "GET"
+        this.callBack = (data) => {
+          if(data) {
+            this.updateChart(data.parameterData, parameter)
+            if(this.nextDefaultParameterExist(parameter)) {
+              nextIndex = this.getParameterIndex(parameter) + 1
+              this.addNewParameter(this.parameters[nextIndex])
+            }
+          }
         }
+        uri = "/instruments/" + parameter.name + "/" + this.startDate + "/" + this.endDate
+        this.currentUrl = process.env.VUE_APP_ROOT_API + uri
+      },
+      updateChart: function(ParamData, parameter) {
+        let dataContent = {}
+        let currentKey= ""
+        let currentContent = null
+        let paramDataKeys = Object.keys(ParamData[0])
+
+        ParamData.forEach((data) => {
+          paramDataKeys.forEach((key) => {
+            currentKey = key === "value" ? parameter.name : key
+            if(! (currentKey in dataContent))
+              dataContent[currentKey] = []
+
+            currentContent = data[key]
+            dataContent[currentKey].push(currentContent)
+          });
+        });
+        paramDataKeys = [paramDataKeys[0], currentKey]
+        this.setAxis(paramDataKeys, dataContent, parameter.color)
+      },
+      setAxis(paramDataKeys, dataContent, color) {
+        const xaxis = paramDataKeys[0]
+        const yaxis = paramDataKeys[1]
+
+        this.data = [...this.data, {
+          x: dataContent[xaxis],
+          y: dataContent[yaxis],
+          name: yaxis,
+          line: {
+            color: color,
+            width: 2,
+            dash: "solid",
+            shape: "linear",
+            simplify: true
+          }
+        }]
+        this.refresh()
+      },
+      nextDefaultParameterExist : function(parameter) {
+        let isDefault = false
+        let parameterIndex
+        if(parameter) {
+          parameterIndex = this.getParameterIndex(parameter)
+          if(parameterIndex !== -1)
+            isDefault = parameterIndex + 1 < this.parameters.length
+        }
+        return isDefault
+      },
+      getParameterIndex : function(parameter) {
+        let index = -1
+
+        if(parameter) {
+          index = this.parameters.indexOf(parameter)
+        }
+        return index
+      },
+      isSelectionEmpty : function() {
+        return !(this.selection && this.currentSelection !== null || this.isDeleteMode)
       },
       initDefaultSelections: function() {
         setTimeout(() => {
@@ -244,15 +301,20 @@
           }
         }, 1000)
       },
+      isDateChange : function() {
+        return (this.isDeleteMode || this.selection.startDate !== this.currentSelection.x0 ||
+            this.selection.endDate !== this.currentSelection.x1)
+      },
+      isSaveSelection : function() {
+        return (this.isDeleteMode || this.isDefaultSelection(this.selection.startDate, this.selection.endDate))
+      },
       isDefaultSelection : function(startDate, endDate) {
-        let selection, selectionStartDate, selectionEndDate
+        let selection
         if(this.defaultSelections) {
           for(let index in this.defaultSelections) {
             selection = this.defaultSelections[index]
-            selectionStartDate = this.$root.getCleanDate(selection.startDate)
-            selectionEndDate = this.$root.getCleanDate(selection.endDate)
-            if(selectionStartDate === this.$root.getCleanDate(startDate) &&
-                selectionEndDate === this.$root.getCleanDate(endDate)) {
+            if(this.$root.getCleanDate(selection.startDate) === this.$root.getCleanDate(startDate) &&
+                this.$root.getCleanDate(selection.endDate) === this.$root.getCleanDate(endDate)) {
               return true
             }
           }
@@ -261,7 +323,6 @@
       },
       changeCurrentSelection : function(startDate, endDate) {
         let targetSelectionIndex = this.getSelectionIndex(startDate, endDate)
-
         if(targetSelectionIndex !== - 1) {
           this.setCurrentSelection(targetSelectionIndex, true)
         }
@@ -281,18 +342,6 @@
 
         return -1
       },
-      addNewParameter : function (parameter) {
-        let uri
-        this.typeOfRequest = "GET"
-        this.callBack = (data) => {
-          if(data) {
-            this.updateChart(data.parameterData, parameter)
-            this.initdefaultParameters(parameter)
-          }
-        }
-        uri = "/instruments/" + parameter.name + "/" + this.startDate + "/" + this.endDate
-        this.currentUrl = process.env.VUE_APP_ROOT_API + uri
-      },
       removeParameter : function (newParameters, oldsParameters) {
         let parameterName, targetParameterIndex
 
@@ -307,43 +356,6 @@
           this.data.splice(targetParameterIndex, 1)
           this.refresh()
         }
-      },
-      updateChart: function(newData, parameter) {
-        let dataContent = {}
-        let currentKey= ""
-        let currentContent = null
-        let newDataKeys = Object.keys(newData[0])
-
-        newData.forEach((data) => {
-          newDataKeys.forEach((key) => {
-            currentKey = key === "value" ? parameter.name : key
-            if(! (currentKey in dataContent))
-              dataContent[currentKey] = []
-
-            currentContent = data[key]
-            dataContent[currentKey].push(currentContent)
-          });
-        });
-        newDataKeys = [newDataKeys[0], currentKey]
-        this.setData( newDataKeys, dataContent, parameter.color)
-      },
-      setData(newDataKeys, dataContent, color) {
-        const xaxis = newDataKeys[0]
-        const yaxis = newDataKeys[1]
-
-        this.data = [...this.data, {
-          x: dataContent[xaxis],
-          y: dataContent[yaxis],
-          name: yaxis,
-          line: {
-            color: color,
-            width: 2,
-            dash: "solid",
-            shape: "linear",
-            simplify: true
-          }
-        }]
-        this.refresh()
       },
       refresh : function() {
         this.currentUrl = ""
@@ -367,12 +379,14 @@
         console.log("Test zoom handler", xStartAxis, xEndAxis)
       },
       addNewSelection : function(data) {
+        let goodInterval
         let startDate, endDate
         if(data /*&& 0 < data.points.length*/) {
           startDate = data.range.x[0]
           endDate = data.range.x[1]
-          if(!this.isSelectionExist(startDate, endDate)) {
-            this.drawSelection(startDate, endDate, false)
+          goodInterval = this.getGoodInterval(startDate, endDate)
+          if(goodInterval !== null && !this.isSelectionExist(goodInterval.startDate, goodInterval.endDate)) {
+            this.drawSelection(goodInterval.startDate, goodInterval.endDate, false)
           }
         }
       },
@@ -420,19 +434,44 @@
           this.notifySelection(startDate, endDate)
       },
       isSelectionExist : function (startDate, endDate) {
-        let currentSelection, currentStartDate, currentEndDate
-        let newStartDate = this.$root.takeOfDateMilliseconds(startDate)
-        let newEndDate = this.$root.takeOfDateMilliseconds(endDate)
-
+        let selection
         for(let index in this.selections) {
-          currentSelection = this.selections[index]
-          currentStartDate = currentSelection.x0
-          currentEndDate = currentSelection.x1
-          if(currentSelection && currentStartDate === newStartDate && currentEndDate === newEndDate )
+          selection = this.selections[index]
+          if(this.$root.getCleanDate(selection.x0) === this.$root.getCleanDate(startDate) &&
+              this.$root.getCleanDate(selection.x1) === this.$root.getCleanDate(endDate))
             return true
         }
-
         return false
+      },
+      getGoodInterval: function(startDateStr, endDateStr) {
+        let selection
+        let selectionStartDate, selectionEndDate
+        let targetStartDate = new Date(startDateStr), targetEndDate = new Date(endDateStr)
+
+        if(this.selections) {
+          for(let index in this.selections) {
+            selection = this.selections[index]
+            selectionStartDate = new Date(selection.x0)
+            selectionEndDate = new Date(selection.x1)
+            if(targetStartDate <= selectionStartDate &&
+                selectionStartDate <= targetEndDate &&
+                targetEndDate <= selectionEndDate) {
+
+              if(selectionStartDate === targetStartDate && selectionEndDate === targetEndDate) {
+                return {startDate : startDateStr, endDate: endDateStr}
+              } else {
+                return {startDate : startDateStr, endDate: selection.x0}
+              }
+
+            } else if(selectionStartDate < targetStartDate &&
+                targetStartDate < selectionEndDate &&
+                selectionEndDate < targetEndDate) {
+              return {startDate : selection.x1, endDate: endDateStr}
+            }
+          }
+        }
+
+        return null
       },
       drawSelection : function(startDate, endDate, isDefault) {
         const cloneLayout = JSON.parse(JSON.stringify(this.layout))
