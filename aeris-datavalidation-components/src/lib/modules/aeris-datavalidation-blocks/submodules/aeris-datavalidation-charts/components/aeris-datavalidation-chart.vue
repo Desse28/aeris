@@ -38,8 +38,8 @@
   } from "./../../../../aeris-datavalidation-components"
 
   const SELECTION_BORDER_COLOR = 'rgb(84,217,27)'
-  const SELECTION_BACKGROUND_COLOR = 'rgb(204, 39, 39)'
-  const TARGET_SELECTION_BORDER_COLOR = 'rgb(27,90,217)'
+  const SELECTION_BACKGROUND_COLOR = 'rgb(33, 150, 243)'
+  const TARGET_SELECTION_BORDER_COLOR = 'rgb(255, 152, 0)'
 
   const TRASH_ICON = {
     'width': 500,
@@ -443,35 +443,38 @@
         }
         return false
       },
-      getGoodInterval: function(startDateStr, endDateStr) {
-        let selection
-        let selectionStartDate, selectionEndDate
-        let targetStartDate = new Date(startDateStr), targetEndDate = new Date(endDateStr)
+      getGoodInterval: function(startDate, endDate) {
+        let intervals
+        let result = {startDate : startDate, endDate: endDate}
 
         if(this.selections) {
           for(let index in this.selections) {
-            selection = this.selections[index]
-            selectionStartDate = new Date(selection.x0)
-            selectionEndDate = new Date(selection.x1)
-            if(targetStartDate <= selectionStartDate &&
-                selectionStartDate <= targetEndDate &&
-                targetEndDate <= selectionEndDate) {
+            intervals = this.getIntervalDates(this.selections[index], result)
 
-              if(selectionStartDate === targetStartDate && selectionEndDate === targetEndDate) {
-                return {startDate : startDateStr, endDate: endDateStr}
+            if(intervals.x3 <= intervals.x1 && intervals.x1 <= intervals.x4 &&
+                intervals.x4 <= intervals.x2) { //LF interval
+
+              if(intervals.x1 === intervals.x3 && intervals.x2 === intervals.x4) {
+                result =  {startDate : startDate, endDate: endDate}
               } else {
-                return {startDate : startDateStr, endDate: selection.x0}
+                result = {startDate : startDate, endDate: this.selections[index].x0}
               }
-
-            } else if(selectionStartDate < targetStartDate &&
-                targetStartDate < selectionEndDate &&
-                selectionEndDate < targetEndDate) {
-              return {startDate : selection.x1, endDate: endDateStr}
+            } else if(intervals.x1 <= intervals.x3 && intervals.x3 < intervals.x2 &&
+                intervals.x2 < intervals.x4) {//RG interval
+              result = {startDate : this.selections[index].x1, endDate: endDate}
             }
           }
         }
 
-        return null
+        return result
+      },
+      getIntervalDates : function(selection, result) {
+        return {
+          x1: new Date(selection.x0),
+          x2: new Date(selection.x1),
+          x3: new Date(result.startDate),
+          x4: new Date(result.endDate)
+        }
       },
       drawSelection : function(startDate, endDate, isDefault) {
         const cloneLayout = JSON.parse(JSON.stringify(this.layout))

@@ -9,10 +9,16 @@
         <v-btn class="ma-2" tile outlined color="blue" v-on="on" v-bind="attrs">
           <v-icon left>mdi-plus-circle-outline</v-icon> {{ $t("chartconf.add-parameters") }}
         </v-btn>
+        <v-btn class="ma-2" tile outlined color="blue" v-on:click="removeChart">
+          <v-icon left>mdi-plus-circle-outline</v-icon> Remove chart
+        </v-btn>
+        <v-btn class="ma-2" tile outlined color="blue" v-on:click="addNewChart">
+          <v-icon left>mdi-plus-circle-outline</v-icon> Add chart
+        </v-btn>
       </template>
       <v-card>
         <v-row justify="center">
-          <v-col cols="6">
+          <v-col cols="4">
             <v-list>
               <v-list-item>
                 <v-list-item-content>
@@ -30,7 +36,7 @@
               </v-list-item>
             </v-list>
           </v-col>
-          <v-col cols="6">
+          <v-col cols="4">
             <v-list>
               <v-list-item>
                 <v-list-item-content>
@@ -51,6 +57,26 @@
                   </v-switch>
                 </v-list-item-action>
                 <v-list-item-title>{{parallelLabel}}</v-list-item-title>
+              </v-list-item>
+            </v-list>
+          </v-col>
+          <v-col cols="4">
+            <v-list>
+              <v-list-item>
+                <v-list-item-content>
+                  <v-list-item-title>Chart(s)</v-list-item-title>
+                </v-list-item-content>
+              </v-list-item>
+            </v-list>
+            <v-divider></v-divider>
+            <v-list>
+              <v-list-item v-for="label in parametersLabel" :key="label.name">
+                <v-list-item-action>
+                  <div style="max-height: 40px;">
+                    <v-select :items="charts">
+                    </v-select>
+                  </div>
+                </v-list-item-action>
               </v-list-item>
             </v-list>
           </v-col>
@@ -75,6 +101,10 @@ export default {
     addNewParameter : {
       type : Function
     },
+    addNewChart: {
+      type: Function,
+      default: () => {}
+    },
     removeParameter : {
       type : Function
     },
@@ -84,6 +114,9 @@ export default {
     removeParallel : {
       type : Function
     },
+    removeChart: {
+      type : Function,
+    },
   },
   data() {
     return {
@@ -91,6 +124,7 @@ export default {
       parameters: [],
       parallelsLabel: [],
       parametersLabel : [],
+      charts: ['chart1', 'chart2', 'chart3'],
     }
   },
   watch: {
@@ -122,6 +156,10 @@ export default {
     }
   },
   methods : {
+    test : function() {
+      console.log("In test options")
+      //this.addNewChart()
+    },
     pushLayering : function(nbrLayering) {
       let parallelLen = this.parallelsLabel.length
       let len = parallelLen + nbrLayering

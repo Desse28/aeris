@@ -4,6 +4,8 @@
         :newSession="newSession"
     />
     <AerisDatavalidationSimpleToolbar
+        :addNewChart="addNewChart"
+        :removeChart="removeChart"
         :addNewParallel="addNewParallel"
         :removeParallel="removeParallel"
         :addNewParameter="addNewParameter"
@@ -58,6 +60,7 @@
             :dataInfo="dataInfo"
             :startDate="startDate"
             :currentSession="currentSession"
+            :nbrParallelChart="nbrParallelChart"
             :secondChartParameters="secondChartParameters"
             :currentInstrument="currentInstrument"
         />
@@ -118,6 +121,7 @@ import {
           selection : null,
           qualityFlags : [],
           auxParameters: [],
+          nbrParallelChart : 2,
           isDeleteMode : false,
           linkedParameters : [],
           currentSession: null,
@@ -221,6 +225,14 @@ import {
           if(targetParameter) {
             this.addNewParameter(targetParameter)
           }
+        },
+        addNewChart : function() {
+          console.log("Test add newChart")
+          this.nbrParallelChart++
+        },
+        removeChart : function() {
+          if(1 < this.nbrParallelChart)
+            this.nbrParallelChart--
         },
         getNewColor : function() {
           if(this.colorCount <  COLORS.length -1) {

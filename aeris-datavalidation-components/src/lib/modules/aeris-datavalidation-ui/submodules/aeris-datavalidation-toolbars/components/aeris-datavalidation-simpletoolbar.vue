@@ -14,12 +14,14 @@
           :notifyDeleteSelection="notifyDeleteSelection"
       />
       <AerisDataValidationOptions
-          :linkedParameters="linkedParameters"
+          :addNewChart="addNewChart"
+          :removeChart="removeChart"
           :auxParameters="auxParameters"
           :addNewParallel="addNewParallel"
           :removeParallel="removeParallel"
           :addNewParameter="addNewParameter"
           :removeParameter="removeParameter"
+          :linkedParameters="linkedParameters"
       />
     </v-toolbar>
   </v-card>
@@ -61,6 +63,9 @@ export default {
     addNewParameter : {
       type : Function,
     },
+    addNewChart : {
+      type : Function,
+    },
     addNewParallel : {
       type : Function,
     },
@@ -68,6 +73,9 @@ export default {
       type : Function,
     },
     removeParameter: {
+      type : Function,
+    },
+    removeChart: {
       type : Function,
     },
     linkedParameters: {
