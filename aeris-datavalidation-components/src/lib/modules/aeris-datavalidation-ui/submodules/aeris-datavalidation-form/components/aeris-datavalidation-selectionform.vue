@@ -303,8 +303,8 @@ export default {
       let selectionStartDate, selectionEndDate
 
       this.session.sessionSelections.forEach((selection) => {
-        selectionStartDate = this.$root.takeOfDateMilliseconds(selection.startDate).replace('T', ' ')
-        selectionEndDate = this.$root.takeOfDateMilliseconds(selection.endDate).replace('T', ' ')
+        selectionStartDate = this.$root.getCleanDate(selection.startDate)
+        selectionEndDate = this.$root.getCleanDate(selection.endDate)
 
         if(selectionStartDate === startDate && selectionEndDate === endDate) {
           this.activeNoEditAlert()

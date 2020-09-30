@@ -152,7 +152,7 @@
           return "mainChart1"
         else
           return "mainChart2"
-      }
+      },
     },
     watch: {
       deleteStep : function() {
@@ -173,11 +173,9 @@
         }
       },
       selection: function() {
-
-        if(this.selection && this.currentSelection !== null || this.isDeleteMode) {
-          if(this.isDeleteMode || this.selection.startDate !== this.currentSelection.x0 ||
-              this.selection.endDate !== this.currentSelection.x1) {
-            if(this.isDeleteMode || this.isDefaultSelection(this.selection.startDate, this.selection.endDate)) {
+        if(!this.isSelectionEmpty()) {
+          if(this.isDateChange()) {
+            if(this.isSaveSelection()) {
               this.changeCurrentSelection(this.selection.startDate, this.selection.endDate)
             } else {
               this.setCurrentSelectionPeriod(this.selection.startDate, this.selection.endDate)
@@ -206,6 +204,16 @@
       this.initCurrentChart(paraName)
     },
     methods: {
+      isSelectionEmpty : function() {
+        return !(this.selection && this.currentSelection !== null || this.isDeleteMode)
+      },
+      isDateChange : function() {
+        return (this.isDeleteMode || this.selection.startDate !== this.currentSelection.x0 ||
+            this.selection.endDate !== this.currentSelection.x1)
+      },
+      isSaveSelection : function() {
+        return (this.isDeleteMode || this.isDefaultSelection(this.selection.startDate, this.selection.endDate))
+      },
       initCurrentChart : function(parameter) {
         if(this.currentSession && this.currentInstrument && parameter) {
           if(0 < this.parameters.length)
@@ -241,10 +249,10 @@
         if(this.defaultSelections) {
           for(let index in this.defaultSelections) {
             selection = this.defaultSelections[index]
-            selectionStartDate = this.$root.takeOfDateMilliseconds(selection.startDate);
-            selectionEndDate = this.$root.takeOfDateMilliseconds(selection.endDate);
-            if(selectionStartDate.replace("T", " ") === startDate &&
-                selectionEndDate.replace("T", " ") === endDate) {
+            selectionStartDate = this.$root.getCleanDate(selection.startDate)
+            selectionEndDate = this.$root.getCleanDate(selection.endDate)
+            if(selectionStartDate === this.$root.getCleanDate(startDate) &&
+                selectionEndDate === this.$root.getCleanDate(endDate)) {
               return true
             }
           }
@@ -264,8 +272,8 @@
         if(this.selections) {
           for(let index in this.selections) {
             selection = this.selections[index]
-            if(selection.x0.replace("T", " ") === startDate.replace("T", " ") &&
-                selection.x1.replace("T", " ") === endDate.replace("T", " ")) {
+            if(this.$root.getCleanDate(selection.x0) === this.$root.getCleanDate(startDate) &&
+                this.$root.getCleanDate(selection.x1) === this.$root.getCleanDate(endDate)) {
               return index
             }
           }
@@ -354,6 +362,7 @@
       zoomHandler : function(data) {
         let xStartAxis = data['xaxis.range[0]']
         let xEndAxis = data['xaxis.range[1]']
+        //this.refresh()
         //xaxis->range
         console.log("Test zoom handler", xStartAxis, xEndAxis)
       },
@@ -466,9 +475,12 @@
           this.notifySelection(startDate, endDate)
       },
       setCurrentSelectionPeriod : function(newStartDate, newEndDate) {
+        let cloneLayout
         if(newStartDate && newEndDate) {
           this.currentSelection.x0 = newStartDate
           this.currentSelection.x1 = newEndDate
+          cloneLayout = JSON.parse(JSON.stringify(this.layout))
+          this.layout = cloneLayout
           this.refresh()
         }
       },
@@ -492,7 +504,7 @@
             this.currentSession.sessionSelections.splice(index, 1)
             this.updateSession()
           } else {
-            this.deleteCurrentSelection()
+            this.deleteCurrentSelection(true)
           }
         }
       },
@@ -517,14 +529,14 @@
         this.requestData = this.currentSession
         this.callBack = (selection) => {
           if(selection) {
-            console.log("delete : ", selection)
-            this.deleteCurrentSelection()
+            this.deleteCurrentSelection(true)
+
           }
           this.currentUrl=""
         }
         this.currentUrl = process.env.VUE_APP_ROOT_API + "/sessions/update"
       },
-      deleteCurrentSelection :function() {
+      deleteCurrentSelection :function(isChartEvent) {
         let startDate, endDate
         const cloneLayout = JSON.parse(JSON.stringify(this.layout))
         if(this.currentSelection !== null) {
@@ -539,11 +551,12 @@
           endDate = ""
           this.refresh()
           this.currentSelection = null
-          if(this.deleteStep !== 2)
+          if(this.deleteStep !== 2 && isChartEvent === undefined)
             this.notifySelection(startDate, endDate)
         }
       },
       initModeBar : function() {
+
         this.modeBarButtons = [
           [
             'select2d',

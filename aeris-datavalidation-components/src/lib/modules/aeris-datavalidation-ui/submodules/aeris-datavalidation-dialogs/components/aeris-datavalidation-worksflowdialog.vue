@@ -108,19 +108,23 @@ export default {
     }
   },
   watch : {
-    dialog : function() {
-      let startDate, endDate
-      if(!this.dialog) {
-        if(this.sessionSelection !== null && this.currentView === this.$t('session.edit')) {
-          startDate = this.$root.takeOfDateMilliseconds(this.sessionSelection.startDate)
-          endDate = this.$root.takeOfDateMilliseconds(this.sessionSelection.endDate)
-          if(this.$root.isSelectionExist(this.session, startDate, endDate)) {
-            this.isResetSelection = true
-            this.notifySelection(startDate, endDate)
+    dialog: {
+      immediate: true,
+      handler() {
+        let startDate, endDate
+
+        if(!this.dialog) {
+          if(this.sessionSelection !== null && this.currentView === this.$t('session.edit')) {
+            startDate = this.$root.takeOfDateMilliseconds(this.sessionSelection.startDate)
+            endDate = this.$root.takeOfDateMilliseconds(this.sessionSelection.endDate)
+            if(this.$root.isSelectionExist(this.session, startDate, endDate)) {
+              this.isResetSelection = true
+              this.notifySelection(startDate, endDate)
+            }
           }
+          this.currentView = this.$t('session.selections')
         }
-        this.currentView = this.$t('session.selections')
-      }
+      },
     },
     selection: function () {
       let targetSelection

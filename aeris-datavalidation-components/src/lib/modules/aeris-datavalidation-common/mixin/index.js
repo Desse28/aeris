@@ -40,21 +40,17 @@ export default {
         isSelectionExist : function(session, startDate, endDate) {
             let selection, selections
             let shortStartDate, shortEndDate
-            let newStartDate = this.takeOfDateMilliseconds(startDate.replace('T', ' '))
-            let newEndDate = this.takeOfDateMilliseconds(endDate.replace('T', ' '))
 
             if(session) {
                 selections = session.sessionSelections
                 if(selections) {
                     for(let index in selections) {
                         selection = selections[index]
-                        shortStartDate = this.takeOfDateMilliseconds(selection.startDate)
-                                            .replace('T', ' ').replace('Z', ' ')
-                        shortEndDate = this.takeOfDateMilliseconds(selection.endDate)
-                                        .replace('T', ' ').replace('Z', ' ')
+                        shortStartDate = this.getCleanDate(selection.startDate)
+                        shortEndDate = this.getCleanDate(selection.endDate)
 
-                        if(newStartDate.trim() === shortStartDate.trim() &&
-                            newEndDate.trim() === shortEndDate.trim())
+                        if(this.getCleanDate(startDate) === shortStartDate &&
+                            this.getCleanDate(endDate) === shortEndDate)
                             return true
                     }
                 }
@@ -69,14 +65,21 @@ export default {
                 if(selections) {
                     for(let index in selections) {
                         selection = selections[index]
-                        shortStartDate = this.takeOfDateMilliseconds(selection.startDate)
-                        shortEndDate = this.takeOfDateMilliseconds(selection.endDate)
-                        if(startDate === shortStartDate && endDate === shortEndDate)
+                        shortStartDate = this.getCleanDate(selection.startDate)
+                        shortEndDate = this.getCleanDate(selection.endDate)
+
+                        if(this.getCleanDate(startDate) === shortStartDate &&
+                            this.getCleanDate(endDate) === shortEndDate)
                             return selection
                     }
                 }
             }
             return null
+        },
+        getCleanDate : function (date) {
+            let dateFragment = date.split(".")
+            return this.takeOfDateMilliseconds(dateFragment[0])
+                .replace('T', ' ').replace('Z', ' ').trim()
         },
         takeOfDateMilliseconds : function(date) {
             let dateFragment = date.split(".")
