@@ -27,11 +27,13 @@
           >
             <AerisDatavalidationChart
                 :endDate="endDate"
-                :isMainChart="isMainChart"
                 :dataInfo="dataInfo"
                 :startDate="startDate"
+                :isMainChart="isMainChart"
                 :currentSession="currentSession"
+                :linkedChartData="linkedChartData"
                 :parameters="secondChartParameters"
+                :isLinkedChartMode="isLinkedChartMode"
                 :currentInstrument="currentInstrument"
             />
           </v-card>
@@ -90,6 +92,10 @@ export default {
       type : Object,
       default : () => null
     },
+    linkedChartData : {
+      type : Object,
+      default : () => null
+    },
     secondChartParameters : {
       type: Array,
       default : () => []
@@ -97,17 +103,16 @@ export default {
     isSecondChartParametersEmpty : {
       type: Boolean,
       default : false
-    }
+    },
+    isLinkedChartMode: {
+      type: Boolean,
+      default : false
+    },
   },
   data () {
     return {
       tab: "chart-2",
       icons: false,
-    }
-  },
-  watch : {
-    tab: function (val) {
-      console.log("test tab : ", val)
     }
   },
   computed : {
@@ -116,7 +121,6 @@ export default {
       for(let i = 1; i <= this.nbrParallelChart; i++) {
         chartsNames.push("chart-" + i)
       }
-      console.log("Test chartsNames : ", chartsNames)
       return chartsNames
     }
   }

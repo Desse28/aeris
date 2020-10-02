@@ -149,26 +149,17 @@ export default {
   watch : {
     selection: function () {
       let selectionDate
-      if(this.selection.startDate !== "" && this.selection.endDate !== "") {
+      if(!this.isSelectionEmpty()) {
         selectionDate = this.getSelectionDate(this.selection, false)
         if(selectionDate) {
-          if((this.startDate !== selectionDate.startDate ||
-              this.startTime !== selectionDate.startTime) ||
-              this.endDate !== selectionDate.endDate ||
-              this.endTime !== selectionDate.endTime)
-          {
+          if(this.isDateChange(selectionDate)) {
             this.setCurrentDate(selectionDate)
           }
         }
       } else {
         this.resetDate()
       }
-
-      if(this.isSelectionMode)
-        this.defaultQualityFlags = []
-      else
-        this.defaultQualityFlags = this.currentSessionSelection.flags
-
+      this.initDefaultQualityFlags()
     },
     sessionSelection: {
       immediate: true,
@@ -184,6 +175,12 @@ export default {
     this.initForm()
   },
   methods: {
+    initDefaultQualityFlags : function () {
+      if(this.isSelectionMode)
+        this.defaultQualityFlags = []
+      else if(this.currentSessionSelection)
+        this.defaultQualityFlags = this.currentSessionSelection.flags
+    },
     initForm : function() {
       if(this.isSelectionMode) {
         this.initSelectionForm()
@@ -357,6 +354,13 @@ export default {
       setTimeout(() => {
         this.isEditSelectionExist = false
       }, 2000);
+    },
+    isSelectionEmpty : function () {
+      return (this.selection.startDate === "" || this.selection.endDate === "")
+    },
+    isDateChange : function (selectionDate) {
+      return ((this.startDate !== selectionDate.startDate || this.startTime !== selectionDate.startTime) ||
+          this.endDate !== selectionDate.endDate || this.endTime !== selectionDate.endTime)
     },
   },
 }

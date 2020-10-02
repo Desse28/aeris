@@ -102,6 +102,10 @@
         type: Object,
         default : () => null
       },
+      linkedChartData : {
+        type : Object,
+        default : () => null
+      },
       notifySelection: {
         type : Function,
         default: () => {}
@@ -121,6 +125,18 @@
       currentInstrument : {
         type : Object,
         default : () => null
+      },
+      applyLinkedEffect: {
+        type: Function,
+        default: ()=> {}
+      },
+      isLinkedChartMode: {
+        type: Boolean,
+        default : false
+      },
+      switchLinkedMode: {
+        type : Function,
+        default: () => {}
       },
     },
     components: {
@@ -173,14 +189,23 @@
         }
       },
       selection: function() {
+        let index
         if(!this.isSelectionEmpty()) {
           if(this.isDateChange()) {
-            if(this.isSaveSelection()) {
-              this.changeCurrentSelection(this.selection.startDate, this.selection.endDate)
+            if(this.isSwitchSelection(this.selection.startDate, this.selection.endDate)) {
+              index = this.getSelectionIndex(this.selection.startDate, this.selection.endDate)
+              if(index !== -1) {
+                this.setCurrentSelection(index, true)
+              }
             } else {
               this.setCurrentSelectionPeriod(this.selection.startDate, this.selection.endDate)
             }
           }
+        }
+      },
+      linkedChartData: function () {
+        if(this.linkedChartData && !this.isMainChart) {
+          this.setLayoutAxisRange()
         }
       },
       dataInfo : function() {
@@ -305,9 +330,6 @@
         return (this.isDeleteMode || this.selection.startDate !== this.currentSelection.x0 ||
             this.selection.endDate !== this.currentSelection.x1)
       },
-      isSaveSelection : function() {
-        return (this.isDeleteMode || this.isDefaultSelection(this.selection.startDate, this.selection.endDate))
-      },
       isDefaultSelection : function(startDate, endDate) {
         let selection
         if(this.defaultSelections) {
@@ -320,27 +342,6 @@
           }
         }
         return false
-      },
-      changeCurrentSelection : function(startDate, endDate) {
-        let targetSelectionIndex = this.getSelectionIndex(startDate, endDate)
-        if(targetSelectionIndex !== - 1) {
-          this.setCurrentSelection(targetSelectionIndex, true)
-        }
-      },
-      getSelectionIndex : function(startDate, endDate) {
-        let selection
-
-        if(this.selections) {
-          for(let index in this.selections) {
-            selection = this.selections[index]
-            if(this.$root.getCleanDate(selection.x0) === this.$root.getCleanDate(startDate) &&
-                this.$root.getCleanDate(selection.x1) === this.$root.getCleanDate(endDate)) {
-              return index
-            }
-          }
-        }
-
-        return -1
       },
       removeParameter : function (newParameters, oldsParameters) {
         let parameterName, targetParameterIndex
@@ -366,27 +367,43 @@
         if(this.isMainChart) {
           this.$nextTick(() => {
             document.getElementById( this.chartId ).on( 'plotly_selected', this.addNewSelection)
-            //document.getElementById( this.chartId ).on( 'plotly_relayout', this.zoomHandler)
+            document.getElementById( this.chartId ).on( 'plotly_relayout', this.reLayoutHandler)
             this.addSelectionEvent()
           });
         }
       },
-      zoomHandler : function(data) {
-        let xStartAxis = data['xaxis.range[0]']
-        let xEndAxis = data['xaxis.range[1]']
-        //this.refresh()
-        //xaxis->range
-        console.log("Test zoom handler", xStartAxis, xEndAxis)
+      reLayoutHandler : function(data) {
+        if(data && data['xaxis.range[0]'] !== this.linkedChartData.startXaxis &&
+            data['xaxis.range[1]'] !== this.linkedChartData.endXaxis) {
+          this.addSelectionEvent()
+          this.applyLinkedEffect(data)
+        }
+      },
+      setLayoutAxisRange: function() {
+        let cloneLayout
+        if(this.linkedChartData.startXaxis && this.linkedChartData.endXaxis) {
+          cloneLayout = JSON.parse(JSON.stringify(this.layout))
+          cloneLayout.xaxis.range = [this.linkedChartData.startXaxis, this.linkedChartData.endXaxis]
+
+          if(this.isLinkedChartMode)
+            cloneLayout.xaxis.autorange = false
+          else
+            cloneLayout.xaxis.autorange = true
+
+          this.layout = cloneLayout
+          this.$forceUpdate()
+        }
       },
       addNewSelection : function(data) {
-        let goodInterval
+        //let goodInterval
         let startDate, endDate
         if(data /*&& 0 < data.points.length*/) {
           startDate = data.range.x[0]
           endDate = data.range.x[1]
-          goodInterval = this.getGoodInterval(startDate, endDate)
-          if(goodInterval !== null && !this.isSelectionExist(goodInterval.startDate, goodInterval.endDate)) {
-            this.drawSelection(goodInterval.startDate, goodInterval.endDate, false)
+          //goodInterval = this.getGoodInterval(startDate, endDate)
+          //if(goodInterval !== null && !this.isSelectionExist(goodInterval.startDate, goodInterval.endDate)) {
+          if(!this.isSelectionExist(startDate, endDate)) {
+            this.drawSelection(startDate, endDate, false)
           }
         }
       },
@@ -522,9 +539,31 @@
           this.currentSelection.x0 = newStartDate
           this.currentSelection.x1 = newEndDate
           cloneLayout = JSON.parse(JSON.stringify(this.layout))
+          cloneLayout.shapes = this.selections
           this.layout = cloneLayout
           this.refresh()
         }
+      },
+      isSwitchSelection: function(startDate, endDate) {
+        if(startDate && endDate) {
+          return (this.$root.getCleanDate(this.currentSelection.x0) !== this.$root.getCleanDate(startDate) &&
+              this.$root.getCleanDate(this.currentSelection.x1) !== this.$root.getCleanDate(endDate))
+        }
+
+        return false
+      },
+      getSelectionIndex: function(startDate, endDate) {
+        let selection
+        if(this.selections) {
+          for(let index in this.selections) {
+            selection = this.selections[index]
+            if(this.$root.getCleanDate(selection.x0) === this.$root.getCleanDate(startDate) &&
+                this.$root.getCleanDate(selection.x1) === this.$root.getCleanDate(endDate)) {
+              return index
+            }
+          }
+        }
+        return -1
       },
       clearCurrentSelection : function() {
         this.selections.forEach((selection) => {
@@ -613,7 +652,7 @@
               name: "Link chart",
               icon: LINK_ICON,
               click: () => {
-                this.deleteCurrentSelection()
+                this.enableLinkedMode()
               }
             },
             'zoomIn2d',
@@ -628,6 +667,10 @@
             'sendDataToCloud',
           ],
         ]
+      },
+      enableLinkedMode : function() {
+        //
+        this.switchLinkedMode()
       },
       setLayout: function() {
         this.layout = {

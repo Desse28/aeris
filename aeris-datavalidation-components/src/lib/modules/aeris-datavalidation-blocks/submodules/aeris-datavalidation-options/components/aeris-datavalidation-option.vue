@@ -156,10 +156,6 @@ export default {
     }
   },
   methods : {
-    test : function() {
-      console.log("In test options")
-      //this.addNewChart()
-    },
     pushLayering : function(nbrLayering) {
       let parallelLen = this.parallelsLabel.length
       let len = parallelLen + nbrLayering

@@ -34,7 +34,10 @@
               :parameters="parameters"
               :isDeleteMode="isDeleteMode"
               :currentSession="currentSession"
+              :linkedChartData="linkedChartData"
               :notifySelection="notifySelection"
+              :switchLinkedMode="switchLinkedMode"
+              :applyLinkedEffect="applyLinkedEffect"
               :defaultSelections="defaultSelections"
               :currentInstrument="currentInstrument"
           />
@@ -63,21 +66,21 @@ export default {
     AerisDatavalidationChart,
   },
   props: {
-    startDate : {
+    startDate: {
       type: String
     },
-    endDate : {
+    endDate: {
       type: String
     },
     parameters: {
-      type : Array,
-      default : () => [],
+      type: Array,
+      default: () => [],
     },
-    dataInfo : {
+    dataInfo: {
       type : Object,
       default : () => null,
     },
-    isMainChart : {
+    isMainChart: {
       type: Boolean,
       default: () => false
     },
@@ -91,48 +94,60 @@ export default {
     },
     selection: {
       type: Object,
-      default : () => null
+      default: () => null
     },
     notifySelection: {
-      type : Function,
+      type: Function,
       default: () => {}
     },
     notifyDeleteSelection: {
       type: Function,
-      default : () => {}
+      default: () => {}
     },
     defaultSelections: {
       type: Array,
       default: () => []
     },
-    currentSession : {
-      type : Object,
-      default : () => null
+    currentSession: {
+      type: Object,
+      default: () => null
     },
-    currentInstrument : {
-      type : Object,
-      default : () => null
+    currentInstrument: {
+      type: Object,
+      default: () => null
     },
-    secondChartParameters : {
+    linkedChartData: {
+      type: Object,
+      default: () => null
+    },
+    switchLinkedMode: {
+      type: Function,
+      default: () => {}
+    },
+    applyLinkedEffect: {
+      type: Function,
+      default: ()=> {}
+    },
+    secondChartParameters: {
       type: Array,
-      default : () => []
+      default: () => []
     },
-    isSecondChartParametersEmpty : {
+    isSecondChartParametersEmpty: {
       type: Boolean,
-      default : false
-    }
+      default: false
+    },
   },
   data () {
     return {
+      tabs: 1,
       tab: null,
-      icons: false,
-      centered: true,
       grow: false,
+      icons: false,
+      right: false,
+      centered: true,
       vertical: false,
       prevIcon: false,
       nextIcon: false,
-      right: false,
-      tabs: 1,
     }
   },
 }

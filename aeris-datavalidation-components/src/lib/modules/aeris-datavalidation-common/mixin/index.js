@@ -48,10 +48,10 @@ export default {
                         selection = selections[index]
                         shortStartDate = this.getCleanDate(selection.startDate)
                         shortEndDate = this.getCleanDate(selection.endDate)
-
                         if(this.getCleanDate(startDate) === shortStartDate &&
-                            this.getCleanDate(endDate) === shortEndDate)
+                            this.getCleanDate(endDate) === shortEndDate) {
                             return true
+                        }
                     }
                 }
             }
@@ -76,10 +76,21 @@ export default {
             }
             return null
         },
-        getCleanDate : function (date) {
+        getCleanDate: function (date) {
+            let day, month, year, hours, minutes, seconds
             let dateFragment = date.split(".")
-            return this.takeOfDateMilliseconds(dateFragment[0])
+            let cleanDate = this.takeOfDateMilliseconds(dateFragment[0])
                 .replace('T', ' ').replace('Z', ' ').trim()
+
+            cleanDate = new Date(cleanDate)
+            day = this.completeNumber(cleanDate.getDate())
+            month = this.completeNumber(cleanDate.getMonth()+1)
+            year = cleanDate.getFullYear()
+            hours = this.completeNumber(cleanDate.getHours())
+            minutes = this.completeNumber(cleanDate.getMinutes())
+            seconds =  this.completeNumber(cleanDate.getSeconds())
+
+            return year + '-' + month + '-' + day + ' ' + hours + ':' + minutes + ':' + seconds
         },
         takeOfDateMilliseconds : function(date) {
             let dateFragment = date.split(".")

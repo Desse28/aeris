@@ -36,15 +36,15 @@ import AerisDatavalidationWorksFlowDialog from "./../../aeris-datavalidation-dia
 export default {
   name: "aeris-datavalidation-simpletoolbar",
   props: {
-    session : {
+    session: {
       type: Object,
       default: null
     },
-    qualityFlags : {
+    qualityFlags: {
       type: Array,
       default: () => []
     },
-    selection : {
+    selection: {
       type: Object,
       default: null
     },
@@ -56,20 +56,20 @@ export default {
       type: Function,
       default : () => {}
     },
-    notifySelection : {
+    notifySelection: {
       type: Function,
       default: () => {}
     },
     addNewParameter : {
       type : Function,
     },
-    addNewChart : {
+    addNewChart: {
       type : Function,
     },
-    addNewParallel : {
+    addNewParallel: {
       type : Function,
     },
-    removeParallel : {
+    removeParallel: {
       type : Function,
     },
     removeParameter: {
@@ -82,7 +82,7 @@ export default {
       type : Array,
       default : () => [],
     },
-    auxParameters : {
+    auxParameters: {
       type : Array,
       default : () => [],
     },

@@ -73,15 +73,15 @@ export default {
     AerisDatavalidationSelectionsTable
   },
   props: {
-    session : {
+    session: {
       type: Object,
       default: null
     },
-    qualityFlags : {
+    qualityFlags: {
       type: Array,
       default: () => []
     },
-    selection : {
+    selection: {
       type: Object,
       default: null
     },
@@ -89,7 +89,7 @@ export default {
       type: Boolean,
       default: () => false
     },
-    notifySelection : {
+    notifySelection: {
       type: Function,
       default: () => {}
     },
@@ -107,14 +107,14 @@ export default {
       currentView : this.$t('worksFlow.view_selection')
     }
   },
-  watch : {
+  watch: {
     dialog: {
       immediate: true,
       handler() {
         let startDate, endDate
 
         if(!this.dialog) {
-          if(this.sessionSelection !== null && this.currentView === this.$t('session.edit')) {
+          if(this.sessionSelection && this.currentView === this.$t('session.edit')) {
             startDate = this.$root.takeOfDateMilliseconds(this.sessionSelection.startDate)
             endDate = this.$root.takeOfDateMilliseconds(this.sessionSelection.endDate)
             if(this.$root.isSelectionExist(this.session, startDate, endDate)) {
@@ -139,7 +139,7 @@ export default {
           if(this.currentView === this.$t('session.edit'))
             return
 
-          if(this.$root.isSelectionExist( this.session, startDate, endDate)) {
+          if(this.$root.isSelectionExist(this.session, startDate, endDate)) {
             targetSelection = this.$root.getTargetSelection(this.session, startDate, endDate)
             this.activeEditMode(targetSelection)
           } else {
@@ -152,34 +152,34 @@ export default {
       }
     }
   },
-  computed : {
-    currentViewIsSelection : function () {
+  computed: {
+    currentViewIsSelection: function () {
       return this.currentView === this.$t('worksFlow.view_selection')
     },
-    currentViewIsSelections : function() {
+    currentViewIsSelections: function() {
       return this.currentView === this.$t('session.selections')
     },
     currentViewIsEdit: function() {
       return this.currentView === this.$t('session.edit')
     }
   },
-  methods : {
-    activeEditMode : function(selection) {
-      if(selection !== null) {
-        this.isSelectionMode = false
-        this.switchCurrentView(this.$t('session.edit'))
-        this.sessionSelection = selection
-      } else {
-        this.switchCurrentView(this.$t('session.edit'))
-      }
+  methods: {
+    activeEditMode: function(selection) {
+      this.isSelectionMode = false
+      this.switchCurrentView(this.$t('session.edit'))
+      this.sessionSelection = selection ? selection : this.sessionSelection
     },
-    activeSelectionMode : function() {
+    activeSelectionMode: function() {
       this.isSelectionMode = true
       this.switchCurrentView( this.$t('worksFlow.view_selection'))
     },
-    switchCurrentView : function(viewName) {
+    switchCurrentView: function(viewName) {
+      let startDate, endDate
       if(viewName) {
+        startDate = this.selection.startDate
+        endDate = this.selection.endDate
         this.currentView = viewName
+        this.sessionSelection = this.$root.getTargetSelection(this.session, startDate, endDate)
         this.dialog = true
       }
       if( this.currentView !== this.$t('worksFlow.view_selection'))

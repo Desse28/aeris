@@ -4,6 +4,12 @@
         :newSession="newSession"
     />
     <AerisDatavalidationSimpleToolbar
+        :selection="selection"
+        :session="currentSession"
+        :qualityFlags="qualityFlags"
+        :isDeleteMode="isDeleteMode"
+        :auxParameters="auxParameters"
+        :linkedParameters ="linkedParameters"
         :addNewChart="addNewChart"
         :removeChart="removeChart"
         :addNewParallel="addNewParallel"
@@ -12,12 +18,6 @@
         :removeParameter="removeParameter"
         :notifySelection=" notifySelection"
         :notifyDeleteSelection="notifyDeleteSelection"
-        :linkedParameters ="linkedParameters"
-        :auxParameters="auxParameters"
-        :qualityFlags="qualityFlags"
-        :isDeleteMode="isDeleteMode"
-        :session="currentSession"
-        :selection="selection"
     />
 
     <AerisDatavalidationLandScapeLayaout
@@ -44,9 +44,12 @@
                 :isDeleteMode="isDeleteMode"
                 :defaultSelections="selections"
                 :currentSession="currentSession"
+                :linkedChartData="linkedChartData"
                 :parameters="firstChartParameters"
                 :currentInstrument="currentInstrument"
                 :notifySelection="notifySelection"
+                :switchLinkedMode="switchLinkedMode"
+                :applyLinkedEffect="applyLinkedEffect"
                 :notifyDeleteSelection="notifyDeleteSelection"
             />
           </template>
@@ -60,9 +63,11 @@
             :dataInfo="dataInfo"
             :startDate="startDate"
             :currentSession="currentSession"
+            :linkedChartData="linkedChartData"
             :nbrParallelChart="nbrParallelChart"
-            :secondChartParameters="secondChartParameters"
+            :isLinkedChartMode="isLinkedChartMode"
             :currentInstrument="currentInstrument"
+            :secondChartParameters="secondChartParameters"
         />
       </template>
     </AerisDatavalidationLandScapeLayaout>
@@ -111,23 +116,25 @@ import {
       },
       data() {
         return {
+          colors: [],
           endDate: "",
-          colors : [],
           startDate: "",
-          colorCount : 0,
-          deleteStep : 0,
+          colorCount: 0,
+          deleteStep: 0,
           selections: [],
-          dataInfo : null,
-          selection : null,
-          qualityFlags : [],
+          dataInfo: null,
+          selection: null,
+          qualityFlags: [],
           auxParameters: [],
-          nbrParallelChart : 2,
-          isDeleteMode : false,
-          linkedParameters : [],
+          nbrParallelChart: 2,
+          isDeleteMode: false,
+          linkedParameters: [],
           currentSession: null,
-          currentInstrument : null,
-          firstChartParameters : [],
-          secondChartParameters : [],
+          currentInstrument: null,
+          isLinkedChartMode: false,
+          firstChartParameters: [],
+          secondChartParameters: [],
+          linkedChartData: {startXaxis: null, endXaxis: null},
         }
       },
       computed : {
@@ -225,6 +232,20 @@ import {
           if(targetParameter) {
             this.addNewParameter(targetParameter)
           }
+        },
+        applyLinkedEffect : function(data) {
+          if(this.isLinkedChartMode && data && data['xaxis.range[0]'] && data['xaxis.range[1]']) {
+            this.linkedChartData = {
+              startXaxis: data['xaxis.range[0]'],
+              endXaxis: data['xaxis.range[1]']
+            }
+          }
+        },
+        switchLinkedMode : function () { //enableLinkedMode
+          if(this.isLinkedChartMode)
+            this.isLinkedChartMode = false
+          else
+            this.isLinkedChartMode = true
         },
         addNewChart : function() {
           console.log("Test add newChart")
