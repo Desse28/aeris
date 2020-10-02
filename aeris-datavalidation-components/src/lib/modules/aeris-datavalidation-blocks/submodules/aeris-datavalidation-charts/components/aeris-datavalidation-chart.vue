@@ -234,11 +234,11 @@
           if(0 < this.parameters.length) {
             this.addNewParameter(parameter)
 
+            this.initModeBar()
+
             if(this.isMainChart) {
-              this.initModeBar()
               this.addEventsHandler()
             }
-
             this.setLayout()
             this.initDefaultSelections()
           }
@@ -637,36 +637,43 @@
         }
       },
       initModeBar : function() {
-
-        this.modeBarButtons = [
-          [
-            'select2d',
-            {
-              name: "Delete selection",
-              icon: TRASH_ICON,
-              click: () => {
-                this.deleteTargetSelection()
-              }
-            },
-            {
-              name: "Link chart",
-              icon: LINK_ICON,
-              click: () => {
-                this.enableLinkedMode()
-              }
-            },
-            'zoomIn2d',
-            'zoomOut2d',
-          ],
-          [
-            'pan2d',
-            'autoScale2d',
-            'resetScale2d',
-          ],
-          [
-            'sendDataToCloud',
-          ],
-        ]
+        if(this.isMainChart) {
+          this.modeBarButtons = [
+            [
+              'select2d',
+              {
+                name: "Delete selection",
+                icon: TRASH_ICON,
+                click: () => {
+                  this.deleteTargetSelection()
+                }
+              },
+              {
+                name: "Link chart",
+                icon: LINK_ICON,
+                click: () => {
+                  this.enableLinkedMode()
+                }
+              },
+              'zoomIn2d',
+              'zoomOut2d',
+            ],
+            [
+              'pan2d',
+              'resetScale2d',
+              'sendDataToCloud',
+            ]
+          ]
+        } else {
+          this.modeBarButtons = [
+            [
+              'zoomIn2d',
+              'zoomOut2d',
+              'pan2d',
+              'resetScale2d',
+            ],
+          ]
+        }
       },
       enableLinkedMode : function() {
         //
@@ -711,7 +718,7 @@
           },
           margin : this.getXaxisMargin(),
           rangeslider: { visible : true, y : 1},
-          rangeselector : this.getXaxisRangeselector()
+          //rangeselector : this.getXaxisRangeselector()
         }
       },
       getXaxisMargin: function() {
@@ -757,12 +764,13 @@
       },
       getLayoutLegend: function() {
         return  {
-          orientation : "h",
-          //x : 0.19999999999999893,
-          x : 0.05,//landscape mode
-          y : -0.6199999999999999,
+          orientation : "v",
+          x : 1.02,
+          y : 0.8,
           borderwidth : 1,
           bordercolor : 'rgb(13, 12, 12)',
+          xanchor: "auto",
+          yanchor: "auto",
         }
       },
     }

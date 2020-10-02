@@ -241,7 +241,7 @@ import {
             }
           }
         },
-        switchLinkedMode : function () { //enableLinkedMode
+        switchLinkedMode : function () {
           if(this.isLinkedChartMode)
             this.isLinkedChartMode = false
           else
