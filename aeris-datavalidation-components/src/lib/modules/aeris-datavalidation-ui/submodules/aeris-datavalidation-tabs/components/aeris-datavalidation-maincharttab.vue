@@ -2,18 +2,17 @@
   <div class="ml-6">
     <v-tabs
         v-model="tab"
-        background-color="deep-purple accent-4"
+        background-color="light-blue"
         class="elevation-2"
         dark
         :centered="centered"
     >
-
       <v-tab
           v-for="i in tabs"
           :key="i"
           :href="`#chart-${i}`"
       >
-        Main chart
+        {{ $t("session.main_chart") }}
       </v-tab>
 
       <v-tab-item
@@ -27,19 +26,20 @@
           <AerisDatavalidationChart
               :endDate="endDate"
               :isMainChart="true"
-              :dataInfo="dataInfo"
               :selection="selection"
               :startDate="startDate"
               :deleteStep="deleteStep"
               :parameters="parameters"
               :isDeleteMode="isDeleteMode"
               :currentSession="currentSession"
+              :instrumentInfos="instrumentInfos"
               :linkedChartData="linkedChartData"
               :notifySelection="notifySelection"
               :switchLinkedMode="switchLinkedMode"
               :applyLinkedEffect="applyLinkedEffect"
               :defaultSelections="defaultSelections"
               :currentInstrument="currentInstrument"
+              :isSecondChartEmpty="isSecondChartEmpty"
           />
         </v-card>
       </v-tab-item>
@@ -76,11 +76,15 @@ export default {
       type: Array,
       default: () => [],
     },
-    dataInfo: {
+    instrumentInfos: {
       type : Object,
       default : () => null,
     },
     isMainChart: {
+      type: Boolean,
+      default: () => false
+    },
+    isSecondChartEmpty : {
       type: Boolean,
       default: () => false
     },
@@ -140,7 +144,7 @@ export default {
   data () {
     return {
       tabs: 1,
-      tab: null,
+      tab: "chart-1",
       grow: false,
       icons: false,
       right: false,

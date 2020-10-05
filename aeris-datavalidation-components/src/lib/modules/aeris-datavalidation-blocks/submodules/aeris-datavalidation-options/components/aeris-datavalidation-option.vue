@@ -10,10 +10,10 @@
           <v-icon left>mdi-plus-circle-outline</v-icon> {{ $t("chartconf.add-parameters") }}
         </v-btn>
         <v-btn class="ma-2" tile outlined color="blue" v-on:click="removeChart">
-          <v-icon left>mdi-plus-circle-outline</v-icon> Remove chart
+          <v-icon left>mdi-delete</v-icon> {{ $t("session.remove_chart") }}
         </v-btn>
         <v-btn class="ma-2" tile outlined color="blue" v-on:click="addNewChart">
-          <v-icon left>mdi-plus-circle-outline</v-icon> Add chart
+          <v-icon left>mdi-plus-circle-outline</v-icon> {{ $t("session.add_chart") }}
         </v-btn>
       </template>
       <v-card>
@@ -136,10 +136,11 @@ export default {
       }
     },
     parallels : function (newParalles, oldParalles) {
-      if(oldParalles.length < newParalles.length)
+      if(oldParalles.length < newParalles.length) {
         this.flushNewParameter(newParalles)
-      else if(newParalles.length < oldParalles.length )
+      } else if(newParalles.length < oldParalles.length ) {
         this.disabledParallel(newParalles, oldParalles)
+      }
     },
     auxParameters: function () {
       this.auxParameters.forEach((parameter)=> {
@@ -150,7 +151,9 @@ export default {
     },
     linkedParameters: function () {
       this.linkedParameters.forEach((parameter)=> {
-        this.parametersLabel.unshift(parameter)
+        if(parameter) {
+          this.parametersLabel.unshift(parameter)
+        }
       })
       this.pushLayering(this.linkedParameters.length)
     }
@@ -177,7 +180,8 @@ export default {
         intersection = oldParrales.filter(value => !newParallels.includes(value))
         deletedIndex = intersection[0].split("Layering")[1]
         targetParameter = this.parametersLabel[deletedIndex - 1]
-        this.addNewParallel(targetParameter)
+        if(this.parameters.includes(targetParameter))
+          this.addNewParallel(targetParameter)
       }
     },
     flushNewParameter : function (parallels) {
@@ -201,7 +205,7 @@ export default {
       this.addNewParallel(newParameter)
     },
     flushRemoveParallel: function (newParameters, oldParameters) {
-      let targetParallelIndex = -1
+      let targetParallelIndex
       let deletedElement
 
       let intersection = oldParameters.filter(param => {
@@ -210,9 +214,10 @@ export default {
 
       deletedElement = intersection[0]
       targetParallelIndex = this.parametersLabel.indexOf(deletedElement);
-
-      if(-1 < targetParallelIndex) {
-        this.parallels.splice(targetParallelIndex, 1);
+      if(0 <= targetParallelIndex) {
+        if(this.parallels.includes(this.parallelsLabel[targetParallelIndex])) {
+          this.parallels.splice(this.parallels.indexOf(this.parallelsLabel[targetParallelIndex]), 1)
+        }
         this.removeParameter(deletedElement)
       }
     }

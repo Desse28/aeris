@@ -30,8 +30,12 @@
             </div>
           </template>
           <template v-slot:item.state="{ item }">
-            <h3 class="mr-2 green accent-2" v-if="!item.state"> In progress</h3>
-            <h3 v-else class="red accent-3">Close</h3>
+            <h3 class="mr-2 green accent-2" v-if="!item.state">
+              {{ $t("session.in_progress") }}
+            </h3>
+            <h3 v-else class="red accent-3">
+              {{ $t("session.close") }}
+            </h3>
           </template>
         </v-data-table>
       </template>
@@ -92,7 +96,7 @@ export default {
   },
   computed : {
     disabledContinueButton : function() {
-      return  this.selected.length === 0
+      return  this.selected.length === 0 || this.selected[0].state
     },
     tableHeaders : function() {
       return [
@@ -150,11 +154,17 @@ export default {
 
       this.callBack = (instrument) => {
         if(instrument) {
-          this.initNewSession(session, instrument)
           this.currentUrl = ""
+          this.getInstrumentInfos(instrument['uuid'], (infos) => {
+            this.initNewSession(session, instrument, infos)
+          })
         }
       }
       this.currentUrl = process.env.VUE_APP_ROOT_API + "/instruments?name=" + instrumentName
+    },
+    getInstrumentInfos : function (uuid, callBack) {
+      this.callBack = callBack
+      this.currentUrl = process.env.VUE_APP_ROOT_API + "/instruments/infos/" + uuid
     },
     getDateGoodFormat : function(date) {
       let timePart, datePart

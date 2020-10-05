@@ -166,19 +166,18 @@ export default {
   methods: {
     activeEditMode: function(selection) {
       this.isSelectionMode = false
-      this.switchCurrentView(this.$t('session.edit'))
-      this.sessionSelection = selection ? selection : this.sessionSelection
+      this.switchCurrentView(this.$t('session.edit'), selection)
     },
     activeSelectionMode: function() {
       this.isSelectionMode = true
       this.switchCurrentView( this.$t('worksFlow.view_selection'))
     },
-    switchCurrentView: function(viewName) {
+    switchCurrentView: function(viewName, selection) {
       let startDate, endDate
-      if(viewName) {
-        startDate = this.selection.startDate
-        endDate = this.selection.endDate
+      if(viewName && (this.selection || selection)) {
         this.currentView = viewName
+        startDate = selection ? selection.startDate : this.selection.startDate
+        endDate = selection ? selection.endDate : this.selection.endDate
         this.sessionSelection = this.$root.getTargetSelection(this.session, startDate, endDate)
         this.dialog = true
       }

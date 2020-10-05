@@ -201,18 +201,26 @@ export default {
 
       this.callBack = (session) => {
         if(session) {
+          this.currentUrl=""
           if(this.isExistSession(session)) {
             this.isSessionExist = true
             setTimeout(() => {
               this.isSessionExist = false
             }, 2000);
           } else {
-            this.initNewSession(session, this.currentInstrument)
+            this.getInstrumentInfos(this.currentInstrument['uuid'], (infos) => {
+              this.initNewSession(session, this.currentInstrument, infos)
+            })
           }
         }
-        this.currentUrl=""
+
       }
       this.currentUrl = process.env.VUE_APP_ROOT_API + "/sessions/create"
+    },
+    getInstrumentInfos : function (uuid, callBack) {
+      this.typeOfRequest = "GET"
+      this.callBack = callBack
+      this.currentUrl = process.env.VUE_APP_ROOT_API + "/instruments/infos/" + uuid
     },
     initRequestData : function () {
       let startDateTime = this.$root.getSpringDateFormat(this.startDate + " " + this.startTime)

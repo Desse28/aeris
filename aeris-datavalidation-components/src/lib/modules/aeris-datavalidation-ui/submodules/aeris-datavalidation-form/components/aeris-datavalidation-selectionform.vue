@@ -207,13 +207,14 @@ export default {
     getSelectionDate : function (selection, isUtcFormat) {
       let startDate, startTime, endDate, endTime
 
-      if(this.selection) {
+      if(selection) {
         endDate= this.$root.getDatePikerDateFormat(selection.endDate, "en")
         startDate= this.$root.getDatePikerDateFormat(selection.startDate, "en")
         startTime= this.$root.getTimePickerTimeFormat(selection.startDate, isUtcFormat)
         endTime= this.$root.getTimePickerTimeFormat(selection.endDate, isUtcFormat)
         return {startDate : startDate, startTime : startTime, endDate: endDate, endTime : endTime}
       }
+
       return null;
     },
     setCurrentDate : function(currentDate) {

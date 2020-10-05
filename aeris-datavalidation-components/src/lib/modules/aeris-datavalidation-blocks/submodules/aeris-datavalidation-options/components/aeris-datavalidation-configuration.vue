@@ -67,9 +67,9 @@ export default {
     setCurrentItem : function(item) {
       this.currentItem = item
     },
-    initNewSession : function (currentSession, currentInstrument) {
+    initNewSession : function (currentSession, currentInstrument, infos) {
       if(currentSession && currentInstrument) {
-        this.newSession(currentSession, currentInstrument)
+        this.newSession(currentSession, currentInstrument, infos)
         this.dialog = false;
       }
     }

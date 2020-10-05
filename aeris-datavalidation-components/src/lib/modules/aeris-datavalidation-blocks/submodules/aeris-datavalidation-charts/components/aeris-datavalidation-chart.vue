@@ -1,18 +1,31 @@
 <template>
-  <div>
+  <div
+      class="v-sheet v-sheet--outlined theme--light grey--text--"
+  >
     <AerisDataValidationServices
         :url="currentUrl"
         :callBack="callBack"
         :requestData="requestData"
         :typeOfRequest="typeOfRequest"
     >
+
       <v-alert type="error" v-if="deleteAlert">
         {{$t('session.choose_selection_message')}}
       </v-alert>
+      <AerisDatavalidationDeleteDialog
+          :dialog="deleteDialog"
+          :ok="$t('session.yes')"
+          :cancel="$t('session.no')"
+          :okCallBack="validateDelete"
+          :cancelCallBack="cancelDelete"
+          :title="$t('session.delete_title')"
+          :message="$t('session.delete_message')"
+      />
       <v-row justify="center">
         <v-col cols="12">
           <Plotly
               :x="Date"
+              :key="componentKey"
               :data="data"
               :id="getChartId"
               :layout="layout"
@@ -43,6 +56,8 @@
     AerisDataValidationServices,
   } from "./../../../../aeris-datavalidation-components"
 
+  import AerisDatavalidationDeleteDialog from "./../../../../aeris-datavalidation-ui/submodules/aeris-datavalidation-dialogs/components/aeris-datavalidation-deletedialog"
+
   const SELECTION_BORDER_COLOR = 'rgb(84,217,27)'
   const SELECTION_BACKGROUND_COLOR = 'rgb(33, 150, 243)'
   const TARGET_SELECTION_BORDER_COLOR = 'rgb(255, 152, 0)'
@@ -60,7 +75,7 @@
         type : Array,
         default : () => [],
       },
-      dataInfo : {
+      instrumentInfos : {
         type : Object,
         default : () => null,
       },
@@ -73,6 +88,10 @@
         default: () => 0
       },
       isDeleteMode: {
+        type: Boolean,
+        default: () => false
+      },
+      isSecondChartEmpty : {
         type: Boolean,
         default: () => false
       },
@@ -119,10 +138,12 @@
     },
     components: {
       Plotly,
-      AerisDataValidationServices
+      AerisDataValidationServices,
+      AerisDatavalidationDeleteDialog
     },
     data() {
       return {
+        componentKey: 0,
         data: [],
         flags: [],
         layout: {},
@@ -136,6 +157,7 @@
         requestData: null,
         deleteAlert: false,
         modeBarButtons: [],
+        deleteDialog: false,
         currentSelection : null,
         currentParameters : [],
         linkIcon: linkChartsIconPath,
@@ -150,6 +172,10 @@
       },
     },
     watch: {
+      isSecondChartEmpty : function () {
+        if(this.isSecondChartEmpty)
+          this.refresh()
+      },
       deleteStep : function() {
         if(this.deleteStep === 2) {
           this.deleteCurrentSelection()
@@ -176,7 +202,7 @@
               if(index !== -1) {
                 this.setCurrentSelection(index, true)
               }
-            } else {
+            } else if(this.currentSelection) {
               this.setCurrentSelectionPeriod(this.selection.startDate, this.selection.endDate)
             }
           }
@@ -187,10 +213,12 @@
           this.setLayoutAxisRange()
         }
       },
-      dataInfo : function() {
-        if(this.dataInfo) {
+      instrumentInfos : function() {
+        const cloneLayout = JSON.parse(JSON.stringify(this.layout))
+
+        if(this.instrumentInfos) {
           let title =  {
-            text : "Current data set - "+ "test",//this.dataInfo.resourceTitle.fr,
+            text : "Current data set - "+ this.instrumentInfos.resourceTitle.fr,
             x : 0.52,
             font : {
               color : 'rgb(13, 13, 13)',
@@ -198,7 +226,9 @@
               size : 18,
             }
           }
-          this.layout.title = title
+          cloneLayout.title = title
+          this.layout = cloneLayout
+          //this.refresh()
         }
       },
     },
@@ -339,7 +369,8 @@
       },
       refresh : function() {
         this.currentUrl = ""
-        this.$forceUpdate()
+        //this.$forceUpdate()
+        this.componentKey += 1;
         this.addEventsHandler()
       },
       addEventsHandler : function () {
@@ -370,7 +401,8 @@
             cloneLayout.xaxis.autorange = true
 
           this.layout = cloneLayout
-          this.$forceUpdate()
+          //this.$forceUpdate()
+          this.componentKey +=1;
         }
       },
       addNewSelection : function(data) {
@@ -524,7 +556,7 @@
         }
       },
       isSwitchSelection: function(startDate, endDate) {
-        if(startDate && endDate) {
+        if(startDate && endDate && this.currentSelection) {
           return (this.$root.getCleanDate(this.currentSelection.x0) !== this.$root.getCleanDate(startDate) &&
               this.$root.getCleanDate(this.currentSelection.x1) !== this.$root.getCleanDate(endDate))
         }
@@ -561,12 +593,30 @@
         } else {
           index = this.getTargetSelectionIndex()
           if(index !== -1) {
-            this.currentSession.sessionSelections.splice(index, 1)
-            this.updateSession()
+            this.deleteDialog = true
+            this.notifyDeleteSelection(true)
           } else {
             this.deleteCurrentSelection(true)
           }
         }
+      },
+      validateDelete : function () {
+        let targetIndex = this.getTargetSelectionIndex()
+        if(targetIndex) {
+          this.currentSession.sessionSelections.splice(targetIndex, 1)
+          this.updateSession()
+          this.deleteDialog = false
+          this.resetDeleteDefaultState()
+        }
+      },
+      resetDeleteDefaultState: function () {
+        setTimeout(() => {
+          this.notifyDeleteSelection(false)
+        }, 500)
+      },
+      cancelDelete : function () {
+        this.deleteDialog = false
+        this.notifyDeleteSelection(false)
       },
       getTargetSelectionIndex : function () {
         let targetIndex = -1
@@ -590,7 +640,6 @@
         this.callBack = (selection) => {
           if(selection) {
             this.deleteCurrentSelection(true)
-
           }
           this.currentUrl=""
         }
@@ -695,7 +744,7 @@
       },
       getLayoutTitle: function() {
         return {
-          text : this.dataInfo !== null ? "Current data set - "+ this.dataInfo.resourceTitle.fr : "Test graph",
+          text : "Current data set - "+ this.instrumentInfos.resourceTitle.fr,
               x : 0.52,
               font : {
             color : 'rgb(13, 13, 13)',

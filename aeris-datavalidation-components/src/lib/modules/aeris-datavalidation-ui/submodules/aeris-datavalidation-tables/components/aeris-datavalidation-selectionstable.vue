@@ -18,6 +18,17 @@
           :title="$t('session.delete_title')"
           :message="$t('session.delete_message')"
       />
+      <AerisDatavalidationSelectionsDialog
+          :dialog="selectionsDialog"
+          title="Soumission de la session"
+          ok="continuer"
+          cancel="Annuler"
+          message="Vous êtes sur le point de soumette votre session au CDS.
+          Attention, une fois soumise, celle-ci ne sera plus modifiable.
+          Souhaitez vous continuer ?"
+          :okCallBack="submitSelection"
+          :cancelCallBack="cancelSubmitSelection"
+      />
       <template>
         <v-data-table
             :headers="tableHeaders"
@@ -70,7 +81,7 @@
         <v-btn
             color="primary"
             text
-            @click="submitSelection"
+            @click="alertSubmitSelection"
         >
           {{$t('session.submit_selections')}}
         </v-btn>
@@ -82,11 +93,14 @@
 <script>
 import AerisDataValidationServices from "./../../../../aeris-datavalidation-services/components/aeris-datavalidation-services"
 import AerisDatavalidationDeleteDialog from "./../../aeris-datavalidation-dialogs/components/aeris-datavalidation-deletedialog"
+import AerisDatavalidationSelectionsDialog from "./../../aeris-datavalidation-dialogs/components/aeris-datavalidation-selectionsdialog"
+
 export default {
   name: "aeris-datavalidation-selectionstable",
   components : {
     AerisDataValidationServices,
     AerisDatavalidationDeleteDialog,
+    AerisDatavalidationSelectionsDialog,
   },
   props : {
     session : {
@@ -123,6 +137,7 @@ export default {
       requestData: null,
       typeOfRequest: "",
       isChartSignal: true,
+      selectionsDialog: false,
       submittedSelections: false,
     }
   },
@@ -165,7 +180,8 @@ export default {
   },
   methods: {
     editSelection (selection) {
-      this.notifyEditMode(selection)
+      if(selection)
+        this.notifyEditMode(selection)
     },
     setDeleteItem (selection) {
       let startDate, endDate
@@ -214,14 +230,30 @@ export default {
       this.requestData = this.session
       this.callBack = (selection) => {
         if(selection) {
-          console.log("delete : ", selection)
+          console.info("delete response : ", selection)
         }
         this.currentUrl=""
       }
       this.currentUrl = process.env.VUE_APP_ROOT_API + "/sessions/update"
     },
-    submitSelection : function() {
-      //Here submit all selections
+    alertSubmitSelection : function() {
+      this.selectionsDialog = true
+    },
+    cancelSubmitSelection : function () {
+      this.selectionsDialog = false
+    },
+    submitSelection: function() {
+      this.selectionsDialog = false
+      this.typeOfRequest = "POST"
+      this.requestData = this.session
+
+      this.callBack = (selection) => {
+        if(selection) {
+          console.info("Submit session response : ", selection)
+        }
+        this.currentUrl=""
+      }
+      this.currentUrl = process.env.VUE_APP_ROOT_API + "/sessions/submit-session"
     },
   },
 }

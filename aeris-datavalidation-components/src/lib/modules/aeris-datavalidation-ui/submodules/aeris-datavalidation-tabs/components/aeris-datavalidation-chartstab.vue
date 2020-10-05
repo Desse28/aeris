@@ -1,8 +1,11 @@
 <template>
-  <div  v-if="isSecondChartParametersEmpty" class="mr-1">
+  <div
+      v-if="isSecondChartParametersEmpty"
+      class="mr-4 rounded-pill"
+  >
     <v-tabs
         v-model="tab"
-        background-color="deep-purple accent-4"
+        background-color="light-blue"
         class="elevation-2"
         dark
     >
@@ -11,9 +14,9 @@
       <v-tab
           v-for="i in nbrParallelChart"
           :key="i"
-          :href="`#chart-${i}`"
+          :href="'#'+$t('session.chart') + `-${i}`"
       >
-        Chart {{ i }}
+        {{ $t("session.chart") }} {{ i }}
       </v-tab>
       <v-tabs-items v-model="tab">
         <v-tab-item
@@ -27,10 +30,10 @@
           >
             <AerisDatavalidationChart
                 :endDate="endDate"
-                :dataInfo="dataInfo"
                 :startDate="startDate"
                 :isMainChart="isMainChart"
                 :currentSession="currentSession"
+                :instrumentInfos="instrumentInfos"
                 :linkedChartData="linkedChartData"
                 :parameters="secondChartParameters"
                 :isLinkedChartMode="isLinkedChartMode"
@@ -64,7 +67,7 @@ export default {
       type : Array,
       default : () => [],
     },
-    dataInfo : {
+    instrumentInfos : {
       type : Object,
       default : () => null,
     },
@@ -107,11 +110,11 @@ export default {
     isLinkedChartMode: {
       type: Boolean,
       default : false
-    },
+    }
   },
   data () {
     return {
-      tab: "chart-2",
+      tab: "chart-1",
       icons: false,
     }
   },
@@ -119,7 +122,7 @@ export default {
     getChartsNames : function () {
       let chartsNames = []
       for(let i = 1; i <= this.nbrParallelChart; i++) {
-        chartsNames.push("chart-" + i)
+        chartsNames.push( this.$t('session.chart') + "-" + i)
       }
       return chartsNames
     }

@@ -18,8 +18,10 @@ import AerisDatavalidationPortraitLayaout from "./aeris-datavalidation-ui/submod
 import AerisDatavalidationSelectionsTable from "./aeris-datavalidation-ui/submodules/aeris-datavalidation-tables/components/aeris-datavalidation-selectionstable";
 import AerisDatavalidationConfiguration from "./aeris-datavalidation-blocks/submodules/aeris-datavalidation-options/components/aeris-datavalidation-configuration";
 import AerisDatavalidationLandScapeLayaout from "./aeris-datavalidation-ui/submodules/aeris-datavalidation-layouts/components/aeris-datavalidation-landscapelayout";
+import AerisDatavalidationSelectionsDialog from "./aeris-datavalidation-ui/submodules/aeris-datavalidation-dialogs/components/aeris-datavalidation-selectionsdialog";
 import AerisDatavalidationLangSwitcher from "./aeris-datavalidation-ui/submodules/aeris-datavalidation-inputs/components/submodules/aeris-datavalidation-switchers/aeris-datavalidation-langswitcher"
 import AerisDatavalidationWorksFlowDialog from "./aeris-datavalidation-ui/submodules/aeris-datavalidation-dialogs/components/aeris-datavalidation-worksflowdialog"
+
 
 export {
     AerisDatavalidationChart,
@@ -44,4 +46,5 @@ export {
     AerisDatavalidationPortraitLayaout,
     AerisDatavalidationWorksFlowDialog,
     AerisDatavalidationLandScapeLayaout,
+    AerisDatavalidationSelectionsDialog,
 };

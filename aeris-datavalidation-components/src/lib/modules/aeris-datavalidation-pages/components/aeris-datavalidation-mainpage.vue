@@ -21,23 +21,16 @@
     />
 
     <AerisDatavalidationLandScapeLayaout
+        key="mainLandScape"
         justify="center"
-        padding="pa-3"
+        padding="pa-0"
         :cols="[getFirsChartCol, getSecondChartCol]"
         :nbrChildElement="2"
     >
       <template v-slot:land1>
-        <AerisDatavalidationPortraitLayaout
-            padding="pa-0"
-            justify="center"
-            :nbrChildElement="1"
-            :cols="[12]"
-        >
-          <template v-slot:portrait1>
             <AerisDatavalidationMainChartTab
                 :endDate="endDate"
                 :isMainChart="true"
-                :dataInfo="dataInfo"
                 :selection="selection"
                 :startDate="startDate"
                 :deleteStep="deleteStep"
@@ -46,23 +39,23 @@
                 :currentSession="currentSession"
                 :linkedChartData="linkedChartData"
                 :parameters="firstChartParameters"
+                :instrumentInfos="instrumentInfos"
                 :currentInstrument="currentInstrument"
+                :isSecondChartEmpty="isSecondChartEmpty"
                 :notifySelection="notifySelection"
                 :switchLinkedMode="switchLinkedMode"
                 :applyLinkedEffect="applyLinkedEffect"
                 :notifyDeleteSelection="notifyDeleteSelection"
             />
-          </template>
-        </AerisDatavalidationPortraitLayaout>
       </template>
       <template v-slot:land2>
         <AerisDatavalidationChartsTab
             :isSecondChartParametersEmpty="!isSecondChartParametersEmpty"
             :endDate="endDate"
             :isMainChart="false"
-            :dataInfo="dataInfo"
             :startDate="startDate"
             :currentSession="currentSession"
+            :instrumentInfos="instrumentInfos"
             :linkedChartData="linkedChartData"
             :nbrParallelChart="nbrParallelChart"
             :isLinkedChartMode="isLinkedChartMode"
@@ -79,31 +72,11 @@ import {
   AerisDatavalidationMainChartTab,
   AerisDatavalidationConfiguration,
   AerisDatavalidationSimpleToolbar,
-  AerisDatavalidationPortraitLayaout,
   AerisDatavalidationLandScapeLayaout
 } from "./../../aeris-datavalidation-components"
 
-  const COLORS = [
-    'rgb(255, 0, 0)',
-    'rgb(0, 255, 1)',
-    'rgb(0, 255, 255)',
-    'rgb(0, 0, 255)',
-    'rgb(170, 170, 0)',
-    'rgb(244, 67, 54)',
-    'rgb(233, 30, 99)',
-    'rgb(156, 39, 176)',
-    'rgb(103, 58, 183)',
-    'rgb(63, 81, 181)',
-    'rgb(33, 150, 243)',
-    'rgb(0, 188, 212)',
-    'rgb(0, 150, 136)',
-    'rgb(76, 175, 180)',
-    'rgb(255, 235, 59)',
-    'rgb(255, 193, 7)',
-    'rgb(255, 193, 7)',
-    'rgb(255, 152, 0)',
-    'rgb(96, 125, 139)',
-  ]
+import {colors, defaultColor} from "./../../aeris-datavalidation-common/colors"
+
     export default {
       name: "aeris-datavalidation-homepage",
       components: {
@@ -111,18 +84,15 @@ import {
         AerisDatavalidationMainChartTab,
         AerisDatavalidationConfiguration,
         AerisDatavalidationSimpleToolbar,
-        AerisDatavalidationPortraitLayaout,
         AerisDatavalidationLandScapeLayaout,
       },
       data() {
         return {
-          colors: [],
           endDate: "",
           startDate: "",
           colorCount: 0,
           deleteStep: 0,
           selections: [],
-          dataInfo: null,
           selection: null,
           qualityFlags: [],
           auxParameters: [],
@@ -130,10 +100,12 @@ import {
           isDeleteMode: false,
           linkedParameters: [],
           currentSession: null,
+          instrumentInfos: null,
           currentInstrument: null,
           isLinkedChartMode: false,
           firstChartParameters: [],
           secondChartParameters: [],
+          isSecondChartEmpty: false,
           linkedChartData: {startXaxis: null, endXaxis: null},
         }
       },
@@ -148,10 +120,11 @@ import {
             return 7
         },
         getSecondChartCol : function() {
-          if( this.secondChartParameters.length === 0)
+          if( this.secondChartParameters.length === 0) {
             return 0
-          else
+          } else {
             return 5
+          }
         }
       },
       methods : {
@@ -161,15 +134,16 @@ import {
         notifyDeleteSelection : function (state) {
           this.isDeleteMode = state
 
-          if(this.deleteStep === 2)
+          if(this.deleteStep === 2 || !state)
             this.deleteStep = 0
 
           if(state)
             this.deleteStep = this.deleteStep + 1
         },
-        newSession : function(currentSession, currentInstrument) {
+        newSession : function(currentSession, currentInstrument, instrumentInfos) {
           let mainParameter
           if(currentSession && currentInstrument) {
+            this.instrumentInfos = instrumentInfos
             this.currentSession = currentSession
             this.currentInstrument = currentInstrument
             this.qualityFlags = currentInstrument.flags
@@ -188,8 +162,10 @@ import {
 
           if(auxParameters) {
             auxParameters.forEach((parameter) => {
-              parameter.color = this.getNewColor()
-              this.secondChartParameters.push(parameter)
+              if(parameter !== "") {
+                parameter.color = this.getNewColor()
+                this.secondChartParameters.push(parameter)
+              }
             })
             this.auxParameters = auxParameters
           }
@@ -203,7 +179,9 @@ import {
         },
         addNewParameter : function(newParameter) {
           if(newParameter) {
-            this.firstChartParameters = [...this.firstChartParameters, newParameter]
+            if(!this.firstChartParameters.includes(newParameter))
+              this.firstChartParameters = [...this.firstChartParameters, newParameter]
+
             this.secondChartParameters = this.secondChartParameters.filter(function(param) {
               return param.name !== newParameter.name
             })
@@ -214,10 +192,12 @@ import {
             this.firstChartParameters = this.firstChartParameters.filter(function(param) {
               return param.name !== deletedElement.name
             })
-
             this.secondChartParameters = this.secondChartParameters.filter(function(param) {
               return param.name !== deletedElement.name
             })
+
+            if( this.secondChartParameters.length === 0)
+              this.isSecondChartEmpty = true
           }
         },
         addNewParallel : function(targetParameter) {
@@ -225,7 +205,8 @@ import {
             this.firstChartParameters = this.firstChartParameters.filter(function(param) {
               return param.name !== targetParameter.name
             })
-            this.secondChartParameters = [...this.secondChartParameters, targetParameter]
+            if(!this.secondChartParameters.includes(targetParameter))
+              this.secondChartParameters = [...this.secondChartParameters, targetParameter]
           }
         },
         removeParallel : function(targetParameter) {
@@ -233,7 +214,7 @@ import {
             this.addNewParameter(targetParameter)
           }
         },
-        applyLinkedEffect : function(data) {
+        applyLinkedEffect: function(data) {
           if(this.isLinkedChartMode && data && data['xaxis.range[0]'] && data['xaxis.range[1]']) {
             this.linkedChartData = {
               startXaxis: data['xaxis.range[0]'],
@@ -241,28 +222,28 @@ import {
             }
           }
         },
-        switchLinkedMode : function () {
+        switchLinkedMode: function () {
           if(this.isLinkedChartMode)
             this.isLinkedChartMode = false
           else
             this.isLinkedChartMode = true
         },
-        addNewChart : function() {
+        addNewChart: function() {
           console.log("Test add newChart")
           this.nbrParallelChart++
         },
-        removeChart : function() {
+        removeChart: function() {
           if(1 < this.nbrParallelChart)
             this.nbrParallelChart--
         },
-        getNewColor : function() {
-          if(this.colorCount <  COLORS.length -1) {
+        getNewColor: function() {
+          if(this.colorCount < colors.length -1) {
             this.colorCount = this.colorCount + 1
-            return COLORS[this.colorCount]
+            return colors[this.colorCount]
           } else {
-            return 'rgb(96, 125, 139)'
+            return defaultColor
           }
-        }
+        },
   },
 }
 </script>

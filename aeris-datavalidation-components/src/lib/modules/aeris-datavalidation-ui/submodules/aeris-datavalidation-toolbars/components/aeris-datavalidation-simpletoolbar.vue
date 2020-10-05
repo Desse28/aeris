@@ -4,7 +4,7 @@
       flat
       tile
   >
-    <v-toolbar dense class="d-flex justify-center">
+    <v-toolbar dense class="d-flex justify-center ml-3 mt-2 mb-0 mr-1">
       <AerisDatavalidationWorksFlowDialog
           :session="session"
           :selection="selection"
