@@ -250,9 +250,11 @@ export default {
       this.callBack = (selection) => {
         if(selection) {
           console.info("Submit session response : ", selection)
+          this.$router.go()
         }
         this.currentUrl=""
       }
+
       this.currentUrl = process.env.VUE_APP_ROOT_API + "/sessions/submit-session"
     },
   },
