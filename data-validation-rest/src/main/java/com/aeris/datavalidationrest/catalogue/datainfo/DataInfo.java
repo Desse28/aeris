@@ -32,7 +32,7 @@ public class DataInfo {
     private String collectionName;
     private String clientTemplateName;
     private Parameter[] parameters;
-    private Instrument[] instruments;
+    private InstrumentName[] instruments;
     private Plateform[] plateforms;
     private Project[] project;
     private DatasetSpecification datasetSpecification;
@@ -49,7 +49,7 @@ public class DataInfo {
                     Publication[] publications, Link[] links, Identifier[] identifiers, String status, Visibility visibility,
                     DistributionInformation distributionInformation, String language, Contact[] contacts, Quicklook[] quicklooks,
                     Keyword[] keywords, Modification[] modifications, Genealogy genealogy, Format[] formats, String dataLevel,
-                    String programName, String collectionName, String clientTemplateName, Parameter[] parameters, Instrument[] instruments,
+                    String programName, String collectionName, String clientTemplateName, Parameter[] parameters, InstrumentName[] instruments,
                     Plateform[] plateforms, Project[] project, DatasetSpecification datasetSpecification,
                     int documentRating, int note, String metadataLevel, String identifier, String type) {
         this.resourceTitle = resourceTitle;
@@ -287,11 +287,11 @@ public class DataInfo {
         this.parameters = parameters;
     }
 
-    public Instrument[] getInstruments() {
+    public InstrumentName[] getInstruments() {
         return instruments;
     }
 
-    public void setInstruments(Instrument[] instruments) {
+    public void setInstruments(InstrumentName[] instruments) {
         this.instruments = instruments;
     }
 
@@ -1430,7 +1430,7 @@ public class DataInfo {
     }
 
     @JsonIgnoreProperties(ignoreUnknown = true)
-    static class Instrument {
+    static class InstrumentName {
         private String thesaurusConcat;
         private ThesaurusClass thesaurusClass;
         private String manufacturer;
@@ -1441,10 +1441,10 @@ public class DataInfo {
         private String displayName;
         private Description description;
 
-        public Instrument() {}
+        public InstrumentName() {}
 
-        public Instrument(String thesaurusConcat, ThesaurusClass thesaurusClass, String manufacturer, String model, String serialNumber,
-                          String calibration, Resolution resolution, String displayName, Description description) {
+        public InstrumentName(String thesaurusConcat, ThesaurusClass thesaurusClass, String manufacturer, String model, String serialNumber,
+                              String calibration, Resolution resolution, String displayName, Description description) {
             this.thesaurusConcat = thesaurusConcat;
             this.thesaurusClass = thesaurusClass;
             this.manufacturer = manufacturer;

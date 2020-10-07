@@ -31,7 +31,7 @@ public class SwaggerConfig {
     private static final String GROUP_NAME = "datavalidation";
     private static final String TITLE = "Datavalidation REST API";
     private static final String DESCRIPTION = "Aeris Data validation tool.";
-    private static final String VERSION = "1.0.0";
+    private static final String VERSION = "1.2.1";
 
     @Bean
     public Docket api() {

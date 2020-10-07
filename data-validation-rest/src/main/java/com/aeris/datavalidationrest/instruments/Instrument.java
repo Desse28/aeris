@@ -6,6 +6,8 @@ import org.springframework.data.annotation.Id;
 import com.aeris.datavalidationrest.parameters.Parameter;
 
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 
 public class Instrument {
@@ -23,6 +25,8 @@ public class Instrument {
             example = "[" +
                             "19a46f95-56ae-432c-877c-477c7c7075b2," +
                             "e5ea86c6-fcec-436e-8218-280a883ac549" +
+                            "ec943fa4-bb9a-4dd7-b949-5dceec25e6f4" +
+                            "cf506cda-e449-4f4e-ae45-0199e5d7ee19" +
                     "]"
     )
     private List<String> responsibleId;
@@ -44,7 +48,6 @@ public class Instrument {
     private List<Parameter> auxParameters;
     @ApiModelProperty(
             example = "[" +
-                        "{ \"label\": \"Valid measurement\"}," +
                         "{ \"label\": \"Episode data checked and accepted by data originator\"}," +
                         "{ \"label\": \"Unspecified contamination or local influence\"}," +
                         "{ \"label\": \"Unspecified contamination or local influence\"}," +
@@ -52,6 +55,12 @@ public class Instrument {
                     "]"
     )
     private List<Flag> flags;
+    @NotNull(message = "StartDate cannot be null")
+    @ApiModelProperty( example = "2019-05-17T00:00:00.0Z" )
+    private Date startDate;
+    @NotNull(message = "EndDate cannot be null")
+    @ApiModelProperty( example = "2019-05-18T00:00:00.0Z" )
+    private Date endDate;
 
     public Instrument() {
         super();
@@ -113,6 +122,22 @@ public class Instrument {
         this.flags = flags;
     }
 
+    public Date getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
+    }
+
+    public Date getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
+    }
+
     @Override
     public String toString() {
         return "Instrument{" +
@@ -123,6 +148,8 @@ public class Instrument {
                 ", parameters=" + parameters +
                 ", auxParameters=" + auxParameters +
                 ", flags=" + flags +
+                ", startDate=" + startDate +
+                ", endDate=" + endDate +
                 '}';
     }
 }
