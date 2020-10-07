@@ -67,6 +67,9 @@ import AerisDataValidationServices from "./../../../../aeris-datavalidation-serv
 export default {
   name: "aeris-datavalidation-selectionstable",
   props : {
+    setSessions : {
+      type : Function,
+    },
     initNewSession : {
       type : Function,
     },
@@ -139,11 +142,12 @@ export default {
   },
   methods: {
     switchTablecurrentPage : function() {
-      this.callBack = ((data) => {
-        if(data) {
-          this.page = data.number
-          this.sessions = data.content
-          this.pageCount = data.totalPages
+      this.callBack = ((currentPageData) => {
+        if(currentPageData) {
+          this.page = currentPageData.number
+          this.sessions = currentPageData.content
+          this.pageCount = currentPageData.totalPages
+          this.setSessions(this.sessions)
         }
       })
       this.currentUrl = process.env.VUE_APP_ROOT_API + "/sessions?page=" + this.page + "&size=" + this.itemsPerPage

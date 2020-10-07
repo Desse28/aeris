@@ -135,6 +135,10 @@ export default {
     setCurrentItem : {
       type : Function
     },
+    sessions: {
+      type : Array,
+      default: () => []
+    },
   },
   data() {
     return {
@@ -151,6 +155,7 @@ export default {
       requestData : {},
       instrument : null,
       typeOfRequest : "",
+      currentSession: null,
       mainParameter : null,
       currentInstrument : null,
       linkedParameters : [],
@@ -215,29 +220,31 @@ export default {
       let endDateTime = this.endDate + " " + this.endTime
 
       if(this.$root.isGreaterThan(endDateTime, startDateTime)) {
-        this.createNewSession()
+        this.createNewSession(startDateTime, endDateTime)
       } else {
         this.turnOnErrorAlert(this.$t('session.greaterThan_message'))
-        this.turnOffErrorAlert(2000);
       }
+
+      this.turnOffErrorAlert(2000);
     },
-    createNewSession : function () {
-      this.initRequestData()
-      this.typeOfRequest = "POST"
-      this.callBack = (session) => {
-        if(session) {
+    createNewSession : function (startDateTime, endDateTime) {
+      this.initSession(startDateTime, endDateTime)
+      console.log("Test createNewSession : ", this.isExistSession())
+      if(!this.isExistSession()) {
+        this.requestData = this.currentSession
+        this.typeOfRequest = "POST"
+        this.callBack = (session) => {
           this.currentUrl=""
-          if(this.isExistSession(session)) {
-            this.turnOnErrorAlert(this.$t('session.session_exist'))
-            this.turnOffErrorAlert(2000);
-          } else {
+          if(session) {
             this.getInstrumentInfos(this.currentInstrument['uuid'], (infos) => {
               this.initNewSession(session, this.currentInstrument, infos)
             })
           }
         }
+        this.currentUrl = process.env.VUE_APP_ROOT_API + "/sessions/create"
+      } else {
+        this.turnOnErrorAlert(this.$t('session.session_exist'))
       }
-      this.currentUrl = process.env.VUE_APP_ROOT_API + "/sessions/create"
     },
     turnOnErrorAlert : function(message) {
       this.newSessionAlertMessage = message
@@ -253,11 +260,11 @@ export default {
       this.callBack = callBack
       this.currentUrl = process.env.VUE_APP_ROOT_API + "/instruments/infos/" + uuid
     },
-    initRequestData : function () {
-      let startDateTime = this.$root.getSpringDateFormat(this.startDate + " " + this.startTime)
-      let endDateTime = this.$root.getSpringDateFormat(this.endDate + " " + this.endTime)
+    initSession : function (startDateTimeStr, endDateTimeStr) {
+      let endDateTime = this.$root.getSpringDateFormat(endDateTimeStr)
+      let startDateTime = this.$root.getSpringDateFormat(startDateTimeStr)
 
-      this.requestData = {
+      this.currentSession = {
         endDate : endDateTime,
         startDate : startDateTime,
         mainParameter : this.mainParameter,
@@ -280,17 +287,45 @@ export default {
     setEndTime : function(newEndTime) {
       this.endTime = newEndTime
     },
-    isExistSession : function (session) {
-      let exist = false;
-      let isIdEmpty, isSameMainParameter, isSameInstrument
-
-      if(session) {
-        isIdEmpty = session.id === null
-        isSameMainParameter = session.mainParameter.name === this.requestData.mainParameter.name
-        isSameInstrument = session.instrumentName === this.requestData.instrumentName
-        exist = isIdEmpty && isSameInstrument && isSameMainParameter
+    isExistSession : function () {
+      let session
+      if(this.currentSession && this.sessions) {
+        for (let key in this.sessions) {
+          session = this.sessions[key]
+          if(this.isSameMainParameter(session) && this.isSameLinkedParameters(session) && this.isSamePeriod(session))
+            return true
+        }
       }
-      return exist;
+      return false
+    },
+    isSamePeriod : function(session) {
+      let exist = false
+      if(session && this.currentSession) {
+        exist = this.$root.isSameDate(session.startDate, this.currentSession.startDate) &&
+                this.$root.isSameDate(session.endDate, this.currentSession.endDate)
+      }
+      return exist
+    },
+    isSameLinkedParameters : function(session) {
+      let parameter, parameters
+      if(session && this.currentSession && session.length === this.currentSession.length) {
+        parameters = this.session.linkedParameters
+        for (let key in parameters) {
+          parameter = parameters[key]
+          if(!this.currentSession.linkedParameters.includes(parameter))
+            return false
+        }
+      }
+      return true
+    },
+    isSameMainParameter : function(session) {
+      let exist = false
+
+      if(session && this.currentSession) {
+        exist = session.mainParameter.name === this.currentSession.mainParameter.name
+      }
+
+      return exist
     },
   }
 }

@@ -22,6 +22,18 @@ export default {
 
             return result
         },
+        isSameDate : function(startDateStr, endDateStr) {
+            let result = false
+            let startDate, endDate
+
+            if(startDateStr && endDateStr) {
+                startDate = new Date(startDateStr)
+                endDate = new Date(endDateStr)
+                result = startDate === endDate
+            }
+
+            return result
+        },
         getDatePikerDateFormat : function(date, code) {
             let response
             let currentDate = new Date(date)

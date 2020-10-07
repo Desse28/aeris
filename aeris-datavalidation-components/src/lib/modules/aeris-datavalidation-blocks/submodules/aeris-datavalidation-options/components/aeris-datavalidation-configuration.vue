@@ -17,11 +17,13 @@
         </v-row>
         <AerisDatavalidationSessionsTable
             v-if="currentItem === 'Continue session'"
+            :setSessions="setSessions"
             :initNewSession="initNewSession"
             :setCurrentItem="setCurrentItem"
         />
         <AerisDatavalidationSessionForm
             v-if="currentItem === 'New session'"
+            :sessions="sessions"
             :initNewSession="initNewSession"
             :setCurrentItem="setCurrentItem"
         />
@@ -51,6 +53,7 @@ export default {
   data() {
     return {
       dialog: true,
+      sessions : [],
       currentItem : "Continue session",
     }
   },
@@ -66,6 +69,11 @@ export default {
   methods : {
     setCurrentItem : function(item) {
       this.currentItem = item
+    },
+    setSessions : function(sessions) {
+      if(sessions) {
+        this.sessions = sessions
+      }
     },
     initNewSession : function (currentSession, currentInstrument, infos) {
       if(currentSession && currentInstrument) {
