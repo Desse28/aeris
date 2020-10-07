@@ -92,6 +92,9 @@
     watch: {
       '$store.state.common.authenticated': function() {
         this.authenticated = this.$store.state.common.authenticated
+        console.log("test watch : ", this.authenticated)
+        if(this.authenticated)
+          this.$router.push( '/data-validation-tool');
       }
     },
     components : {
@@ -117,6 +120,9 @@
       getLogoutMessage : function () {
         return this.$t('appbar.logout')
       }
+    },
+    mounted() {
+      console.log("Test login : ", keycloak.authenticated)
     },
     methods: {
       login : function() {

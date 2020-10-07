@@ -6,37 +6,43 @@ const instance = axios.create({
     //timeout: 1000
 });
 
-/*const keycloak = Keycloak({
+const keycloak = Keycloak({
     url: "https://sso.aeris-data.fr/auth",
     realm: "test",
     clientId: "datavalidation-vjs",
-});*/
+});
 
-const keycloak = Keycloak({
+/*const keycloak = Keycloak({
     url: "http://localhost:8180/auth",
     realm: "SpringBootKeycloak",
     clientId: "test-vjs",
-});
+});*/
 
 async function start_keycloack(store) {
+    console.log("Test start_keycloack : ");
     addTokenToRequest(keycloak);
     await initKeycloak(keycloak, store);
     updateSSoToken(keycloak);
 }
 
 async function initKeycloak(keycloak, store) {
+    console.log("Test initKeycloak : ");
     await keycloak
         .init({
             onLoad: "check-sso",
-            promiseType: "native"
+            promiseType: "native",
+            checkLoginIframe: false
         })
         .then(function(authenticated) {
+            console.log("test authenticate")
             if (authenticated && keycloak.tokenParsed) {
                 let username = keycloak.tokenParsed.preferred_username;
                 console.log("Test UserName : ", username);
                 store.commit("updateAuthenticated", keycloak.authenticated);
             }
-        })
+        }).catch(error => {
+            console.log("Error *** : ", error)
+        });
 }
 
 function addTokenToRequest(keycloak) {

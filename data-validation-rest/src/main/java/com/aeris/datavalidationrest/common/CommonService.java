@@ -19,6 +19,8 @@ import java.util.Set;
 public class CommonService {
     private static final String ADMIN_ROLE = "ADMIN";
     private static final String PI_ROLE = "PI";
+    private static final String OFFLINE_ACCESS_ROLE = "offline_access";
+    private static final String UMA_AUTHORIZATION_ROLE = "uma_authorization";
 
     Logger logger = LoggerFactory.getLogger(LoginResource.class);
 
@@ -41,7 +43,9 @@ public class CommonService {
     }
 
     public boolean isPI(HttpServletRequest request) {
-        return getCurrentUserRoles(request).contains(PI_ROLE);
+        return (getCurrentUserRoles(request).contains(PI_ROLE) ||
+                getCurrentUserRoles(request).contains(OFFLINE_ACCESS_ROLE) ||
+                getCurrentUserRoles(request).contains(UMA_AUTHORIZATION_ROLE));
     }
 
     public boolean isAdmin(HttpServletRequest request) {
@@ -50,8 +54,7 @@ public class CommonService {
 
     public String getCurrrentUserId(HttpServletRequest request) {
         AccessToken scAccessToken = getAccessToken(request);
-        String userId = scAccessToken.getSubject();
-        return userId;
+        return scAccessToken.getSubject();
     }
 
     public Date strToDate(String str, String dateFormat) throws ParseException {
