@@ -20,7 +20,7 @@
           <v-row>
             <v-col cols="6">
               <AerisDatavalidationDateMounthPicker
-                  :date_label="$t('session.start_date_input_label')"
+                  :dateLabel="$t('session.start_date_input_label')"
                   :currentDate="startDate"
                   :setCurrentDate="setStartDate"
                   :disabled="false"
@@ -28,7 +28,7 @@
             </v-col>
             <v-col cols="6">
               <AerisDatavalidationDateMounthPicker
-                  :date_label="$t('session.end_date_input_label')"
+                  :dateLabel="$t('session.end_date_input_label')"
                   :currentDate="endDate"
                   :setCurrentDate="setEndDate"
                   :disabled="false"

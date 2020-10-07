@@ -10,6 +10,18 @@ export default {
             let result = Math.floor(number / 10) <= 0 ? "0" + number : number
             return result
         },
+        isGreaterThan : function(startDateStr, endDateStr) {
+            let result = false
+            let startDate, endDate
+
+            if(startDateStr && endDateStr) {
+                startDate = new Date(startDateStr)
+                endDate = new Date(endDateStr)
+                result = startDate > endDate
+            }
+
+            return result
+        },
         getDatePikerDateFormat : function(date, code) {
             let response
             let currentDate = new Date(date)

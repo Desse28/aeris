@@ -26,7 +26,6 @@ async function start_keycloack(store) {
 }
 
 async function initKeycloak(keycloak, store) {
-    console.log("Test initKeycloak : ");
     await keycloak
         .init({
             onLoad: "check-sso",
@@ -34,7 +33,6 @@ async function initKeycloak(keycloak, store) {
             checkLoginIframe: false
         })
         .then(function(authenticated) {
-            console.log("test authenticate")
             if (authenticated && keycloak.tokenParsed) {
                 let username = keycloak.tokenParsed.preferred_username;
                 console.log("Test UserName : ", username);

@@ -51,6 +51,7 @@
     "start_time_input_label" : "@:common.start_time",
     "choose_selection_message": "Please choose a selection",
     "delete_message" : "Are you sure you want to delete this selection ?",
+    "greaterThan_message" : "The end date must be greater than the start date",
     "can_not_edit" : "Selection not edited, because an identical selection exists"
   },
   "worksFlow": {

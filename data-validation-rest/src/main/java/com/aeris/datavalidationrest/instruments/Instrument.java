@@ -24,8 +24,8 @@ public class Instrument {
     @ApiModelProperty(
             example = "[" +
                             "19a46f95-56ae-432c-877c-477c7c7075b2," +
-                            "e5ea86c6-fcec-436e-8218-280a883ac549" +
-                            "ec943fa4-bb9a-4dd7-b949-5dceec25e6f4" +
+                            "e5ea86c6-fcec-436e-8218-280a883ac549," +
+                            "ec943fa4-bb9a-4dd7-b949-5dceec25e6f4," +
                             "cf506cda-e449-4f4e-ae45-0199e5d7ee19" +
                     "]"
     )

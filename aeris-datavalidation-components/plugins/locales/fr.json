@@ -51,7 +51,8 @@
     "choose_quality_flag": "Choisissez le drapeau de qualité",
     "choose_selection_message": "Veuillez choisir une sélection",
     "delete_message" : "Êtes-vous sûr de vouloir supprimer cette sélection ?",
-    "can_not_edit" : "Sélection non éditée, car une sélection identique existe"
+    "can_not_edit" : "Sélection non éditée, car une sélection identique existe",
+    "greaterThan_message" : "La date de fin doit être supérieur à la date de début"
   },
   "worksFlow": {
     "validation": "Validation",

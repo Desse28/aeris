@@ -7,12 +7,11 @@
           transition="scale-transition"
           offset-y
           min-width="290px"
-          :disabled="disabled"
       >
         <template v-slot:activator="{ on, attrs }">
           <v-text-field
               v-model="date"
-              :label="date_label"
+              :label="dateLabel"
               prepend-icon="mdi-calendar"
               readonly
               v-bind="attrs"
@@ -22,7 +21,7 @@
         <v-date-picker
             v-model="date"
             no-title scrollable
-            :value="date"
+            :value="currentDate"
             :max="maxDate"
             :min="minDate"
         >
@@ -36,7 +35,7 @@
 export default {
   name: "aeris-datavalidation-datemounthpicker",
   props: {
-    date_label : {
+    dateLabel : {
       type : String,
       default : "Date"
     },
@@ -55,10 +54,6 @@ export default {
       type : String,
       default : ""
     },
-    disabled : {
-      type : Boolean,
-      default : false
-    }
   },
   data() {
     return {

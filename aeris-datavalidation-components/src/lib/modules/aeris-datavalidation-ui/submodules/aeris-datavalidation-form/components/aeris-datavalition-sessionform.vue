@@ -1,7 +1,7 @@
 <template>
   <div>
-    <v-alert type="error" v-if="isSessionExist">
-      {{ $t("session.session_exist") }}
+    <v-alert type="error" v-if="newSessionAlertError">
+      {{ newSessionAlertMessage  }}
     </v-alert>
     <AerisDataValidationServices
         :url="currentUrl"
@@ -54,28 +54,38 @@
           </template>
           <template v-slot:portrait4>
               <AerisDatavalidationDateMounthPicker
-                  :date_label="$t('session.start_date_input_label')"
+                  :dateLabel="$t('session.start_date_input_label')"
+                  :minDate="minDate"
+                  :maxDate="maxDate"
+                  :currentDate="minDate"
+                  :linkDate="endDate"
                   :setCurrentDate="setStartDate"
+                  :disabled="parametersAuthorization"
               />
           </template>
           <template v-slot:portrait5>
               <AerisDatavalidationDateMounthPicker
-                  :date_label="$t('session.end_date_input_label')"
+                  :dateLabel="$t('session.end_date_input_label')"
+                  :minDate="minDate"
+                  :maxDate="maxDate"
+                  :linkDate="startDate"
+                  :currentDate="maxDate"
                   :setCurrentDate="setEndDate"
+                  :disabled="parametersAuthorization"
               />
           </template>
           <template v-slot:portrait6>
             <AerisDatavalidationTimePicker
                 :time_label="$t('session.start_time_input_label')"
                 :setCurrentTime="setStartTime"
-                :disabled="false"
+                :disabled="parametersAuthorization"
             />
           </template>
           <template v-slot:portrait7>
             <AerisDatavalidationTimePicker
                 :time_label="$t('session.end_time_input_label')"
                 :setCurrentTime="setEndTime"
-                :disabled="false"
+                :disabled="parametersAuthorization"
             />
           </template>
         </AerisDatavalidationPortraitLayaout>
@@ -85,7 +95,7 @@
             type="submit"
             color="blue darken-1"
             :disabled="disabledCreateButton"
-            text @click="createNewSession"
+            text @click="startNewSession"
         >
           {{ $t("session.create_button") }}
         </v-btn>
@@ -130,6 +140,8 @@ export default {
     return {
       endDate : "",
       endTime : "",
+      minDate: "",
+      maxDate: "",
       startDate : "",
       startTime : "",
       parameters : [],
@@ -140,9 +152,10 @@ export default {
       instrument : null,
       typeOfRequest : "",
       mainParameter : null,
-      isSessionExist : false,
       currentInstrument : null,
       linkedParameters : [],
+      newSessionAlertMessage : "",
+      newSessionAlertError : false,
     }
   },
   computed : {
@@ -161,10 +174,12 @@ export default {
     instrument : function(instrumentIdObj) {
       let instrumentId = instrumentIdObj['_id']['$oid']
 
-      this.callBack = (data) => {
-        if(data) {
-          this.currentInstrument = data
+      this.callBack = (instrument) => {
+        if(instrument) {
+          this.currentInstrument = instrument
           this.parameters = this.currentInstrument.parameters
+          this.maxDate = this.$root.getDatePikerDateFormat(instrument.endDate, "en")
+          this.minDate = this.$root.getDatePikerDateFormat(instrument.startDate, "en")
         }
       }
       this.currentUrl = process.env.VUE_APP_ROOT_API + "/instruments?id=" + instrumentId
@@ -195,27 +210,43 @@ export default {
       this.currentInstrument = null
       this.linkedParameters = []
     },
+    startNewSession : function() {
+      let startDateTime = this.startDate + " " + this.startTime
+      let endDateTime = this.endDate + " " + this.endTime
+
+      if(this.$root.isGreaterThan(endDateTime, startDateTime)) {
+        this.createNewSession()
+      } else {
+        this.turnOnErrorAlert(this.$t('session.greaterThan_message'))
+        this.turnOffErrorAlert(2000);
+      }
+    },
     createNewSession : function () {
       this.initRequestData()
       this.typeOfRequest = "POST"
-
       this.callBack = (session) => {
         if(session) {
           this.currentUrl=""
           if(this.isExistSession(session)) {
-            this.isSessionExist = true
-            setTimeout(() => {
-              this.isSessionExist = false
-            }, 2000);
+            this.turnOnErrorAlert(this.$t('session.session_exist'))
+            this.turnOffErrorAlert(2000);
           } else {
             this.getInstrumentInfos(this.currentInstrument['uuid'], (infos) => {
               this.initNewSession(session, this.currentInstrument, infos)
             })
           }
         }
-
       }
       this.currentUrl = process.env.VUE_APP_ROOT_API + "/sessions/create"
+    },
+    turnOnErrorAlert : function(message) {
+      this.newSessionAlertMessage = message
+      this.newSessionAlertError = true
+    },
+    turnOffErrorAlert : function(timeOut) {
+      setTimeout(() => {
+        this.newSessionAlertError = false
+      }, timeOut);
     },
     getInstrumentInfos : function (uuid, callBack) {
       this.typeOfRequest = "GET"
