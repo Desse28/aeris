@@ -7,6 +7,7 @@
   "common": {
     "close" : "Close",
     "state" : "State",
+    "cancel" : "Cancel",
     "create" : "Create",
     "actions" : "Actions",
     "endDate" : "End date",
@@ -36,11 +37,14 @@
     "message_mainParameterInLinkedParameters" : "Main parameter cannot be contained in linked parameters"
   },
   "session": {
-    "label_flags" : "Flags",
+    "label_flags" : "Flag(s)",
+    "label_selections": "Selections",
+    "label_cancel" : "@:common.cancel",
     "label_actions" : "@:common.actions",
     "label_endDate" : "@:common.endDate",
     "label_startDate" : "@:common.startDate",
     "label_closeSession" : "Close the session",
+    "message_closeSession" : "You are about to submit your session to CDS. Please note, once submitted, it will no longer be editable. Would you like to continue ?",
 
     "no" : "No",
     "yes" : "Yes",
@@ -49,7 +53,6 @@
     "chart" : "Chart",
     "selection" : "Selection",
     "add_chart" : "Add chart",
-    "selections": "Selections",
     "delete_title" : "Deletion",
     "main_chart"  : "Main chart",
     "new_session" : "New session",

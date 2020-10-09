@@ -7,6 +7,7 @@
   "common" : {
     "state": "État",
     "create" : "Créer",
+    "cancel" : "Annuler",
     "actions" : "Actions",
     "continue" : "Continuer",
     "sessionClose": "Fermée",
@@ -36,11 +37,14 @@
     "message_mainParameterInLinkedParameters" : "Le paramètre principal ne peut pas être contenu dans les paramètres liés"
   },
   "session": {
-    "label_flags" : "Drapeaux",
+    "label_flags" : "Drapeau(x)",
+    "label_selections": "Sélections",
+    "label_cancel" : "@:common.cancel",
     "label_endDate" : "@:common.endDate",
     "label_actions" : "@:common.actions",
     "label_startDate" : "@:common.startDate",
     "label_closeSession" : "clore la session",
+    "message_closeSession" : "Vous êtes sur le point de soumette votre session au CDS. Attention, une fois soumise, celle-ci ne sera plus modifiable. Souhaitez vous continuer ?",
 
     "no": "Non",
     "yes": "Oui",
@@ -48,7 +52,6 @@
     "chart" : "Graphique",
     "save": "Enregistrer",
     "selection": "Sélection",
-    "selections": "Sélections",
     "delete_title": "Supression",
     "create_button" : "@:common.create",
     "main_chart" : "Graphique principal",

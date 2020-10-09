@@ -22,7 +22,7 @@
                v-on="on" v-bind="attrs"
                v-on:click="switchCurrentView($t('session.selections'))"
         >
-          <v-icon left>mdi-send-check-outline</v-icon> {{ $t("session.selections") }}
+          <v-icon left>mdi-send-check-outline</v-icon> {{ $t("session.label_selections") }}
         </v-btn>
       </template>
 
@@ -34,7 +34,7 @@
           {{$t('worksFlow.view_selection')}}
         </v-card-title>
         <v-card-title class="headline grey lighten-2" v-if="currentViewIsSelections">
-          {{ $t("session.selections") }}
+          {{ $t("session.label_selections") }}
         </v-card-title>
           <AerisDatavalidationSelectionform
               v-if="currentViewIsSelection || currentViewIsEdit"
@@ -51,7 +51,9 @@
             :notifyEditMode="activeEditMode"
             :session="session"
             :selection="selection"
+            :currentView="currentView"
             :notifySelection="notifySelection"
+            :notifyCancelPopUp="notifyCancelPopUp"
             :notifyDeleteSelection="notifyDeleteSelection"
         />
         <v-divider></v-divider>
@@ -63,9 +65,9 @@
           <v-btn
               color="primary"
               text
-              @click="switchCurrentView($t('session.selections'))"
+              @click="switchCurrentView($t('session.label_selections'))"
           >
-            {{$t('session.selections')}}
+            {{$t('session.label_selections')}}
           </v-btn>
         </v-card-actions>
       </v-card>
@@ -132,7 +134,7 @@ export default {
               this.notifySelection(startDate, endDate)
             }
           }
-          this.currentView = this.$t('session.selections')
+          this.currentView = this.$t('session.label_selections')
         }
       },
     },
@@ -167,7 +169,7 @@ export default {
       return this.currentView === this.$t('worksFlow.view_selection')
     },
     currentViewIsSelections: function() {
-      return this.currentView === this.$t('session.selections')
+      return this.currentView === this.$t('session.label_selections')
     },
     currentViewIsEdit: function() {
       return this.currentView === this.$t('session.edit')
@@ -196,6 +198,9 @@ export default {
     },
     refreshCurrentWindow : function () {
       this.$router.go()
+    },
+    notifyCancelPopUp : function () {
+      this.dialog = false
     }
   },
 }

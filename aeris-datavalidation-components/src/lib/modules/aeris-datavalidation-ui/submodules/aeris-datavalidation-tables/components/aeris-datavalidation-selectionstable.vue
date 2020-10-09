@@ -19,15 +19,13 @@
           :message="$t('session.delete_message')"
       />
       <AerisDatavalidationSelectionsDialog
-          :dialog="selectionsDialog"
-          title="Soumission de la session"
           ok="continuer"
           cancel="Annuler"
-          message="Vous êtes sur le point de soumette votre session au CDS.
-          Attention, une fois soumise, celle-ci ne sera plus modifiable.
-          Souhaitez vous continuer ?"
+          :dialog="selectionsDialog"
           :okCallBack="submitSelection"
+          title="Soumission de la session"
           :cancelCallBack="cancelSubmitSelection"
+          :message="$t('session.message_closeSession')"
       />
       <template>
         <v-data-table
@@ -85,6 +83,13 @@
         >
           {{$t('session.label_closeSession')}}
         </v-btn>
+        <v-btn
+            color="primary"
+            text
+            @click="notifyCancelPopUp"
+        >
+          {{$t('session.label_cancel')}}
+        </v-btn>
       </v-card-actions>
     </AerisDataValidationServices>
   </div>
@@ -103,9 +108,12 @@ export default {
     AerisDatavalidationSelectionsDialog,
   },
   props : {
+    currentView : {
+      type : String,
+    },
     session : {
       type : Object,
-      default: () => null
+      default : () => null
     },
     selection : {
       type : Object,
@@ -113,16 +121,20 @@ export default {
     },
     notifyEditMode: {
       type : Function,
-      default: ()=>{}
+      default : ()=>{}
     },
-    notifySelection: {
+    notifySelection : {
       type : Function,
-      default: ()=>{}
+      default : ()=>{}
     },
-    notifyDeleteSelection: {
-      type: Function,
+    notifyDeleteSelection : {
+      type : Function,
       default : () => {}
     },
+    notifyCancelPopUp : {
+      type : Function,
+      default : () => {}
+    }
   },
   data () {
     return {
@@ -143,7 +155,7 @@ export default {
   },
   computed : {
     tableHeaders : function() {
-      return [
+      let headers = [
         {
           text: this.$t('session.label_startDate'),
           align: 'start',
@@ -161,9 +173,11 @@ export default {
           align: 'start',
           sortable: false,
           value: 'flags',
-        },
-        {text: this.$t('session.label_actions'), value: 'actions', sortable: false},
+        }
       ]
+      if(this.currentView !== this.$t('session.label_selections'))
+        headers.push({text: this.$t('session.label_actions'), value: 'actions', sortable: false})
+      return headers
     },
     getSelections : function () {
       if(this.session)
