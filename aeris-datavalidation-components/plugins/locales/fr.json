@@ -1,34 +1,55 @@
 {
-  "message": {
-    "hello": "Salut"
-  },
   "appbar" : {
     "login" : "Se connecter",
     "logout" : "Se déconnecter",
     "data_validation_tool" : "Outil de validation des données"
   },
-  "common": {
-    "create": "Créer",
-    "continue": "Continuer",
-    "end_date": "Date de fin",
-    "end_time": "Heure de fin",
-    "start_date": "Date de début",
-    "start_time": "Heure de début"
+  "common" : {
+    "state": "État",
+    "create" : "Créer",
+    "actions" : "Actions",
+    "continue" : "Continuer",
+    "sessionClose": "Fermée",
+    "in_progress": "En cours",
+    "endDate" : "Date de fin",
+    "endTime" : "Heure de fin",
+    "startDate" : "Date de début",
+    "startTime" : "Heure de début",
+    "message_greaterThan" : "La date de fin doit être supérieur à la date de début"
+  },
+  "configuration" : {
+    "label_state" : "@:common.state",
+    "label_endTime" : "@:common.endTime",
+    "label_endDate" : "@:common.endDate",
+    "label_newSession": "Nouvelle session",
+    "label_close" : "@:common.sessionClose",
+    "label_sessions" : "Liste des sessions",
+    "label_startTime" : "@:common.startTime",
+    "label_startDate" : "@:common.startDate",
+    "label_inProgress" : "@:common.in_progress",
+    "label_linkedParameters" : "Paramètres liés",
+    "label_mainParameter" : "Paramètre principal",
+    "label_instrumentName" : "Nom de l'instrument",
+    "message_existSession" : "Cette session existe",
+    "label_continueSession" : "Continuer une session",
+    "message_greaterThan": "@:common.message_greaterThan",
+    "message_mainParameterInLinkedParameters" : "Le paramètre principal ne peut pas être contenu dans les paramètres liés"
   },
   "session": {
+    "label_flags" : "Drapeaux",
+    "label_endDate" : "@:common.endDate",
+    "label_actions" : "@:common.actions",
+    "label_startDate" : "@:common.startDate",
+    "label_closeSession" : "clore la session",
+
     "no": "Non",
     "yes": "Oui",
-    "state": "État",
     "edit": "Éditer",
-    "close": "Fermée",
-    "flags" : "Drapeaux",
     "chart" : "Graphique",
     "save": "Enregistrer",
     "selection": "Sélection",
     "selections": "Sélections",
-    "in_progress": "En cours",
     "delete_title": "Supression",
-    "new_session": "Nouvelle session",
     "create_button" : "@:common.create",
     "main_chart" : "Graphique principal",
     "add_chart" : "Ajouter un graphique",
@@ -38,7 +59,6 @@
     "main_parameter": "Paramètre principal",
     "instrument_name": "Nom de l'instrument",
     "remove_chart" : "Supprimer le graphique",
-    "continue_session" : "Continuer la session",
     "end_date_input_label" : "@:common.end_date",
     "end_time_input_label" : "@:common.end_time",
     "selection_exists" : "Cette selection existe",

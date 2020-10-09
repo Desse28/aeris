@@ -7,10 +7,11 @@
           transition="scale-transition"
           offset-y
           min-width="290px"
+          :disabled="disabled"
       >
         <template v-slot:activator="{ on, attrs }">
           <v-text-field
-              v-model="date"
+              v-model="computedDateFormatted"
               :label="dateLabel"
               prepend-icon="mdi-calendar"
               readonly
@@ -22,11 +23,10 @@
             v-model="date"
             no-title scrollable
             :value="currentDate"
+            @input="$refs.menu.save(date)"
             :max="maxDate"
             :min="minDate"
         >
-          <v-btn text color="primary" @click="menu = false">Cancel</v-btn>
-          <v-btn text color="primary" @click="$refs.menu.save(date)">OK</v-btn>
         </v-date-picker>
       </v-menu>
 </template>
@@ -35,6 +35,10 @@
 export default {
   name: "aeris-datavalidation-datemounthpicker",
   props: {
+    disabled : {
+      type : Boolean,
+      default : () => false
+    },
     dateLabel : {
       type : String,
       default : "Date"
@@ -61,6 +65,11 @@ export default {
       date: "",
     }
   },
+  computed: {
+    computedDateFormatted () {
+      return this.formatDate(this.date)
+    },
+  },
   watch: {
     date(newDate) {
       this.setCurrentDate(newDate)
@@ -68,6 +77,14 @@ export default {
     currentDate : function(currentDate) {
       this.date = currentDate
     }
+  },
+  methods: {
+    formatDate (date) {
+      if (!date) return null
+
+      const [year, month, day] = date.split('-')
+      return `${month}/${day}/${year}`
+    },
   }
 }
 </script>

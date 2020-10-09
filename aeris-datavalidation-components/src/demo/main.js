@@ -36,16 +36,11 @@ const router = new VueRouter({
     },
     {
       path: "/data-validation-tool",
-      /*beforeEnter(to, from, next) {
-        if (keycloak.authenticated) {
-            next();
-        } else {
-          next('/');
-        }
-      },*/
       component: AerisDataValidationMainPage
     },
-    { path: "*", component: AerisDataValidationPageNotFound }
+    { path: "*",
+      component: AerisDataValidationPageNotFound
+    }
   ]
 });
 

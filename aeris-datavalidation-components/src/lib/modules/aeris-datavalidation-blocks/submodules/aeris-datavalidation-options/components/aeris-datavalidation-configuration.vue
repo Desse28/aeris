@@ -3,7 +3,7 @@
     <v-dialog v-model="dialog" persistent max-width="1000px">
       <v-card min-height="500" max-height="900">
         <v-row>
-          <v-col offset="5">
+          <v-col offset="4">
             <v-card-title>
               <AerisDatavalidationTypography
                   :text="getTitle"
@@ -16,13 +16,13 @@
           </v-col>
         </v-row>
         <AerisDatavalidationSessionsTable
-            v-if="currentItem === 'Continue session'"
+            v-if="currentItem === this.$t('configuration.label_continueSession')"
             :setSessions="setSessions"
             :initNewSession="initNewSession"
             :setCurrentItem="setCurrentItem"
         />
         <AerisDatavalidationSessionForm
-            v-if="currentItem === 'New session'"
+            v-if="currentItem === this.$t('configuration.label_newSession')"
             :sessions="sessions"
             :initNewSession="initNewSession"
             :setCurrentItem="setCurrentItem"
@@ -54,15 +54,15 @@ export default {
     return {
       dialog: true,
       sessions : [],
-      currentItem : "Continue session",
+      currentItem : this.$t('configuration.label_continueSession'),
     }
   },
   computed : {
     getTitle : function() {
-      if(this.currentItem === "Continue session")
-        return this.$t('session.continue_session')
-      else if(this.currentItem === 'New session')
-        return this.$t('session.new_session')
+      if(this.currentItem === this.$t('configuration.label_continueSession'))
+        return this.$t('configuration.label_continueSession')
+      else if(this.currentItem === this.$t('configuration.label_newSession'))
+        return this.$t('configuration.label_newSession')
       return ""
     },
   },

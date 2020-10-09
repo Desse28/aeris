@@ -23,7 +23,7 @@
                 name="name"
                 item-text="name"
                 item-value="name"
-                :label="$t('session.instrument_name')"
+                :label="$t('configuration.label_instrumentName')"
                 return-object
                 required
             ></v-select>
@@ -34,7 +34,7 @@
                 v-model="mainParameter"
                 name="mainParameter"
                 item-text="name"
-                :label="$t('session.main_parameter')"
+                :label="$t('configuration.label_mainParameter')"
                 return-object
                 required
                 :disabled="parametersAuthorization"
@@ -45,7 +45,7 @@
                 :items="parameters"
                 v-model="linkedParameters"
                 item-text="name"
-                :label="$t('session.linked_parameters')"
+                :label="$t('configuration.label_linkedParameters')"
                 name="linkedParameters"
                 return-object
                 multiple
@@ -54,7 +54,7 @@
           </template>
           <template v-slot:portrait4>
               <AerisDatavalidationDateMounthPicker
-                  :dateLabel="$t('session.start_date_input_label')"
+                  :dateLabel="$t('configuration.label_startDate')"
                   :minDate="minDate"
                   :maxDate="maxDate"
                   :currentDate="minDate"
@@ -65,7 +65,7 @@
           </template>
           <template v-slot:portrait5>
               <AerisDatavalidationDateMounthPicker
-                  :dateLabel="$t('session.end_date_input_label')"
+                  :dateLabel="$t('configuration.label_endDate')"
                   :minDate="minDate"
                   :maxDate="maxDate"
                   :linkDate="startDate"
@@ -76,14 +76,14 @@
           </template>
           <template v-slot:portrait6>
             <AerisDatavalidationTimePicker
-                :time_label="$t('session.start_time_input_label')"
+                :time_label="$t('configuration.label_startTime')"
                 :setCurrentTime="setStartTime"
                 :disabled="parametersAuthorization"
             />
           </template>
           <template v-slot:portrait7>
             <AerisDatavalidationTimePicker
-                :time_label="$t('session.end_time_input_label')"
+                :time_label="$t('configuration.label_endTime')"
                 :setCurrentTime="setEndTime"
                 :disabled="parametersAuthorization"
             />
@@ -104,7 +104,7 @@
             color="blue darken-1"
             text @click="continueSession"
         >
-          {{ $t("session.continue_session") }}
+          {{ $t("configuration.label_sessions") }}
         </v-btn>
       </v-card-actions>
     </AerisDataValidationServices>
@@ -220,16 +220,29 @@ export default {
       let endDateTime = this.endDate + " " + this.endTime
 
       if(this.$root.isGreaterThan(endDateTime, startDateTime)) {
-        this.createNewSession(startDateTime, endDateTime)
+        this.initSession(startDateTime, endDateTime)
+
+        if(this.mainParameterInLinkedParameter()) {
+          this.turnOnErrorAlert(this.$t('configuration.message_mainParameterInLinkedParameters'))
+        } else {
+          this.createNewSession(startDateTime, endDateTime)
+        }
       } else {
-        this.turnOnErrorAlert(this.$t('session.greaterThan_message'))
+        this.turnOnErrorAlert(this.$t('configuration.message_greaterThan'))
       }
 
       this.turnOffErrorAlert(2000);
     },
-    createNewSession : function (startDateTime, endDateTime) {
-      this.initSession(startDateTime, endDateTime)
-      console.log("Test createNewSession : ", this.isExistSession())
+    mainParameterInLinkedParameter() {
+      let mainParameterName
+      if(this.currentSession) {
+        mainParameterName = this.currentSession.mainParameter.name
+        if(this.currentSession.linkedParameters.some(currentParam => currentParam.name === mainParameterName))
+          return true
+      }
+      return false
+    },
+    createNewSession : function () {
       if(!this.isExistSession()) {
         this.requestData = this.currentSession
         this.typeOfRequest = "POST"
@@ -243,7 +256,7 @@ export default {
         }
         this.currentUrl = process.env.VUE_APP_ROOT_API + "/sessions/create"
       } else {
-        this.turnOnErrorAlert(this.$t('session.session_exist'))
+        this.turnOnErrorAlert(this.$t('configuration.message_existSession'))
       }
     },
     turnOnErrorAlert : function(message) {
@@ -273,7 +286,7 @@ export default {
       }
     },
     continueSession : function () {
-      this.setCurrentItem("Continue session")
+      this.setCurrentItem(this.$t('configuration.label_continueSession'))
     },
     setStartDate : function (newStartDate) {
       this.startDate = newStartDate;
@@ -292,11 +305,20 @@ export default {
       if(this.currentSession && this.sessions) {
         for (let key in this.sessions) {
           session = this.sessions[key]
-          if(this.isSameMainParameter(session) && this.isSameLinkedParameters(session) && this.isSamePeriod(session))
+          if(this.isSameMainParameter(session) || this.isSamePeriod(session) || this.isSameLinkedParameters(session))
             return true
         }
       }
       return false
+    },
+    isSameMainParameter : function(session) {
+      let exist = false
+
+      if(session && this.currentSession) {
+        exist = session.mainParameter.name === this.currentSession.mainParameter.name
+      }
+
+      return exist
     },
     isSamePeriod : function(session) {
       let exist = false
@@ -308,25 +330,23 @@ export default {
     },
     isSameLinkedParameters : function(session) {
       let parameter, parameters
-      if(session && this.currentSession && session.length === this.currentSession.length) {
-        parameters = this.session.linkedParameters
-        for (let key in parameters) {
-          parameter = parameters[key]
-          if(!this.currentSession.linkedParameters.includes(parameter))
-            return false
+      if(session && this.currentSession) {
+        parameters = session.linkedParameters
+
+        if(parameters.length === 0 && this.currentSession.linkedParameters.length === 0)
+          return true
+
+        if(parameters.length === this.currentSession.linkedParameters.length) {
+          for (let key in parameters) {
+            parameter = parameters[key]
+            if(!this.currentSession.linkedParameters.some(currentParam => currentParam.name === parameter.name))
+              return false
+          }
+          return true
         }
       }
-      return true
-    },
-    isSameMainParameter : function(session) {
-      let exist = false
-
-      if(session && this.currentSession) {
-        exist = session.mainParameter.name === this.currentSession.mainParameter.name
-      }
-
-      return exist
-    },
+      return false
+    }
   }
 }
 </script>

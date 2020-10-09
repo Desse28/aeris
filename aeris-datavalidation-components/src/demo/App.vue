@@ -92,9 +92,8 @@
     watch: {
       '$store.state.common.authenticated': function() {
         this.authenticated = this.$store.state.common.authenticated
-        console.log("test watch : ", this.authenticated)
         if(this.authenticated)
-          this.$router.push( '/data-validation-tool');
+          this.$router.push( '/data-validation-tool')
       }
     },
     components : {
@@ -122,7 +121,8 @@
       }
     },
     mounted() {
-      console.log("Test login : ", keycloak.authenticated)
+      if(!keycloak.authenticated && this.$router.currentRoute.path !== '/')
+        this.$router.push( '/')
     },
     methods: {
       login : function() {

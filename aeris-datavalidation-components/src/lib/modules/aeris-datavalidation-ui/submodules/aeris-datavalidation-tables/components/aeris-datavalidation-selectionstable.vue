@@ -83,7 +83,7 @@
             text
             @click="alertSubmitSelection"
         >
-          {{$t('session.submit_selections')}}
+          {{$t('session.label_closeSession')}}
         </v-btn>
       </v-card-actions>
     </AerisDataValidationServices>
@@ -145,24 +145,24 @@ export default {
     tableHeaders : function() {
       return [
         {
-          text: this.$t('session.start_date_input_label'),
+          text: this.$t('session.label_startDate'),
           align: 'start',
           sortable: false,
           value: 'startDate',
         },
         {
-          text: this.$t('session.end_date_input_label'),
+          text: this.$t('session.label_endDate'),
           align: 'start',
           sortable: false,
           value: 'endDate',
         },
         {
-          text: this.$t('session.flags'),
+          text: this.$t('session.label_flags'),
           align: 'start',
           sortable: false,
           value: 'flags',
         },
-        {text: 'Actions', value: 'actions', sortable: false},
+        {text: this.$t('session.label_actions'), value: 'actions', sortable: false},
       ]
     },
     getSelections : function () {

@@ -31,10 +31,10 @@
           </template>
           <template v-slot:item.state="{ item }">
             <h3 class="mr-2 green accent-2" v-if="!item.state">
-              {{ $t("session.in_progress") }}
+              {{ $t("configuration.label_inProgress") }}
             </h3>
             <h3 v-else class="red accent-3">
-              {{ $t("session.close") }}
+              {{ $t("configuration.label_close") }}
             </h3>
           </template>
         </v-data-table>
@@ -54,7 +54,7 @@
                color="blue darken-1"
                text @click="createNewSession"
         >
-          {{ $t("session.create_new_session") }}
+          {{ $t("configuration.label_newSession") }}
         </v-btn>
       </v-card-actions>
     </div>
@@ -104,36 +104,36 @@ export default {
     tableHeaders : function() {
       return [
         {
-          text: this.$t('session.start_date_input_label'),
+          text: this.$t('configuration.label_startDate'),
           align: 'startDate',
           sortable: false,
           value: 'startDate',
         },
         {
-          text: this.$t('session.end_date_input_label'),
+          text: this.$t('configuration.label_endDate'),
           align: 'start',
           sortable: false,
           value: 'endDate',
         },
         {
-          text: this.$t('session.instrument_name'),
+          text: this.$t('configuration.label_instrumentName'),
           align: 'start',
           sortable: false,
           value: 'instrumentName',
         },
         {
-          text: this.$t('session.main_parameter'),
+          text: this.$t('configuration.label_mainParameter'),
           align: 'start',
           sortable: false,
           value: 'mainParameter.name',
         },
         {
-          text: this.$t('session.linked_parameters'),
+          text: this.$t('configuration.label_linkedParameters'),
           align: 'start',
           sortable: false,
           value: 'linkedParameters',
         },
-        {text: this.$t('session.state'), value: 'state', align: 'center',},
+        {text: this.$t('configuration.label_state'), value: 'state', align: 'center',},
       ]
     },
   },
@@ -173,13 +173,13 @@ export default {
     getDateGoodFormat : function(date) {
       let timePart, datePart
       if (date) {
-        timePart = this.$root.getTimePickerTimeFormat(date)
+        timePart = this.$root.getTimeUniverselFormat(date)
         datePart = this.$root.getDatePikerDateFormat(date, "fr")
         return datePart + ", "+ timePart
       }
     },
     createNewSession : function() {
-      this.setCurrentItem("New session")
+      this.setCurrentItem(this.$t('configuration.label_newSession'))
     },
   },
 }

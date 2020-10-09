@@ -29,7 +29,7 @@ export default {
             if(startDateStr && endDateStr) {
                 startDate = new Date(startDateStr)
                 endDate = new Date(endDateStr)
-                result = startDate === endDate
+                result = startDate.getTime() === endDate.getTime()
             }
 
             return result
@@ -43,12 +43,18 @@ export default {
             response = code === "en" ? year + "-" + month + "-" + day : day + "-" + month + "-" + year
             return response
         },
-        getTimePickerTimeFormat : function(date, isUtcFormat) {
+        getTimePickerTimeFormat : function(date) {
             let currentTime = new Date(date)
-            let hours = isUtcFormat ? currentTime.getUTCHours() : currentTime.getHours()
+            let hours = this.completeNumber(currentTime.getHours())
             let minutes = this.completeNumber(currentTime.getMinutes())
             let seconds = this.completeNumber(currentTime.getSeconds())
-            hours = this.completeNumber(hours)
+            return hours + ":" + minutes + ":" + seconds
+        },
+        getTimeUniverselFormat : function(date) {
+            let currentTime = new Date(date)
+            let hours =  this.completeNumber(currentTime.getUTCHours())
+            let minutes = this.completeNumber(currentTime.getUTCMinutes())
+            let seconds = this.completeNumber(currentTime.getUTCSeconds())
             return hours + ":" + minutes + ":" + seconds
         },
         getSpringDateFormat : function(date) {

@@ -2,9 +2,19 @@
   <div class="text-center">
     <v-dialog
         v-model="dialog"
+        persistent
         width="900"
     >
       <template v-slot:activator="{ on, attrs }">
+        <v-btn class="ma-2"
+               tile
+               outlined
+               color="blue"
+               v-on="on" v-bind="attrs"
+               v-on:click="refreshCurrentWindow"
+        >
+          <v-icon left>mdi-view-list</v-icon> Sessions
+        </v-btn>
         <v-btn class="ma-2"
                tile
                outlined
@@ -184,6 +194,9 @@ export default {
       if( this.currentView !== this.$t('worksFlow.view_selection'))
         this.isSelectionMode = false
     },
+    refreshCurrentWindow : function () {
+      this.$router.go()
+    }
   },
 }
 </script>
