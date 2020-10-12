@@ -67,7 +67,7 @@ export default {
   },
   computed: {
     computedDateFormatted () {
-      return this.formatDate(this.date)
+      return this.$root.formatDate(this.date)
     },
   },
   watch: {
@@ -77,14 +77,6 @@ export default {
     currentDate : function(currentDate) {
       this.date = currentDate
     }
-  },
-  methods: {
-    formatDate (date) {
-      if (!date) return null
-
-      const [year, month, day] = date.split('-')
-      return `${month}/${day}/${year}`
-    },
   }
 }
 </script>

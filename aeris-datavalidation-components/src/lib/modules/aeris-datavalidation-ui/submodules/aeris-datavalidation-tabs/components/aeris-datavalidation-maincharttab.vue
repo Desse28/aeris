@@ -30,7 +30,6 @@
               :startDate="startDate"
               :deleteStep="deleteStep"
               :parameters="parameters"
-              :isDeleteMode="isDeleteMode"
               :currentSession="currentSession"
               :instrumentInfos="instrumentInfos"
               :linkedChartData="linkedChartData"
@@ -91,10 +90,6 @@ export default {
     deleteStep: {
       type: Number,
       default: () => 0
-    },
-    isDeleteMode: {
-      type: Boolean,
-      default: () => false
     },
     selection: {
       type: Object,

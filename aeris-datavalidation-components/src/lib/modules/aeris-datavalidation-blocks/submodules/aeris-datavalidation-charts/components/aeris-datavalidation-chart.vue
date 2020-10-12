@@ -86,10 +86,6 @@
         type: Number,
         default: () => 0
       },
-      isDeleteMode: {
-        type: Boolean,
-        default: () => false
-      },
       isSecondChartEmpty : {
         type: Boolean,
         default: () => false
@@ -142,7 +138,7 @@
     },
     data() {
       return {
-        componentKey: 0,
+        componentKey: 1,
         data: [],
         flags: [],
         layout: {},
@@ -227,7 +223,6 @@
           }
           cloneLayout.title = title
           this.layout = cloneLayout
-          //this.refresh()
         }
       },
     },
@@ -235,6 +230,11 @@
       let paraName= this.parameters[0]
       this.chartId = this.getChartId
       this.initCurrentChart(paraName)
+    },
+    updated() {
+      this.currentUrl = ""
+      this.setDefaultLinkIcon()
+      this.addEventsHandler()
     },
     methods: {
       initCurrentChart : function(parameter) {
@@ -323,7 +323,7 @@
         return index
       },
       isSelectionEmpty : function() {
-        return !(this.selection && this.currentSelection !== null /*|| this.isDeleteMode*/)
+        return !(this.selection && this.currentSelection !== null)
       },
       initDefaultSelections: function() {
         setTimeout(() => {
@@ -335,7 +335,7 @@
         }, 1000)
       },
       isDateChange : function() {
-        return (/*this.isDeleteMode || */this.selection.startDate !== this.currentSelection.x0 ||
+        return (this.selection.startDate !== this.currentSelection.x0 ||
             this.selection.endDate !== this.currentSelection.x1)
       },
       isDefaultSelection : function(startDate, endDate) {
@@ -367,10 +367,10 @@
         }
       },
       refresh : function() {
-        this.currentUrl = ""
-        //this.$forceUpdate()
-        this.componentKey += 1;
-        this.addEventsHandler()
+        if(this.componentKey%2 === 0)
+          this.componentKey = 1
+        else
+          this.componentKey = 2
       },
       addEventsHandler : function () {
         if(this.isMainChart) {
@@ -400,7 +400,6 @@
             cloneLayout.xaxis.autorange = true
 
           this.layout = cloneLayout
-          //this.$forceUpdate()
           this.componentKey +=1;
         }
       },
@@ -539,7 +538,6 @@
         cloneLayout.shapes = this.selections
         this.layout = cloneLayout
         this.currentSelection = this.selections[this.selections.length-1]
-        //this.refresh()
         this.addSelectionEvent()
         if(!isDefault)
           this.notifySelection(startDate, endDate)
@@ -716,17 +714,22 @@
       },
       enableLinkedMode : function() {
         let path =  $('#' + this.chartId).find( "a[data-title='Link chart']").find("path")
-
-        if(this.isMainChart && this.linkIcon === linkChartsIconPath && path) {
+        if(this.isMainChart && this.linkIcon === linkChartsIconPath) {
           this.linkIcon= unLinkChartsIconPath
         } else  if(this.isMainChart && this.linkIcon === unLinkChartsIconPath) {
           this.linkIcon= linkChartsIconPath
         }
 
-        if(path)
+        if( this.isMainChart  && path)
           path.attr('d', this.linkIcon)
 
         this.switchLinkedMode()
+      },
+      setDefaultLinkIcon : function() {
+        let path =  $('#' + this.chartId).find( "a[data-title='Link chart']").find("path")
+
+        if( this.isMainChart  && path)
+          path.attr('d', this.linkIcon)
       },
       setLayout: function() {
         this.layout = {

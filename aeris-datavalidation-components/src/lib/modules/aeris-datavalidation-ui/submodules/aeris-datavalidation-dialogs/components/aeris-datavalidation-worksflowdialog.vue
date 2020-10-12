@@ -98,10 +98,6 @@ export default {
       type: Object,
       default: null
     },
-    isDeleteMode: {
-      type: Boolean,
-      default: () => false
-    },
     notifySelection: {
       type: Function,
       default: () => {}
@@ -145,7 +141,7 @@ export default {
       let startDate = this.selection.startDate
       let endDate = this.selection.endDate
 
-      if(!this.isResetSelection/* && !this.isDeleteMode*/) {
+      if(!this.isResetSelection) {
         this.dialog = true
 
         if(this.selection && startDate !== "" && endDate !== "") {

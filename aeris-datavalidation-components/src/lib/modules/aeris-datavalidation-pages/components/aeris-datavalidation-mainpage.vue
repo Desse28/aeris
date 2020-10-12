@@ -7,7 +7,6 @@
         :selection="selection"
         :session="currentSession"
         :qualityFlags="qualityFlags"
-        :isDeleteMode="isDeleteMode"
         :auxParameters="auxParameters"
         :linkedParameters ="linkedParameters"
         :addNewChart="addNewChart"
@@ -34,7 +33,6 @@
                 :selection="selection"
                 :startDate="startDate"
                 :deleteStep="deleteStep"
-                :isDeleteMode="isDeleteMode"
                 :defaultSelections="selections"
                 :currentSession="currentSession"
                 :linkedChartData="linkedChartData"
@@ -97,7 +95,6 @@ import {colors, defaultColor} from "./../../aeris-datavalidation-common/colors"
           qualityFlags: [],
           auxParameters: [],
           nbrParallelChart: 2,
-          isDeleteMode: false,
           linkedParameters: [],
           currentSession: null,
           instrumentInfos: null,
@@ -132,8 +129,6 @@ import {colors, defaultColor} from "./../../aeris-datavalidation-common/colors"
           this.selection = {startDate: startDate, endDate: endDate}
         },
         notifyDeleteSelection : function () {
-          //this.isDeleteMode = state
-
           if(this.deleteStep%2 === 0)
             this.deleteStep = 1
           else

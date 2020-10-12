@@ -202,14 +202,9 @@ export default {
         this.notifyEditMode(selection)
     },
     setDeleteItem (selection) {
-      let startDate, endDate
       this.dialog = true
       this.deleteItem = selection
-      startDate = this.$root.takeOfDateMilliseconds(selection.startDate)
-      endDate = this.$root.takeOfDateMilliseconds(selection.endDate)
       this.isChartSignal = false
-      this.notifyDeleteSelection(true)
-      this.notifySelection(startDate, endDate)
     },
     getDateGoodFormat : function(date) {
       let timePart, datePart
@@ -223,11 +218,9 @@ export default {
       this.dialog = false
     },
     validateDelete : function () {
-      //this.notifyDeleteSelection(true)
       this.dialog = false
       this.removeTargetSelection()
       this.updateSession()
-      this.resetDeleteDefaultState()
     },
     removeTargetSelection : function () {
       let index
@@ -236,18 +229,13 @@ export default {
         this.session.sessionSelections.splice(index, 1)
       }
     },
-    resetDeleteDefaultState: function () {
-      setTimeout(() => {
-        this.isChartSignal = true
-        this.notifyDeleteSelection(false)
-      }, 500)
-    },
     updateSession : function() {
       this.typeOfRequest = "PUT"
       this.requestData = this.session
       this.callBack = (selection) => {
         if(selection) {
           console.info("delete response : ", selection)
+          this.notifyDeleteSelection()
         }
         this.currentUrl=""
       }
