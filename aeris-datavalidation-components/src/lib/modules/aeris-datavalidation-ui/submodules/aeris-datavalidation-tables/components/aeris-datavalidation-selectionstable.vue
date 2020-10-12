@@ -214,8 +214,8 @@ export default {
     getDateGoodFormat : function(date) {
       let timePart, datePart
       if (date) {
-        timePart = this.$root.getTimePickerTimeFormat(date, true)
-        datePart = this.$root.getDatePikerDateFormat(date, "fr")
+        timePart = this.$root.getTimeUniverselFormat(date)
+        datePart = this.$root.formatDate(this.$root.getDatePikerDateFormat(date))
         return datePart + ", "+ timePart
       }
     },

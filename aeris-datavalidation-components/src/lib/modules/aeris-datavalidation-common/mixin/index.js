@@ -6,6 +6,11 @@ export default {
         console.log("Printing from the Mixin")
     },
     methods: {
+        formatDate (date) {
+            if (!date) return null
+            const [year, month, day] = date.split('-')
+            return `${month}/${day}/${year}`
+        },
         completeNumber : function(number) {
             let result = Math.floor(number / 10) <= 0 ? "0" + number : number
             return result

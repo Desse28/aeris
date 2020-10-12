@@ -174,7 +174,7 @@ export default {
       let timePart, datePart
       if (date) {
         timePart = this.$root.getTimeUniverselFormat(date)
-        datePart = this.$root.getDatePikerDateFormat(date, "fr")
+        datePart = this.$root.formatDate(this.$root.getDatePikerDateFormat(date))
         return datePart + ", "+ timePart
       }
     },

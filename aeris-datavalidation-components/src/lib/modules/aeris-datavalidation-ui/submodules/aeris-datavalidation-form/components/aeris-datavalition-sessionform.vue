@@ -183,8 +183,8 @@ export default {
         if(instrument) {
           this.currentInstrument = instrument
           this.parameters = this.currentInstrument.parameters
-          this.maxDate = this.$root.getDatePikerDateFormat(instrument.endDate, "en")
-          this.minDate = this.$root.getDatePikerDateFormat(instrument.startDate, "en")
+          this.maxDate = this.$root.getDatePikerDateFormat(instrument.endDate)
+          this.minDate = this.$root.getDatePikerDateFormat(instrument.startDate)
         }
       }
       this.currentUrl = process.env.VUE_APP_ROOT_API + "/instruments?id=" + instrumentId
