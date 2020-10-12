@@ -145,7 +145,7 @@ export default {
       let startDate = this.selection.startDate
       let endDate = this.selection.endDate
 
-      if(!this.isResetSelection && !this.isDeleteMode) {
+      if(!this.isResetSelection/* && !this.isDeleteMode*/) {
         this.dialog = true
 
         if(this.selection && startDate !== "" && endDate !== "") {
@@ -207,6 +207,9 @@ export default {
     },
     notifyCancelPopUp : function () {
       this.dialog = false
+      if(this.currentView === this.$t('session.label_selection'))
+        this.notifyDeleteSelection()
+
     }
   },
 }

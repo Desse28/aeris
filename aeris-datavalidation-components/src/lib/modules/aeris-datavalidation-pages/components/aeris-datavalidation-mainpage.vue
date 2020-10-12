@@ -91,7 +91,7 @@ import {colors, defaultColor} from "./../../aeris-datavalidation-common/colors"
           endDate: "",
           startDate: "",
           colorCount: 0,
-          deleteStep: 0,
+          deleteStep: 1,
           selections: [],
           selection: null,
           qualityFlags: [],
@@ -131,14 +131,13 @@ import {colors, defaultColor} from "./../../aeris-datavalidation-common/colors"
         notifySelection : function(startDate, endDate) {
           this.selection = {startDate: startDate, endDate: endDate}
         },
-        notifyDeleteSelection : function (state) {
-          this.isDeleteMode = state
+        notifyDeleteSelection : function () {
+          //this.isDeleteMode = state
 
-          if(this.deleteStep === 2 || !state)
-            this.deleteStep = 0
-
-          if(state)
-            this.deleteStep = this.deleteStep + 1
+          if(this.deleteStep%2 === 0)
+            this.deleteStep = 1
+          else
+            this.deleteStep = 2
         },
         newSession : function(currentSession, currentInstrument, instrumentInfos) {
           let mainParameter

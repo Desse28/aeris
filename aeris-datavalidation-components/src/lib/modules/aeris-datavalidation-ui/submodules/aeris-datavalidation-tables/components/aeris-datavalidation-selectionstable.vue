@@ -221,10 +221,9 @@ export default {
     },
     cancelDelete : function () {
       this.dialog = false
-      this.notifyDeleteSelection(false)
     },
     validateDelete : function () {
-      this.notifyDeleteSelection(true)
+      //this.notifyDeleteSelection(true)
       this.dialog = false
       this.removeTargetSelection()
       this.updateSession()

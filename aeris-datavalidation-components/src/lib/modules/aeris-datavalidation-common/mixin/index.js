@@ -34,14 +34,12 @@ export default {
 
             return result
         },
-        getDatePikerDateFormat : function(date, code) {
-            let response
+        getDatePikerDateFormat : function(date) {
             let currentDate = new Date(date)
             let day = this.completeNumber(currentDate.getUTCDate())
             let month = this.completeNumber(currentDate.getUTCMonth()+1)
             let year = currentDate.getUTCFullYear()
-            response = code === "en" ? year + "-" + month + "-" + day : day + "-" + month + "-" + year
-            return response
+            return year + "-" + month + "-" + day
         },
         getTimePickerTimeFormat : function(date) {
             let currentTime = new Date(date)

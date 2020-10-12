@@ -217,10 +217,10 @@ export default {
       let startDate, startTime, endDate, endTime
 
       if(selection) {
-        endDate= this.$root.getDatePikerDateFormat(selection.endDate, "en")
-        startDate= this.$root.getDatePikerDateFormat(selection.startDate, "en")
-        startTime= this.$root.getTimePickerTimeFormat(selection.startDate, isUtcFormat)
-        endTime= this.$root.getTimePickerTimeFormat(selection.endDate, isUtcFormat)
+        endDate= this.$root.getDatePikerDateFormat(selection.endDate)
+        startDate= this.$root.getDatePikerDateFormat(selection.startDate)
+        startTime= isUtcFormat ? this.$root.getTimeUniverselFormat(selection.startDate) : this.$root.getTimePickerTimeFormat(selection.startDate)
+        endTime= isUtcFormat ? this.$root.getTimeUniverselFormat(selection.endDate) : this.$root.getTimePickerTimeFormat(selection.endDate)
         return {startDate : startDate, startTime : startTime, endDate: endDate, endTime : endTime}
       }
 
@@ -333,6 +333,7 @@ export default {
         if(selection) {
           this.activeIsRecordedAlert()
           this.switchCurrentView(this.$t('session.label_edit'))
+          this.notifyCancelPopUp()
         }
         this.currentUrl=""
       }

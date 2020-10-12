@@ -176,8 +176,8 @@
           this.refresh()
       },
       deleteStep : function() {
-        if(this.deleteStep === 2) {
-          this.deleteCurrentSelection()
+        if(this.deleteStep) {
+          this.deleteCurrentSelection(false, true)
         }
       },
       parameters : function (newParameters, oldsParameters) {
@@ -323,7 +323,7 @@
         return index
       },
       isSelectionEmpty : function() {
-        return !(this.selection && this.currentSelection !== null || this.isDeleteMode)
+        return !(this.selection && this.currentSelection !== null /*|| this.isDeleteMode*/)
       },
       initDefaultSelections: function() {
         setTimeout(() => {
@@ -335,7 +335,7 @@
         }, 1000)
       },
       isDateChange : function() {
-        return (this.isDeleteMode || this.selection.startDate !== this.currentSelection.x0 ||
+        return (/*this.isDeleteMode || */this.selection.startDate !== this.currentSelection.x0 ||
             this.selection.endDate !== this.currentSelection.x1)
       },
       isDefaultSelection : function(startDate, endDate) {
@@ -457,6 +457,7 @@
         cloneLayout.shapes = this.selections
         this.layout = cloneLayout
         this.refresh()
+
         if(!isDefault)
           this.notifySelection(startDate, endDate)
       },
@@ -595,7 +596,7 @@
             this.deleteDialog = true
             this.notifyDeleteSelection(true)
           } else {
-            this.deleteCurrentSelection(true)
+            this.deleteCurrentSelection(true, false)
           }
         }
       },
@@ -638,15 +639,16 @@
         this.requestData = this.currentSession
         this.callBack = (selection) => {
           if(selection) {
-            this.deleteCurrentSelection(true)
+            this.deleteCurrentSelection(true, false)
           }
           this.currentUrl=""
         }
         this.currentUrl = process.env.VUE_APP_ROOT_API + "/sessions/update"
       },
-      deleteCurrentSelection :function(isChartEvent) {
+      deleteCurrentSelection :function(isChartEvent, isDeleteSignal) {
         let startDate, endDate
         const cloneLayout = JSON.parse(JSON.stringify(this.layout))
+
         if(this.currentSelection !== null) {
           startDate = this.currentSelection.x0
           endDate = this.currentSelection.x1
@@ -659,9 +661,10 @@
           endDate = ""
           this.refresh()
           this.currentSelection = null
-          if(this.deleteStep !== 2 && isChartEvent === undefined)
+          if(!isDeleteSignal && isChartEvent === undefined)
             this.notifySelection(startDate, endDate)
         }
+
       },
       initModeBar : function() {
         if(this.isMainChart) {
