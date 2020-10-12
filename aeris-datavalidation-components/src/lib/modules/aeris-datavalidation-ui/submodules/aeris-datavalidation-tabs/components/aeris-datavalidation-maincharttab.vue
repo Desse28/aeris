@@ -12,7 +12,7 @@
           :key="i"
           :href="`#chart-${i}`"
       >
-        {{ $t("session.main_chart") }}
+        {{ $t("session.label_mainChart") }}
       </v-tab>
 
       <v-tab-item

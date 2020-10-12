@@ -7,13 +7,13 @@
     >
       <template v-slot:activator="{ on, attrs }">
         <v-btn class="ma-2" tile outlined color="blue" v-on="on" v-bind="attrs">
-          <v-icon left>mdi-plus-circle-outline</v-icon> {{ $t("chartconf.add-parameters") }}
+          <v-icon left>mdi-plus-circle-outline</v-icon> {{ $t("session.label_addParameters") }}
         </v-btn>
         <v-btn class="ma-2" tile outlined color="blue" v-on:click="removeChart">
-          <v-icon left>mdi-delete</v-icon> {{ $t("session.remove_chart") }}
+          <v-icon left>mdi-delete</v-icon> {{ $t("session.label_removeChart") }}
         </v-btn>
         <v-btn class="ma-2" tile outlined color="blue" v-on:click="addNewChart">
-          <v-icon left>mdi-plus-circle-outline</v-icon> {{ $t("session.add_chart") }}
+          <v-icon left>mdi-plus-circle-outline</v-icon> {{ $t("session.label_addChart") }}
         </v-btn>
       </template>
       <v-card>

@@ -7,16 +7,16 @@
         :typeOfRequest="typeOfRequest"
     >
       <v-alert type="success" v-if="submittedSelections">
-        {{$t('session.submitted_selections')}}
+        {{$t('session.label_submittedSelections')}}
       </v-alert>
       <AerisDatavalidationDeleteDialog
           :dialog="dialog"
-          :ok="$t('session.yes')"
-          :cancel="$t('session.no')"
+          :ok="$t('session.label_yes')"
+          :cancel="$t('session.label_no')"
           :okCallBack="validateDelete"
           :cancelCallBack="cancelDelete"
-          :title="$t('session.delete_title')"
-          :message="$t('session.delete_message')"
+          :title="$t('session.label_deletion')"
+          :message="$t('session.message_delete')"
       />
       <AerisDatavalidationSelectionsDialog
           ok="continuer"
@@ -79,6 +79,7 @@
         <v-btn
             color="primary"
             text
+            v-if="!this.isEditSelection && getSelectionsLen > 0"
             @click="alertSubmitSelection"
         >
           {{$t('session.label_closeSession')}}
@@ -108,8 +109,9 @@ export default {
     AerisDatavalidationSelectionsDialog,
   },
   props : {
-    currentView : {
-      type : String,
+    isEditSelection : {
+      type : Boolean,
+      default : () => false
     },
     session : {
       type : Object,
@@ -175,8 +177,10 @@ export default {
           value: 'flags',
         }
       ]
-      if(this.currentView !== this.$t('session.label_selections'))
+
+      if(this.isEditSelection)
         headers.push({text: this.$t('session.label_actions'), value: 'actions', sortable: false})
+
       return headers
     },
     getSelections : function () {

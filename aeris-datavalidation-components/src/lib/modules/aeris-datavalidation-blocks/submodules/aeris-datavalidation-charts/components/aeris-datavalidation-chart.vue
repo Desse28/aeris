@@ -10,16 +10,16 @@
     >
 
       <v-alert type="error" v-if="deleteAlert">
-        {{$t('session.choose_selection_message')}}
+        {{$t('session.message_chooseQualityFlag')}}
       </v-alert>
       <AerisDatavalidationDeleteDialog
           :dialog="deleteDialog"
-          :ok="$t('session.yes')"
-          :cancel="$t('session.no')"
+          :ok="$t('session.label_yes')"
+          :cancel="$t('session.label_no')"
           :okCallBack="validateDelete"
           :cancelCallBack="cancelDelete"
-          :title="$t('session.delete_title')"
-          :message="$t('session.delete_message')"
+          :title="$t('session.label_deletion')"
+          :message="$t('session.message_delete')"
       />
       <v-row justify="center">
         <v-col cols="12">
@@ -32,7 +32,6 @@
               :scrollZoom="true"
               :displaylogo="false"
               :displayModeBar="true"
-              :responsive="true"
               :modeBarButtons="modeBarButtons"
           >
           </Plotly>

@@ -20,7 +20,7 @@
                outlined
                color="blue"
                v-on="on" v-bind="attrs"
-               v-on:click="switchCurrentView($t('session.selections'))"
+               v-on:click="switchCurrentView($t('session.label_selections'), null, false)"
         >
           <v-icon left>mdi-send-check-outline</v-icon> {{ $t("session.label_selections") }}
         </v-btn>
@@ -28,10 +28,10 @@
 
       <v-card>
         <v-card-title class="headline grey lighten-2" v-if="currentViewIsEdit">
-          {{$t('session.edit')}}
+          {{$t('session.label_edit')}}
         </v-card-title>
         <v-card-title class="headline grey lighten-2" v-if="currentViewIsSelection">
-          {{$t('worksFlow.view_selection')}}
+          {{$t('session.label_selection')}}
         </v-card-title>
         <v-card-title class="headline grey lighten-2" v-if="currentViewIsSelections">
           {{ $t("session.label_selections") }}
@@ -44,6 +44,7 @@
               :notifySelection="notifySelection"
               :isSelectionMode="isSelectionMode"
               :sessionSelection="sessionSelection"
+              :notifyCancelPopUp="notifyCancelPopUp"
               :switchCurrentView="switchCurrentView"
           />
         <AerisDatavalidationSelectionsTable
@@ -51,7 +52,7 @@
             :notifyEditMode="activeEditMode"
             :session="session"
             :selection="selection"
-            :currentView="currentView"
+            :isEditSelection="isEditSelection"
             :notifySelection="notifySelection"
             :notifyCancelPopUp="notifyCancelPopUp"
             :notifyDeleteSelection="notifyDeleteSelection"
@@ -59,13 +60,13 @@
         <v-divider></v-divider>
 
         <v-card-actions
-            v-if="currentViewIsSelection || currentViewIsEdit"
+            v-if="currentViewIsEdit"
         >
           <v-spacer></v-spacer>
           <v-btn
               color="primary"
               text
-              @click="switchCurrentView($t('session.label_selections'))"
+              @click="switchCurrentView($t('session.label_selections'), null, true)"
           >
             {{$t('session.label_selections')}}
           </v-btn>
@@ -116,7 +117,8 @@ export default {
       isSelectionMode: true,
       sessionSelection: null,
       isResetSelection: false,
-      currentView : this.$t('worksFlow.view_selection')
+      isEditSelection : false,
+      currentView : this.$t('session.label_selection')
     }
   },
   watch: {
@@ -126,7 +128,7 @@ export default {
         let startDate, endDate
 
         if(!this.dialog) {
-          if(this.sessionSelection && this.currentView === this.$t('session.edit')) {
+          if(this.sessionSelection && this.currentView === this.$t('session.label_edit')) {
             startDate = this.$root.takeOfDateMilliseconds(this.sessionSelection.startDate)
             endDate = this.$root.takeOfDateMilliseconds(this.sessionSelection.endDate)
             if(this.$root.isSelectionExist(this.session, startDate, endDate)) {
@@ -148,7 +150,7 @@ export default {
 
         if(this.selection && startDate !== "" && endDate !== "") {
 
-          if(this.currentView === this.$t('session.edit'))
+          if(this.currentView === this.$t('session.label_edit'))
             return
 
           if(this.$root.isSelectionExist(this.session, startDate, endDate)) {
@@ -166,26 +168,27 @@ export default {
   },
   computed: {
     currentViewIsSelection: function () {
-      return this.currentView === this.$t('worksFlow.view_selection')
+      return this.currentView === this.$t('session.label_selection')
     },
     currentViewIsSelections: function() {
       return this.currentView === this.$t('session.label_selections')
     },
     currentViewIsEdit: function() {
-      return this.currentView === this.$t('session.edit')
+      return this.currentView === this.$t('session.label_edit')
     }
   },
   methods: {
     activeEditMode: function(selection) {
       this.isSelectionMode = false
-      this.switchCurrentView(this.$t('session.edit'), selection)
+      this.switchCurrentView(this.$t('session.label_edit'), selection)
     },
     activeSelectionMode: function() {
       this.isSelectionMode = true
-      this.switchCurrentView( this.$t('worksFlow.view_selection'))
+      this.switchCurrentView( this.$t('session.label_selection'))
     },
-    switchCurrentView: function(viewName, selection) {
+    switchCurrentView: function(viewName, selection, isEditSelection) {
       let startDate, endDate
+
       if(viewName && (this.selection || selection)) {
         this.currentView = viewName
         startDate = selection ? selection.startDate : this.selection.startDate
@@ -193,8 +196,11 @@ export default {
         this.sessionSelection = this.$root.getTargetSelection(this.session, startDate, endDate)
         this.dialog = true
       }
-      if( this.currentView !== this.$t('worksFlow.view_selection'))
+
+      if( this.currentView !== this.$t('session.label_selection'))
         this.isSelectionMode = false
+
+      this.isEditSelection = isEditSelection ?? undefined
     },
     refreshCurrentWindow : function () {
       this.$router.go()

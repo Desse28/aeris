@@ -97,7 +97,7 @@
             :disabled="disabledCreateButton"
             text @click="startNewSession"
         >
-          {{ $t("session.create_button") }}
+          {{ $t("configuration.label_create") }}
         </v-btn>
         <v-btn
             type="submit"

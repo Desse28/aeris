@@ -14,9 +14,9 @@
       <v-tab
           v-for="i in nbrParallelChart"
           :key="i"
-          :href="'#'+$t('session.chart') + `-${i}`"
+          :href="'#'+$t('session.label_chart') + `-${i}`"
       >
-        {{ $t("session.chart") }} {{ i }}
+        {{ $t("session.label_chart") }} {{ i }}
       </v-tab>
       <v-tabs-items v-model="tab">
         <v-tab-item
@@ -122,7 +122,7 @@ export default {
     getChartsNames : function () {
       let chartsNames = []
       for(let i = 1; i <= this.nbrParallelChart; i++) {
-        chartsNames.push( this.$t('session.chart') + "-" + i)
+        chartsNames.push( this.$t('session.label_chart') + "-" + i)
       }
       return chartsNames
     }

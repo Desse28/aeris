@@ -19,7 +19,6 @@ const keycloak = Keycloak({
 });*/
 
 async function start_keycloack(store) {
-    console.log("Test start_keycloack : ");
     addTokenToRequest(keycloak);
     await initKeycloak(keycloak, store);
     updateSSoToken(keycloak);

@@ -7,20 +7,20 @@
         :typeOfRequest="typeOfRequest"
     >
       <v-alert type="success" v-if="isRecorded">
-        {{ $t("session.recorded_selection") }}
+        {{ $t("session.message_recordedSelection") }}
       </v-alert>
       <v-alert type="error" v-if="existSelection">
-        {{ $t("session.selection_exists") }}
+        {{ $t("session.message_existSelection") }}
       </v-alert>
       <v-alert type="warning" v-if="isEditSelectionExist">
-        {{ $t("session.can_not_edit") }}
+        {{ $t("session.message_canNotEdit") }}
       </v-alert>
       <v-row>
         <v-col :cols="12" :sm="12" :md="12">
           <v-row>
             <v-col cols="6">
               <AerisDatavalidationDateMounthPicker
-                  :dateLabel="$t('session.start_date_input_label')"
+                  :dateLabel="$t('session.label_startDate')"
                   :currentDate="startDate"
                   :setCurrentDate="setStartDate"
                   :disabled="false"
@@ -28,7 +28,7 @@
             </v-col>
             <v-col cols="6">
               <AerisDatavalidationDateMounthPicker
-                  :dateLabel="$t('session.end_date_input_label')"
+                  :dateLabel="$t('session.label_endDate')"
                   :currentDate="endDate"
                   :setCurrentDate="setEndDate"
                   :disabled="false"
@@ -36,7 +36,7 @@
             </v-col>
             <v-col cols="6">
               <AerisDatavalidationTimePicker
-                  :time_label="$t('session.start_time_input_label')"
+                  :time_label="$t('session.label_startTime')"
                   :currentTime="startTime"
                   :setCurrentTime="setStartTime"
                   :disabled="false"
@@ -44,7 +44,7 @@
             </v-col>
             <v-col cols="6">
               <AerisDatavalidationTimePicker
-                  :time_label="$t('session.end_time_input_label')"
+                  :time_label="$t('session.label_endTime')"
                   :currentTime="endTime"
                   :setCurrentTime="setEndTime"
                   :disabled="false"
@@ -55,28 +55,33 @@
                   name="flags"
                   itemText="label"
                   :qualityFlags="qualityFlags"
-                  :flag_message="$t('session.choose_quality_flag')"
+                  :flag_message="$t('session.label_qualityFlags')"
                   :setFlagsSelected="setFlagsSelected"
                   :defaultQualityFlags="defaultQualityFlags"
               />
             </v-col>
             <v-col cols="12">
-              <div class="my-2">
+              <v-card-actions>
                 <v-btn
                     v-if="isSelectionMode"
                     v-on:click="saveSelection"
                     :disabled="false"
                 >
-                  {{$t('session.save')}}
+                  {{$t('session.label_save')}}
                 </v-btn>
                 <v-btn
                     v-else
                     v-on:click="editSelection"
                     :disabled="false"
                 >
-                  {{$t('session.edit')}}
+                  {{$t('session.label_save')}}
                 </v-btn>
-              </div>
+                <v-btn
+                    v-on:click="notifyCancelPopUp"
+                >
+                  {{$t('session.label_cancel')}}
+                </v-btn>
+              </v-card-actions>
             </v-col>
           </v-row>
         </v-col>
@@ -101,39 +106,43 @@ export default {
   },
   props : {
     session : {
-      type: Object,
-      default: null
+      type : Object,
+      default : null
     },
     qualityFlags : {
-      type: Array,
-      default: () => []
+      type : Array,
+      default : () => []
     },
-    selection: {
-      type: Object,
-      default: null,
+    selection : {
+      type : Object,
+      default : null,
     },
     sessionSelection : {
       type : Object,
     },
-    isSelectionMode: {
-      type: Boolean,
-      default:() =>true,
+    isSelectionMode : {
+      type : Boolean,
+      default : () =>true,
     },
     notifySelection : {
-      type: Function,
-      default: () => {}
+      type : Function,
+      default : () => {}
+    },
+    notifyCancelPopUp : {
+      type : Function,
+      default : () => {}
     },
     switchCurrentView : {
-      type: Function,
-      default: () => {}
+      type : Function,
+      default : () => {}
     }
   },
   data() {
     return {
-      startDate: "",
-      startTime: "",
       endDate: "",
       endTime: "",
+      startDate: "",
+      startTime: "",
       callBack: null,
       currentUrl: "",
       requestData: null,
@@ -323,7 +332,7 @@ export default {
       this.callBack = (selection) => {
         if(selection) {
           this.activeIsRecordedAlert()
-          this.switchCurrentView(this.$t('session.edit'))
+          this.switchCurrentView(this.$t('session.label_edit'))
         }
         this.currentUrl=""
       }
