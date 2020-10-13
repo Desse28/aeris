@@ -1,7 +1,9 @@
 <template>
   <div>
     <AerisDatavalidationConfiguration
+        :sessionsDialog="sessionsDialog"
         :newSession="newSession"
+        :setSessionsDialog="setSessionsDialog"
     />
     <AerisDatavalidationSimpleToolbar
         :selection="selection"
@@ -16,9 +18,10 @@
         :addNewParameter="addNewParameter"
         :removeParameter="removeParameter"
         :notifySelection=" notifySelection"
+        :setSessionsDialog="setSessionsDialog"
         :notifyDeleteSelection="notifyDeleteSelection"
     />
-
+    <div :key="testKey">
     <AerisDatavalidationLandScapeLayaout
         key="mainLandScape"
         justify="center"
@@ -62,6 +65,7 @@
         />
       </template>
     </AerisDatavalidationLandScapeLayaout>
+    </div>
   </div>
 </template>
 <script>
@@ -87,6 +91,7 @@ import {colors, defaultColor} from "./../../aeris-datavalidation-common/colors"
       data() {
         return {
           endDate: "",
+          testKey : 0,
           startDate: "",
           colorCount: 0,
           deleteStep: 1,
@@ -95,6 +100,7 @@ import {colors, defaultColor} from "./../../aeris-datavalidation-common/colors"
           qualityFlags: [],
           auxParameters: [],
           nbrParallelChart: 2,
+          sessionsDialog: false,
           linkedParameters: [],
           currentSession: null,
           instrumentInfos: null,
@@ -125,6 +131,13 @@ import {colors, defaultColor} from "./../../aeris-datavalidation-common/colors"
         }
       },
       methods : {
+        setSessionsDialog : function (state) {
+          this.sessionsDialog = false
+          if(state) {
+            console.log("Test setSessionsDialog : ", state, ", before : ", this.sessionsDialog)
+            //this.sessionsDialog = state
+          }
+        },
         notifySelection : function(startDate, endDate) {
           this.selection = {startDate: startDate, endDate: endDate}
         },
@@ -136,6 +149,8 @@ import {colors, defaultColor} from "./../../aeris-datavalidation-common/colors"
         },
         newSession : function(currentSession, currentInstrument, instrumentInfos) {
           let mainParameter
+          //console.log("Test newSession")
+          //this.restCurrentSession()
           if(currentSession && currentInstrument) {
             this.instrumentInfos = instrumentInfos
             this.currentSession = currentSession
@@ -149,6 +164,9 @@ import {colors, defaultColor} from "./../../aeris-datavalidation-common/colors"
             mainParameter.color = this.getNewColor()
             this.firstChartParameters = [mainParameter]
           }
+        },
+        restCurrentSession : function() {
+          this.testKey++
         },
         initParametersLabel : function() {
           let auxParameters = this.currentInstrument['auxParameters']

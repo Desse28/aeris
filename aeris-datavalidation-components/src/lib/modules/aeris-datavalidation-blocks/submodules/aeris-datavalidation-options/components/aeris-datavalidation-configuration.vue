@@ -43,12 +43,24 @@ export default {
       type : Function,
       default: () => {}
     },
+    sessionsDialog : {
+      type : Boolean
+    },
+    setSessionsDialog : {
+      type : Function,
+    },
   },
   components: {
     AerisDatavalidationTypography,
     AerisDatavalidationSessionForm,
     AerisDatavalidationLangSwitcher,
     AerisDatavalidationSessionsTable
+  },
+  watch : {
+    sessionsDialog : function() {
+      if(this.sessionsDialog)
+        this.dialog = true
+    },
   },
   data() {
     return {
@@ -77,8 +89,9 @@ export default {
     },
     initNewSession : function (currentSession, currentInstrument, infos) {
       if(currentSession && currentInstrument) {
+        this.dialog = false
+        this.setSessionsDialog(false)
         this.newSession(currentSession, currentInstrument, infos)
-        this.dialog = false;
       }
     }
   }

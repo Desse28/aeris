@@ -10,6 +10,7 @@
           :selection="selection"
           :qualityFlags="qualityFlags"
           :notifySelection="notifySelection"
+          :setSessionsDialog="setSessionsDialog"
           :notifyDeleteSelection="notifyDeleteSelection"
       />
       <AerisDataValidationOptions
@@ -80,6 +81,9 @@ export default {
     auxParameters: {
       type : Array,
       default : () => [],
+    },
+    setSessionsDialog: {
+      type : Function,
     },
   },
   components: {

@@ -199,6 +199,7 @@ export default {
     },
     initSelectionForm : function() {
       let selectionDate = this.getSelectionDate(this.selection, false)
+
       if(selectionDate !== null) {
         this.defaultQualityFlags = []
         this.setCurrentDate(selectionDate)

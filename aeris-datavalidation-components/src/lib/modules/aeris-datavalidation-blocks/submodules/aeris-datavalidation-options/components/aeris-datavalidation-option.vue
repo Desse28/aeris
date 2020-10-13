@@ -116,7 +116,7 @@ export default {
     },
     removeChart: {
       type : Function,
-    },
+    }
   },
   data() {
     return {

@@ -20,9 +20,9 @@ export default {
             let startDate, endDate
 
             if(startDateStr && endDateStr) {
-                startDate = new Date(startDateStr)
-                endDate = new Date(endDateStr)
-                result = startDate > endDate
+                startDate = new Date(this.getCleanDate(startDateStr))
+                endDate = new Date(this.getCleanDate(endDateStr))
+                result = startDate.getTime() > endDate.getTime()
             }
 
             return result
@@ -32,8 +32,8 @@ export default {
             let startDate, endDate
 
             if(startDateStr && endDateStr) {
-                startDate = new Date(startDateStr)
-                endDate = new Date(endDateStr)
+                startDate = new Date(this.getCleanDate(startDateStr))
+                endDate = new Date(this.getCleanDate(endDateStr))
                 result = startDate.getTime() === endDate.getTime()
             }
 
@@ -47,7 +47,7 @@ export default {
             return year + "-" + month + "-" + day
         },
         getTimePickerTimeFormat : function(date) {
-            let currentTime = new Date(date)
+            let currentTime = new Date(this.getCleanDate(date))
             let hours = this.completeNumber(currentTime.getHours())
             let minutes = this.completeNumber(currentTime.getMinutes())
             let seconds = this.completeNumber(currentTime.getSeconds())

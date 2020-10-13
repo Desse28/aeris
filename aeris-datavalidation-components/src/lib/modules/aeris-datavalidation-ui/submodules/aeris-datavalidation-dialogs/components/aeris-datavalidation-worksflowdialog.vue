@@ -10,8 +10,7 @@
                tile
                outlined
                color="blue"
-               v-on="on" v-bind="attrs"
-               v-on:click="refreshCurrentWindow"
+               v-on:click="setSessionsDialog(true)"
         >
           <v-icon left>mdi-view-list</v-icon> Sessions
         </v-btn>
@@ -106,6 +105,9 @@ export default {
       type: Function,
       default : () => {}
     },
+    setSessionsDialog: {
+      type : Function,
+    },
   },
   data() {
     return {
@@ -125,8 +127,8 @@ export default {
 
         if(!this.dialog) {
           if(this.sessionSelection && this.currentView === this.$t('session.label_edit')) {
-            startDate = this.$root.takeOfDateMilliseconds(this.sessionSelection.startDate)
-            endDate = this.$root.takeOfDateMilliseconds(this.sessionSelection.endDate)
+            startDate = this.$root.getCleanDate(this.sessionSelection.startDate)
+            endDate = this.$root.getCleanDate(this.sessionSelection.endDate)
             if(this.$root.isSelectionExist(this.session, startDate, endDate)) {
               this.isResetSelection = true
               this.notifySelection(startDate, endDate)
@@ -140,6 +142,7 @@ export default {
       let targetSelection
       let startDate = this.selection.startDate
       let endDate = this.selection.endDate
+
 
       if(!this.isResetSelection) {
         this.dialog = true
@@ -197,9 +200,6 @@ export default {
         this.isSelectionMode = false
 
       this.isEditSelection = isEditSelection ?? undefined
-    },
-    refreshCurrentWindow : function () {
-      this.$router.go()
     },
     notifyCancelPopUp : function () {
       this.dialog = false

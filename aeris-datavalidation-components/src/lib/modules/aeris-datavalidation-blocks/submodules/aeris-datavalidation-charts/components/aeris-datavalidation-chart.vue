@@ -404,17 +404,20 @@
         }
       },
       addNewSelection : function(data) {
-        //let goodInterval
-        let startDate, endDate
+        let neighbor, validInterval
+
         if(data /*&& 0 < data.points.length*/) {
-          startDate = data.range.x[0]
-          endDate = data.range.x[1]
-          //goodInterval = this.getGoodInterval(startDate, endDate)
-          //if(goodInterval !== null && !this.isSelectionExist(goodInterval.startDate, goodInterval.endDate)) {
-          if(!this.isSelectionExist(startDate, endDate)) {
-            this.drawSelection(startDate, endDate, false)
-          }
+          validInterval = {startDate : data.range.x[0], endDate : data.range.x[1]}
+          neighbor = this.getNeighbor(validInterval.startDate, validInterval.endDate)
+
+          if(neighbor !== null)
+            this.setValidInterval(neighbor, validInterval)
+
+          if(!this.isSelectionExist(validInterval.startDate, validInterval.endDate))
+            this.drawSelection(validInterval.startDate, validInterval.endDate, false)
+
         }
+
       },
       addSelectionEvent: function () {
         let children =  $('#' + this.chartId).find( '.shapelayer' )[2].children
@@ -470,43 +473,72 @@
         }
         return false
       },
-      getGoodInterval: function(startDate, endDate) {
-        let intervals
-        let result = {startDate : startDate, endDate: endDate}
+      setValidInterval : function(neighbor, validInterval) {
+        if(neighbor && validInterval) {
 
-        if(this.selections) {
-          for(let index in this.selections) {
-            intervals = this.getIntervalDates(this.selections[index], result)
+          if(this.$root.isGreaterThan(neighbor.startDate, validInterval.startDate) &&
+              this.$root.isGreaterThan(validInterval.endDate, neighbor.startDate))
+            validInterval.endDate = neighbor.startDate
 
-            if(intervals.x3 <= intervals.x1 && intervals.x1 <= intervals.x4 &&
-                intervals.x4 <= intervals.x2) { //LF interval
+          else if(this.$root.isGreaterThan(neighbor.endDate, validInterval.startDate) &&
+                  this.$root.isGreaterThan(validInterval.endDate, neighbor.endDate))
+            validInterval.startDate = neighbor.endDate
+        }
+      },
+      getNeighbor : function(startDate, endDate) {
+        let selection, neighbor = null
+        let leftNeighbor = null, rightNeighbor = null
+        let selections = this.currentSession.sessionSelections
 
-              if(intervals.x1 === intervals.x3 && intervals.x2 === intervals.x4) {
-                result =  {startDate : startDate, endDate: endDate}
-              } else {
-                result = {startDate : startDate, endDate: this.selections[index].x0}
-              }
-            } else if(intervals.x1 <= intervals.x3 && intervals.x3 < intervals.x2 &&
-                intervals.x2 < intervals.x4) {//RG interval
-              result = {startDate : this.selections[index].x1, endDate: endDate}
-            }
+        if(selections) {
+          for(let index in selections) {
+            selection = selections[index]
+            leftNeighbor = this.getLeftNeighbor(leftNeighbor, selection, startDate, endDate)
+            rightNeighbor = this.getRightNeighbor(rightNeighbor, selection, startDate, endDate)
           }
+          neighbor = leftNeighbor !== null ? leftNeighbor : rightNeighbor
+        }
+        return neighbor
+      },
+      getLeftNeighbor : function (leftNeighbor, selection, startDate, endDate) {
+        let result = leftNeighbor
+
+        if( (this.$root.isGreaterThan(selection.startDate, startDate) &&
+            this.$root.isGreaterThan(endDate, selection.startDate) &&
+            this.$root.isGreaterThan(selection.endDate, endDate)) ||
+            (this.$root.isGreaterThan(selection.startDate, startDate) &&
+                this.$root.isGreaterThan(endDate, selection.endDate)))
+        {
+
+          if(leftNeighbor === null)
+            result = selection
+          else
+            result = this.$root.isGreaterThan(leftNeighbor.startDate, selection.startDate) ? selection : leftNeighbor
         }
 
         return result
       },
-      getIntervalDates : function(selection, result) {
-        return {
-          x1: new Date(selection.x0),
-          x2: new Date(selection.x1),
-          x3: new Date(result.startDate),
-          x4: new Date(result.endDate)
+      getRightNeighbor : function (rightNeighbor, selection, startDate, endDate) {
+        let result = rightNeighbor
+
+        if((this.$root.isGreaterThan(startDate, selection.startDate) &&
+            this.$root.isGreaterThan(selection.endDate, startDate) &&
+            this.$root.isGreaterThan(endDate, selection.endDate)) ||
+            (this.$root.isGreaterThan(selection.startDate, startDate) &&
+                this.$root.isGreaterThan(endDate, selection.endDate))
+        ) {
+          if(rightNeighbor === null)
+            result = selection
+          else
+            result = this.$root.isGreaterThan(rightNeighbor.endDate, selection.endDate) ? rightNeighbor : selection
         }
+
+        return result
       },
       drawSelection : function(startDate, endDate, isDefault) {
         const cloneLayout = JSON.parse(JSON.stringify(this.layout))
-        let newStartDate = this.$root.takeOfDateMilliseconds(startDate)
-        let newEndDate = this.$root.takeOfDateMilliseconds(endDate)
+        let newStartDate = this.$root.getCleanDate(startDate)
+        let newEndDate = this.$root.getCleanDate(endDate)
 
         this.clearCurrentSelection()
 
