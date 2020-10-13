@@ -29,21 +29,8 @@
               <AerisDatavalidationLangSwitcher/>
             </v-tab>
           </v-list-item>
-          <AerisDatavalidationAccountDialog/>
-          <v-list-item  v-if="!authenticated">
-            <v-tab
-                v-on:click="login"
-            >
-              <v-list-item-content>
-                <v-list-item-title>
-                  {{ $t('appbar.login') }}
-                </v-list-item-title>
-              </v-list-item-content>
-              <v-list-item-action>
-                <v-icon>mdi-login</v-icon>
-              </v-list-item-action>
-            </v-tab>
-          </v-list-item>
+          <AerisDatavalidationAccountItem/>
+          <AerisDatavalidationLoginItem/>
         </v-list>
       </v-app-bar>
       <v-main>
@@ -53,32 +40,16 @@
   </div>
 </template>
 <script>
-import {keycloak}  from '../../plugins/keycloak'
-  import AerisDatavalidationAccountDialog from "./../lib/modules/aeris-datavalidation-ui/submodules/aeris-datavalidation-dialogs/components/aeris-datavalidation-accountdialog"
+  import AerisDatavalidationLoginItem from "../lib/modules/aeris-datavalidation-ui/submodules/aeris-datavalidation-items/components/aeris-datavalidation-loginitem"
+  import AerisDatavalidationAccountItem from "../lib/modules/aeris-datavalidation-ui/submodules/aeris-datavalidation-items/components/aeris-datavalidation-accountitem"
   import AerisDatavalidationLangSwitcher from "./../lib/modules/aeris-datavalidation-ui/submodules/aeris-datavalidation-inputs/components/submodules/aeris-datavalidation-switchers/aeris-datavalidation-langswitcher"
 
   export default {
     name: 'App',
     components : {
-      AerisDatavalidationLangSwitcher,
-      AerisDatavalidationAccountDialog
-    },
-    watch: {
-      '$store.state.common.authenticated': function() {
-        this.authenticated = this.$store.state.common.authenticated
-        if(this.authenticated)
-          this.$router.push( '/data-validation-tool')
-      }
-    },
-    data: function() {
-      return {
-        authenticated : false,
-      }
-    },
-    methods: {
-      login : function() {
-        keycloak.login({ redirectUri: process.env.VUE_APP_ORIGN_URL + '/data-validation-tool' })
-      },
-    },
+      AerisDatavalidationLoginItem,
+      AerisDatavalidationAccountItem,
+      AerisDatavalidationLangSwitcher
+    }
   };
 </script>

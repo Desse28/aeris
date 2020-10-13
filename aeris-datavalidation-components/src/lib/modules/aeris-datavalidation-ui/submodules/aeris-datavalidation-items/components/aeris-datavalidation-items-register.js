@@ -1,13 +1,11 @@
 import HelperRegisterModule from "./../../../../helper-register-module"
 
-import AerisDatavalidationDeleteDialog from "./aeris-datavalidation-deletedialog";
-import AerisDatavalidationWorksFlowDialog from "./aeris-datavalidation-worksflowdialog";
-import AerisDatavalidationSelectionsDialog from "./aeris-datavalidation-selectionsdialog";
+import AerisDatavalidationLoginItem from "./aeris-datavalidation-loginitem";
+import AerisDatavalidationAccountItem from "./aeris-datavalidation-accountitem";
 
 const components = [
-    AerisDatavalidationDeleteDialog,
-    AerisDatavalidationWorksFlowDialog,
-    AerisDatavalidationSelectionsDialog,
+    AerisDatavalidationLoginItem,
+    AerisDatavalidationAccountItem
 ];
 
 export default {
