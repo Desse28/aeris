@@ -13,6 +13,7 @@
           </v-col>
           <v-col>
             <AerisDatavalidationLangSwitcher/>
+            <!--<AerisDatavalidationLogoutItem/>-->
           </v-col>
         </v-row>
         <AerisDatavalidationSessionsTable
@@ -33,6 +34,9 @@
 </template>
 <script>
 import AerisDatavalidationSessionForm from "./../../../../aeris-datavalidation-ui/submodules/aeris-datavalidation-form/components/aeris-datavalition-sessionform"
+/*
+import AerisDatavalidationLogoutItem from "./../../../../aeris-datavalidation-ui/submodules/aeris-datavalidation-items/components/aeris-datavalidation-logoutitem"
+*/
 import AerisDatavalidationSessionsTable from "./../../../../aeris-datavalidation-ui/submodules/aeris-datavalidation-tables/components/aeris-datavalidation-sessionstable"
 import AerisDatavalidationTypography from "./../../../../aeris-datavalidation-ui/submodules/aeris-datavalidation-typographies/components/aeris-datavalidation-typography"
 import AerisDatavalidationLangSwitcher from "./../../../../aeris-datavalidation-ui/submodules/aeris-datavalidation-inputs/components/submodules/aeris-datavalidation-switchers/aeris-datavalidation-langswitcher"
@@ -51,6 +55,7 @@ export default {
     },
   },
   components: {
+   /* AerisDatavalidationLogoutItem,*/
     AerisDatavalidationTypography,
     AerisDatavalidationSessionForm,
     AerisDatavalidationLangSwitcher,
