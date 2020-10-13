@@ -33,8 +33,7 @@ async function initKeycloak(keycloak, store) {
         })
         .then(function(authenticated) {
             if (authenticated && keycloak.tokenParsed) {
-                let username = keycloak.tokenParsed.preferred_username;
-                console.log("Test UserName : ", username);
+                store.commit("updateUser", keycloak.tokenParsed);
                 store.commit("updateAuthenticated", keycloak.authenticated);
             }
         }).catch(error => {

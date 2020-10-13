@@ -6,8 +6,8 @@ export default {
         authenticated: false
     },
     mutations: {
-        updateUser(state, user) {
-            state.user = new User(user);
+        updateUser(state, data) {
+            state.user = new User(data);
         },
         updateAuthenticated(state, authenticated) {
             state.authenticated = authenticated;

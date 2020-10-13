@@ -11,6 +11,7 @@ import AerisDatavalidationChart from "@/lib/modules/aeris-datavalidation-blocks/
 import AerisDatavalidationSelection from "./aeris-datavalidation-blocks/submodules/aeris-datavalidation-selections/components/aeris-datavalidation-selection";
 import AerisDatavalidationSessionsTable from "./aeris-datavalidation-ui/submodules/aeris-datavalidation-tables/components/aeris-datavalidation-sessionstable";
 import AerisDatavalidationTypography from "./aeris-datavalidation-ui/submodules/aeris-datavalidation-typographies/components/aeris-datavalidation-typography";
+import AerisDatavalidationAccountDialog from "./aeris-datavalidation-ui/submodules/aeris-datavalidation-dialogs/components/aeris-datavalidation-accountdialog";
 import AerisDatavalidationSelectionsList from "./aeris-datavalidation-ui/submodules/aeris-datavalidation-lists/components/aeris-datavalidation-selectionslist";
 import AerisDatavalidationChartSteppers from "./aeris-datavalidation-ui/submodules/aeris-datavalidation-steppers/components/aeris-datavalidation-chartsteppers";
 import AerisDatavalidationSimpleToolbar from "./aeris-datavalidation-ui/submodules/aeris-datavalidation-toolbars/components/aeris-datavalidation-simpletoolbar";
@@ -37,6 +38,7 @@ export {
     AerisDatavalidationMainChartTab,
     AerisDataValidationPageNotFound,
     AerisDatavalidationLangSwitcher,
+    AerisDatavalidationAccountDialog,
     AerisDatavalidationConfiguration,
     AerisDatavalidationSessionsTable,
     AerisDatavalidationSimpleToolbar,

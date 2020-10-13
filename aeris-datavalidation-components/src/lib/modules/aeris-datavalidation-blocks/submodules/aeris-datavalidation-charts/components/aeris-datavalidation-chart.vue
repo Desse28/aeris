@@ -406,7 +406,7 @@
       addNewSelection : function(data) {
         let neighbor, validInterval
 
-        if(data /*&& 0 < data.points.length*/) {
+        if(data) {
           validInterval = {startDate : data.range.x[0], endDate : data.range.x[1]}
           neighbor = this.getNeighbor(validInterval.startDate, validInterval.endDate)
 
@@ -503,13 +503,11 @@
       getLeftNeighbor : function (leftNeighbor, selection, startDate, endDate) {
         let result = leftNeighbor
 
-        if( (this.$root.isGreaterThan(selection.startDate, startDate) &&
-            this.$root.isGreaterThan(endDate, selection.startDate) &&
+        if(this.$root.isGreaterThan(selection.startDate, startDate) &&
+            ((this.$root.isGreaterThan(endDate, selection.startDate) &&
             this.$root.isGreaterThan(selection.endDate, endDate)) ||
-            (this.$root.isGreaterThan(selection.startDate, startDate) &&
-                this.$root.isGreaterThan(endDate, selection.endDate)))
+            (this.$root.isGreaterThan(endDate, selection.endDate))))
         {
-
           if(leftNeighbor === null)
             result = selection
           else
@@ -521,11 +519,10 @@
       getRightNeighbor : function (rightNeighbor, selection, startDate, endDate) {
         let result = rightNeighbor
 
-        if((this.$root.isGreaterThan(startDate, selection.startDate) &&
-            this.$root.isGreaterThan(selection.endDate, startDate) &&
+        if(this.$root.isGreaterThan(startDate, selection.startDate) &&
+            ((this.$root.isGreaterThan(selection.endDate, startDate) &&
             this.$root.isGreaterThan(endDate, selection.endDate)) ||
-            (this.$root.isGreaterThan(selection.startDate, startDate) &&
-                this.$root.isGreaterThan(endDate, selection.endDate))
+            (this.$root.isGreaterThan(endDate, selection.endDate)))
         ) {
           if(rightNeighbor === null)
             result = selection
