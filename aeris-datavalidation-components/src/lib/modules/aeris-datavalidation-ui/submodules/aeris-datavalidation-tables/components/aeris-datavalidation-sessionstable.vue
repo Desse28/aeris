@@ -34,7 +34,7 @@
               {{ $t("configuration.label_inProgress") }}
             </h3>
             <h3 v-else class="red accent-3">
-              {{ $t("configuration.label_close") }}
+              {{ $t("configuration.label_sessionClose") }}
             </h3>
           </template>
         </v-data-table>

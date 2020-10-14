@@ -79,7 +79,7 @@
                 <v-btn
                     v-on:click="notifyCancelPopUp"
                 >
-                  {{$t('session.label_cancel')}}
+                  {{isSelectionMode? $t('session.label_cancel') : $t('session.label_close')}}
                 </v-btn>
               </v-card-actions>
             </v-col>

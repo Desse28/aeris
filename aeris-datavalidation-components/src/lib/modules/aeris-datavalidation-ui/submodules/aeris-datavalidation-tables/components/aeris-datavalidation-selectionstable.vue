@@ -89,7 +89,7 @@
             text
             @click="notifyCancelPopUp"
         >
-          {{$t('session.label_cancel')}}
+          {{$t('session.label_close')}}
         </v-btn>
       </v-card-actions>
     </AerisDataValidationServices>

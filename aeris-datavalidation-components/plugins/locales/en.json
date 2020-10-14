@@ -25,7 +25,6 @@
     "message_greaterThan" : "The end date must be greater than the start date"
   },
   "configuration" : {
-    "label_close" : "@:common.close",
     "label_state" : "@:common.state",
     "label_chart" : "@:common.chart",
     "label_newSession": "New session",
@@ -33,6 +32,7 @@
     "label_sessions" : "Sessions list",
     "label_endTime" : "@:common.endTime",
     "label_endDate" : "@:common.endDate",
+    "label_sessionClose" : "@:common.close",
     "label_startTime" : "@:common.startTime",
     "label_mainParameter" : "Main parameter",
     "label_startDate" : "@:common.startDate",
@@ -52,6 +52,7 @@
     "label_edit" : "@:common.edit",
     "label_addChart" : "Add chart",
     "label_selection" : "Selection",
+    "label_close" : "@:common.close",
     "label_selections": "Selections",
     "label_mainChart"  : "Main chart",
     "label_cancel" : "@:common.cancel",
