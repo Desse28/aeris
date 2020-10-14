@@ -23,7 +23,7 @@
             <v-list>
               <v-list-item>
                 <v-list-item-content>
-                  <v-list-item-title>Parameter(s)</v-list-item-title>
+                  <v-list-item-title>{{ $t("session.label_parameter") }}</v-list-item-title>
                 </v-list-item-content>
               </v-list-item>
             </v-list>
