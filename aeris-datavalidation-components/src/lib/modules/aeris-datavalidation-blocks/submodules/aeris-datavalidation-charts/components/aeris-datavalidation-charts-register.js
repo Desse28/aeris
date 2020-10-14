@@ -1,9 +1,11 @@
 import HelperRegisterModule from "./../../../../helper-register-module"
 
 import AerisDatavalidationChart from "./aeris-datavalidation-chart";
+import AerisDatavalidationChartscontroller from "./aeris-datavalidation-chartscontroller";
 
 const components = [
     AerisDatavalidationChart,
+    AerisDatavalidationChartscontroller,
 ];
 
 export default {

@@ -18,6 +18,7 @@
       </template>
       <v-card>
         <v-row justify="center">
+
           <v-col cols="4">
             <v-list>
               <v-list-item>
@@ -30,36 +31,44 @@
             <v-list>
               <v-list-item v-for="label in parametersLabel" :key="label.name">
                 <v-list-item-action>
-                  <v-switch v-model="parameters" :value="label" color="blue"></v-switch>
+                  <v-checkbox
+                      v-model="parameters"
+                      :label="label.name"
+                      :color="label.color"
+                      :value="label"
+                      hide-details
+                  ></v-checkbox>
+
                 </v-list-item-action>
-                <v-list-item-title>{{label.name}}</v-list-item-title>
               </v-list-item>
             </v-list>
           </v-col>
+
           <v-col cols="4">
             <v-list>
               <v-list-item>
                 <v-list-item-content>
-                  <v-list-item-title>Layering(s)</v-list-item-title>
+                  <v-list-item-title>{{ $t("session.label_layering") }}</v-list-item-title>
                 </v-list-item-content>
               </v-list-item>
             </v-list>
             <v-divider></v-divider>
             <v-list>
-              <v-list-item  v-for=" (parallelLabel, index) in parallelsLabel" :key="parallelLabel">
+              <v-list-item  v-for="(parallelLabel, index) in parallelsLabel" :key="parallelLabel">
                 <v-list-item-action>
-                  <v-switch
+                  <v-checkbox
                       v-model="parallels"
+                      color="red"
                       :value="parallelLabel"
-                      color="blue"
                       :disabled="!parameters.includes(parametersLabel[index])"
-                  >
-                  </v-switch>
+                      hide-details
+                  ></v-checkbox>
+
                 </v-list-item-action>
-                <v-list-item-title>{{parallelLabel}}</v-list-item-title>
               </v-list-item>
             </v-list>
           </v-col>
+
           <v-col cols="4">
             <v-list>
               <v-list-item>
@@ -80,6 +89,7 @@
               </v-list-item>
             </v-list>
           </v-col>
+
         </v-row>
       </v-card>
     </v-menu>

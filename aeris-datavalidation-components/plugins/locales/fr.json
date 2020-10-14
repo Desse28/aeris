@@ -21,6 +21,7 @@
     "in_progress": "En cours",
     "endDate" : "Date de fin",
     "endTime" : "Heure de fin",
+    "layering" : "Superposition",
     "startDate" : "Date de début",
     "startTime" : "Heure de début",
     "message_greaterThan" : "La date de fin doit être supérieur à la date de début"
@@ -58,6 +59,7 @@
     "label_endTime" : "@:common.endTime",
     "label_endDate" : "@:common.endDate",
     "label_actions" : "@:common.actions",
+    "label_layering" : "@:common.layering",
     "label_deletion" : "@:common.deletion",
     "label_startTime" : "@:common.startTime",
     "label_startDate" : "@:common.startDate",

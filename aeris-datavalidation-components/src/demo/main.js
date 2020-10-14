@@ -10,8 +10,9 @@ import app from "./App.vue"
 import common from "./../lib/modules/aeris-datavalidation-common/store/index"
 import myMixin from "./../lib/modules/aeris-datavalidation-common/mixin/index"
 import AerisDataValidationHomePage from "../lib/modules/aeris-datavalidation-pages/components/aeris-datavalidation-homepage"
-import AerisDataValidationMainPage from "../lib/modules/aeris-datavalidation-pages/components/aeris-datavalidation-mainpage"
 import AerisDataValidationPageNotFound from  "./../lib/modules/aeris-datavalidation-pages/components/aeris-datavalidation-pagenotfound"
+
+import AerisDatavalidationChartscontroller from "./../lib/modules/aeris-datavalidation-blocks/submodules/aeris-datavalidation-charts/components/aeris-datavalidation-chartscontroller"
 
 Vue.use(VueAxios, axios);
 Vue.use(Vuex);
@@ -31,15 +32,15 @@ const router = new VueRouter({
   mode: "history",
   routes: [
     {
-      path: "/",
-      component: AerisDataValidationHomePage
+      path : "/",
+      component : AerisDataValidationHomePage
     },
     {
-      path: "/data-validation-tool",
-      component: AerisDataValidationMainPage
+      path : "/data-validation-tool",
+      component : AerisDatavalidationChartscontroller
     },
     { path: "*",
-      component: AerisDataValidationPageNotFound
+      component : AerisDataValidationPageNotFound
     }
   ]
 });
