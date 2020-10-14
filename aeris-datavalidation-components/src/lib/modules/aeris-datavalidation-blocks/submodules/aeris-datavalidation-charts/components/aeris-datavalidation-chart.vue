@@ -474,14 +474,10 @@
         return false
       },
       setValidInterval : function(neighbor, validInterval) {
-        if(neighbor && validInterval) {
-
-          if(this.$root.isGreaterThan(neighbor.startDate, validInterval.startDate) &&
-              this.$root.isGreaterThan(validInterval.endDate, neighbor.startDate))
+        if(neighbor && validInterval && neighbor.orgin) {
+          if( neighbor.orgin === "left" )
             validInterval.endDate = neighbor.startDate
-
-          else if(this.$root.isGreaterThan(neighbor.endDate, validInterval.startDate) &&
-                  this.$root.isGreaterThan(validInterval.endDate, neighbor.endDate))
+          else if(neighbor.orgin === "right")
             validInterval.startDate = neighbor.endDate
         }
       },
@@ -493,19 +489,21 @@
         if(selections) {
           for(let index in selections) {
             selection = selections[index]
-            leftNeighbor = this.getLeftNeighbor(leftNeighbor, selection, startDate, endDate)
+            leftNeighbor = this.getLeftNeighbor(leftNeighbor, selections, selection, startDate, endDate)
             rightNeighbor = this.getRightNeighbor(rightNeighbor, selection, startDate, endDate)
           }
           neighbor = leftNeighbor !== null ? leftNeighbor : rightNeighbor
+          if(neighbor)
+            neighbor.orgin = leftNeighbor !== null ? "left" : "right"
         }
         return neighbor
       },
-      getLeftNeighbor : function (leftNeighbor, selection, startDate, endDate) {
+      getLeftNeighbor : function (leftNeighbor, selections, selection, startDate, endDate) {
         let result = leftNeighbor
 
-        if(this.$root.isGreaterThan(selection.startDate, startDate) &&
+        if(this.$root.isGreaterThan(selection.startDate, startDate) && !this.isInsideSelection(startDate, selections) &&
             ((this.$root.isGreaterThan(endDate, selection.startDate) &&
-            this.$root.isGreaterThan(selection.endDate, endDate)) ||
+                this.$root.isGreaterThan(selection.endDate, endDate)) ||
             (this.$root.isGreaterThan(endDate, selection.endDate))))
         {
           if(leftNeighbor === null)
@@ -519,11 +517,8 @@
       getRightNeighbor : function (rightNeighbor, selection, startDate, endDate) {
         let result = rightNeighbor
 
-        if(this.$root.isGreaterThan(startDate, selection.startDate) &&
-            ((this.$root.isGreaterThan(selection.endDate, startDate) &&
-            this.$root.isGreaterThan(endDate, selection.endDate)) ||
-            (this.$root.isGreaterThan(endDate, selection.endDate)))
-        ) {
+        if(this.$root.isGreaterThan(selection.endDate, startDate) &&
+            this.$root.isGreaterThan(endDate, selection.endDate)) {
           if(rightNeighbor === null)
             result = selection
           else
@@ -531,6 +526,17 @@
         }
 
         return result
+      },
+      isInsideSelection : function(point, selections) {
+        let selection
+        if(point) {
+          for(let index in selections) {
+            selection = selections[index]
+            if(this.$root.isGreaterThan(point, selection.startDate) && this.$root.isGreaterThan(selection.endDate, point))
+              return true
+          }
+        }
+        return false
       },
       drawSelection : function(startDate, endDate, isDefault) {
         const cloneLayout = JSON.parse(JSON.stringify(this.layout))
