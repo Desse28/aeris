@@ -1,19 +1,32 @@
 <template>
-  <div class="text-center">
+  <div class="text-center ml-4">
     <v-menu
         :close-on-content-click="false"
         :nudge-width="200"
         offset-x
     >
       <template v-slot:activator="{ on, attrs }">
-        <v-btn class="ma-2" tile outlined color="blue" v-on="on" v-bind="attrs">
-          <v-icon left>mdi-plus-circle-outline</v-icon> {{ $t("session.label_addParameters") }}
+        <v-btn class="mb-2 mt-2 blue--text"
+               color="rgb(255, 255, 255)"
+               depressed
+               v-on="on"
+               v-bind="attrs"
+        >
+          <v-icon left>mdi-chevron-down</v-icon> {{ $t("session.label_addParameters") }}
         </v-btn>
-        <v-btn class="ma-2" tile outlined color="blue" v-on:click="removeChart">
-          <v-icon left>mdi-delete</v-icon> {{ $t("session.label_removeChart") }}
+        <v-btn class="mb-2 mt-2 blue--text"
+               color="rgb(255, 255, 255)"
+               depressed
+               v-on:click="removeChart"
+        >
+          <v-icon left>mdi-tab-remove </v-icon> {{ $t("session.label_removeChart") }}
         </v-btn>
-        <v-btn class="ma-2" tile outlined color="blue" v-on:click="addNewChart">
-          <v-icon left>mdi-plus-circle-outline</v-icon> {{ $t("session.label_addChart") }}
+        <v-btn class="mb-2 mt-2 blue--text"
+               color="rgb(255, 255, 255)"
+               depressed
+               v-on:click="addNewChart"
+        >
+          <v-icon left>mdi-tab-plus</v-icon> {{ $t("session.label_addChart") }}
         </v-btn>
       </template>
       <v-card>
@@ -29,7 +42,7 @@
             </v-list>
             <v-divider></v-divider>
             <v-list>
-              <v-list-item v-for="label in parametersLabel" :key="label.name">
+              <v-list-item v-for="label in parametersLabel" :key="label.name" class="ma-3">
                 <v-list-item-action>
                   <v-checkbox
                       v-model="parameters"
@@ -54,7 +67,7 @@
             </v-list>
             <v-divider></v-divider>
             <v-list>
-              <v-list-item  v-for="(parallelLabel, index) in parallelsLabel" :key="parallelLabel">
+              <v-list-item  v-for="(parallelLabel, index) in parallelsLabel" :key="parallelLabel" class="ma-3">
                 <v-list-item-action>
                   <v-checkbox
                       v-model="parallels"
@@ -82,7 +95,9 @@
               <v-list-item v-for="label in parametersLabel" :key="label.name">
                 <v-list-item-action>
                   <div style="max-height: 40px;">
-                    <v-select :items="charts">
+                    <v-select
+                        :items="charts"
+                    >
                     </v-select>
                   </div>
                 </v-list-item-action>

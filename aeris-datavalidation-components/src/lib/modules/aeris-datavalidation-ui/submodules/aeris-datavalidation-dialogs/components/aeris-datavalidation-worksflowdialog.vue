@@ -6,22 +6,26 @@
         width="900"
     >
       <template v-slot:activator="{ on, attrs }">
-        <v-btn class="ma-2"
-               tile
-               outlined
-               color="blue"
+        <v-btn class="mb-2 mt-2 blue--text"
+               color="rgb(255, 255, 255)"
+               depressed
                v-on:click="setSessionsDialog(true)"
         >
           <v-icon left>mdi-view-list</v-icon> Sessions
         </v-btn>
-        <v-btn class="ma-2"
-               tile
-               outlined
-               color="blue"
+        <v-btn class="mb-2 mt-2 blue--text"
+               color="rgb(255, 255, 255)"
+               depressed
+        >
+          <v-icon left> mdi-selection-drag</v-icon> Edit selections
+        </v-btn>
+        <v-btn class="mb-2 mt-2 blue--text"
+               color="rgb(255, 255, 255)"
+               depressed
                v-on="on" v-bind="attrs"
                v-on:click="switchCurrentView($t('session.label_selections'), null, false)"
         >
-          <v-icon left>mdi-send-check-outline</v-icon> {{ $t("session.label_selections") }}
+          <v-icon left>mdi-send-outline</v-icon> send session
         </v-btn>
       </template>
 
