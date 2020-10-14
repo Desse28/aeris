@@ -12,8 +12,8 @@
 export default {
   name: "aeris-datavalidation-langswitcher",
   data () {
-    return { langs: ['en', 'fr'] }
-  }
+    return { langs : ['en', 'fr'] }
+  },
 }
 </script>
 

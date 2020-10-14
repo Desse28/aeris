@@ -3,7 +3,10 @@
     <v-dialog v-model="dialog" persistent max-width="1000px">
       <v-card min-height="500" max-height="900">
         <v-row>
-          <v-col offset="4">
+          <v-col cols="2" offset="1">
+            <AerisDatavalidationLangSwitcher/>
+          </v-col>
+          <v-col offset="1">
             <v-card-title>
               <AerisDatavalidationTypography
                   :text="getTitle"
@@ -11,19 +14,18 @@
               />
             </v-card-title>
           </v-col>
-          <v-col>
-            <AerisDatavalidationLangSwitcher/>
-            <!--<AerisDatavalidationLogoutItem/>-->
+          <v-col offset="1">
+            <AerisDatavalidationLogoutItem/>
           </v-col>
         </v-row>
         <AerisDatavalidationSessionsTable
-            v-if="currentItem === this.$t('configuration.label_continueSession')"
+            v-if="currentItem === 'configuration.label_continueSession'"
             :setSessions="setSessions"
             :initNewSession="initNewSession"
             :setCurrentItem="setCurrentItem"
         />
         <AerisDatavalidationSessionForm
-            v-if="currentItem === this.$t('configuration.label_newSession')"
+            v-if="currentItem === 'configuration.label_newSession'"
             :sessions="sessions"
             :initNewSession="initNewSession"
             :setCurrentItem="setCurrentItem"
@@ -34,9 +36,7 @@
 </template>
 <script>
 import AerisDatavalidationSessionForm from "./../../../../aeris-datavalidation-ui/submodules/aeris-datavalidation-form/components/aeris-datavalition-sessionform"
-/*
 import AerisDatavalidationLogoutItem from "./../../../../aeris-datavalidation-ui/submodules/aeris-datavalidation-items/components/aeris-datavalidation-logoutitem"
-*/
 import AerisDatavalidationSessionsTable from "./../../../../aeris-datavalidation-ui/submodules/aeris-datavalidation-tables/components/aeris-datavalidation-sessionstable"
 import AerisDatavalidationTypography from "./../../../../aeris-datavalidation-ui/submodules/aeris-datavalidation-typographies/components/aeris-datavalidation-typography"
 import AerisDatavalidationLangSwitcher from "./../../../../aeris-datavalidation-ui/submodules/aeris-datavalidation-inputs/components/submodules/aeris-datavalidation-switchers/aeris-datavalidation-langswitcher"
@@ -55,8 +55,8 @@ export default {
     },
   },
   components: {
-   /* AerisDatavalidationLogoutItem,*/
     AerisDatavalidationTypography,
+    AerisDatavalidationLogoutItem,
     AerisDatavalidationSessionForm,
     AerisDatavalidationLangSwitcher,
     AerisDatavalidationSessionsTable
@@ -71,14 +71,14 @@ export default {
     return {
       dialog: true,
       sessions : [],
-      currentItem : this.$t('configuration.label_continueSession'),
+      currentItem : 'configuration.label_continueSession',
     }
   },
   computed : {
     getTitle : function() {
-      if(this.currentItem === this.$t('configuration.label_continueSession'))
+      if(this.currentItem === 'configuration.label_continueSession')
         return this.$t('configuration.label_continueSession')
-      else if(this.currentItem === this.$t('configuration.label_newSession'))
+      else if(this.currentItem === 'configuration.label_newSession')
         return this.$t('configuration.label_newSession')
       return ""
     },

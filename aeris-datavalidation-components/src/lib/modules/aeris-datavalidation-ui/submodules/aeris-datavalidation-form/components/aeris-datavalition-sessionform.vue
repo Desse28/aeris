@@ -286,7 +286,7 @@ export default {
       }
     },
     continueSession : function () {
-      this.setCurrentItem(this.$t('configuration.label_continueSession'))
+      this.setCurrentItem('configuration.label_continueSession')
     },
     setStartDate : function (newStartDate) {
       this.startDate = newStartDate;

@@ -179,7 +179,7 @@ export default {
       }
     },
     createNewSession : function() {
-      this.setCurrentItem(this.$t('configuration.label_newSession'))
+      this.setCurrentItem('configuration.label_newSession')
     },
   },
 }
