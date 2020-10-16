@@ -11,12 +11,15 @@
           :qualityFlags="qualityFlags"
           :notifySelection="notifySelection"
           :setSessionsDialog="setSessionsDialog"
+          :instrumentEndDate="instrumentEndDate"
+          :instrumentStartDate="instrumentStartDate"
           :notifyDeleteSelection="notifyDeleteSelection"
       />
       <AerisDataValidationOptions
           :addNewChart="addNewChart"
           :removeChart="removeChart"
           :auxParameters="auxParameters"
+          :parallelCharts="parallelCharts"
           :addNewParallel="addNewParallel"
           :removeParallel="removeParallel"
           :addNewParameter="addNewParameter"
@@ -85,6 +88,18 @@ export default {
     setSessionsDialog: {
       type : Function,
     },
+    instrumentStartDate : {
+      type : String,
+      default : () => ""
+    },
+    instrumentEndDate : {
+      type : String,
+      default : () => ""
+    },
+    parallelCharts : {
+      type : Array,
+      default : () => []
+    }
   },
   components: {
     AerisDataValidationOptions,

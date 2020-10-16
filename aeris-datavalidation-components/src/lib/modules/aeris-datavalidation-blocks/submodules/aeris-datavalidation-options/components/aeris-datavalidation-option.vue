@@ -1,5 +1,8 @@
 <template>
   <div class="text-center ml-4">
+    <v-divider
+        vertical
+    ></v-divider>
     <v-menu
         :close-on-content-click="false"
         :nudge-width="200"
@@ -24,7 +27,7 @@
         <v-btn class="mb-2 mt-2 blue--text"
                color="rgb(255, 255, 255)"
                depressed
-               v-on:click="addNewChart"
+               v-on:click="addChart"
         >
           <v-icon left>mdi-tab-plus</v-icon> {{ $t("session.label_addChart") }}
         </v-btn>
@@ -92,14 +95,12 @@
             </v-list>
             <v-divider></v-divider>
             <v-list>
-              <v-list-item v-for="label in parametersLabel" :key="label.name">
+              <v-list-item v-for="(label, index) in parametersLabel" :key="label.name">
                 <v-list-item-action>
-                  <div style="max-height: 40px;">
-                    <v-select
-                        :items="charts"
-                    >
-                    </v-select>
-                  </div>
+                  <AerisDatavalidationChartsSelect
+                      :selectIndex="index"
+                      :parallelCharts="parallelCharts"
+                  />
                 </v-list-item-action>
               </v-list-item>
             </v-list>
@@ -111,9 +112,13 @@
   </div>
 </template>
 <script>
+import AerisDatavalidationChartsSelect from "../../../../aeris-datavalidation-ui/submodules/aeris-datavalidation-selects/components/aeris-datavalidation-chartsselect"
 
 export default {
   name: "aeris-datavalidation-options",
+  components : {
+    AerisDatavalidationChartsSelect
+  },
   props: {
     linkedParameters: {
       type : Array,
@@ -141,6 +146,10 @@ export default {
     },
     removeChart: {
       type : Function,
+    },
+    parallelCharts : {
+      type : Array,
+      default : () => []
     }
   },
   data() {
@@ -149,7 +158,6 @@ export default {
       parameters: [],
       parallelsLabel: [],
       parametersLabel : [],
-      charts: ['chart1', 'chart2', 'chart3'],
     }
   },
   watch: {
@@ -245,6 +253,10 @@ export default {
         }
         this.removeParameter(deletedElement)
       }
+    },
+    addChart : function () {
+      let chartName = "Chart" + (this.parallelCharts.length + 1)
+      this.addNewChart(chartName)
     }
 },
 

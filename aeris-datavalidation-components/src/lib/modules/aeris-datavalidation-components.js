@@ -7,6 +7,7 @@ import AerisDataValidationOptions from "./aeris-datavalidation-blocks/submodules
 import AerisDatavalidationSessionList from "./aeris-datavalidation-ui/submodules/aeris-datavalidation-lists/components/aeris-datavalidation-sessionlist";
 import AerisDatavalidationAccountItem from "./aeris-datavalidation-ui/submodules/aeris-datavalidation-items/components/aeris-datavalidation-accountitem";
 import AerisDatavalidationMainChartTab from "./aeris-datavalidation-ui/submodules/aeris-datavalidation-tabs/components/aeris-datavalidation-maincharttab";
+import AerisDatavalidationChartsSelect from "./aeris-datavalidation-ui/submodules/aeris-datavalidation-selects/components/aeris-datavalidation-chartsselect";
 import AerisDatavalidationDeleteDialog from "./aeris-datavalidation-ui/submodules/aeris-datavalidation-dialogs/components/aeris-datavalidation-deletedialog";
 import AerisDatavalidationChart from "@/lib/modules/aeris-datavalidation-blocks/submodules/aeris-datavalidation-charts/components/aeris-datavalidation-chart";
 import AerisDatavalidationSelection from "./aeris-datavalidation-blocks/submodules/aeris-datavalidation-selections/components/aeris-datavalidation-selection";
@@ -39,6 +40,7 @@ export {
     AerisDatavalidationAccountItem,
     AerisDatavalidationDeleteDialog,
     AerisDatavalidationMainChartTab,
+    AerisDatavalidationChartsSelect,
     AerisDataValidationPageNotFound,
     AerisDatavalidationLangSwitcher,
     AerisDatavalidationConfiguration,

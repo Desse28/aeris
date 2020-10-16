@@ -22,6 +22,8 @@
               <AerisDatavalidationDateMounthPicker
                   :dateLabel="$t('session.label_startDate')"
                   :currentDate="startDate"
+                  :minDate="getLowerBoundMinDate"
+                  :maxDate="getLowerBoundMaxDate"
                   :setCurrentDate="setStartDate"
                   :disabled="false"
               />
@@ -30,6 +32,8 @@
               <AerisDatavalidationDateMounthPicker
                   :dateLabel="$t('session.label_endDate')"
                   :currentDate="endDate"
+                  :minDate="getUpperBoundMinDate"
+                  :maxDate="getUpperBoundMaxDate"
                   :setCurrentDate="setEndDate"
                   :disabled="false"
               />
@@ -38,6 +42,8 @@
               <AerisDatavalidationTimePicker
                   :time_label="$t('session.label_startTime')"
                   :currentTime="startTime"
+                  :min="getLowerBoundMinTime"
+                  :max="getLowerBoundMaxTime"
                   :setCurrentTime="setStartTime"
                   :disabled="false"
               />
@@ -46,6 +52,8 @@
               <AerisDatavalidationTimePicker
                   :time_label="$t('session.label_endTime')"
                   :currentTime="endTime"
+                  :min="getUpperBoundMinTime"
+                  :max="getUpperBoundMaxTime"
                   :setCurrentTime="setEndTime"
                   :disabled="false"
               />
@@ -135,6 +143,14 @@ export default {
     switchCurrentView : {
       type : Function,
       default : () => {}
+    },
+    instrumentStartDate : {
+      type : String,
+      default : () => ""
+    },
+    instrumentEndDate : {
+      type : String,
+      default : () => ""
     }
   },
   data() {
@@ -155,8 +171,54 @@ export default {
       currentSessionSelection: null,
     }
   },
+  computed : {
+    getLowerBoundMinDate : function () {
+      return this.instrumentStartDate
+    },
+    getLowerBoundMaxDate : function () {
+      return this.instrumentEndDate
+    },
+    getUpperBoundMaxDate : function () {
+      return this.instrumentEndDate
+    },
+    getUpperBoundMinDate : function () {
+      return this.instrumentStartDate
+    },
+    getLowerBoundMinTime : function () {
+      let lim
+      let selections = this.session.sessionSelections
+      if(this.selection !== undefined && selections !== undefined) {
+        if(!this.$root.isSinglePoint(this.selection.startDate, selections)) {
+          return this.$root.getTimePickerTimeFormat(this.selection.startDate)
+        } else {
+          lim = this.$root.getStartDateLim(this.selection.startDate, selections)
+          return this.$root.getTimePickerTimeFormat(lim)
+        }
+      }
+      return ""
+    },
+    getLowerBoundMaxTime : function () {
+      let dateTime
+      if(this.selection !== undefined) {
+        dateTime = this.$root.addMinutesToDate(this.selection.endDate, 1, "subtract")
+        return this.$root.getTimePickerTimeFormat(dateTime)
+      }
+      console.log("empty (1)")
+      return ""
+    },
+    getUpperBoundMinTime : function () {
+      let selections = this.session.sessionSelections
+      if(this.selection && selections && !this.$root.isSinglePoint(this.selection.endDate, selections)) {
+        return this.$root.getTimePickerTimeFormat(this.selection.endDate)
+      }
+      return ""
+    },
+    getUpperBoundMaxTime : function () {
+      return ""
+    }
+  },
   watch : {
-    selection: function () {
+    selection : function () {
       let selectionDate
       if(!this.isSelectionEmpty()) {
         selectionDate = this.getSelectionDate(this.selection, false)

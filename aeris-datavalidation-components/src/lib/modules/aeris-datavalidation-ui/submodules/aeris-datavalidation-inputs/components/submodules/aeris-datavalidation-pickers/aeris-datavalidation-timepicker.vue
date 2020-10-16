@@ -25,6 +25,10 @@
             v-if="menu2"
             v-model="time"
             full-width
+            scrollable
+            format="24hr"
+            :min="min"
+            :max="max"
             @click:minute="$refs.menu.save(time)"
         ></v-time-picker>
       </v-menu>
@@ -48,6 +52,14 @@ export default {
     disabled : {
       type : Boolean,
       default : false
+    },
+    min : {
+      type : String,
+      default : () => ""
+    },
+    max : {
+      type : String,
+      default : () => ""
     }
   },
   data() {

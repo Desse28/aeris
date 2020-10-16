@@ -70,6 +70,15 @@ export default {
             let seconds =  this.completeNumber(currentDate.getSeconds())
             return year + '-' + month + '-' + day + 'T' + hours + ':'+ minutes + ':' + seconds + 'Z'
         },
+        addMinutesToDate : function (dateStr, numberOfMinute, mode) {
+            let currentDate, minute, result = ""
+            if(dateStr && numberOfMinute) {
+                currentDate = new Date(dateStr)
+                minute = mode === "subtract" ? - 1000 * (60 * numberOfMinute) : 1000 * (60 * numberOfMinute)
+                result =  this.getSpringDateFormat( currentDate.getTime() + minute )
+            }
+            return result
+        },
         isSelectionExist : function(session, startDate, endDate) {
             let selection, selections
             let shortStartDate, shortEndDate
@@ -128,6 +137,53 @@ export default {
         takeOfDateMilliseconds : function(date) {
             let dateFragment = date.split(".")
             return dateFragment[0]
+        },
+        isSinglePoint(point, selections) {
+            let selection
+            let cptPoint = 0
+
+            if(point && selections) {
+                for(let index in selections) {
+                    selection = selections[index]
+                    if(this.isSameDate(selection.startDate, point) || this.isSameDate(selection.endDate, point))
+                        cptPoint++
+                }
+            }
+            return cptPoint < 2;
+        },
+        getStartDateLim : function(startDate, selections) {
+            let lim="", selection
+
+            if(startDate && selections) {
+                for(let index in selections) {
+                    selection = selections[index]
+                    if(this.isGreaterThan(startDate, selection.endDate)) {
+                        if(lim === "")
+                            lim = selection.endDate
+                        else
+                            lim = this.isGreaterThan(selection.endDate, lim) ? selection.endDate : lim
+                    }
+                }
+            }
+
+            return lim
+        },
+        getEndDateLim : function(endDate, selections) {
+            let lim="", selection
+
+            if(endDate && selections) {
+                for(let index in selections) {
+                    selection = selections[index]
+                    if(this.isGreaterThan(selection.startDate, endDate)) {
+                        if(lim === "")
+                            lim = selection.startDate
+                        else
+                            lim = this.isGreaterThan(lim, selection.startDate) ? lim : selection.startDate
+                    }
+                }
+            }
+
+            return lim
         }
     }
 }

@@ -12,17 +12,17 @@
       <v-tabs-slider></v-tabs-slider>
 
       <v-tab
-          v-for="i in nbrParallelChart"
-          :key="i"
-          :href="'#'+$t('session.label_chart') + `-${i}`"
+          v-for="(chart, index) in getParallelCharts"
+          :key="index"
+          :href="'#' + chart.name"
       >
-        {{ $t("session.label_chart") }} {{ i }}
+        {{ chart.name }}
       </v-tab>
       <v-tabs-items v-model="tab">
         <v-tab-item
-            v-for="name in getChartsNames"
-            :key="name"
-            :value="name"
+            v-for="chart in getParallelCharts"
+            :key="chart.name"
+            :value="chart.name"
         >
           <v-card
               flat
@@ -53,10 +53,6 @@ export default {
     AerisDatavalidationChart,
   },
   props: {
-    nbrParallelChart: {
-      type: Number,
-      default : () => 1
-    },
     startDate : {
       type: String
     },
@@ -110,6 +106,14 @@ export default {
     isLinkedChartMode: {
       type: Boolean,
       default : false
+    },
+    parallelCharts : {
+      type : Array,
+      default : () => []
+    },
+    setCurrentParralelChart  : {
+      type : Function,
+      default : () => {}
     }
   },
   data () {
@@ -118,13 +122,16 @@ export default {
       icons: false,
     }
   },
-  computed : {
-    getChartsNames : function () {
-      let chartsNames = []
-      for(let i = 1; i <= this.nbrParallelChart; i++) {
-        chartsNames.push( this.$t('session.label_chart') + "-" + i)
-      }
-      return chartsNames
+  computed: {
+    getParallelCharts() {
+      let result = [...this.parallelCharts]
+      result.shift()
+      return result
+    },
+  },
+  watch : {
+    tab : function(chartName) {
+      this.setCurrentParralelChart(chartName)
     }
   }
 }

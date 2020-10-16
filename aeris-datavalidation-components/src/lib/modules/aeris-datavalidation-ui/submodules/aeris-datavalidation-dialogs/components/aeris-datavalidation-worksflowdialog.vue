@@ -16,6 +16,8 @@
         <v-btn class="mb-2 mt-2 blue--text"
                color="rgb(255, 255, 255)"
                depressed
+               v-on="on" v-bind="attrs"
+               v-on:click="switchCurrentView($t('session.label_selections'), null, true)"
         >
           <v-icon left> mdi-selection-drag</v-icon> Edit selections
         </v-btn>
@@ -47,6 +49,8 @@
               :notifySelection="notifySelection"
               :isSelectionMode="isSelectionMode"
               :sessionSelection="sessionSelection"
+              :instrumentEndDate="instrumentEndDate"
+              :instrumentStartDate="instrumentStartDate"
               :notifyCancelPopUp="notifyCancelPopUp"
               :switchCurrentView="switchCurrentView"
           />
@@ -61,19 +65,6 @@
             :notifyDeleteSelection="notifyDeleteSelection"
         />
         <v-divider></v-divider>
-
-        <v-card-actions
-            v-if="currentViewIsEdit"
-        >
-          <v-spacer></v-spacer>
-          <v-btn
-              color="primary"
-              text
-              @click="switchCurrentView($t('session.label_selections'), null, true)"
-          >
-            {{$t('session.label_selections')}}
-          </v-btn>
-        </v-card-actions>
       </v-card>
     </v-dialog>
   </div>
@@ -88,30 +79,38 @@ export default {
     AerisDatavalidationSelectionform,
     AerisDatavalidationSelectionsTable
   },
-  props: {
-    session: {
+  props : {
+    session : {
       type: Object,
       default: null
     },
-    qualityFlags: {
+    qualityFlags : {
       type: Array,
       default: () => []
     },
-    selection: {
+    selection : {
       type: Object,
       default: null
     },
-    notifySelection: {
+    notifySelection : {
       type: Function,
       default: () => {}
     },
-    notifyDeleteSelection: {
+    notifyDeleteSelection : {
       type: Function,
       default : () => {}
     },
-    setSessionsDialog: {
+    setSessionsDialog : {
       type : Function,
     },
+    instrumentStartDate : {
+      type : String,
+      default : () => ""
+    },
+    instrumentEndDate : {
+      type : String,
+      default : () => ""
+    }
   },
   data() {
     return {
@@ -191,7 +190,7 @@ export default {
     },
     switchCurrentView: function(viewName, selection, isEditSelection) {
       let startDate, endDate
-
+      console.log("Test switchCurrentView")
       if(viewName && (this.selection || selection)) {
         this.currentView = viewName
         startDate = selection ? selection.startDate : this.selection.startDate

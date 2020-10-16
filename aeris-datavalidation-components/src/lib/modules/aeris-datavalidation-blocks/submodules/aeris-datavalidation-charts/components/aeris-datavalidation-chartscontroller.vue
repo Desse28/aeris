@@ -10,6 +10,9 @@
         :session="currentSession"
         :qualityFlags="qualityFlags"
         :auxParameters="auxParameters"
+        :instrumentEndDate="endDate"
+        :parallelCharts="parallelCharts"
+        :instrumentStartDate="startDate"
         :linkedParameters ="linkedParameters"
         :addNewChart="addNewChart"
         :removeChart="removeChart"
@@ -55,13 +58,14 @@
               :endDate="endDate"
               :isMainChart="false"
               :startDate="startDate"
+              :parallelCharts="parallelCharts"
               :currentSession="currentSession"
               :instrumentInfos="instrumentInfos"
               :linkedChartData="linkedChartData"
-              :nbrParallelChart="nbrParallelChart"
               :isLinkedChartMode="isLinkedChartMode"
               :currentInstrument="currentInstrument"
               :secondChartParameters="secondChartParameters"
+              :setCurrentParralelChart="setCurrentParralelChart"
           />
         </template>
       </AerisDatavalidationLandScapeLayaout>
@@ -99,16 +103,17 @@ export default {
       selection: null,
       qualityFlags: [],
       auxParameters: [],
-      nbrParallelChart: 2,
       sessionsDialog: false,
       linkedParameters: [],
       currentSession: null,
       instrumentInfos: null,
       currentInstrument: null,
       isLinkedChartMode: false,
+      currentParalelChart: "",
       firstChartParameters: [],
       secondChartParameters: [],
       isSecondChartEmpty: false,
+      parallelCharts : [{name : "Chart1"}, {name : "Chart2"}],
       linkedChartData: {startXaxis: null, endXaxis: null},
     }
   },
@@ -240,13 +245,27 @@ export default {
       else
         this.isLinkedChartMode = true
     },
-    addNewChart: function() {
-      console.log("Test add newChart")
-      this.nbrParallelChart++
+    addNewChart: function(chartName) {
+      this.parallelCharts.push({name: chartName})
     },
-    removeChart: function() {
-      if(1 < this.nbrParallelChart)
-        this.nbrParallelChart--
+    removeChart : function() {
+      let mainChatName =  this.parallelCharts[0].name
+      let defaultParrallelChatName =  this.parallelCharts[1].name
+      const currentChart = this.currentParalelChart
+
+      if(currentChart !== "" &&
+          currentChart !== mainChatName &&
+          currentChart !== defaultParrallelChatName) {
+
+        this.parallelCharts = this.parallelCharts.filter(function(chart) {
+          return chart.name !== currentChart
+        })
+        this.currentParalelChart = ""
+      }
+    },
+    setCurrentParralelChart : function (chartName) {
+      this.currentParalelChart = chartName
+      console.log("Test setCurrentParralelChart : ", chartName)
     },
     getNewColor: function() {
       if(this.colorCount < colors.length -1) {
