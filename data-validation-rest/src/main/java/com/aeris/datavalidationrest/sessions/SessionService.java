@@ -34,6 +34,12 @@ public class SessionService {
 
     Logger logger = LoggerFactory.getLogger(LoginResource.class);
 
+    public void setCurrentPiid() {
+        if (this.commonService.isPI(request)) {
+            this.currentPiid = this.commonService.getCurrrentUserId(request);
+        }
+    }
+
     public ResponseEntity<Session> createNewSession(Session session) {
         Session newSession = session;
         this.setCurrentPiid();
@@ -45,10 +51,10 @@ public class SessionService {
             if(!isSessionExist(session))
                 newSession = sessionDao.save(session);
         }
-        return createResponse(newSession);
+        return createSessionResponse(newSession);
     }
 
-    public  ResponseEntity<Session> createResponse(Session session) {
+    public  ResponseEntity<Session> createSessionResponse(Session session) {
         URI location;
         ResponseEntity<Session> response = ResponseEntity.status(HttpStatus.SC_FORBIDDEN).body(null);
 
@@ -72,52 +78,6 @@ public class SessionService {
         }
 
         return ResponseEntity.status(HttpStatus.SC_FORBIDDEN).body(session);
-    }
-
-    public ResponseEntity<String> updateSession(Session session) {
-        ResponseEntity<String> response;
-
-        if(this.commonService.isPI(request)) {
-            sessionDao.save(session);
-            response = ResponseEntity.status(HttpStatus.SC_ACCEPTED).body("Update session (" + session.getId() + ")");
-        } else {
-            response = ResponseEntity.status(HttpStatus.SC_FORBIDDEN).body("Error Message");
-        }
-
-        return response;
-    }
-
-    public ResponseEntity<String> deleteSessionById(String id) {
-        ResponseEntity<String> response;
-
-        if(id == null)
-            return ResponseEntity.noContent().build();
-
-        if (this.commonService.isPI(request)) {
-            sessionDao.deleteById(id);
-            response = ResponseEntity.status(HttpStatus.SC_OK).body("Delete session");
-        } else {
-            response = ResponseEntity.status(HttpStatus.SC_FORBIDDEN).body("Error Message");
-        }
-
-        return response;
-    }
-
-    public ResponseEntity<String>  submitSession(Session session) {
-        ResponseEntity<String> response;
-
-        if( session == null)
-            return ResponseEntity.noContent().build();
-
-        if(this.commonService.isPI(request)) {
-            session.setState(true);
-            sessionDao.save(session);
-            response = ResponseEntity.status(HttpStatus.SC_OK).body("Submit session");
-        } else {
-            response = ResponseEntity.status(HttpStatus.SC_FORBIDDEN).body("Error Message");
-        }
-
-        return response;
     }
 
     public boolean isSessionExist(Session session) {
@@ -154,12 +114,6 @@ public class SessionService {
         return response;
     }
 
-    public void setCurrentPiid() {
-        if (this.commonService.isPI(request)) {
-            this.currentPiid = this.commonService.getCurrrentUserId(request);
-        }
-    }
-
     public SpringDataPageable getPageable(int page, int size) {
         SpringDataPageable pageable = new SpringDataPageable();
         List<Order> orders = new ArrayList<>();
@@ -170,5 +124,34 @@ public class SessionService {
         pageable.setPagenumber(page);
 
         return pageable;
+    }
+
+    public ResponseEntity<String> updateSession(Session session) {
+        ResponseEntity<String> response;
+
+        if(this.commonService.isPI(request)) {
+            sessionDao.save(session);
+            response = ResponseEntity.status(HttpStatus.SC_ACCEPTED).body("Update session (" + session.getId() + ")");
+        } else {
+            response = ResponseEntity.status(HttpStatus.SC_FORBIDDEN).body("Error Message");
+        }
+
+        return response;
+    }
+
+    public ResponseEntity<String> deleteSessionById(String id) {
+        ResponseEntity<String> response;
+
+        if(id == null)
+            return ResponseEntity.noContent().build();
+
+        if (this.commonService.isPI(request)) {
+            sessionDao.deleteById(id);
+            response = ResponseEntity.status(HttpStatus.SC_OK).body("Delete session");
+        } else {
+            response = ResponseEntity.status(HttpStatus.SC_FORBIDDEN).body("Error Message");
+        }
+
+        return response;
     }
 }

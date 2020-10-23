@@ -22,16 +22,6 @@ public class SessionResource {
         return sessionService.createNewSession(session);
     }
 
-    @DeleteMapping(value = "/{id}")
-    public ResponseEntity<String> delete(@PathVariable String id) {
-        return this.sessionService.deleteSessionById(id);
-    }
-
-    @PutMapping(value = "/update")
-    public ResponseEntity<String> update(@RequestBody Session session) {
-        return this.sessionService.updateSession(session);
-    }
-
     @GetMapping(value = "/{id}")
     public ResponseEntity<Optional<Session>> findById(@PathVariable String id) {
         return this.sessionService.getById(id);
@@ -39,11 +29,16 @@ public class SessionResource {
 
     @GetMapping(params = { "page", "size" })
     public ResponseEntity<Page<List<Session>>> findByPiid(@RequestParam("page") int page, @RequestParam("size") int size) {
-       return sessionService.getPiSessions(page, size);
+        return sessionService.getPiSessions(page, size);
     }
 
-    @PostMapping("/submit-session")
-    public ResponseEntity<String> submitSession(@RequestBody Session session) {
-        return this.sessionService.submitSession(session);
+    @PutMapping(value = "/update")
+    public ResponseEntity<String> update(@RequestBody Session session) {
+        return this.sessionService.updateSession(session);
+    }
+
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity<String> delete(@PathVariable String id) {
+        return this.sessionService.deleteSessionById(id);
     }
 }

@@ -13,8 +13,6 @@ public class Session {
     private String id;
     @ApiModelProperty(hidden=true)
     private String piId;
-    @ApiModelProperty( example = "false" )
-    private boolean state;
     @ApiModelProperty( example = "2020-08-19T09:14:21.274Z" )
     private Date startDate;
     @ApiModelProperty( example = "2020-08-19T09:14:21.274Z" )
@@ -58,14 +56,6 @@ public class Session {
 
     public void setId(String id) {
         this.id = id;
-    }
-
-    public boolean isState() {
-        return state;
-    }
-
-    public void setState(boolean state) {
-        this.state = state;
     }
 
     public String getPiId() {
@@ -129,7 +119,6 @@ public class Session {
         return "Session{" +
                 "id='" + id + '\'' +
                 ", piId='" + piId + '\'' +
-                ", state=" + state +
                 ", startDate=" + startDate +
                 ", endDate=" + endDate +
                 ", instrumentName='" + instrumentName + '\'' +
