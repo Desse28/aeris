@@ -28,6 +28,16 @@ public class InstrumentResource {
             return instrumentService.insertNewInstrument(instrument);
     }
 
+    @GetMapping(params = { "id" })
+    public ResponseEntity<Optional<Instrument>> findById(@RequestParam("id") String id) {
+        return instrumentService.getById(id);
+    }
+
+    @GetMapping(params = { "name" })
+    public ResponseEntity<Optional<Instrument>> findByName(@RequestParam("name") String name) {
+        return this.instrumentService.getByName(name);
+    }
+
     @GetMapping
     public ResponseEntity<List<Instrument>> findAll() {
         return this.instrumentService.getAll();
@@ -38,14 +48,16 @@ public class InstrumentResource {
         return instrumentService.getAllNames();
     }
 
-    @GetMapping(params = { "id" })
-    public ResponseEntity<Optional<Instrument>> findById(@RequestParam("id") String id) {
-        return instrumentService.getById(id);
+    @GetMapping(value = "infos/{id}")
+    public Optional<DataInfo> findInstrumentInfos(@PathVariable String id) {
+        return dataInfoDao.findById(id);
     }
 
-    @GetMapping(params = { "name" })
-    public ResponseEntity<Optional<Instrument>> findByName(@RequestParam("name") String name) {
-        return this.instrumentService.getByName(name);
+    @GetMapping(value = "/{name}/{startDate}/{endDate}")
+    public Parameter findParameterDataByPeriod(@ApiParam(value = "Air Temp") @PathVariable String name,
+                                  @ApiParam(value = "2019-05-16T22:00:00.000+00:00") @PathVariable String startDate,
+                                  @ApiParam(value = "2019-05-16T22:02:01.000+00:00") @PathVariable String endDate) {
+        return this.instrumentService.getParameterDataByPeriod(name, startDate,  endDate);
     }
 
     @PutMapping(value = "/update")
@@ -62,17 +74,5 @@ public class InstrumentResource {
             return ResponseEntity.noContent().build();
         else
             return this.instrumentService.deleteInstrument(id);
-    }
-
-    @GetMapping(value = "/{name}/{startDate}/{endDate}")
-    public Parameter findParameterDataByPeriod(@ApiParam(value = "Air Temp") @PathVariable String name,
-                                  @ApiParam(value = "2019-05-16T22:00:00.000+00:00") @PathVariable String startDate,
-                                  @ApiParam(value = "2019-05-16T22:02:01.000+00:00") @PathVariable String endDate) {
-        return this.instrumentService.getParameterDataByPeriod(name, startDate,  endDate);
-    }
-
-    @GetMapping(value = "infos/{id}")
-    public Optional<DataInfo> getDataInformation(@PathVariable String id) {
-        return dataInfoDao.findById(id);
     }
 }

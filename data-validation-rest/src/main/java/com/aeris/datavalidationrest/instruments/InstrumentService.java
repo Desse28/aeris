@@ -19,8 +19,6 @@ import java.util.*;
 @Service
 public class InstrumentService {
     @Autowired
-    private DataInfoDao dataInfoDao;
-    @Autowired
     private HttpServletRequest request;
     @Autowired
     private CommonService commonService;
