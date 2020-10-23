@@ -11,7 +11,7 @@
                depressed
                v-on:click="setSessionsDialog(true)"
         >
-          <v-icon left>mdi-view-list</v-icon> Sessions
+          <v-icon left>mdi-view-list</v-icon> {{$t('session.label_sessions')}}
         </v-btn>
         <v-btn class="mb-2 mt-2 blue--text"
                color="rgb(255, 255, 255)"
@@ -19,7 +19,7 @@
                v-on="on" v-bind="attrs"
                v-on:click="switchCurrentView($t('session.label_selections'), null, true)"
         >
-          <v-icon left> mdi-selection-drag</v-icon> Edit selections
+          <v-icon left> mdi-selection-drag</v-icon> {{$t('session.label_selections')}}
         </v-btn>
         <v-btn class="mb-2 mt-2 blue--text"
                color="rgb(255, 255, 255)"
@@ -27,7 +27,7 @@
                v-on="on" v-bind="attrs"
                v-on:click="switchCurrentView($t('session.label_selections'), null, false)"
         >
-          <v-icon left>mdi-send-outline</v-icon> send session
+          <v-icon left>mdi-send-outline</v-icon> {{$t('session.label_sendMySession')}}
         </v-btn>
       </template>
 
@@ -51,6 +51,7 @@
               :sessionSelection="sessionSelection"
               :instrumentEndDate="instrumentEndDate"
               :instrumentStartDate="instrumentStartDate"
+              :notifyDeleteSelection="notifyDeleteSelection"
               :notifyCancelPopUp="notifyCancelPopUp"
               :switchCurrentView="switchCurrentView"
           />

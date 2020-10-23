@@ -1,123 +1,131 @@
 <template>
   <div class="text-center ml-4">
-    <v-divider
-        vertical
-    ></v-divider>
+    <AerisDatavalidationDeleteDialog
+        :dialog="deleteDialog"
+        :hideOkButton="hideOkButton"
+        :ok="$t('session.label_yes')"
+        :cancel="cancelDeleteLabel"
+        :okCallBack="validateDelete"
+        :cancelCallBack="cancelDelete"
+        :title="$t('session.label_deletion')"
+        :message="deleteTabMessage"
+    />
     <v-menu
-        :close-on-content-click="false"
-        :nudge-width="200"
-        offset-x
+        v-for="([text], index) in btns"
+        :key="text"
+        :close-on-content-click="closeMenu"
+        :nudge-width="text ===  $t('session.label_addChart') ? 80 : 200"
+        :offset-y="text ===  $t('session.label_addChart') && offset"
+        :offset-x="text === $t('session.label_addParameters')&& offset"
     >
       <template v-slot:activator="{ on, attrs }">
-        <v-btn class="mb-2 mt-2 blue--text"
-               color="rgb(255, 255, 255)"
-               depressed
-               v-on="on"
-               v-bind="attrs"
+        <v-btn
+            class="mb-2 mt-2 blue--text"
+            color="rgb(255, 255, 255)"
+            v-if="text !== $t('session.label_removeChart')"
+            depressed
+            v-bind="attrs"
+            v-on="on"
         >
-          <v-icon left>mdi-chevron-down</v-icon> {{ $t("session.label_addParameters") }}
+          <v-icon left>{{icons[index]}}</v-icon> {{ text }}
         </v-btn>
         <v-btn class="mb-2 mt-2 blue--text"
                color="rgb(255, 255, 255)"
                depressed
-               v-on:click="removeChart"
+               v-else
+               v-on:click="deleteCurrentParalelChart"
         >
-          <v-icon left>mdi-tab-remove </v-icon> {{ $t("session.label_removeChart") }}
-        </v-btn>
-        <v-btn class="mb-2 mt-2 blue--text"
-               color="rgb(255, 255, 255)"
-               depressed
-               v-on:click="addChart"
-        >
-          <v-icon left>mdi-tab-plus</v-icon> {{ $t("session.label_addChart") }}
+          <v-icon left>{{icons[index]}}</v-icon> {{ text }}
         </v-btn>
       </template>
       <v-card>
-        <v-row justify="center">
+        <div v-if="text === $t('session.label_addParameters')">
+          <v-row justify="center">
+            <v-col cols="6">
+              <v-list>
+                <v-list-item>
+                  <v-list-item-content>
+                    <v-list-item-title>{{ $t("session.label_parameter") }}</v-list-item-title>
+                  </v-list-item-content>
+                </v-list-item>
+              </v-list>
+              <v-divider></v-divider>
+              <v-list>
+                <v-list-item v-for="label in parametersLabel" :key="label.name" class="ma-3">
+                  <v-list-item-action>
+                    <v-checkbox
+                        v-model="parameters"
+                        :label="label.name"
+                        :color="label.color"
+                        :value="label"
+                        hide-details
+                    ></v-checkbox>
 
-          <v-col cols="4">
-            <v-list>
-              <v-list-item>
-                <v-list-item-content>
-                  <v-list-item-title>{{ $t("session.label_parameter") }}</v-list-item-title>
-                </v-list-item-content>
-              </v-list-item>
-            </v-list>
-            <v-divider></v-divider>
-            <v-list>
-              <v-list-item v-for="label in parametersLabel" :key="label.name" class="ma-3">
-                <v-list-item-action>
-                  <v-checkbox
-                      v-model="parameters"
-                      :label="label.name"
-                      :color="label.color"
-                      :value="label"
-                      hide-details
-                  ></v-checkbox>
-
-                </v-list-item-action>
-              </v-list-item>
-            </v-list>
-          </v-col>
-
-          <v-col cols="4">
-            <v-list>
-              <v-list-item>
-                <v-list-item-content>
-                  <v-list-item-title>{{ $t("session.label_layering") }}</v-list-item-title>
-                </v-list-item-content>
-              </v-list-item>
-            </v-list>
-            <v-divider></v-divider>
-            <v-list>
-              <v-list-item  v-for="(parallelLabel, index) in parallelsLabel" :key="parallelLabel" class="ma-3">
-                <v-list-item-action>
-                  <v-checkbox
-                      v-model="parallels"
-                      color="red"
-                      :value="parallelLabel"
-                      :disabled="!parameters.includes(parametersLabel[index])"
-                      hide-details
-                  ></v-checkbox>
-
-                </v-list-item-action>
-              </v-list-item>
-            </v-list>
-          </v-col>
-
-          <v-col cols="4">
-            <v-list>
-              <v-list-item>
-                <v-list-item-content>
-                  <v-list-item-title>Chart(s)</v-list-item-title>
-                </v-list-item-content>
-              </v-list-item>
-            </v-list>
-            <v-divider></v-divider>
-            <v-list>
-              <v-list-item v-for="(label, index) in parametersLabel" :key="label.name">
-                <v-list-item-action>
-                  <AerisDatavalidationChartsSelect
-                      :selectIndex="index"
-                      :parallelCharts="parallelCharts"
-                  />
-                </v-list-item-action>
-              </v-list-item>
-            </v-list>
-          </v-col>
-
-        </v-row>
+                  </v-list-item-action>
+                </v-list-item>
+              </v-list>
+            </v-col>
+            <v-col cols="6">
+              <v-list>
+                <v-list-item>
+                  <v-list-item-content>
+                    <v-list-item-title>{{$t('session.label_chart')}}</v-list-item-title>
+                  </v-list-item-content>
+                </v-list-item>
+              </v-list>
+              <v-divider></v-divider>
+              <v-list>
+                <v-list-item v-for="(label, index) in parametersLabel"
+                             :key="label.name"
+                >
+                  <v-list-item-action>
+                    <AerisDatavalidationChartsSelect
+                        :selectIndex="index"
+                        :charts="getCharts"
+                        :currentParameter="parametersLabel[index]"
+                        :switchParameterChart="switchParameterChart"
+                    />
+                  </v-list-item-action>
+                </v-list-item>
+              </v-list>
+            </v-col>
+          </v-row>
+        </div>
+        <div v-if="text ===  $t('session.label_addChart')" class="pa-4">
+          <v-alert
+              dense
+              outlined
+              type="error"
+              v-if="isEmptyName"
+          >
+            {{tabAlertMess}}
+          </v-alert>
+          <v-text-field
+              v-model="tabName"
+              :label="$t('session.label_chartName')"
+              hide-details="auto"
+          ></v-text-field>
+          <v-btn class="mb-2 mt-2"
+                 color="blue"
+                 depressed
+                 v-on:click="addChart"
+          >
+            {{$t('session.label_add')}}
+          </v-btn>
+        </div>
       </v-card>
     </v-menu>
   </div>
 </template>
 <script>
 import AerisDatavalidationChartsSelect from "../../../../aeris-datavalidation-ui/submodules/aeris-datavalidation-selects/components/aeris-datavalidation-chartsselect"
+import AerisDatavalidationDeleteDialog from "../../../../aeris-datavalidation-ui/submodules/aeris-datavalidation-dialogs/components/aeris-datavalidation-deletedialog"
 
 export default {
   name: "aeris-datavalidation-options",
   components : {
-    AerisDatavalidationChartsSelect
+    AerisDatavalidationChartsSelect,
+    AerisDatavalidationDeleteDialog
   },
   props: {
     linkedParameters: {
@@ -128,9 +136,6 @@ export default {
       type : Array,
       default : () => []
     },
-    addNewParameter : {
-      type : Function
-    },
     addNewChart: {
       type: Function,
       default: () => {}
@@ -138,127 +143,158 @@ export default {
     removeParameter : {
       type : Function
     },
-    addNewParallel : {
-      type : Function
-    },
-    removeParallel : {
+    addParameter : {
       type : Function
     },
     removeChart: {
       type : Function,
     },
-    parallelCharts : {
-      type : Array,
-      default : () => []
+    charts : {
+      type : Object,
+      default : () => null
+    },
+    switchParameterChart : {
+      type : Function,
+      default : () => {}
+    },
+    currentParalelChart : {
+      type : String,
+      default : () => ""
     }
   },
   data() {
     return {
-      parallels: [],
+      tabName: "",
+      offset: true,
       parameters: [],
-      parallelsLabel: [],
+      currentItem : "",
+      closeMenu : false,
+      tabAlertMess : "",
+      hideOkButton:false,
+      isEmptyName: false,
+      deleteDialog: false,
       parametersLabel : [],
+      deleteTabMessage : "",
+      tabNames : ["CHART2"],
+      btns: [
+        [this.$t("session.label_addParameters")],
+        [this.$t("session.label_addChart")],
+        [this.$t("session.label_removeChart")],
+      ],
+      cancelDeleteLabel: this.$t('session.label_no'),
+      icons : ['mdi-chevron-down', 'mdi-tab-plus', 'mdi-tab-remove']
     }
   },
   watch: {
     parameters : function (newParameters, oldParameters) {
       if(oldParameters.length < newParameters.length) {
-        this.flushNewParallel(newParameters)
+        this.switchParameterState(newParameters[newParameters.length - 1])
+        this.addParameter(newParameters[newParameters.length - 1])
       } else if (newParameters.length < oldParameters.length) {
-        this.flushRemoveParallel(newParameters, oldParameters)
-      }
-    },
-    parallels : function (newParalles, oldParalles) {
-      if(oldParalles.length < newParalles.length) {
-        this.flushNewParameter(newParalles)
-      } else if(newParalles.length < oldParalles.length ) {
-        this.disabledParallel(newParalles, oldParalles)
+        this.flushRemoveParameter(newParameters, oldParameters)
       }
     },
     auxParameters: function () {
+      let charts = Object.values(this.charts)
+
       this.auxParameters.forEach((parameter)=> {
+        parameter.chartName = charts[1].name
         this.parametersLabel.push(parameter)
         this.parameters.push(parameter)
       })
-      this.pushLayering(this.auxParameters.length)
     },
     linkedParameters: function () {
+      let charts = Object.values(this.charts)
+
       this.linkedParameters.forEach((parameter)=> {
         if(parameter) {
+          parameter.chartName = charts[1].name
           this.parametersLabel.unshift(parameter)
         }
       })
-      this.pushLayering(this.linkedParameters.length)
+    }
+  },
+  computed : {
+    getCharts : function () {
+      return Object.values(this.charts)
     }
   },
   methods : {
-    pushLayering : function(nbrLayering) {
-      let parallelLen = this.parallelsLabel.length
-      let len = parallelLen + nbrLayering
-      for(let i = parallelLen; i < len; i++) {
-        this.parallelsLabel.push("Layering" + (i + 1))
-      }
-    },
-    turnLayering : function(start, end) {
-      for(let i = start; i < end; i++) {
-        this.parallels.push("Layering" + i)
-      }
-    },
-    disabledParallel : function (newParallels, oldParrales) {
-      let deletedIndex
-      let targetParameter
-      let intersection
-
-      if(newParallels && oldParrales) {
-        intersection = oldParrales.filter(value => !newParallels.includes(value))
-        deletedIndex = intersection[0].split("Layering")[1]
-        targetParameter = this.parametersLabel[deletedIndex - 1]
-        if(this.parameters.includes(targetParameter))
-          this.addNewParallel(targetParameter)
-      }
-    },
-    flushNewParameter : function (parallels) {
-      let lastIndex = parallels.length - 1
-      let newParallelIndex = parallels[lastIndex].split("Layering")[1]
-      let targetParameter = this.parametersLabel[newParallelIndex-1]
-      this.addNewParameter(targetParameter)
+    setCurrentItem : function (targetItem) {
+      console.log("Test setCurrentItem : ", targetItem)
+      if(targetItem)
+        this.currentItem = targetItem
     },
     flushRemoveParameter : function (newParameters, oldParameters) {
-      let deletedElement
-
       let intersection = oldParameters.filter(param => {
         return !newParameters.some(newParam => newParam.name === param.name)
       })
-
-      deletedElement = oldParameters.length === 0 ? newParameters : intersection[0]
-      this.removeParameter(deletedElement)
-    },
-    flushNewParallel : function(parameters) {
-      let newParameter = parameters[parameters.length - 1]
-      this.addNewParallel(newParameter)
-    },
-    flushRemoveParallel: function (newParameters, oldParameters) {
-      let targetParallelIndex
-      let deletedElement
-
-      let intersection = oldParameters.filter(param => {
-        return !newParameters.some(newParam => newParam.name === param.name)
-      })
-
-      deletedElement = intersection[0]
-      targetParallelIndex = this.parametersLabel.indexOf(deletedElement);
-      if(0 <= targetParallelIndex) {
-        if(this.parallels.includes(this.parallelsLabel[targetParallelIndex])) {
-          this.parallels.splice(this.parallels.indexOf(this.parallelsLabel[targetParallelIndex]), 1)
-        }
-        this.removeParameter(deletedElement)
-      }
+      this.switchParameterState(intersection[0])
+      this.removeParameter(intersection[0])
     },
     addChart : function () {
-      let chartName = "Chart" + (this.parallelCharts.length + 1)
-      this.addNewChart(chartName)
-    }
-},
+     if(this.tabName === "") {
+       this.turnTabAlert(true)
+     } else if(this.tabNames.includes(this.tabName.toUpperCase())) {
+       this.turnTabAlert(false)
+     } else {
+       this.addNewChart(this.tabName)
+       this.closeMenu = true
+       this.tabNames.push(this.tabName.toUpperCase())
+       setTimeout(() => {
+         this.closeMenu = false
+         this.tabName = ""
+       }, 100)
+     }
+    },
+    turnTabAlert : function (isEmptyName) {
+      this.tabAlertMess = isEmptyName ? this.$t("session.label_emptyName") : this.$t("session.label_chartExist")
+      this.isEmptyName = true
+      setTimeout(() => {
+        this.isEmptyName = false
+      }, 1000)
+    },
+    switchParameterState : function(targetParameter) {
+      this.parametersLabel.forEach((parameter)=> {
+        if(parameter.name === targetParameter.name) {
+          if(!parameter.isOn)
+            parameter.isOn = true
+          else
+            parameter.isOn = false
+        }
+      })
+    },
+    deleteCurrentParalelChart : function() {
+      if(this.currentParalelChart.toUpperCase() === "CHART2") {
+        this.hideOkButton = true
+        this.cancelDeleteLabel = this.$t('session.label_close')
+        this.deleteTabMessage = this.$t("session.label_nonDeletableChart")
+      } else {
+        this.deleteTabMessage = this.$t("session.message_deleteChart")
+      }
+      this.deleteDialog = true
+    },
+    validateDelete : function () {
+      let intersection
+      let targetParameters = this.charts[this.currentParalelChart].parameters
+      this.removeChart()
+      this.deleteDialog = false
+      if(targetParameters) {
+        intersection = this.parameters.filter(param => {
+          return !targetParameters.some(newParam => newParam.name === param.name)
+        })
+        if(intersection)
+          this.parameters = intersection
+      }
+
+      this.tabNames =  this.tabNames.filter(tabName => tabName.toUpperCase() !== this.currentParalelChart.toUpperCase())
+    },
+    cancelDelete : function () {
+      this.deleteDialog = false
+      this.hideOkButton = false
+      this.cancelDeleteLabel = this.$t('session.label_no')
+    },
+  },
 
 }
 </script>

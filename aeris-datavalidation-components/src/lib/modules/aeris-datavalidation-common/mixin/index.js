@@ -118,6 +118,20 @@ export default {
             }
             return null
         },
+        getTargetSelectionIndex : function (selections, selection) {
+            let currentSelection
+            if(selection && selections) {
+                for(let index in selections) {
+                    currentSelection = selections[index]
+
+                    if( this.isSameDate(selection.x0, currentSelection.startDate) &&
+                        this.isSameDate(selection.x1, currentSelection.endDate)) {
+                        return index
+                    }
+                }
+            }
+            return -1
+        },
         getCleanDate: function (date) {
             let day, month, year, hours, minutes, seconds
             let dateFragment = date.split(".")

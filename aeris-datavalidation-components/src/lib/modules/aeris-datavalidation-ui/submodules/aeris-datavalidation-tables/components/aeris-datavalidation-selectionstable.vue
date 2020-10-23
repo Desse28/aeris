@@ -82,7 +82,7 @@
             v-if="!this.isEditSelection && getSelectionsLen > 0"
             @click="alertSubmitSelection"
         >
-          {{$t('session.label_closeSession')}}
+          {{$t('session.label_submit')}}
         </v-btn>
         <v-btn
             color="primary"

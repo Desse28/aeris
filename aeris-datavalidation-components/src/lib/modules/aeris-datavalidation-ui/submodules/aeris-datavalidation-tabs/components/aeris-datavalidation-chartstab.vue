@@ -1,6 +1,6 @@
 <template>
   <div
-      v-if="isSecondChartParametersEmpty"
+      v-if="!hideChart"
       class="mr-4 rounded-pill"
   >
     <v-tabs
@@ -12,7 +12,7 @@
       <v-tabs-slider></v-tabs-slider>
 
       <v-tab
-          v-for="(chart, index) in getParallelCharts"
+          v-for="(chart, index) in getCharts"
           :key="index"
           :href="'#' + chart.name"
       >
@@ -20,7 +20,7 @@
       </v-tab>
       <v-tabs-items v-model="tab">
         <v-tab-item
-            v-for="chart in getParallelCharts"
+            v-for="chart in getCharts"
             :key="chart.name"
             :value="chart.name"
         >
@@ -35,7 +35,7 @@
                 :currentSession="currentSession"
                 :instrumentInfos="instrumentInfos"
                 :linkedChartData="linkedChartData"
-                :parameters="secondChartParameters"
+                :parameters="charts[chart.name].parameters"
                 :isLinkedChartMode="isLinkedChartMode"
                 :currentInstrument="currentInstrument"
             />
@@ -99,7 +99,7 @@ export default {
       type: Array,
       default : () => []
     },
-    isSecondChartParametersEmpty : {
+    hideChart : {
       type: Boolean,
       default : false
     },
@@ -107,9 +107,9 @@ export default {
       type: Boolean,
       default : false
     },
-    parallelCharts : {
-      type : Array,
-      default : () => []
+    charts : {
+      type : Object,
+      default : () => null
     },
     setCurrentParralelChart  : {
       type : Function,
@@ -123,8 +123,8 @@ export default {
     }
   },
   computed: {
-    getParallelCharts() {
-      let result = [...this.parallelCharts]
+    getCharts() {
+      let result = Object.values(this.charts)
       result.shift()
       return result
     },

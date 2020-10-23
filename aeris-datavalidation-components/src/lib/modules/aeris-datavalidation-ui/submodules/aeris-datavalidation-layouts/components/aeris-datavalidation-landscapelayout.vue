@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div :class="cols[0] === 12 && 'mr-4 rounded-pill'">
       <v-row :justify="justify">
         <v-col
             :class="padding"

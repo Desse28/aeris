@@ -1,24 +1,15 @@
 <template>
   <div class="ml-6">
     <v-tabs
-        v-model="tab"
         background-color="light-blue"
-        class="elevation-2"
+        :class="'elevation-2 ' + tab"
         dark
         :centered="centered"
     >
-      <v-tab
-          v-for="i in tabs"
-          :key="i"
-          :href="`#chart-${i}`"
-      >
+      <v-tab>
         {{ $t("session.label_mainChart") }}
       </v-tab>
-
-      <v-tab-item
-          :key="1"
-          :value="'chart-' + 1"
-      >
+      <v-tab-item>
         <v-card
             flat
             tile
@@ -38,7 +29,7 @@
               :applyLinkedEffect="applyLinkedEffect"
               :defaultSelections="defaultSelections"
               :currentInstrument="currentInstrument"
-              :isSecondChartEmpty="isSecondChartEmpty"
+              :isParallelChartsEmpty="isParallelChartsEmpty"
           />
         </v-card>
       </v-tab-item>
@@ -58,7 +49,10 @@
   </div>
 </template>
 <script>
+import $ from "jquery";
 import AerisDatavalidationChart from "./../../../../aeris-datavalidation-blocks/submodules/aeris-datavalidation-charts/components/aeris-datavalidation-chart"
+
+///v-tabs-slider-wrapper
 export default {
   name: "aeris-datavalidation-chartstabs",
   components : {
@@ -83,7 +77,7 @@ export default {
       type: Boolean,
       default: () => false
     },
-    isSecondChartEmpty : {
+    isParallelChartsEmpty : {
       type: Boolean,
       default: () => false
     },
@@ -139,16 +133,21 @@ export default {
   data () {
     return {
       tabs: 1,
-      tab: "chart-1",
       grow: false,
       icons: false,
       right: false,
       centered: true,
+      tab: "main-tab",
       vertical: false,
       prevIcon: false,
       nextIcon: false,
     }
   },
+  mounted() {
+    let tabSlider = $('.' + this.tab).find( '.v-tabs-slider-wrapper' )
+    if(tabSlider)
+      tabSlider.remove()
+  }
 }
 </script>
 

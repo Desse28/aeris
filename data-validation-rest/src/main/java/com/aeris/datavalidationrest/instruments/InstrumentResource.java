@@ -64,14 +64,6 @@ public class InstrumentResource {
             return this.instrumentService.deleteInstrument(id);
     }
 
-    @PostMapping(value = "/{uuid}")
-    public ResponseEntity<String> importParameters(@RequestBody @Valid String uuid) {
-        if(uuid == null)
-            return ResponseEntity.noContent().build();
-        else
-            return instrumentService.importParameters(uuid);
-    }
-
     @GetMapping(value = "/{name}/{startDate}/{endDate}")
     public Parameter findParameterDataByPeriod(@ApiParam(value = "Air Temp") @PathVariable String name,
                                   @ApiParam(value = "2019-05-16T22:00:00.000+00:00") @PathVariable String startDate,

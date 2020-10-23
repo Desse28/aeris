@@ -86,7 +86,7 @@
         type: Number,
         default: () => 0
       },
-      isSecondChartEmpty : {
+      isParallelChartsEmpty : {
         type: Boolean,
         default: () => false
       },
@@ -129,7 +129,7 @@
       switchLinkedMode: {
         type : Function,
         default: () => {}
-      },
+      }
     },
     components: {
       Plotly,
@@ -167,8 +167,8 @@
       },
     },
     watch: {
-      isSecondChartEmpty : function () {
-        if(this.isSecondChartEmpty)
+      isParallelChartsEmpty : function () {
+        if(this.isParallelChartsEmpty)
           this.refresh()
       },
       deleteStep : function() {
@@ -178,6 +178,9 @@
       },
       parameters : function (newParameters, oldsParameters) {
         let parameter
+        if(newParameters.length === 0)
+          this.resetChart()
+
         if(this.data.length === 0) {
           parameter = newParameters[0]
           this.initCurrentChart(parameter)
@@ -238,19 +241,28 @@
     },
     methods: {
       initCurrentChart : function(parameter) {
-        if(this.currentSession && this.currentInstrument && parameter) {
-          if(0 < this.parameters.length) {
+        if(this.currentSession && this.currentInstrument) {
+          if(0 < this.parameters.length && parameter)
             this.addNewParameter(parameter)
 
-            this.initModeBar()
+          this.initModeBar()
 
-            if(this.isMainChart) {
-              this.addEventsHandler()
-            }
-            this.setLayout()
+          if(0 < this.parameters.length && this.isMainChart)
+            this.addEventsHandler()
+
+          this.setLayout()
+
+          if(0 < this.parameters.length)
             this.initDefaultSelections()
-          }
+
         }
+      },
+      resetChart : function() {
+        const cloneLayout = JSON.parse(JSON.stringify(this.layout))
+        this.selections = []
+        cloneLayout.shapes = this.selections
+        this.layout = cloneLayout
+        this.refresh()
       },
       addNewParameter : function (parameter) {
         let uri, nextIndex
@@ -618,13 +630,14 @@
       },
       deleteTargetSelection : function() {
         let index
+        let selections = this.currentSession.sessionSelections
         if(this.currentSelection === null) {
           this.deleteAlert = true
           setTimeout(() => {
             this.deleteAlert = false
           }, 1000)
         } else {
-          index = this.getTargetSelectionIndex()
+          index = this.$root.getTargetSelectionIndex(selections, this.currentSelection)
           if(index !== -1) {
             this.deleteDialog = true
             this.notifyDeleteSelection(true)
@@ -634,7 +647,8 @@
         }
       },
       validateDelete : function () {
-        let targetIndex = this.getTargetSelectionIndex()
+        let selections = this.currentSession.sessionSelections
+        let targetIndex = this.$root.getTargetSelectionIndex(selections, this.currentSelection)
         if(targetIndex) {
           this.currentSession.sessionSelections.splice(targetIndex, 1)
           this.updateSession()
@@ -650,22 +664,6 @@
       cancelDelete : function () {
         this.deleteDialog = false
         this.notifyDeleteSelection(false)
-      },
-      getTargetSelectionIndex : function () {
-        let targetIndex = -1
-        let selectionCurs, selectionCursStartDate, selectionCursEndDate
-        for(let index in this.currentSession.sessionSelections) {
-          selectionCurs = this.currentSession.sessionSelections[index]
-          selectionCursStartDate = this.$root.takeOfDateMilliseconds(selectionCurs.startDate)
-          selectionCursEndDate = this.$root.takeOfDateMilliseconds(selectionCurs.endDate)
-
-          if(selectionCursStartDate === this.currentSelection.x0 &&
-              selectionCursEndDate === this.currentSelection.x1) {
-            targetIndex = index
-            break
-          }
-        }
-        return targetIndex
       },
       updateSession : function() {
         this.typeOfRequest = "PUT"

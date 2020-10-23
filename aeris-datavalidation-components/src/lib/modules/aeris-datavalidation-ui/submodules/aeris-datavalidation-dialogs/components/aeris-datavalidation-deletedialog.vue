@@ -12,7 +12,11 @@
           />
         </v-card-text>
         <v-card-actions class="d-flex justify-center">
-          <v-btn color="green darken-1" text @click="okCallBack">
+          <v-btn
+              color="green darken-1"
+              text @click="okCallBack"
+              v-if="!hideOkButton"
+          >
             {{ok}}
           </v-btn>
           <v-btn color="green darken-1" text @click="cancelCallBack">
@@ -43,6 +47,10 @@ export default {
     ok : {
       type : String,
       default: () => "OK"
+    },
+    hideOkButton : {
+      type : Boolean,
+      default: () => false
     },
     cancel: {
       type: String,

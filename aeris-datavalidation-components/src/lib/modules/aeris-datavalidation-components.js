@@ -22,6 +22,8 @@ import AerisDatavalidationSelectionsTable from "./aeris-datavalidation-ui/submod
 import AerisDatavalidationConfiguration from "./aeris-datavalidation-blocks/submodules/aeris-datavalidation-options/components/aeris-datavalidation-configuration";
 import AerisDatavalidationWorksFlowDialog from "./aeris-datavalidation-ui/submodules/aeris-datavalidation-dialogs/components/aeris-datavalidation-worksflowdialog";
 import AerisDatavalidationLandScapeLayaout from "./aeris-datavalidation-ui/submodules/aeris-datavalidation-layouts/components/aeris-datavalidation-landscapelayout";
+import AerisDatavalidationChartsTabsDialog from "./aeris-datavalidation-ui/submodules/aeris-datavalidation-dialogs/components/aeris-datavalidation-chartstabsdialog";
+import AerisDatavalidationParametersDialog from "./aeris-datavalidation-ui/submodules/aeris-datavalidation-dialogs/components/aeris-datavalidation-parametersdialog";
 import AerisDatavalidationSelectionsDialog from "./aeris-datavalidation-ui/submodules/aeris-datavalidation-dialogs/components/aeris-datavalidation-selectionsdialog";
 import AerisDatavalidationChartscontroller from "./aeris-datavalidation-blocks/submodules/aeris-datavalidation-charts/components/aeris-datavalidation-chartscontroller";
 import AerisDatavalidationLangSwitcher from "./aeris-datavalidation-ui/submodules/aeris-datavalidation-inputs/components/submodules/aeris-datavalidation-switchers/aeris-datavalidation-langswitcher";
@@ -51,6 +53,8 @@ export {
     AerisDatavalidationSelectionsTable,
     AerisDatavalidationPortraitLayaout,
     AerisDatavalidationWorksFlowDialog,
+    AerisDatavalidationChartsTabsDialog,
+    AerisDatavalidationParametersDialog,
     AerisDatavalidationChartscontroller,
     AerisDatavalidationLandScapeLayaout,
     AerisDatavalidationSelectionsDialog,

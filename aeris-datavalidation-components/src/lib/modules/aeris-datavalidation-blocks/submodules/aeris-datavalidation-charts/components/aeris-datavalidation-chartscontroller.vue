@@ -6,30 +6,30 @@
         :setSessionsDialog="setSessionsDialog"
     />
     <AerisDatavalidationSimpleToolbar
+        :charts="charts"
         :selection="selection"
         :session="currentSession"
         :qualityFlags="qualityFlags"
         :auxParameters="auxParameters"
         :instrumentEndDate="endDate"
-        :parallelCharts="parallelCharts"
         :instrumentStartDate="startDate"
         :linkedParameters ="linkedParameters"
+        :currentParalelChart="currentParalelChart"
         :addNewChart="addNewChart"
         :removeChart="removeChart"
-        :addNewParallel="addNewParallel"
-        :removeParallel="removeParallel"
-        :addNewParameter="addNewParameter"
+        :addParameter="addParameter"
         :removeParameter="removeParameter"
         :notifySelection=" notifySelection"
         :setSessionsDialog="setSessionsDialog"
+        :switchParameterChart="switchParameterChart"
         :notifyDeleteSelection="notifyDeleteSelection"
     />
-    <div :key="testKey">
+    <div>
       <AerisDatavalidationLandScapeLayaout
           key="mainLandScape"
           justify="center"
           padding="pa-0"
-          :cols="[getFirsChartCol, getSecondChartCol]"
+          :cols="getChartsCol"
           :nbrChildElement="2"
       >
         <template v-slot:land1>
@@ -42,10 +42,10 @@
               :defaultSelections="selections"
               :currentSession="currentSession"
               :linkedChartData="linkedChartData"
-              :parameters="firstChartParameters"
               :instrumentInfos="instrumentInfos"
               :currentInstrument="currentInstrument"
-              :isSecondChartEmpty="isSecondChartEmpty"
+              :isParallelChartsEmpty="getChartsCol[1] === 0"
+              :parameters="charts[charts.Chart1.name].parameters"
               :notifySelection="notifySelection"
               :switchLinkedMode="switchLinkedMode"
               :applyLinkedEffect="applyLinkedEffect"
@@ -54,11 +54,11 @@
         </template>
         <template v-slot:land2>
           <AerisDatavalidationChartsTab
-              :isSecondChartParametersEmpty="!isSecondChartParametersEmpty"
+              :hideChart="getChartsCol[1] === 0"
               :endDate="endDate"
               :isMainChart="false"
               :startDate="startDate"
-              :parallelCharts="parallelCharts"
+              :charts="charts"
               :currentSession="currentSession"
               :instrumentInfos="instrumentInfos"
               :linkedChartData="linkedChartData"
@@ -95,7 +95,6 @@ export default {
   data() {
     return {
       endDate: "",
-      testKey : 0,
       startDate: "",
       colorCount: 0,
       deleteStep: 1,
@@ -110,28 +109,19 @@ export default {
       currentInstrument: null,
       isLinkedChartMode: false,
       currentParalelChart: "",
-      firstChartParameters: [],
       secondChartParameters: [],
       isSecondChartEmpty: false,
-      parallelCharts : [{name : "Chart1"}, {name : "Chart2"}],
+      parallelChartsParameters : [],
       linkedChartData: {startXaxis: null, endXaxis: null},
+      charts : {Chart1 : {name : "Chart1", parameters : []}, Chart2 : {name : "Chart2", parameters : []}},
     }
   },
   computed : {
-    isSecondChartParametersEmpty : function() {
-      return this.secondChartParameters.length === 0
-    },
-    getFirsChartCol : function() {
-      if( this.secondChartParameters.length === 0)
-        return 12
-      else
-        return 7
-    },
-    getSecondChartCol : function() {
-      if( this.secondChartParameters.length === 0) {
-        return 0
+    getChartsCol : function() {
+      if(this.parallelChartsParameters.length !== 0) {
+        return [7, 5]
       } else {
-        return 5
+        return [12, 0]
       }
     }
   },
@@ -139,8 +129,9 @@ export default {
     setSessionsDialog : function (state) {
       this.sessionsDialog = false
       if(state) {
-        console.log("Test setSessionsDialog : ", state, ", before : ", this.sessionsDialog)
-        //this.sessionsDialog = state
+        Object.assign(this.$data, this.$options.data())
+        this.sessionsDialog = state
+        console.log("Reset all")
       }
     },
     notifySelection : function(startDate, endDate) {
@@ -154,8 +145,6 @@ export default {
     },
     newSession : function(currentSession, currentInstrument, instrumentInfos) {
       let mainParameter
-      //console.log("Test newSession")
-      //this.restCurrentSession()
       if(currentSession && currentInstrument) {
         this.instrumentInfos = instrumentInfos
         this.currentSession = currentSession
@@ -163,73 +152,100 @@ export default {
         this.qualityFlags = currentInstrument.flags
         this.startDate = this.currentSession.startDate
         this.endDate = this.currentSession.endDate
-        this.initParametersLabel()
+        this.initParameters()
         this.selections = currentSession.sessionSelections
         mainParameter = this.currentSession['mainParameter']
         mainParameter.color = this.getNewColor()
-        this.firstChartParameters = [mainParameter]
+        this.charts[this.charts.Chart1.name].parameters = [mainParameter]
       }
     },
-    restCurrentSession : function() {
-      this.testKey++
-    },
-    initParametersLabel : function() {
+    initParameters : function() {
       let auxParameters = this.currentInstrument['auxParameters']
       let linkedParameters = this.currentSession.linkedParameters
 
       if(auxParameters) {
         auxParameters.forEach((parameter) => {
           if(parameter !== "") {
+            parameter.isOn = true
             parameter.color = this.getNewColor()
-            this.secondChartParameters.push(parameter)
+            parameter.chartName = this.charts.Chart2.name
           }
         })
         this.auxParameters = auxParameters
+        this.parallelChartsParameters = [...auxParameters]
+        this.charts.Chart2.parameters = this.auxParameters
       }
 
       if(linkedParameters) {
-        linkedParameters.forEach((parameter)=> {
+        linkedParameters.forEach((parameter) => {
+          parameter.isOn = false
           parameter.color = this.getNewColor()
         })
         this.linkedParameters = linkedParameters
       }
     },
-    addNewParameter : function(newParameter) {
-      if(newParameter) {
-        if(!this.firstChartParameters.includes(newParameter))
-          this.firstChartParameters = [...this.firstChartParameters, newParameter]
+    getNewColor: function() {
+      if(this.colorCount < colors.length -1) {
+        this.colorCount = this.colorCount + 1
+        return colors[this.colorCount]
+      } else {
+        return defaultColor
+      }
+    },
+    addParameter : function(targetParameter) {
+      //console.log("Test add : ", targetParameter)
+      let targetChart = this.charts[targetParameter.chartName]
 
-        this.secondChartParameters = this.secondChartParameters.filter(function(param) {
-          return param.name !== newParameter.name
-        })
+      if(targetParameter) {
+        if(!targetChart.parameters.includes(targetParameter))
+          this.charts[targetParameter.chartName].parameters = [...targetChart.parameters, targetParameter]
+
+        if(targetParameter.chartName !== "Chart1")
+          this.parallelChartsParameters = [...this.parallelChartsParameters, targetParameter]
       }
     },
     removeParameter : function(deletedElement) {
-      if(deletedElement) {
-        this.firstChartParameters = this.firstChartParameters.filter(function(param) {
-          return param.name !== deletedElement.name
-        })
-        this.secondChartParameters = this.secondChartParameters.filter(function(param) {
-          return param.name !== deletedElement.name
-        })
+      let targetChart = this.charts[deletedElement.chartName]
 
-        if( this.secondChartParameters.length === 0)
-          this.isSecondChartEmpty = true
+      if(deletedElement && targetChart) {
+        this.charts[deletedElement.chartName].parameters = targetChart.parameters.filter(function(param) {
+          return param.name !== deletedElement.name
+        })
       }
+
+      if(deletedElement.chartName !== "Chart1")
+        this.parallelChartsParameters = this.parallelChartsParameters.filter(function(param) {
+          return param.name !== deletedElement.name
+        })
     },
-    addNewParallel : function(targetParameter) {
-      if(targetParameter) {
-        this.firstChartParameters = this.firstChartParameters.filter(function(param) {
+    switchParameterChart: function (targetParameter) {
+      let oldChart, newChart
+
+      if (targetParameter) {
+        oldChart = this.charts[targetParameter.oldChartName]
+        newChart = this.charts[targetParameter.chartName]
+
+        oldChart.parameters = oldChart.parameters.filter(function (param) {
           return param.name !== targetParameter.name
         })
-        if(!this.secondChartParameters.includes(targetParameter))
-          this.secondChartParameters = [...this.secondChartParameters, targetParameter]
+
+        if(!newChart.parameters.includes(targetParameter))
+          newChart.parameters = [...newChart.parameters, targetParameter]
+
+        if(targetParameter.oldChartName !== "Chart1")
+          this.parallelChartsParameters = this.parallelChartsParameters.filter(function(param) {
+            return param.name !== targetParameter.name
+          })
+
+        if(targetParameter.chartName !== "Chart1")
+          this.parallelChartsParameters = [...this.parallelChartsParameters, targetParameter]
       }
     },
-    removeParallel : function(targetParameter) {
-      if(targetParameter) {
-        this.addNewParameter(targetParameter)
-      }
+    switchLinkedMode: function () {
+      if(this.isLinkedChartMode)
+        this.isLinkedChartMode = false
+      else
+        this.isLinkedChartMode = true
     },
     applyLinkedEffect: function(data) {
       if(this.isLinkedChartMode && data && data['xaxis.range[0]'] && data['xaxis.range[1]']) {
@@ -239,40 +255,27 @@ export default {
         }
       }
     },
-    switchLinkedMode: function () {
-      if(this.isLinkedChartMode)
-        this.isLinkedChartMode = false
-      else
-        this.isLinkedChartMode = true
-    },
     addNewChart: function(chartName) {
-      this.parallelCharts.push({name: chartName})
-    },
-    removeChart : function() {
-      let mainChatName =  this.parallelCharts[0].name
-      let defaultParrallelChatName =  this.parallelCharts[1].name
-      const currentChart = this.currentParalelChart
-
-      if(currentChart !== "" &&
-          currentChart !== mainChatName &&
-          currentChart !== defaultParrallelChatName) {
-
-        this.parallelCharts = this.parallelCharts.filter(function(chart) {
-          return chart.name !== currentChart
-        })
-        this.currentParalelChart = ""
-      }
+      let cloneCharts = JSON.parse(JSON.stringify(this.charts))
+      cloneCharts[chartName] = {name: chartName, parameters : []}
+      this.charts = cloneCharts
     },
     setCurrentParralelChart : function (chartName) {
       this.currentParalelChart = chartName
-      console.log("Test setCurrentParralelChart : ", chartName)
     },
-    getNewColor: function() {
-      if(this.colorCount < colors.length -1) {
-        this.colorCount = this.colorCount + 1
-        return colors[this.colorCount]
-      } else {
-        return defaultColor
+    removeChart : function() {
+      let charts = Object.values(this.charts)
+      const currentChart = this.currentParalelChart
+      let cloneCharts = JSON.parse(JSON.stringify(this.charts))
+      let mainChatName =  charts[0].name
+      let defaultChartName =  charts[1].name
+
+      if(currentChart !== "" &&
+          currentChart !== mainChatName &&
+          currentChart !== defaultChartName) {
+        delete(cloneCharts[currentChart])
+        this.charts = cloneCharts
+        this.currentParalelChart = ""
       }
     },
   },

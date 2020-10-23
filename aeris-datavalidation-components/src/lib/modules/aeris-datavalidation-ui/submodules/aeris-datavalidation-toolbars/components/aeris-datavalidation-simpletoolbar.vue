@@ -15,16 +15,19 @@
           :instrumentStartDate="instrumentStartDate"
           :notifyDeleteSelection="notifyDeleteSelection"
       />
+      <v-divider
+          vertical
+      ></v-divider>
       <AerisDataValidationOptions
+          :charts="charts"
           :addNewChart="addNewChart"
           :removeChart="removeChart"
+          :addParameter="addParameter"
           :auxParameters="auxParameters"
-          :parallelCharts="parallelCharts"
-          :addNewParallel="addNewParallel"
-          :removeParallel="removeParallel"
-          :addNewParameter="addNewParameter"
           :removeParameter="removeParameter"
           :linkedParameters="linkedParameters"
+          :currentParalelChart="currentParalelChart"
+          :switchParameterChart="switchParameterChart"
       />
     </v-toolbar>
   </v-card>
@@ -59,16 +62,10 @@ export default {
       type: Function,
       default: () => {}
     },
-    addNewParameter : {
-      type : Function,
-    },
     addNewChart: {
       type : Function,
     },
-    addNewParallel: {
-      type : Function,
-    },
-    removeParallel: {
+    addParameter : {
       type : Function,
     },
     removeParameter: {
@@ -96,9 +93,17 @@ export default {
       type : String,
       default : () => ""
     },
-    parallelCharts : {
-      type : Array,
-      default : () => []
+    charts : {
+      type : Object,
+      default : () => null
+    },
+    switchParameterChart : {
+      type : Function,
+      default : () => {}
+    },
+    currentParalelChart : {
+      type : String,
+      default : () => ""
     }
   },
   components: {

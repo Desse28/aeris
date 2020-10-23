@@ -1,7 +1,7 @@
 <template>
   <div style="max-height: 40px;">
     <v-select
-        :items="parallelCharts"
+        :items="charts"
         item-text="name"
         v-model="select"
     >
@@ -16,16 +16,35 @@ export default {
     selectIndex : {
       type : Number,
     },
-    parallelCharts : {
+    charts : {
       type : Array,
       default : () => []
+    },
+    currentParameter : {
+      type : Object
+    },
+    switchParameterChart : {
+      type : Function,
+      default : () => {}
     }
   },
   data() {
     return {
-      select: this.parallelCharts[1],
+      select: this.charts[1],
     }
   },
+  watch : {
+    select : function (chartName, oldChart) {
+
+      if(this.currentParameter) {
+        this.currentParameter.chartName = chartName
+        this.currentParameter.oldChartName = typeof oldChart === "object" ? oldChart.name : oldChart
+      }
+
+      if(this.currentParameter.isOn)
+        this.switchParameterChart(this.currentParameter)
+    }
+  }
 }
 </script>
 

@@ -1,5 +1,14 @@
 <template>
   <div class="pa-8">
+    <AerisDatavalidationDeleteDialog
+        :dialog="dialog"
+        :ok="$t('session.label_yes')"
+        :cancel="$t('session.label_no')"
+        :okCallBack="validateDelete"
+        :cancelCallBack="cancelDelete"
+        :title="$t('session.label_deletion')"
+        :message="$t('session.message_delete')"
+    />
     <AerisDataValidationServices
         :url="currentUrl"
         :callBack="callBack"
@@ -85,9 +94,15 @@
                   {{$t('session.label_save')}}
                 </v-btn>
                 <v-btn
+                    v-on:click="deleteCurrentSelecton"
+                    v-if="!isSelectionMode"
+                >
+                  {{$t('session.label_delete')}}
+                </v-btn>
+                <v-btn
                     v-on:click="notifyCancelPopUp"
                 >
-                  {{isSelectionMode? $t('session.label_cancel') : $t('session.label_close')}}
+                  {{isSelectionMode? $t('session.label_delete') : $t('session.label_close')}}
                 </v-btn>
               </v-card-actions>
             </v-col>
@@ -100,6 +115,7 @@
 
 <script>
 import AerisDataValidationServices from "./../../../../aeris-datavalidation-services/components/aeris-datavalidation-services"
+import AerisDatavalidationDeleteDialog from "./../../aeris-datavalidation-dialogs/components/aeris-datavalidation-deletedialog"
 import AerisDatavalidationSelect from "./../../aeris-datavalidation-inputs/components/submodules/aeris-datavalidation-selects/aeris-datavalidation-select"
 import AerisDatavalidationDateMounthPicker from "./../../aeris-datavalidation-inputs/components/submodules/aeris-datavalidation-pickers/aeris-datavalidation-datemounthpicker"
 import AerisDatavalidationTimePicker from "./../../aeris-datavalidation-inputs/components/submodules/aeris-datavalidation-pickers/aeris-datavalidation-timepicker"
@@ -108,6 +124,7 @@ export default {
   name: "aeris-datavalidation-selectionform",
   components: {
     AerisDatavalidationDateMounthPicker,
+    AerisDatavalidationDeleteDialog,
     AerisDatavalidationTimePicker,
     AerisDataValidationServices,
     AerisDatavalidationSelect
@@ -151,12 +168,17 @@ export default {
     instrumentEndDate : {
       type : String,
       default : () => ""
-    }
+    },
+    notifyDeleteSelection : {
+      type : Function,
+      default : () => {}
+    },
   },
   data() {
     return {
       endDate: "",
       endTime: "",
+      dialog: false,
       startDate: "",
       startTime: "",
       callBack: null,
@@ -173,19 +195,19 @@ export default {
   },
   computed : {
     getLowerBoundMinDate : function () {
-      return this.instrumentStartDate
+      return ""//this.instrumentStartDate
     },
     getLowerBoundMaxDate : function () {
-      return this.instrumentEndDate
+      return ""//this.instrumentEndDate
     },
     getUpperBoundMaxDate : function () {
-      return this.instrumentEndDate
+      return ""//this.instrumentEndDate
     },
     getUpperBoundMinDate : function () {
-      return this.instrumentStartDate
+      return ""//this.instrumentStartDate
     },
     getLowerBoundMinTime : function () {
-      let lim
+      /*let lim
       let selections = this.session.sessionSelections
       if(this.selection !== undefined && selections !== undefined) {
         if(!this.$root.isSinglePoint(this.selection.startDate, selections)) {
@@ -194,23 +216,23 @@ export default {
           lim = this.$root.getStartDateLim(this.selection.startDate, selections)
           return this.$root.getTimePickerTimeFormat(lim)
         }
-      }
+      }*/
       return ""
     },
     getLowerBoundMaxTime : function () {
-      let dateTime
+      /*let dateTime
       if(this.selection !== undefined) {
         dateTime = this.$root.addMinutesToDate(this.selection.endDate, 1, "subtract")
         return this.$root.getTimePickerTimeFormat(dateTime)
       }
-      console.log("empty (1)")
+      console.log("empty (1)")*/
       return ""
     },
     getUpperBoundMinTime : function () {
-      let selections = this.session.sessionSelections
+      /*let selections = this.session.sessionSelections
       if(this.selection && selections && !this.$root.isSinglePoint(this.selection.endDate, selections)) {
         return this.$root.getTimePickerTimeFormat(this.selection.endDate)
-      }
+      }*/
       return ""
     },
     getUpperBoundMaxTime : function () {
@@ -368,6 +390,17 @@ export default {
         this.setTargetSelection(startDate, endDate)
         this.submitSelection()
       }
+    },
+    deleteCurrentSelecton : function () {
+      this.dialog = true
+    },
+    cancelDelete : function () {
+      this.dialog = false
+    },
+    validateDelete : function () {
+      this.dialog = false
+      this.notifyDeleteSelection()
+      this.notifyCancelPopUp()
     },
     setTargetSelection : function(startDate, endDate) {
       let selectionStartDate, selectionEndDate
