@@ -563,7 +563,7 @@
             visible : true,
             type : 'rect',
             editable : false,
-            layer : 'above',
+            layer : 'below',
             opacity : 0.28,
             fillcolor : SELECTION_BACKGROUND_COLOR,
             fillrule : 'evenodd',

@@ -52,7 +52,6 @@
 import $ from "jquery";
 import AerisDatavalidationChart from "./../../../../aeris-datavalidation-blocks/submodules/aeris-datavalidation-charts/components/aeris-datavalidation-chart"
 
-///v-tabs-slider-wrapper
 export default {
   name: "aeris-datavalidation-chartstabs",
   components : {
