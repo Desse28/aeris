@@ -33,6 +33,7 @@
               :displaylogo="false"
               :displayModeBar="true"
               :modeBarButtons="modeBarButtons"
+
           >
           </Plotly>
         </v-col>
@@ -312,7 +313,7 @@
             dash: "solid",
             shape: "linear",
             simplify: true
-          }
+          },
         }]
         this.refresh()
       },
@@ -387,11 +388,22 @@
       addEventsHandler : function () {
         if(this.isMainChart) {
           this.$nextTick(() => {
+            document.getElementById( this.chartId ).on( 'plotly_hover', this.hoverHandler)
             document.getElementById( this.chartId ).on( 'plotly_selected', this.addNewSelection)
             document.getElementById( this.chartId ).on( 'plotly_relayout', this.reLayoutHandler)
             this.addSelectionEvent()
           });
         }
+      },
+      hoverHandler : function(/*data*/) {
+        console.log("Test getData : ", $('#' + this.chartId).find( '.hoverinfo' ))
+        //let points = eventdata.points[0], pointNum = points.pointNumber
+        //console.log("Test point : ", points, ", pointNum : ", pointNum)
+        /*let hoverInfo = document.getElementById('hoverinfo')
+        let infotext = data.points.map(function(d){
+          return (d.data.name+': x= '+d.x+', y= '+d.y.toPrecision(3));
+        });*/
+        //hoverInfo.innerHTML = infotext.join('<br/>');
       },
       reLayoutHandler : function(data) {
         if(data && data['xaxis.range[0]'] !== this.linkedChartData.startXaxis &&

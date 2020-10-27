@@ -5,6 +5,7 @@
         :newSession="newSession"
         :setSessionsDialog="setSessionsDialog"
     />
+
     <AerisDatavalidationSimpleToolbar
         :charts="charts"
         :selection="selection"

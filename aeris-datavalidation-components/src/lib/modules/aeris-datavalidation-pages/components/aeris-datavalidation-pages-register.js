@@ -1,11 +1,9 @@
 import HelperRegisterModule from "./../../helper-register-module"
 
 import AerisDataValidationHomePage from "./aeris-datavalidation-homepage";
-import AerisDataValidationPageNotFound from "./aeris-datavalidation-pagenotfound";
 
 const components = [
-    AerisDataValidationHomePage,
-    AerisDataValidationPageNotFound
+    AerisDataValidationHomePage
 ];
 
 export default {
