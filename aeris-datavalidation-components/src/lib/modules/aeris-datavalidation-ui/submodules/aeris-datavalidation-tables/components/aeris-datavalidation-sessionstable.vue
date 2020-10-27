@@ -16,7 +16,7 @@
             :single-select="singleSelect"
         >
           <template v-slot:item.startDate="{ item }">
-            <div>{{getDateGoodFormat(item.startDate)}}</div>
+            <div>{{getDateGoodFormat(item.creationDate)}}</div>
           </template>
           <template v-slot:item.linkedParameters="{ item}">
             <div v-for="parameter in item.linkedParameters"
@@ -95,7 +95,7 @@ export default {
           text: this.$t('configuration.label_creationDate'),
           align: 'start',
           sortable: false,
-          value: 'startDate',
+          value: 'creationDate',
         },
         {
           text: this.$t('configuration.label_instrumentName'),
