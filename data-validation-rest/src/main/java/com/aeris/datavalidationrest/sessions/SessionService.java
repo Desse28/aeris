@@ -18,6 +18,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.net.URI;
 import java.util.Optional;
@@ -46,6 +47,7 @@ public class SessionService {
 
         if(this.currentPiid != null) {
             session.setPiId(this.currentPiid);
+            session.setCreationDate(new Date());
             session.setSessionSelections(new ArrayList<>());
 
             if(!isSessionExist(session))

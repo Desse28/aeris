@@ -11,6 +11,7 @@ public class Session {
     @ApiModelProperty(hidden=true)
     @Id
     private String id;
+    private Date creationDate;
     @ApiModelProperty(hidden=true)
     private String piId;
     @NotNull(message = "InstrumentId cannot be null")
@@ -52,6 +53,14 @@ public class Session {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public Date getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(Date creationDate) {
+        this.creationDate = creationDate;
     }
 
     public String getPiId() {
@@ -98,6 +107,7 @@ public class Session {
     public String toString() {
         return "Session{" +
                 "id='" + id + '\'' +
+                ", creationDate=" + creationDate +
                 ", piId='" + piId + '\'' +
                 ", instrumentName='" + instrumentName + '\'' +
                 ", mainParameter=" + mainParameter +
