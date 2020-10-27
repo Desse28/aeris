@@ -1,9 +1,9 @@
 import HelperRegisterModule from "./../../../../helper-register-module"
 
-import AerisDatavalidationSimpleToolbar from "./aeris-datavalidation-simpletoolbar";
+import AerisDatavalidationToolbar from "./aeris-datavalidation-toolbar";
 
 const components = [
-    AerisDatavalidationSimpleToolbar,
+    AerisDatavalidationToolbar,
 ];
 
 export default {

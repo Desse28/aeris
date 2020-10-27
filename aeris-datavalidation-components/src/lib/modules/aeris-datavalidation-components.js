@@ -1,6 +1,7 @@
 import AerisDataValidationServices from "./aeris-datavalidation-services/components/aeris-datavalidation-services";
 import AerisDataValidationHomePage from "@/lib/modules/aeris-datavalidation-pages/components/aeris-datavalidation-homepage";
 import AerisDatavalidationChartsTab from "./aeris-datavalidation-ui/submodules/aeris-datavalidation-tabs/components/aeris-datavalidation-chartstab";
+import AerisDatavalidationToolbar from "./aeris-datavalidation-ui/submodules/aeris-datavalidation-toolbars/components/aeris-datavalidation-toolbar";
 import AerisDatavalidationLoginItem from "./aeris-datavalidation-ui/submodules/aeris-datavalidation-items/components/aeris-datavalidation-loginitem";
 import AerisDataValidationOptions from "./aeris-datavalidation-blocks/submodules/aeris-datavalidation-options/components/aeris-datavalidation-option";
 import AerisDatavalidationAccountItem from "./aeris-datavalidation-ui/submodules/aeris-datavalidation-items/components/aeris-datavalidation-accountitem";
@@ -10,7 +11,6 @@ import AerisDatavalidationDeleteDialog from "./aeris-datavalidation-ui/submodule
 import AerisDatavalidationChart from "@/lib/modules/aeris-datavalidation-blocks/submodules/aeris-datavalidation-charts/components/aeris-datavalidation-chart";
 import AerisDatavalidationSessionsTable from "./aeris-datavalidation-ui/submodules/aeris-datavalidation-tables/components/aeris-datavalidation-sessionstable";
 import AerisDatavalidationTypography from "./aeris-datavalidation-ui/submodules/aeris-datavalidation-typographies/components/aeris-datavalidation-typography";
-import AerisDatavalidationSimpleToolbar from "./aeris-datavalidation-ui/submodules/aeris-datavalidation-toolbars/components/aeris-datavalidation-simpletoolbar";
 import AerisDatavalidationPortraitLayaout from "./aeris-datavalidation-ui/submodules/aeris-datavalidation-layouts/components/aeris-datavalidation-potraitlayout";
 import AerisDatavalidationLogoutItem from "@/lib/modules/aeris-datavalidation-ui/submodules/aeris-datavalidation-items/components/aeris-datavalidation-loginitem";
 import AerisDatavalidationSelectionsTable from "./aeris-datavalidation-ui/submodules/aeris-datavalidation-tables/components/aeris-datavalidation-selectionstable";
@@ -26,6 +26,7 @@ import AerisDatavalidationLangSwitcher from "./aeris-datavalidation-ui/submodule
 export {
     AerisDatavalidationChart,
     AerisDataValidationOptions,
+    AerisDatavalidationToolbar,
     AerisDataValidationHomePage,
     AerisDataValidationServices,
     AerisDatavalidationChartsTab,
@@ -39,7 +40,6 @@ export {
     AerisDatavalidationLangSwitcher,
     AerisDatavalidationConfiguration,
     AerisDatavalidationSessionsTable,
-    AerisDatavalidationSimpleToolbar,
     AerisDatavalidationSelectionsTable,
     AerisDatavalidationPortraitLayaout,
     AerisDatavalidationWorksFlowDialog,

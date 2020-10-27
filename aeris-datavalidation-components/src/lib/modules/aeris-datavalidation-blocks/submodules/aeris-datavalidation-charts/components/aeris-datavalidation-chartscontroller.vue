@@ -6,7 +6,7 @@
         :setSessionsDialog="setSessionsDialog"
     />
 
-    <AerisDatavalidationSimpleToolbar
+    <AerisDatavalidationToolbar
         :charts="charts"
         :selection="selection"
         :session="currentSession"
@@ -78,7 +78,7 @@ import {
   AerisDatavalidationChartsTab,
   AerisDatavalidationMainChartTab,
   AerisDatavalidationConfiguration,
-  AerisDatavalidationSimpleToolbar,
+  AerisDatavalidationToolbar,
   AerisDatavalidationLandScapeLayaout
 } from "./../../../../aeris-datavalidation-components"
 
@@ -87,10 +87,10 @@ import {colors, defaultColor} from "./../../../../aeris-datavalidation-common/co
 export default {
   name: "aeris-datavalidation-homepage",
   components: {
+    AerisDatavalidationToolbar,
     AerisDatavalidationChartsTab,
     AerisDatavalidationMainChartTab,
     AerisDatavalidationConfiguration,
-    AerisDatavalidationSimpleToolbar,
     AerisDatavalidationLandScapeLayaout,
   },
   data() {
@@ -130,8 +130,8 @@ export default {
     setSessionsDialog : function (state) {
       this.sessionsDialog = false
       if(state) {
-        Object.assign(this.$data, this.$options.data())
-        this.sessionsDialog = state
+        //Object.assign(this.$data, this.$options.data())
+        //this.sessionsDialog = state
         console.log("Reset all")
       }
     },

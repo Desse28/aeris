@@ -1,7 +1,7 @@
-import Vue from "vue";
+import Vue from "vue"
 
-import AerisDatavalidationSimpleToolbar from "./components/aeris-datavalidation-simpletoolbar";
+import AerisDatavalidationToolbar from "./components/aeris-datavalidation-toolbar"
 
 Vue.use(
-    AerisDatavalidationSimpleToolbar
-);
+    AerisDatavalidationToolbar
+)
