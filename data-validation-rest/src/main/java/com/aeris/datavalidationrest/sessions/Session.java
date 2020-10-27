@@ -13,10 +13,6 @@ public class Session {
     private String id;
     @ApiModelProperty(hidden=true)
     private String piId;
-    @ApiModelProperty( example = "2020-08-19T09:14:21.274Z" )
-    private Date startDate;
-    @ApiModelProperty( example = "2020-08-19T09:14:21.274Z" )
-    private Date endDate;
     @NotNull(message = "InstrumentId cannot be null")
     @ApiModelProperty( example = "PDM_NEPHE" )
     private String instrumentName;
@@ -66,22 +62,6 @@ public class Session {
         this.piId = piId;
     }
 
-    public Date getStartDate() {
-        return startDate;
-    }
-
-    public void setStartDate(Date startDate) {
-        this.startDate = startDate;
-    }
-
-    public Date getEndDate() {
-        return endDate;
-    }
-
-    public void setEndDate(Date endDate) {
-        this.endDate = endDate;
-    }
-
     public String getInstrumentName() {
         return instrumentName;
     }
@@ -119,8 +99,6 @@ public class Session {
         return "Session{" +
                 "id='" + id + '\'' +
                 ", piId='" + piId + '\'' +
-                ", startDate=" + startDate +
-                ", endDate=" + endDate +
                 ", instrumentName='" + instrumentName + '\'' +
                 ", mainParameter=" + mainParameter +
                 ", linkedParameters=" + linkedParameters +
