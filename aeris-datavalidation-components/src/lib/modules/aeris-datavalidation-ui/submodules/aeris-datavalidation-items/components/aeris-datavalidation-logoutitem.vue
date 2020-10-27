@@ -17,6 +17,7 @@
 
 <script>
 import {keycloak}  from '../../../../../../../plugins/keycloak'
+
 export default {
   name: "aeris-datavalidation-loginmenu",
   watch: {
@@ -38,5 +39,4 @@ export default {
 </script>
 
 <style scoped>
-
 </style>

@@ -205,16 +205,6 @@ export default {
       }
       this.currentUrl = process.env.VUE_APP_ROOT_API + "/instruments/names"
     },
-    resetForm : function () {
-      this.endDate = ""
-      this.startDate = ""
-      this.parameters = []
-      this.instruments = []
-      this.instrument  = null
-      this.mainParameter = null
-      this.currentInstrument = null
-      this.linkedParameters = []
-    },
     startNewSession : function() {
       let startDateTime = this.startDate + " " + this.startTime
       let endDateTime = this.endDate + " " + this.endTime

@@ -19,13 +19,13 @@
           </v-col>
         </v-row>
         <AerisDatavalidationSessionsTable
-            v-if="currentItem === 'configuration.label_continueSession'"
+            v-if="!isCreateMode"
             :setSessions="setSessions"
             :initNewSession="initNewSession"
             :setCurrentItem="setCurrentItem"
         />
         <AerisDatavalidationSessionForm
-            v-if="currentItem === 'configuration.label_newSession'"
+            v-if="isCreateMode"
             :sessions="sessions"
             :initNewSession="initNewSession"
             :setCurrentItem="setCurrentItem"
@@ -35,11 +35,13 @@
   </v-row>
 </template>
 <script>
+
 import AerisDatavalidationSessionForm from "./../../../../aeris-datavalidation-ui/submodules/aeris-datavalidation-form/components/aeris-datavalition-sessionform"
 import AerisDatavalidationLogoutItem from "./../../../../aeris-datavalidation-ui/submodules/aeris-datavalidation-items/components/aeris-datavalidation-logoutitem"
 import AerisDatavalidationSessionsTable from "./../../../../aeris-datavalidation-ui/submodules/aeris-datavalidation-tables/components/aeris-datavalidation-sessionstable"
 import AerisDatavalidationTypography from "./../../../../aeris-datavalidation-ui/submodules/aeris-datavalidation-typographies/components/aeris-datavalidation-typography"
 import AerisDatavalidationLangSwitcher from "./../../../../aeris-datavalidation-ui/submodules/aeris-datavalidation-inputs/components/submodules/aeris-datavalidation-switchers/aeris-datavalidation-langswitcher"
+
 export default {
   name: "aeris-datavalidation-configuration",
   props : {
@@ -76,12 +78,11 @@ export default {
   },
   computed : {
     getTitle : function() {
-      if(this.currentItem === 'configuration.label_continueSession')
-        return this.$t('configuration.label_continueSession')
-      else if(this.currentItem === 'configuration.label_newSession')
-        return this.$t('configuration.label_newSession')
-      return ""
+      return this.$t(this.currentItem)
     },
+    isCreateMode : function () {
+      return this.currentItem === 'configuration.label_newSession'
+    }
   },
   methods : {
     setCurrentItem : function(item) {
