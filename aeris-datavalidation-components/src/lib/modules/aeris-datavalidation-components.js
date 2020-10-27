@@ -22,7 +22,7 @@ import AerisDatavalidationChartsTabsDialog from "./aeris-datavalidation-ui/submo
 import AerisDatavalidationParametersDialog from "./aeris-datavalidation-ui/submodules/aeris-datavalidation-dialogs/components/aeris-datavalidation-parametersdialog";
 import AerisDatavalidationSelectionsDialog from "./aeris-datavalidation-ui/submodules/aeris-datavalidation-dialogs/components/aeris-datavalidation-selectionsdialog";
 import AerisDatavalidationChartscontroller from "./aeris-datavalidation-blocks/submodules/aeris-datavalidation-charts/components/aeris-datavalidation-chartscontroller";
-import AerisDatavalidationLangSwitcher from "./aeris-datavalidation-ui/submodules/aeris-datavalidation-inputs/components/submodules/aeris-datavalidation-switchers/aeris-datavalidation-langswitcher";
+import AerisDatavalidationLangSwitcher from "./aeris-datavalidation-ui/submodules/aeris-datavalidation-inputs/submodules/aeris-datavalidation-switchers/components/aeris-datavalidation-langswitcher";
 
 export {
     AerisDatavalidationChart,

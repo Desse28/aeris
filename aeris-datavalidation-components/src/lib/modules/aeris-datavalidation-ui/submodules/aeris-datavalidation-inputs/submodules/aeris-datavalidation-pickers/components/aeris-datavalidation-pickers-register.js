@@ -1,9 +1,11 @@
-import HelperRegisterModule from "./../../../../../../helper-register-module"
+import HelperRegisterModule from "../../../../../../helper-register-module"
 
-import AerisDatavalidationSelect from "./aeris-datavalidation-select";
+import AerisDatavalidationTimePicker from "./aeris-datavalidation-timepicker";
+import AerisDatavalidationDateMounthPicker from "./aeris-datavalidation-datemounthpicker";
 
 const components = [
-    AerisDatavalidationSelect,
+    AerisDatavalidationTimePicker,
+    AerisDatavalidationDateMounthPicker
 ];
 
 export default {

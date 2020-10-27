@@ -19,13 +19,13 @@
           </v-col>
         </v-row>
         <AerisDatavalidationSessionsTable
-            v-if="!isCreateMode"
+            v-if="!isCreationMode"
             :setSessions="setSessions"
             :initNewSession="initNewSession"
             :setCurrentItem="setCurrentItem"
         />
         <AerisDatavalidationSessionForm
-            v-if="isCreateMode"
+            v-if="isCreationMode"
             :sessions="sessions"
             :initNewSession="initNewSession"
             :setCurrentItem="setCurrentItem"
@@ -36,13 +36,19 @@
 </template>
 <script>
 
-import {
+/*import {
   AerisDatavalidationLogoutItem,
   AerisDatavalidationTypography,
   AerisDatavalidationSessionForm,
   AerisDatavalidationLangSwitcher,
   AerisDatavalidationSessionsTable
-} from "@/lib/modules/aeris-datavalidation-components";
+} from "@/lib/modules/aeris-datavalidation-components";*/
+
+import AerisDatavalidationSessionForm from "../../../../aeris-datavalidation-ui/submodules/aeris-datavalidation-form/components/aeris-datavalition-sessionform"
+import AerisDatavalidationLogoutItem from "../../../../aeris-datavalidation-ui/submodules/aeris-datavalidation-items/components/aeris-datavalidation-logoutitem"
+import AerisDatavalidationTypography from "../../../../aeris-datavalidation-ui/submodules/aeris-datavalidation-typographies/components/aeris-datavalidation-typography"
+import AerisDatavalidationSessionsTable from "../../../../aeris-datavalidation-ui/submodules/aeris-datavalidation-tables/components/aeris-datavalidation-sessionstable"
+import AerisDatavalidationLangSwitcher from "../../../../aeris-datavalidation-ui/submodules/aeris-datavalidation-inputs/submodules/aeris-datavalidation-switchers/components/aeris-datavalidation-langswitcher"
 
 export default {
   name: "aeris-datavalidation-configuration",
@@ -58,7 +64,7 @@ export default {
       type : Function,
     },
   },
-  components: {
+  components : {
     AerisDatavalidationTypography,
     AerisDatavalidationLogoutItem,
     AerisDatavalidationSessionForm,
@@ -82,7 +88,7 @@ export default {
     getTitle : function() {
       return this.$t(this.currentItem)
     },
-    isCreateMode : function () {
+    isCreationMode : function () {
       return this.currentItem === 'configuration.label_newSession'
     }
   },

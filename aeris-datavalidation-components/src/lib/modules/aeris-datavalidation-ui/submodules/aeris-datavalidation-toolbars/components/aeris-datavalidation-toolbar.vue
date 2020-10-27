@@ -33,14 +33,17 @@
   </v-card>
 </template>
 <script>
-import {
-  AerisDataValidationOptions,
-} from "@/lib/modules/aeris-datavalidation-components";
 
-import AerisDatavalidationWorksFlowDialog from "./../../aeris-datavalidation-dialogs/components/aeris-datavalidation-worksflowdialog"
+/*import {
+  AerisDataValidationOptions,
+  AerisDatavalidationWorksFlowDialog
+} from "@/lib/modules/aeris-datavalidation-components";*/
+
+import AerisDataValidationOptions from "../../../../aeris-datavalidation-blocks/submodules/aeris-datavalidation-options/components/aeris-datavalidation-configuration"
+import AerisDatavalidationWorksFlowDialog from "../../../../aeris-datavalidation-ui/submodules/aeris-datavalidation-dialogs/components/aeris-datavalidation-worksflowdialog"
 
 export default {
-  name: "aeris-datavalidation-simpletoolbar",
+  name: "aeris-datavalidation-toolbar",
   props: {
     session: {
       type: Object,

@@ -42,7 +42,7 @@
 <script>
   import AerisDatavalidationLoginItem from "../lib/modules/aeris-datavalidation-ui/submodules/aeris-datavalidation-items/components/aeris-datavalidation-loginitem"
   import AerisDatavalidationAccountItem from "../lib/modules/aeris-datavalidation-ui/submodules/aeris-datavalidation-items/components/aeris-datavalidation-accountitem"
-  import AerisDatavalidationLangSwitcher from "./../lib/modules/aeris-datavalidation-ui/submodules/aeris-datavalidation-inputs/components/submodules/aeris-datavalidation-switchers/aeris-datavalidation-langswitcher"
+  import AerisDatavalidationLangSwitcher from "../lib/modules/aeris-datavalidation-ui/submodules/aeris-datavalidation-inputs/submodules/aeris-datavalidation-switchers/components/aeris-datavalidation-langswitcher"
 
   export default {
     name: 'App',

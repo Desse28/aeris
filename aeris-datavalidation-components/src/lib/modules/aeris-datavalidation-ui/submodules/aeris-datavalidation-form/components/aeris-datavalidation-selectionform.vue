@@ -116,9 +116,9 @@
 <script>
 import AerisDataValidationServices from "./../../../../aeris-datavalidation-services/components/aeris-datavalidation-services"
 import AerisDatavalidationDeleteDialog from "./../../aeris-datavalidation-dialogs/components/aeris-datavalidation-deletedialog"
-import AerisDatavalidationSelect from "./../../aeris-datavalidation-inputs/components/submodules/aeris-datavalidation-selects/aeris-datavalidation-select"
-import AerisDatavalidationDateMounthPicker from "./../../aeris-datavalidation-inputs/components/submodules/aeris-datavalidation-pickers/aeris-datavalidation-datemounthpicker"
-import AerisDatavalidationTimePicker from "./../../aeris-datavalidation-inputs/components/submodules/aeris-datavalidation-pickers/aeris-datavalidation-timepicker"
+import AerisDatavalidationSelect from "../../aeris-datavalidation-inputs/submodules/aeris-datavalidation-selects/components/aeris-datavalidation-select"
+import AerisDatavalidationDateMounthPicker from "../../aeris-datavalidation-inputs/submodules/aeris-datavalidation-pickers/components/aeris-datavalidation-datemounthpicker"
+import AerisDatavalidationTimePicker from "../../aeris-datavalidation-inputs/submodules/aeris-datavalidation-pickers/components/aeris-datavalidation-timepicker"
 
 export default {
   name: "aeris-datavalidation-selectionform",

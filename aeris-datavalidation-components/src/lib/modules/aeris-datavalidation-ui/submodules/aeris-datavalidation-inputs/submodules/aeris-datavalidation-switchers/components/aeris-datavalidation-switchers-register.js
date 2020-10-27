@@ -1,4 +1,4 @@
-import HelperRegisterModule from "./../../../../../../helper-register-module"
+import HelperRegisterModule from "../../../../../../helper-register-module"
 
 import AerisDatavalidationLangSwitcher from "./aeris-datavalidation-langswitcher";
 

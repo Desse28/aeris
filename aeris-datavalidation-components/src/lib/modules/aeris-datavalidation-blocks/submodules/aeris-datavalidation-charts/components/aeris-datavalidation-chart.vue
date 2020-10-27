@@ -242,6 +242,8 @@
     },
     methods: {
       initCurrentChart : function(parameter) {
+        this.initModeBar()
+        this.setLayout()
         if(this.currentSession && this.currentInstrument) {
           if(0 < this.parameters.length && parameter)
             this.addNewParameter(parameter)
@@ -793,8 +795,9 @@
         }
       },
       getLayoutTitle: function() {
+        let title = this.instrumentInfos ? this.instrumentInfos.resourceTitle.fr : ""
         return {
-          text : "Current data set - "+ this.instrumentInfos.resourceTitle.fr,
+          text : "Current data set - "+ title,
               x : 0.52,
               font : {
             color : 'rgb(13, 13, 13)',
