@@ -36,11 +36,13 @@
 </template>
 <script>
 
-import AerisDatavalidationSessionForm from "./../../../../aeris-datavalidation-ui/submodules/aeris-datavalidation-form/components/aeris-datavalition-sessionform"
-import AerisDatavalidationLogoutItem from "./../../../../aeris-datavalidation-ui/submodules/aeris-datavalidation-items/components/aeris-datavalidation-logoutitem"
-import AerisDatavalidationSessionsTable from "./../../../../aeris-datavalidation-ui/submodules/aeris-datavalidation-tables/components/aeris-datavalidation-sessionstable"
-import AerisDatavalidationTypography from "./../../../../aeris-datavalidation-ui/submodules/aeris-datavalidation-typographies/components/aeris-datavalidation-typography"
-import AerisDatavalidationLangSwitcher from "./../../../../aeris-datavalidation-ui/submodules/aeris-datavalidation-inputs/components/submodules/aeris-datavalidation-switchers/aeris-datavalidation-langswitcher"
+import {
+  AerisDatavalidationLogoutItem,
+  AerisDatavalidationTypography,
+  AerisDatavalidationSessionForm,
+  AerisDatavalidationLangSwitcher,
+  AerisDatavalidationSessionsTable
+} from "@/lib/modules/aeris-datavalidation-components";
 
 export default {
   name: "aeris-datavalidation-configuration",

@@ -187,20 +187,6 @@ export default {
         this.turnOnErrorAlert(this.$t('configuration.message_existSession'))
       }
     },
-    turnOnErrorAlert : function(message) {
-      this.newSessionAlertMessage = message
-      this.newSessionAlertError = true
-    },
-    turnOffErrorAlert : function(timeOut) {
-      setTimeout(() => {
-        this.newSessionAlertError = false
-      }, timeOut);
-    },
-    getInstrumentInfos : function (uuid, callBack) {
-      this.typeOfRequest = "GET"
-      this.callBack = callBack
-      this.currentUrl = process.env.VUE_APP_ROOT_API + "/instruments/infos/" + uuid
-    },
     isExistSession : function () {
       let session
       if(this.currentSession && this.sessions) {
@@ -239,6 +225,20 @@ export default {
         }
       }
       return false
+    },
+    getInstrumentInfos : function (uuid, callBack) {
+      this.typeOfRequest = "GET"
+      this.callBack = callBack
+      this.currentUrl = process.env.VUE_APP_ROOT_API + "/instruments/infos/" + uuid
+    },
+    turnOnErrorAlert : function(message) {
+      this.newSessionAlertMessage = message
+      this.newSessionAlertError = true
+    },
+    turnOffErrorAlert : function(timeOut) {
+      setTimeout(() => {
+        this.newSessionAlertError = false
+      }, timeOut);
     }
   }
 }

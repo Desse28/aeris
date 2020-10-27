@@ -50,7 +50,10 @@
 </template>
 
 <script>
-import AerisDataValidationServices from "./../../../../aeris-datavalidation-services/components/aeris-datavalidation-services"
+
+import {
+  AerisDataValidationServices
+} from "@/lib/modules/aeris-datavalidation-components";
 
 export default {
   name: "aeris-datavalidation-selectionstable",
