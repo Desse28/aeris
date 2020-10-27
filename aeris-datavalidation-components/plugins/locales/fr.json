@@ -36,6 +36,7 @@
     "label_sessions" : "Liste des sessions",
     "label_startTime" : "@:common.startTime",
     "label_startDate" : "@:common.startDate",
+    "label_creationDate" : "Date de création",
     "label_inProgress" : "@:common.in_progress",
     "label_linkedParameters" : "Paramètres liés",
     "label_mainParameter" : "Paramètre principal",

@@ -18,24 +18,12 @@
           <template v-slot:item.startDate="{ item }">
             <div>{{getDateGoodFormat(item.startDate)}}</div>
           </template>
-          <template v-slot:item.endDate="{ item }">
-            <div class="pa-4" v-if="item.endDate === null">/</div>
-            <div v-else >{{getDateGoodFormat(item.endDate)}}</div>
-          </template>
           <template v-slot:item.linkedParameters="{ item}">
             <div v-for="parameter in item.linkedParameters"
                 :key="item.linkedParameters.indexOf(parameter)"
             >
               <div>{{ parameter.name}}</div>
             </div>
-          </template>
-          <template v-slot:item.state="{ item }">
-            <h3 class="mr-2 green accent-2" v-if="!item.state">
-              {{ $t("configuration.label_inProgress") }}
-            </h3>
-            <h3 v-else class="red accent-3">
-              {{ $t("configuration.label_sessionClose") }}
-            </h3>
           </template>
         </v-data-table>
       </template>
@@ -104,16 +92,10 @@ export default {
     tableHeaders : function() {
       return [
         {
-          text: this.$t('configuration.label_startDate'),
-          align: 'startDate',
-          sortable: false,
-          value: 'startDate',
-        },
-        {
-          text: this.$t('configuration.label_endDate'),
+          text: this.$t('configuration.label_creationDate'),
           align: 'start',
           sortable: false,
-          value: 'endDate',
+          value: 'startDate',
         },
         {
           text: this.$t('configuration.label_instrumentName'),
@@ -132,8 +114,7 @@ export default {
           align: 'start',
           sortable: false,
           value: 'linkedParameters',
-        },
-        {text: this.$t('configuration.label_state'), value: 'state', align: 'center',},
+        }
       ]
     },
   },

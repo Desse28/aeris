@@ -34,6 +34,7 @@
     "label_sessions" : "Sessions list",
     "label_endTime" : "@:common.endTime",
     "label_endDate" : "@:common.endDate",
+    "label_creationDate" : "Creation date",
     "label_sessionClose" : "@:common.close",
     "label_startTime" : "@:common.startTime",
     "label_mainParameter" : "Main parameter",
