@@ -795,9 +795,9 @@
         }
       },
       getLayoutTitle: function() {
-        let title = this.instrumentInfos ? this.instrumentInfos.resourceTitle.fr : ""
+        let title = this.instrumentInfos ? "Current data set - " + this.instrumentInfos.resourceTitle.fr : ""
         return {
-          text : "Current data set - "+ title,
+          text : title,
               x : 0.52,
               font : {
             color : 'rgb(13, 13, 13)',

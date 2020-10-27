@@ -76,10 +76,13 @@
 </template>
 
 <script>
-import {
+/*import {
   AerisDataValidationServices,
   AerisDatavalidationPortraitLayaout,
-} from "@/lib/modules/aeris-datavalidation-components";
+} from "@/lib/modules/aeris-datavalidation-components";*/
+
+import AerisDataValidationServices from "../../../../aeris-datavalidation-services/components/aeris-datavalidation-services"
+import AerisDatavalidationPortraitLayaout from "../../aeris-datavalidation-layouts/components/aeris-datavalidation-potraitlayout"
 
 export default {
   name: "aeris-datavalition-sessionform",
