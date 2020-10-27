@@ -10,7 +10,6 @@ import app from "./App.vue"
 import common from "./../lib/modules/aeris-datavalidation-common/store/index"
 import myMixin from "./../lib/modules/aeris-datavalidation-common/mixin/index"
 import AerisDataValidationHomePage from "../lib/modules/aeris-datavalidation-pages/components/aeris-datavalidation-homepage"
-import AerisDataValidationPageNotFound from  "./../lib/modules/aeris-datavalidation-pages/components/aeris-datavalidation-pagenotfound"
 
 import AerisDatavalidationChartscontroller from "./../lib/modules/aeris-datavalidation-blocks/submodules/aeris-datavalidation-charts/components/aeris-datavalidation-chartscontroller"
 
@@ -40,7 +39,7 @@ const router = new VueRouter({
       component : AerisDatavalidationChartscontroller
     },
     { path: "*",
-      component : AerisDataValidationPageNotFound
+      component : AerisDataValidationHomePage
     }
   ]
 });

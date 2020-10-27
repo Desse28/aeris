@@ -8,7 +8,6 @@ import AerisDatavalidationMainChartTab from "./aeris-datavalidation-ui/submodule
 import AerisDatavalidationChartsSelect from "./aeris-datavalidation-ui/submodules/aeris-datavalidation-selects/components/aeris-datavalidation-chartsselect";
 import AerisDatavalidationDeleteDialog from "./aeris-datavalidation-ui/submodules/aeris-datavalidation-dialogs/components/aeris-datavalidation-deletedialog";
 import AerisDatavalidationChart from "@/lib/modules/aeris-datavalidation-blocks/submodules/aeris-datavalidation-charts/components/aeris-datavalidation-chart";
-import AerisDatavalidationSelection from "./aeris-datavalidation-blocks/submodules/aeris-datavalidation-selections/components/aeris-datavalidation-selection";
 import AerisDatavalidationSessionsTable from "./aeris-datavalidation-ui/submodules/aeris-datavalidation-tables/components/aeris-datavalidation-sessionstable";
 import AerisDatavalidationTypography from "./aeris-datavalidation-ui/submodules/aeris-datavalidation-typographies/components/aeris-datavalidation-typography";
 import AerisDatavalidationSimpleToolbar from "./aeris-datavalidation-ui/submodules/aeris-datavalidation-toolbars/components/aeris-datavalidation-simpletoolbar";
@@ -31,7 +30,6 @@ export {
     AerisDataValidationServices,
     AerisDatavalidationChartsTab,
     AerisDatavalidationLoginItem,
-    AerisDatavalidationSelection,
     AerisDatavalidationTypography,
     AerisDatavalidationLogoutItem,
     AerisDatavalidationAccountItem,
