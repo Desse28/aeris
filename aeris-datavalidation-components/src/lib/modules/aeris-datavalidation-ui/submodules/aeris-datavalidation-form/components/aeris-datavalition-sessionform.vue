@@ -99,6 +99,7 @@ export default {
   },
   watch : {
     instrument : function(instrumentIdObj) {
+      console.log("Test instrument")
       let instrumentId = instrumentIdObj['_id']['$oid']
 
       this.callBack = (instrument) => {
@@ -178,7 +179,7 @@ export default {
         }
         this.currentUrl = process.env.VUE_APP_ROOT_API + "/sessions/create"
       } else {
-        this.alert(this.$t('configuration.message_existSession'))
+        this.enableAlert(this.$t('configuration.message_existSession'))
       }
     },
     initSession : function () {
@@ -220,12 +221,12 @@ export default {
         name : "Graphique secondaire",
         parameters : auxParameters
       }
-
     },
     getParametersWithColors : function(parameters) {
       let result = []
       if(parameters) {
-        result = parameters.forEach((parameter) => {
+        result = parameters.slice()
+        result.forEach((parameter) => {
           parameter.color = this.$root.getNewColor(this.colorCount)
           this.colorCount++
         })
@@ -233,19 +234,13 @@ export default {
       return result
     },
     isExistSession : function () {
-      let session
-      if(this.currentSession && this.sessions) {
-        for (let key in this.sessions) {
-          session = this.sessions[key]
-          if(this.isSameMainParameter(session) || this.isSameLinkedParameters(session))
-            return true
-        }
-      }
-      return false
+      return this.sessions.some( (session) => {
+        this.isSameMainParameter(session) || this.isSameLinkedParameters(session)
+      })
     },
     isSameMainParameter : function(session) {
       let exist = false
-
+      console.log("Test isSameMainParameter : ", session.mainParameter.name === this.currentSession.mainParameter.name)
       if(session && this.currentSession) {
         exist = session.mainParameter.name === this.currentSession.mainParameter.name
       }
@@ -253,35 +248,24 @@ export default {
       return exist
     },
     isSameLinkedParameters : function(session) {
-      let parameter, parameters
-      if(session && this.currentSession) {
-        parameters = session.linkedParameters
-
-        if(parameters.length === 0 && this.currentSession.linkedParameters.length === 0)
-          return true
-
-        if(parameters.length === this.currentSession.linkedParameters.length) {
-          for (let key in parameters) {
-            parameter = parameters[key]
-            if(!this.currentSession.linkedParameters.some(currentParam => currentParam.name === parameter.name))
-              return false
-          }
-          return true
-        }
-      }
-      return false
+      let parameters = session.linkedParameters.filter((parameter) => {
+        this.currentSession.linkedParameters.some(
+            (currentParam) => {currentParam.name === parameter.name}
+        )
+      })
+      return parameters.length !== 0
     },
     getInstrumentInfos : function (uuid, callBack) {
       this.typeOfRequest = "GET"
       this.callBack = callBack
       this.currentUrl = process.env.VUE_APP_ROOT_API + "/instruments/infos/" + uuid
     },
-    alert : function(message) {
+    enableAlert : function(message) {
       this.newSessionAlertMessage = message
       this.newSessionAlertError = true
-      this.alertOff(2000)
+      this.disableAlert(2000)
     },
-    alertOff : function(timeOut) {
+    disableAlert : function(timeOut) {
       setTimeout(() => {
         this.newSessionAlertError = false
       }, timeOut);

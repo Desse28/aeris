@@ -48,11 +48,11 @@ public class SessionService {
         if(this.currentPiid != null) {
             session.setPiId(this.currentPiid);
             session.setCreationDate(new Date());
-            session.setCharts(new ArrayList<>());
 
             if(!isSessionExist(session))
                 newSession = sessionDao.save(session);
         }
+
         return createSessionResponse(newSession);
     }
 

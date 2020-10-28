@@ -1,6 +1,6 @@
 <template>
   <v-row justify="center">
-    <v-dialog v-model="dialog" persistent max-width="1000px">
+    <v-dialog v-model="dialog" persistent max-width="1000px" :retain-focus="false">
       <v-card min-height="500" max-height="900">
         <v-row>
           <v-col cols="2" offset="1">
@@ -91,6 +91,7 @@ export default {
       }
     },
     initNewSession : function (currentSession, currentInstrument, infos) {
+      console.log("Test initNewSession")
       if(currentSession && currentInstrument) {
         this.dialog = false
         this.newSession(currentSession, currentInstrument, infos)
