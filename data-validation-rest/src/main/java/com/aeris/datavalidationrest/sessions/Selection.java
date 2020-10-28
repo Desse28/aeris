@@ -7,7 +7,7 @@ import org.springframework.data.annotation.Id;
 import java.util.Date;
 import java.util.List;
 
-public class SessionSelection {
+public class Selection {
     @ApiModelProperty( example = "2020-08-19T09:14:21.274Z" )
     private Date startDate;
     @ApiModelProperty( example = "2020-08-19T09:14:21.274Z" )
@@ -20,7 +20,7 @@ public class SessionSelection {
     )
     private List<Flag> flags;
 
-    public SessionSelection() {}
+    public Selection() {}
 
     public Date getStartDate() {
         return startDate;

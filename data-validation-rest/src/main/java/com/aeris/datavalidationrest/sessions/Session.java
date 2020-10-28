@@ -1,4 +1,5 @@
 package com.aeris.datavalidationrest.sessions;
+import com.aeris.datavalidationrest.chart.Chart;
 import com.aeris.datavalidationrest.parameters.Parameter;
 import io.swagger.annotations.ApiModelProperty;
 import org.springframework.data.annotation.Id;
@@ -11,6 +12,7 @@ public class Session {
     @ApiModelProperty(hidden=true)
     @Id
     private String id;
+    @ApiModelProperty(hidden=true)
     private Date creationDate;
     @ApiModelProperty(hidden=true)
     private String piId;
@@ -28,20 +30,8 @@ public class Session {
     )
 
     private List<Parameter> linkedParameters;
-    @ApiModelProperty(
-            example = "[" +
-                        "{" +
-                            "\"endDate\": \"2020-08-19T09:52:55.785Z\","+
-                            "\"flags\": " + "["+
-                                    "{\"label\": \"Valid measurement\"}," +
-                                    "{\"label\": \"Episode data checked and accepted by data originator\"}," +
-                                    "{\"label\": \"Missing measurement\"}," +
-                                "]," +
-                            "\"startDate\": \"2020-08-19T09:52:55.785Z\"" +
-                        "}" +
-                    "]"
-    )
-    private List<SessionSelection> sessionSelections;
+
+    private List<Chart> charts;
 
     public Session() {
         super();
@@ -95,12 +85,12 @@ public class Session {
         this.linkedParameters = linkedParameters;
     }
 
-    public List<SessionSelection> getSessionSelections() {
-        return sessionSelections;
+    public List<Chart> getCharts() {
+        return charts;
     }
 
-    public void setSessionSelections(List<SessionSelection> sessionSelections) {
-        this.sessionSelections = sessionSelections;
+    public void setCharts(List<Chart> charts) {
+        this.charts = charts;
     }
 
     @Override
@@ -112,7 +102,7 @@ public class Session {
                 ", instrumentName='" + instrumentName + '\'' +
                 ", mainParameter=" + mainParameter +
                 ", linkedParameters=" + linkedParameters +
-                ", sessionSelections=" + sessionSelections +
+                ", charts=" + charts +
                 '}';
     }
 }
