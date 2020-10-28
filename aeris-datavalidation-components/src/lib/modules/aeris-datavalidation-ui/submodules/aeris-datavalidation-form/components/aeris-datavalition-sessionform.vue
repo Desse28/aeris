@@ -162,7 +162,6 @@ export default {
       this.currentUrl = process.env.VUE_APP_ROOT_API + "/instruments/names"
     },
     createNewSession : function () {
-
       this.initSession()
 
       if(!this.isExistSession()) {
@@ -172,7 +171,8 @@ export default {
           this.currentUrl=""
           if(session) {
             this.getInstrumentInfos(this.currentInstrument['uuid'], (infos) => {
-              this.initNewSession(session, this.currentInstrument, infos)
+              console.log("Test start newSession : ", infos)
+              //this.initNewSession(session, this.currentInstrument, infos)
             })
           }
         }
