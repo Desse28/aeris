@@ -164,8 +164,6 @@ export default {
     createNewSession : function () {
       this.initSession()
 
-      console.log("Test exist session : ", this.isExistSession())
-
       if(!this.isExistSession()) {
         this.requestData = this.currentSession
         this.typeOfRequest = "POST"
@@ -180,7 +178,6 @@ export default {
         }
         this.currentUrl = process.env.VUE_APP_ROOT_API + "/sessions/create"
       } else {
-
         this.enableAlert(this.$t('configuration.message_existSession'))
       }
     },
@@ -240,20 +237,22 @@ export default {
         return this.isSameMainParameter(session) || this.isSameLinkedParameters(session)
       })
     },
-    isSameMainParameter : function(session) {
+    isSameMainParameter : function({mainParameter}) {
       let exist = false
-      if(session && this.currentSession) {
-        exist = session.mainParameter.name === this.currentSession.mainParameter.name
+      if(this.currentSession) {
+        exist = mainParameter.name === this.currentSession.mainParameter.name
       }
       return exist
     },
-    isSameLinkedParameters : function(session) {
-      let parameters = session.linkedParameters.filter((parameter) => {
-        this.currentSession.linkedParameters.some(
-            (currentParam) => {currentParam.name === parameter.name}
+    isSameLinkedParameters : function({linkedParameters}) {
+      let parameters = linkedParameters.filter((parameter) => {
+        return this.currentSession.linkedParameters.some((currentParam) => {
+              return currentParam.name === parameter.name
+            }
         )
       })
-      return parameters.length !== 0
+
+      return parameters.length === linkedParameters.length
     },
     getInstrumentInfos : function (uuid, callBack) {
       this.typeOfRequest = "GET"
