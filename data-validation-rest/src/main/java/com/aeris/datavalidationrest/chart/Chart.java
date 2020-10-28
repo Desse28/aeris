@@ -11,8 +11,9 @@ public class Chart {
     @Id
     @ApiModelProperty(hidden = true)
     private String id;
-    @ApiModelProperty( example = "Main chart" )
+    @ApiModelProperty( example = "Graphique principal" )
     private String frName;
+    @ApiModelProperty( example = "Main chart" )
     private String enName;
     private Double startXaxis;//Default zoom
     private Double endXaxis;//Default zoom
