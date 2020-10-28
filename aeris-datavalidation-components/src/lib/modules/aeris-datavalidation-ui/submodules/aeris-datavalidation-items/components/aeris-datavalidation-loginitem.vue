@@ -17,13 +17,14 @@
 
 <script>
 import {keycloak}  from '../../../../../../../plugins/keycloak'
+
 export default {
   name: "aeris-datavalidation-loginmenu",
   watch: {
     '$store.state.common.authenticated': function() {
       this.authenticated = this.$store.state.common.authenticated
       if(this.authenticated)
-        this.$router.push( '/data-validation-tool')
+        this.$router.push( '/data-validation-tool').catch(()=>{})
     }
   },
   data: function() {

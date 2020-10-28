@@ -36,9 +36,6 @@ const router = new VueRouter({
     {
       path : "/data-validation-tool",
       component : AerisDatavalidationChartscontroller
-    },
-    { path: "*",
-      component : AerisDataValidationHomePage
     }
   ]
 });

@@ -36,14 +36,6 @@
 </template>
 <script>
 
-/*import {
-  AerisDatavalidationLogoutItem,
-  AerisDatavalidationTypography,
-  AerisDatavalidationSessionForm,
-  AerisDatavalidationLangSwitcher,
-  AerisDatavalidationSessionsTable
-} from "@/lib/modules/aeris-datavalidation-components";*/
-
 import AerisDatavalidationSessionForm from "../../../../aeris-datavalidation-ui/submodules/aeris-datavalidation-form/components/aeris-datavalition-sessionform"
 import AerisDatavalidationLogoutItem from "../../../../aeris-datavalidation-ui/submodules/aeris-datavalidation-items/components/aeris-datavalidation-logoutitem"
 import AerisDatavalidationTypography from "../../../../aeris-datavalidation-ui/submodules/aeris-datavalidation-typographies/components/aeris-datavalidation-typography"

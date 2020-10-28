@@ -11,6 +11,7 @@ public class Parameter {
     @ApiModelProperty(hidden = true)
     private String id;
     private String name;
+    private String color;
     private List<ParameterData> parameterData;
 
     public Parameter() {
