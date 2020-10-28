@@ -99,7 +99,6 @@ export default {
   },
   watch : {
     instrument : function(instrumentIdObj) {
-      console.log("Test instrument")
       let instrumentId = instrumentIdObj['_id']['$oid']
 
       this.callBack = (instrument) => {
@@ -165,6 +164,8 @@ export default {
     createNewSession : function () {
       this.initSession()
 
+      console.log("Test exist session : ", this.isExistSession())
+
       if(!this.isExistSession()) {
         this.requestData = this.currentSession
         this.typeOfRequest = "POST"
@@ -179,6 +180,7 @@ export default {
         }
         this.currentUrl = process.env.VUE_APP_ROOT_API + "/sessions/create"
       } else {
+
         this.enableAlert(this.$t('configuration.message_existSession'))
       }
     },
@@ -235,16 +237,14 @@ export default {
     },
     isExistSession : function () {
       return this.sessions.some( (session) => {
-        this.isSameMainParameter(session) || this.isSameLinkedParameters(session)
+        return this.isSameMainParameter(session) || this.isSameLinkedParameters(session)
       })
     },
     isSameMainParameter : function(session) {
       let exist = false
-      console.log("Test isSameMainParameter : ", session.mainParameter.name === this.currentSession.mainParameter.name)
       if(session && this.currentSession) {
         exist = session.mainParameter.name === this.currentSession.mainParameter.name
       }
-
       return exist
     },
     isSameLinkedParameters : function(session) {

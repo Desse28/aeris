@@ -91,7 +91,6 @@ export default {
       }
     },
     initNewSession : function (currentSession, currentInstrument, infos) {
-      console.log("Test initNewSession")
       if(currentSession && currentInstrument) {
         this.dialog = false
         this.newSession(currentSession, currentInstrument, infos)
