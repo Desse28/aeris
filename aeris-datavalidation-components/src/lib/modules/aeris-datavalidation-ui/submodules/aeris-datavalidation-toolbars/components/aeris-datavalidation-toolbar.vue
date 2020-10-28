@@ -10,7 +10,6 @@
           :selection="selection"
           :qualityFlags="qualityFlags"
           :notifySelection="notifySelection"
-          :setSessionsDialog="setSessionsDialog"
           :instrumentEndDate="instrumentEndDate"
           :instrumentStartDate="instrumentStartDate"
           :notifyDeleteSelection="notifyDeleteSelection"
@@ -33,11 +32,6 @@
   </v-card>
 </template>
 <script>
-
-/*import {
-  AerisDataValidationOptions,
-  AerisDatavalidationWorksFlowDialog
-} from "@/lib/modules/aeris-datavalidation-components";*/
 
 import AerisDataValidationOptions from "../../../../aeris-datavalidation-blocks/submodules/aeris-datavalidation-options/components/aeris-datavalidation-configuration"
 import AerisDatavalidationWorksFlowDialog from "../../../../aeris-datavalidation-ui/submodules/aeris-datavalidation-dialogs/components/aeris-datavalidation-worksflowdialog"
@@ -84,9 +78,6 @@ export default {
     auxParameters: {
       type : Array,
       default : () => [],
-    },
-    setSessionsDialog: {
-      type : Function,
     },
     instrumentStartDate : {
       type : String,

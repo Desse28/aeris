@@ -9,7 +9,7 @@
         <v-btn class="mb-2 mt-2 blue--text"
                color="rgb(255, 255, 255)"
                depressed
-               v-on:click="setSessionsDialog(true)"
+               v-on:click="()=>{}"
         >
           <v-icon left>mdi-view-list</v-icon> {{$t('session.label_sessions')}}
         </v-btn>
@@ -100,9 +100,6 @@ export default {
     notifyDeleteSelection : {
       type: Function,
       default : () => {}
-    },
-    setSessionsDialog : {
-      type : Function,
     },
     instrumentStartDate : {
       type : String,

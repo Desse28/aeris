@@ -36,7 +36,7 @@
                :disabled="disabledContinueButton"
                text @click="continueSession"
         >
-          Continue
+          Continuer
         </v-btn>
         <v-btn type="submit"
                color="blue darken-1"

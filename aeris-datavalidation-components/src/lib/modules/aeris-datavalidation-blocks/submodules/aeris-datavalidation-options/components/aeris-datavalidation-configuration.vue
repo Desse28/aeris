@@ -52,9 +52,6 @@ export default {
     sessionsDialog : {
       type : Boolean
     },
-    setSessionsDialog : {
-      type : Function,
-    },
   },
   components : {
     AerisDatavalidationTypography,
@@ -96,7 +93,6 @@ export default {
     initNewSession : function (currentSession, currentInstrument, infos) {
       if(currentSession && currentInstrument) {
         this.dialog = false
-        this.setSessionsDialog(false)
         this.newSession(currentSession, currentInstrument, infos)
       }
     }

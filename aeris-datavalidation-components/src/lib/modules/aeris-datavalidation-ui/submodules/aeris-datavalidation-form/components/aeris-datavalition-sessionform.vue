@@ -59,7 +59,7 @@
             type="submit"
             color="blue darken-1"
             :disabled="disabledCreateButton"
-            text @click="startNewSession"
+            text @click="createNewSession"
         >
           {{ $t("configuration.label_create") }}
         </v-btn>
@@ -76,11 +76,6 @@
 </template>
 
 <script>
-/*import {
-  AerisDataValidationServices,
-  AerisDatavalidationPortraitLayaout,
-} from "@/lib/modules/aeris-datavalidation-components";*/
-
 import AerisDataValidationServices from "../../../../aeris-datavalidation-services/components/aeris-datavalidation-services"
 import AerisDatavalidationPortraitLayaout from "../../aeris-datavalidation-layouts/components/aeris-datavalidation-potraitlayout"
 
@@ -117,6 +112,7 @@ export default {
   },
   data() {
     return {
+      colorCount: 0,
       parameters : [],
       currentUrl : "",
       callBack : null,
@@ -165,15 +161,10 @@ export default {
       }
       this.currentUrl = process.env.VUE_APP_ROOT_API + "/instruments/names"
     },
-    startNewSession : function() {
-      this.currentSession = {
-        mainParameter : this.mainParameter,
-        linkedParameters : this.linkedParameters,
-        instrumentName : this.currentInstrument.name,
-      }
-      this.createNewSession()
-    },
     createNewSession : function () {
+
+      this.initSession()
+
       if(!this.isExistSession()) {
         this.requestData = this.currentSession
         this.typeOfRequest = "POST"
@@ -187,8 +178,59 @@ export default {
         }
         this.currentUrl = process.env.VUE_APP_ROOT_API + "/sessions/create"
       } else {
-        this.turnOnErrorAlert(this.$t('configuration.message_existSession'))
+        this.alert(this.$t('configuration.message_existSession'))
       }
+    },
+    initSession : function () {
+      let charts = [this.getMainChart(), this.getSecondaryChart()]
+      let linkedParameters = this.getParametersWithColors(this.linkedParameters)
+
+      this.currentSession = {
+        charts : charts,
+        mainParameter : this.mainParameter,
+        linkedParameters : linkedParameters,
+        instrumentName : this.currentInstrument.name,
+      }
+
+    },
+    getMainChart : function() {
+      let mainChart = {
+        name : "Graphique principal",
+        startXaxis : 0,
+        endXaxis : 0,
+        parameters : [
+          {
+            color : this.$root.getNewColor(this.colorCount),
+            name : this.mainParameter.name,
+          }
+        ],
+        selections : []
+      }
+      this.colorCount++
+
+      return mainChart
+    },
+    getSecondaryChart : function() {
+      let auxParameters = this.getParametersWithColors(this.currentInstrument.auxParameters)
+
+      return {
+        endXaxis : 0,
+        startXaxis : 0,
+        selections : [],
+        name : "Graphique secondaire",
+        parameters : auxParameters
+      }
+
+    },
+    getParametersWithColors : function(parameters) {
+      let result = []
+      if(parameters) {
+        result = parameters.forEach((parameter) => {
+          parameter.color = this.$root.getNewColor(this.colorCount)
+          this.colorCount++
+        })
+      }
+      return result
     },
     isExistSession : function () {
       let session
@@ -234,11 +276,12 @@ export default {
       this.callBack = callBack
       this.currentUrl = process.env.VUE_APP_ROOT_API + "/instruments/infos/" + uuid
     },
-    turnOnErrorAlert : function(message) {
+    alert : function(message) {
       this.newSessionAlertMessage = message
       this.newSessionAlertError = true
+      this.alertOff(2000)
     },
-    turnOffErrorAlert : function(timeOut) {
+    alertOff : function(timeOut) {
       setTimeout(() => {
         this.newSessionAlertError = false
       }, timeOut);

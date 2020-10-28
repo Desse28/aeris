@@ -1,3 +1,5 @@
+import {colors, defaultColor} from "./../colors/index"
+
 export default {
     data () {
         return {}
@@ -198,6 +200,12 @@ export default {
             }
 
             return lim
+        },
+        getNewColor : function(colorIndex) {
+            if(colorIndex < colors.length -1)
+                return colors[colorIndex]
+            else
+                return defaultColor
         }
     }
 }

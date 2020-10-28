@@ -3,7 +3,6 @@
     <AerisDatavalidationConfiguration
         :sessionsDialog="sessionsDialog"
         :newSession="newSession"
-        :setSessionsDialog="setSessionsDialog"
     />
 
     <AerisDatavalidationToolbar
@@ -21,7 +20,6 @@
         :addParameter="addParameter"
         :removeParameter="removeParameter"
         :notifySelection=" notifySelection"
-        :setSessionsDialog="setSessionsDialog"
         :switchParameterChart="switchParameterChart"
         :notifyDeleteSelection="notifyDeleteSelection"
     />
@@ -127,14 +125,6 @@ export default {
     }
   },
   methods : {
-    setSessionsDialog : function (state) {
-      this.sessionsDialog = false
-      if(state) {
-        //Object.assign(this.$data, this.$options.data())
-        //this.sessionsDialog = state
-        console.log("Reset all")
-      }
-    },
     notifySelection : function(startDate, endDate) {
       this.selection = {startDate: startDate, endDate: endDate}
     },
