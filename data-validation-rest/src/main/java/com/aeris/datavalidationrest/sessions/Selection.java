@@ -12,12 +12,6 @@ public class Selection {
     private Date startDate;
     @ApiModelProperty( example = "2020-08-19T09:14:21.274Z" )
     private Date endDate;
-    @ApiModelProperty(
-            example = "["+
-                        "{\"label\": \"Valid measurement\"}," +
-                        "{\"label\": \"Missing measurement\"}," +
-                    "]"
-    )
     private List<Flag> flags;
 
     public Selection() {}

@@ -10,9 +10,9 @@ public class Parameter {
     @Id
     @ApiModelProperty(hidden = true)
     private String id;
-    @ApiModelProperty( example = "{ \"name\": \"Air Temp\"}," )
+    @ApiModelProperty( example = "Air Temp" )
     private String name;
-    @ApiModelProperty( example = "{ \"color\": \"rgb(148, 17, 0)\"}," )
+    @ApiModelProperty( example = "rgb(148, 17, 0)" )
     private String color;
     @ApiModelProperty(hidden=true)
     private List<ParameterData> parameterData;
