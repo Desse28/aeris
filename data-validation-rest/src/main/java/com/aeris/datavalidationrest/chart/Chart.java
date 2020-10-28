@@ -12,7 +12,8 @@ public class Chart {
     @ApiModelProperty(hidden = true)
     private String id;
     @ApiModelProperty( example = "Main chart" )
-    private String name;
+    private String frName;
+    private String enName;
     private Double startXaxis;//Default zoom
     private Double endXaxis;//Default zoom
     private List<Parameter> parameters;
@@ -28,12 +29,20 @@ public class Chart {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getFrName() {
+        return frName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setFrName(String frName) {
+        this.frName = frName;
+    }
+
+    public String getEnName() {
+        return enName;
+    }
+
+    public void setEnName(String enName) {
+        this.enName = enName;
     }
 
     public Double getStartXaxis() {
@@ -72,7 +81,8 @@ public class Chart {
     public String toString() {
         return "Chart{" +
                 "id='" + id + '\'' +
-                ", name='" + name + '\'' +
+                ", frName='" + frName + '\'' +
+                ", enName='" + enName + '\'' +
                 ", startXaxis=" + startXaxis +
                 ", endXaxis=" + endXaxis +
                 ", parameters=" + parameters +

@@ -251,7 +251,6 @@ export default {
             }
         )
       })
-
       return parameters.length === linkedParameters.length
     },
     getInstrumentInfos : function (uuid, callBack) {
