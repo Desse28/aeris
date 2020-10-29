@@ -27,8 +27,10 @@
     "message_greaterThan" : "The end date must be greater than the start date"
   },
   "configuration" : {
+    "label_continue" : "Continuer",
     "label_state" : "@:common.state",
     "label_chart" : "@:common.chart",
+    "label_mainChart" : "Main chart",
     "label_newSession": "New session",
     "label_create" : "@:common.create",
     "label_sessions" : "Sessions list",
@@ -39,6 +41,7 @@
     "label_startTime" : "@:common.startTime",
     "label_mainParameter" : "Main parameter",
     "label_startDate" : "@:common.startDate",
+    "label_secondaryChart" : "Secondary Chart",
     "label_instrumentName" : "Instrument name",
     "label_inProgress" : "@:common.in_progress",
     "message_existSession" : "This session exists",

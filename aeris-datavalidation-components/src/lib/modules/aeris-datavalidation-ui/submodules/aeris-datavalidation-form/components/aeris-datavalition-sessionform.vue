@@ -79,6 +79,17 @@
 import AerisDataValidationServices from "../../../../aeris-datavalidation-services/components/aeris-datavalidation-services"
 import AerisDatavalidationPortraitLayaout from "../../aeris-datavalidation-layouts/components/aeris-datavalidation-potraitlayout"
 
+
+const MAIN_CHART_EN_NAME = "Main chart"
+const SECOND_CHART_EN_NAME = "Secondary chart"
+const MAIN_CHART_FR_NAME = "Graphique principal"
+const SECOND_CHART_FR_NAME = "Graphique secondaire"
+
+const INSTRUMENT_PATH = "/instruments?id="
+const CREATE_SESSION_PATH = "/sessions/create"
+const INSTRUMENT_NAMES_PATH = "/instruments/names"
+const INSTRUMENT_INFOS_PATH = "/instruments/infos/"
+
 export default {
   name: "aeris-datavalition-sessionform",
   components : {
@@ -107,7 +118,7 @@ export default {
           this.parameters = this.currentInstrument.parameters
         }
       }
-      this.currentUrl = process.env.VUE_APP_ROOT_API + "/instruments?id=" + instrumentId
+      this.currentUrl = process.env.VUE_APP_ROOT_API + INSTRUMENT_PATH + instrumentId
     },
   },
   data() {
@@ -159,7 +170,7 @@ export default {
           })
         }
       }
-      this.currentUrl = process.env.VUE_APP_ROOT_API + "/instruments/names"
+      this.currentUrl = process.env.VUE_APP_ROOT_API + INSTRUMENT_NAMES_PATH
     },
     createNewSession : function () {
       this.initSession()
@@ -176,7 +187,7 @@ export default {
             })
           }
         }
-        this.currentUrl = process.env.VUE_APP_ROOT_API + "/sessions/create"
+        this.currentUrl = process.env.VUE_APP_ROOT_API + CREATE_SESSION_PATH
       } else {
         this.enableAlert(this.$t('configuration.message_existSession'))
       }
@@ -195,7 +206,8 @@ export default {
     },
     getMainChart : function() {
       let mainChart = {
-        name : "Graphique principal",
+        frName : MAIN_CHART_FR_NAME,
+        enName : MAIN_CHART_EN_NAME,
         startXaxis : 0,
         endXaxis : 0,
         parameters : [
@@ -217,7 +229,8 @@ export default {
         endXaxis : 0,
         startXaxis : 0,
         selections : [],
-        name : "Graphique secondaire",
+        frName : SECOND_CHART_FR_NAME,
+        enName : SECOND_CHART_EN_NAME,
         parameters : auxParameters
       }
     },
@@ -256,7 +269,7 @@ export default {
     getInstrumentInfos : function (uuid, callBack) {
       this.typeOfRequest = "GET"
       this.callBack = callBack
-      this.currentUrl = process.env.VUE_APP_ROOT_API + "/instruments/infos/" + uuid
+      this.currentUrl = process.env.VUE_APP_ROOT_API + INSTRUMENT_INFOS_PATH + uuid
     },
     enableAlert : function(message) {
       this.newSessionAlertMessage = message
