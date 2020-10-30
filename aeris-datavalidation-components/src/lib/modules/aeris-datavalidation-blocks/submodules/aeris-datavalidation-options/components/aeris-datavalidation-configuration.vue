@@ -26,9 +26,14 @@
           </v-row>
           <AerisDatavalidationSessionsTable
               v-if="!isCreationMode"
-              :setSessions="setSessions"
+              :page="page"
+              :sessions="sessions"
+              :pageCount="pageCount"
+              :itemsPerPage="itemsPerPage"
               :initNewSession="initNewSession"
-              :setCurrentItem="setCurrentItem"
+              :setCurrentView="setCurrentView"
+              :continueSession="continueSession"
+              :switchTablecurrentPage="switchTablecurrentPage"
           />
           <AerisDatavalidationSessionForm
               v-if="isCreationMode"
@@ -38,7 +43,7 @@
               :currentInstrument="currentInstrument"
               :getInstrument="getInstrument"
               :initNewSession="initNewSession"
-              :setCurrentItem="setCurrentItem"
+              :setCurrentView="setCurrentView"
               :createNewSession="createNewSession"
               :getPiInstruments="getPiInstruments"
           />
@@ -57,7 +62,9 @@ import AerisDatavalidationSessionsTable from "../../../../aeris-datavalidation-u
 import AerisDatavalidationLangSwitcher from "../../../../aeris-datavalidation-ui/submodules/aeris-datavalidation-inputs/submodules/aeris-datavalidation-switchers/components/aeris-datavalidation-langswitcher"
 
 const INSTRUMENT_PATH = "/instruments?id="
+const SESSIONS_PAGE_PATH = "/sessions?page="
 const CREATE_SESSION_PATH = "/sessions/create"
+const INSTRUMENT_NAME_PATH = "/instruments?name="
 const INSTRUMENT_NAMES_PATH = "/instruments/names"
 const INSTRUMENT_INFOS_PATH = "/instruments/infos/"
 
@@ -88,8 +95,11 @@ export default {
   },
   data() {
     return {
+      page: 1,
+      pageCount: 0,
       dialog: true,
       sessions : [],
+      itemsPerPage: 5,
       callBack : null,
       parameters : [],
       currentUrl : "",
@@ -97,25 +107,20 @@ export default {
       requestData : {},
       typeOfRequest : "",
       currentInstrument : null,
-      currentItem : 'configuration.label_continueSession',
+      currentView : 'configuration.label_continueSession',
     }
   },
   computed : {
     getTitle : function() {
-      return this.$t(this.currentItem)
+      return this.$t(this.currentView)
     },
     isCreationMode : function () {
-      return this.currentItem === 'configuration.label_newSession'
+      return this.currentView === 'configuration.label_newSession'
     }
   },
   methods : {
-    setCurrentItem : function(item) {
-      this.currentItem = item
-    },
-    setSessions : function(sessions) {
-      if(sessions) {
-        this.sessions = sessions
-      }
+    setCurrentView : function(view) {
+      this.currentView = view
     },
     getInstrument : function (instrumentIdObj) {
       let instrumentId = instrumentIdObj['_id']['$oid']
@@ -147,18 +152,30 @@ export default {
       this.callBack = (session) => {
         this.currentUrl=""
         if(session) {
-          this.startNewSession(session)
+          this.startNewSession(session, this.currentInstrument)
         }
         this.currentUrl = process.env.VUE_APP_ROOT_API + CREATE_SESSION_PATH
       }
     },
-    startNewSession : function(currentSession) {
-      this.getInstrumentInfos(this.currentInstrument['uuid'], (infos) => {
+    continueSession : function(session) {
+      let {instrumentName} = session
+
+      this.typeOfRequest = "GET"
+      this.callBack = (instrument) => {
+        if(instrument) {
+          this.currentUrl = ""
+          this.startNewSession(session, instrument)
+        }
+      }
+      this.currentUrl = process.env.VUE_APP_ROOT_API + INSTRUMENT_NAME_PATH + instrumentName
+    },
+    startNewSession : function(currentSession, instrument) {
+      this.getInstrumentInfos(instrument, (infos) => {
         console.log("Test start newSession : ", infos, currentSession)
         //this.initNewSession(session, this.currentInstrument, infos)
       })
     },
-    getInstrumentInfos : function (uuid, callBack) {
+    getInstrumentInfos : function ({uuid}, callBack) {
       this.typeOfRequest = "GET"
       this.callBack = callBack
       this.currentUrl = process.env.VUE_APP_ROOT_API + INSTRUMENT_INFOS_PATH + uuid
@@ -168,7 +185,18 @@ export default {
         this.dialog = false
         this.newSession(currentSession, currentInstrument, infos)
       }
-    }
+    },
+    switchTablecurrentPage : function() {
+      this.typeOfRequest = "GET"
+      this.callBack = ((currentPageData) => {
+        if(currentPageData) {
+          this.page = currentPageData.number
+          this.sessions = currentPageData.content
+          this.pageCount = currentPageData.totalPages
+        }
+      })
+      this.currentUrl = process.env.VUE_APP_ROOT_API + SESSIONS_PAGE_PATH + this.page + "&size=" + this.itemsPerPage
+    },
   }
 }
 </script>

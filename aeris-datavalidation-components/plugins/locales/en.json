@@ -27,7 +27,7 @@
     "message_greaterThan" : "The end date must be greater than the start date"
   },
   "configuration" : {
-    "label_continue" : "Continuer",
+    "label_continue" : "Continue",
     "label_state" : "@:common.state",
     "label_chart" : "@:common.chart",
     "label_mainChart" : "Main chart",

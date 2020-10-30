@@ -60,7 +60,7 @@
         <v-btn
             type="submit"
             color="blue darken-1"
-            text @click="setCurrentItem('configuration.label_continueSession')"
+            text @click="setCurrentView('configuration.label_continueSession')"
         >
           {{ $t("configuration.label_sessions") }}
         </v-btn>
@@ -99,7 +99,7 @@ export default {
     initNewSession : {
       type : Function,
     },
-    setCurrentItem : {
+    setCurrentView : {
       type : Function
     },
     getPiInstruments : {
@@ -120,11 +120,7 @@ export default {
   data() {
     return {
       colorCount: 0,
-      currentUrl : "",
-      callBack : null,
-      requestData : {},
       instrument : null,
-      typeOfRequest : "",
       mainParameter : null,
       linkedParameters : [],
       newSessionAlertMessage : "",
