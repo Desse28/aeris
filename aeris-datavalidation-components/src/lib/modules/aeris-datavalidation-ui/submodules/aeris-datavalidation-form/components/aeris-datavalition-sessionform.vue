@@ -204,6 +204,7 @@ export default {
       if(parameters) {
         result = parameters.slice()
         result.forEach((parameter) => {
+          //parameter.isOn = true
           parameter.color = this.$root.getNewColor(this.colorCount)
           this.colorCount++
         })

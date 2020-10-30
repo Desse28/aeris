@@ -131,7 +131,7 @@ export default {
     newSession : function(currentSession, currentInstrument, instrumentInfos) {
       let mainParameter
       if(currentSession && currentInstrument && instrumentInfos && mainParameter) {
-        //this.instrumentInfos = instrumentInfos
+        this.instrumentInfos = instrumentInfos
         //this.currentSession = currentSession
         //this.currentInstrument = currentInstrument
         //this.qualityFlags = currentInstrument.flags

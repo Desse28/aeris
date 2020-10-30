@@ -207,11 +207,12 @@
         }
       },
       instrumentInfos : function() {
+        const {resourceTitle} = this.instrumentInfos
         const cloneLayout = JSON.parse(JSON.stringify(this.layout))
 
-        if(this.instrumentInfos) {
+        if(resourceTitle) {
           let title =  {
-            text : "Current data set - "+ this.instrumentInfos.resourceTitle.fr,
+            text : "Current data set - "+ resourceTitle.fr,
             x : 0.52,
             font : {
               color : 'rgb(13, 13, 13)',
@@ -789,14 +790,15 @@
         }
       },
       getLayoutTitle: function() {
-        let title = this.instrumentInfos ? "Current data set - " + this.instrumentInfos.resourceTitle.fr : ""
+        const {resourceTitle} =  this.instrumentInfos
+        let title = resourceTitle ? "Current data set - " + resourceTitle.fr : ""
         return {
           text : title,
-              x : 0.52,
-              font : {
+          x : 0.52,
+          font : {
             color : 'rgb(13, 13, 13)',
-                family : '"Open Sans", verdana, arial, sans-serif',
-                size : 18,
+            family : '"Open Sans", verdana, arial, sans-serif',
+            size : 18,
           }
         }
       },
