@@ -33,10 +33,8 @@
       >
         <template v-slot:land1>
           <AerisDatavalidationMainChartTab
-              :endDate="endDate"
               :isMainChart="true"
               :selection="selection"
-              :startDate="startDate"
               :deleteStep="deleteStep"
               :defaultSelections="selections"
               :currentSession="currentSession"
@@ -54,9 +52,7 @@
         <template v-slot:land2>
           <AerisDatavalidationChartsTab
               :hideChart="getChartsCol[1] === 0"
-              :endDate="endDate"
               :isMainChart="false"
-              :startDate="startDate"
               :charts="charts"
               :currentSession="currentSession"
               :instrumentInfos="instrumentInfos"
@@ -93,8 +89,6 @@ export default {
   },
   data() {
     return {
-      endDate: "",
-      startDate: "",
       colorCount: 0,
       deleteStep: 1,
       selections: [],
@@ -136,18 +130,16 @@ export default {
     },
     newSession : function(currentSession, currentInstrument, instrumentInfos) {
       let mainParameter
-      if(currentSession && currentInstrument) {
-        this.instrumentInfos = instrumentInfos
-        this.currentSession = currentSession
-        this.currentInstrument = currentInstrument
-        this.qualityFlags = currentInstrument.flags
-        this.startDate = this.currentSession.startDate
-        this.endDate = this.currentSession.endDate
-        this.initParameters()
-        this.selections = currentSession.sessionSelections
-        mainParameter = this.currentSession['mainParameter']
-        mainParameter.color = this.getNewColor()
-        this.charts[this.charts.Chart1.name].parameters = [mainParameter]
+      if(currentSession && currentInstrument && instrumentInfos && mainParameter) {
+        //this.instrumentInfos = instrumentInfos
+        //this.currentSession = currentSession
+        //this.currentInstrument = currentInstrument
+        //this.qualityFlags = currentInstrument.flags
+        //this.initParameters()
+        //this.selections = currentSession.sessionSelections
+        //mainParameter = this.currentSession['mainParameter']
+        //mainParameter.color = this.getNewColor()
+        //this.charts[this.charts.Chart1.name].parameters = [mainParameter]
       }
     },
     initParameters : function() {

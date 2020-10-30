@@ -15,10 +15,8 @@
             tile
         >
           <AerisDatavalidationChart
-              :endDate="endDate"
               :isMainChart="true"
               :selection="selection"
-              :startDate="startDate"
               :deleteStep="deleteStep"
               :parameters="parameters"
               :currentSession="currentSession"
@@ -58,12 +56,6 @@ export default {
     AerisDatavalidationChart,
   },
   props: {
-    startDate: {
-      type: String
-    },
-    endDate: {
-      type: String
-    },
     parameters: {
       type: Array,
       default: () => [],

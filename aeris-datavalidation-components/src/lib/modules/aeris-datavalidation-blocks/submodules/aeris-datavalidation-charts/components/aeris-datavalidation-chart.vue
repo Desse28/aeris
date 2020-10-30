@@ -65,12 +65,6 @@
   export default {
     name: "aeris-datavalidation-chart",
     props: {
-      startDate : {
-        type: String
-      },
-      endDate : {
-        type: String
-      },
       parameters: {
         type : Array,
         default : () => [],

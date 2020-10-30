@@ -29,8 +29,6 @@
               tile
           >
             <AerisDatavalidationChart
-                :endDate="endDate"
-                :startDate="startDate"
                 :isMainChart="isMainChart"
                 :currentSession="currentSession"
                 :instrumentInfos="instrumentInfos"
@@ -53,12 +51,6 @@ export default {
     AerisDatavalidationChart,
   },
   props: {
-    startDate : {
-      type: String
-    },
-    endDate : {
-      type: String
-    },
     parameters: {
       type : Array,
       default : () => [],

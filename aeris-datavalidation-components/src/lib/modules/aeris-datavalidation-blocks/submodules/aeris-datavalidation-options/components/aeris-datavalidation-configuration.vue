@@ -126,6 +126,7 @@ export default {
       let instrumentId = instrumentIdObj['_id']['$oid']
       this.typeOfRequest = "GET"
       this.callBack = (instrument) => {
+        this.currentUrl=""
         if(instrument) {
           this.currentInstrument = instrument
           this.parameters = this.currentInstrument.parameters
@@ -138,6 +139,7 @@ export default {
       this.typeOfRequest = "GET"
       this.callBack = (data) => {
         if(data) {
+          this.currentUrl=""
           data.forEach((instrumentObj) => {
             newInstruments.push(JSON.parse(instrumentObj))
           })
@@ -172,19 +174,14 @@ export default {
     startNewSession : function(currentSession, instrument) {
       this.getInstrumentInfos(instrument, (infos) => {
         console.log("Test start newSession : ", infos, currentSession)
-        //this.initNewSession(session, this.currentInstrument, infos)
+        //this.dialog = false
+        //this.newSession(currentSession, instrument, infos)
       })
     },
     getInstrumentInfos : function ({uuid}, callBack) {
       this.typeOfRequest = "GET"
       this.callBack = callBack
       this.currentUrl = process.env.VUE_APP_ROOT_API + INSTRUMENT_INFOS_PATH + uuid
-    },
-    initNewSession : function (currentSession, currentInstrument, infos) {
-      if(currentSession && currentInstrument) {
-        this.dialog = false
-        this.newSession(currentSession, currentInstrument, infos)
-      }
     },
     switchTablecurrentPage : function() {
       this.typeOfRequest = "GET"
