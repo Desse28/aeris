@@ -3,63 +3,57 @@
     <v-alert type="error" v-if="newSessionAlertError">
       {{ newSessionAlertMessage  }}
     </v-alert>
-    <AerisDataValidationServices
-        :url="currentUrl"
-        :callBack="callBack"
-        :requestData="requestData"
-        :typeOfRequest="typeOfRequest"
-    >
-      <v-container>
-        <AerisDatavalidationPortraitLayaout
-            justify="center"
-            padding="pa-6"
-            :cols="[12, 12, 12, 6, 6, 6, 6]"
-            :nbrChildElement="7"
-        >
-          <template v-slot:portrait1>
-            <v-select
-                :items="instruments"
-                v-model="instrument"
-                name="name"
-                item-text="name"
-                item-value="name"
-                :label="$t('configuration.label_instrumentName')"
-                return-object
-                required
-            ></v-select>
-          </template>
-          <template v-slot:portrait2>
-            <v-select
-                :items="parameters"
-                v-model="mainParameter"
-                name="mainParameter"
-                item-text="name"
-                :label="$t('configuration.label_mainParameter')"
-                return-object
-                required
-                :disabled="disabledMainParameter"
-            ></v-select>
-          </template>
-          <template v-slot:portrait3>
-            <v-autocomplete
-                :items="getLinkedParameters"
-                v-model="linkedParameters"
-                item-text="name"
-                :label="$t('configuration.label_linkedParameters')"
-                name="linkedParameters"
-                return-object
-                multiple
-                :disabled="disabledLinkedParameters"
-            ></v-autocomplete>
-          </template>
-        </AerisDatavalidationPortraitLayaout>
+    <v-container>
+      <AerisDatavalidationPortraitLayaout
+          justify="center"
+          padding="pa-6"
+          :cols="[12, 12, 12, 6, 6, 6, 6]"
+          :nbrChildElement="7"
+      >
+        <template v-slot:portrait1>
+          <v-select
+              :items="instruments"
+              v-model="instrument"
+              name="name"
+              item-text="name"
+              item-value="name"
+              :label="$t('configuration.label_instrumentName')"
+              return-object
+              required
+          ></v-select>
+        </template>
+        <template v-slot:portrait2>
+          <v-select
+              :items="parameters"
+              v-model="mainParameter"
+              name="mainParameter"
+              item-text="name"
+              :label="$t('configuration.label_mainParameter')"
+              return-object
+              required
+              :disabled="disabledMainParameter"
+          ></v-select>
+        </template>
+        <template v-slot:portrait3>
+          <v-autocomplete
+              :items="getLinkedParameters"
+              v-model="linkedParameters"
+              item-text="name"
+              :label="$t('configuration.label_linkedParameters')"
+              name="linkedParameters"
+              return-object
+              multiple
+              :disabled="disabledLinkedParameters"
+          ></v-autocomplete>
+        </template>
+      </AerisDatavalidationPortraitLayaout>
       </v-container>
       <v-card-actions>
         <v-btn
             type="submit"
             color="blue darken-1"
             :disabled="disabledCreateButton"
-            text @click="createNewSession"
+            text @click="create"
         >
           {{ $t("configuration.label_create") }}
         </v-btn>
@@ -71,12 +65,10 @@
           {{ $t("configuration.label_sessions") }}
         </v-btn>
       </v-card-actions>
-    </AerisDataValidationServices>
   </div>
 </template>
 
 <script>
-import AerisDataValidationServices from "../../../../aeris-datavalidation-services/components/aeris-datavalidation-services"
 import AerisDatavalidationPortraitLayaout from "../../aeris-datavalidation-layouts/components/aeris-datavalidation-potraitlayout"
 
 
@@ -85,56 +77,56 @@ const SECOND_CHART_EN_NAME = "Secondary chart"
 const MAIN_CHART_FR_NAME = "Graphique principal"
 const SECOND_CHART_FR_NAME = "Graphique secondaire"
 
-const INSTRUMENT_PATH = "/instruments?id="
-const CREATE_SESSION_PATH = "/sessions/create"
-const INSTRUMENT_NAMES_PATH = "/instruments/names"
-const INSTRUMENT_INFOS_PATH = "/instruments/infos/"
-
 export default {
   name: "aeris-datavalition-sessionform",
   components : {
-    AerisDataValidationServices,
     AerisDatavalidationPortraitLayaout,
   },
   props : {
+    parameters : {
+      type : Array
+    },
+    instruments : {
+      type : Array
+    },
+    sessions : {
+      type : Array,
+      default : () => []
+    },
+    getInstrument : {
+      type : Function,
+    },
     initNewSession : {
       type : Function,
     },
     setCurrentItem : {
       type : Function
     },
-    sessions : {
-      type : Array,
-      default : () => []
+    getPiInstruments : {
+      type : Function,
     },
+    createNewSession : {
+      type : Function
+    },
+    currentInstrument : {
+      type : Object
+    }
   },
   watch : {
     instrument : function(instrumentIdObj) {
-      let instrumentId = instrumentIdObj['_id']['$oid']
-
-      this.callBack = (instrument) => {
-        if(instrument) {
-          this.currentInstrument = instrument
-          this.parameters = this.currentInstrument.parameters
-        }
-      }
-      this.currentUrl = process.env.VUE_APP_ROOT_API + INSTRUMENT_PATH + instrumentId
+      this.getInstrument(instrumentIdObj)
     },
   },
   data() {
     return {
       colorCount: 0,
-      parameters : [],
       currentUrl : "",
       callBack : null,
-      instruments : [],
       requestData : {},
       instrument : null,
       typeOfRequest : "",
-      currentSession: null,
       mainParameter : null,
       linkedParameters : [],
-      currentInstrument : null,
       newSessionAlertMessage : "",
       newSessionAlertError : false,
     }
@@ -162,47 +154,24 @@ export default {
   },
   methods : {
     initForm : function() {
-      this.typeOfRequest = "GET"
-      this.callBack = (data) => {
-        if(data) {
-          data.forEach((instrumentObj) => {
-            this.instruments.push(JSON.parse(instrumentObj))
-          })
-        }
-      }
-      this.currentUrl = process.env.VUE_APP_ROOT_API + INSTRUMENT_NAMES_PATH
+      this.getPiInstruments()
     },
-    createNewSession : function () {
-      this.initSession()
-
-      if(!this.isExistSession()) {
-        this.requestData = this.currentSession
-        this.typeOfRequest = "POST"
-        this.callBack = (session) => {
-          this.currentUrl=""
-          if(session) {
-            this.getInstrumentInfos(this.currentInstrument['uuid'], (infos) => {
-              console.log("Test start newSession : ", infos)
-              //this.initNewSession(session, this.currentInstrument, infos)
-            })
-          }
-        }
-        this.currentUrl = process.env.VUE_APP_ROOT_API + CREATE_SESSION_PATH
-      } else {
-        this.enableAlert(this.$t('configuration.message_existSession'))
-      }
-    },
-    initSession : function () {
+    create : function () {
       let charts = [this.getMainChart(), this.getSecondaryChart()]
       let linkedParameters = this.getParametersWithColors(this.linkedParameters)
 
-      this.currentSession = {
+      let newSession = {
         charts : charts,
         mainParameter : this.mainParameter,
         linkedParameters : linkedParameters,
         instrumentName : this.currentInstrument.name,
       }
 
+      if(!this.isExistSession(newSession)) {
+        this.createNewSession(newSession)
+      } else {
+        this.enableAlert(this.$t('configuration.message_existSession'))
+      }
     },
     getMainChart : function() {
       let mainChart = {
@@ -245,31 +214,26 @@ export default {
       }
       return result
     },
-    isExistSession : function () {
+    isExistSession : function (newSession) {
       return this.sessions.some( (session) => {
-        return this.isSameMainParameter(session) || this.isSameLinkedParameters(session)
+        return this.isSameMainParameter(session, newSession) || this.isSameLinkedParameters(session, newSession)
       })
     },
-    isSameMainParameter : function({mainParameter}) {
+    isSameMainParameter : function({mainParameter}, newSession) {
       let exist = false
-      if(this.currentSession) {
-        exist = mainParameter.name === this.currentSession.mainParameter.name
+      if(newSession) {
+        exist = mainParameter.name === newSession.mainParameter.name
       }
       return exist
     },
-    isSameLinkedParameters : function({linkedParameters}) {
+    isSameLinkedParameters : function({linkedParameters}, newSession) {
       let parameters = linkedParameters.filter((parameter) => {
-        return this.currentSession.linkedParameters.some((currentParam) => {
+        return newSession.linkedParameters.some((currentParam) => {
               return currentParam.name === parameter.name
             }
         )
       })
       return parameters.length === linkedParameters.length
-    },
-    getInstrumentInfos : function (uuid, callBack) {
-      this.typeOfRequest = "GET"
-      this.callBack = callBack
-      this.currentUrl = process.env.VUE_APP_ROOT_API + INSTRUMENT_INFOS_PATH + uuid
     },
     enableAlert : function(message) {
       this.newSessionAlertMessage = message
