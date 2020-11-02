@@ -120,6 +120,8 @@ import AerisDatavalidationSelect from "../../aeris-datavalidation-inputs/submodu
 import AerisDatavalidationDateMounthPicker from "../../aeris-datavalidation-inputs/submodules/aeris-datavalidation-pickers/components/aeris-datavalidation-datemounthpicker"
 import AerisDatavalidationTimePicker from "../../aeris-datavalidation-inputs/submodules/aeris-datavalidation-pickers/components/aeris-datavalidation-timepicker"
 
+const UPDATE_SESSION_PATH = "/sessions/update"
+
 export default {
   name: "aeris-datavalidation-selectionform",
   components: {
@@ -364,23 +366,32 @@ export default {
       }
     },
     saveSelection : function() {
-      let selectionStartDate = this.$root.getSpringDateFormat(this.startDate + " " + this.startTime)
-      let selectionEndDate = this.$root.getSpringDateFormat(this.endDate + " " + this.endTime)
-
-      if(!this.isSelectionExist(selectionStartDate, selectionEndDate)) {
-        this.createNewSelection(selectionStartDate, selectionEndDate)
-        this.submitSelection()
-      } else {
-        this.activeExistSelectionAlert()
+      let mainChart
+      let charts = this.session.charts
+      let startDate = this.$root.getSpringDateFormat(this.startDate + " " + this.startTime)
+      let endDate = this.$root.getSpringDateFormat(this.endDate + " " + this.endTime)
+      if(charts) {
+        mainChart = charts[0]
+        if(!this.isSelectionExist(startDate, endDate, mainChart.selections)) {
+          this.createNewSelection(startDate, endDate, mainChart)
+          this.submitSelection()
+        } else {
+          this.alertExistSelection()
+        }
       }
     },
-    createNewSelection : function(selectionStartDate, selectionEndDate) {
+    isSelectionExist: function(startDate, endDate, selections) {
+      return selections.some((selection) => {
+        return (selection.startDate === startDate && selection.endDate === endDate)
+      })
+    },
+    createNewSelection : function(startDate, endDate, chart) {
       let selection = {
-        startDate : selectionStartDate,
-        endDate : selectionEndDate,
-        flags : this.selectedFlags,
-      }
-      this.session.sessionSelections.push(selection)
+          startDate : startDate,
+          endDate : endDate,
+          flags : this.selectedFlags,
+        }
+        chart.selections.push(selection)
     },
     editSelection : function() {
       let startDate = this.startDate + " " + this.startTime
@@ -427,30 +438,21 @@ export default {
       this.requestData = this.session
       this.callBack = (selection) => {
         if(selection) {
-          this.activeIsRecordedAlert()
+          this.alertIsRecorded()
           this.switchCurrentView(this.$t('session.label_edit'))
           this.notifyCancelPopUp()
         }
         this.currentUrl=""
       }
-      this.currentUrl = process.env.VUE_APP_ROOT_API + "/sessions/update"
+      this.currentUrl = process.env.VUE_APP_ROOT_API + UPDATE_SESSION_PATH
     },
-    isSelectionExist: function(selectionStartDate, selectionEndDate) {
-      let selections = this.session.sessionSelections
-      for(const index in selections) {
-        if(selections[index].startDate === selectionStartDate &&
-            selections[index].endDate === selectionEndDate)
-          return true
-      }
-      return false
-    },
-    activeIsRecordedAlert : function () {
+    alertIsRecorded : function () {
       this.isRecorded = true
       setTimeout(() => {
         this.isRecorded = false
       }, 2000);
     },
-    activeExistSelectionAlert : function () {
+    alertExistSelection : function () {
       this.existSelection=true
       setTimeout(() => {
         this.existSelection = false
@@ -470,5 +472,6 @@ export default {
           this.endDate !== selectionDate.endDate || this.endTime !== selectionDate.endTime)
     },
   },
+
 }
 </script>
