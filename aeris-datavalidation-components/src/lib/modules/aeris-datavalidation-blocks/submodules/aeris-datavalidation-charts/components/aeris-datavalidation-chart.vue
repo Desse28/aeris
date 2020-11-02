@@ -26,7 +26,7 @@
               :x="Date"
               :key="componentKey"
               :data="data"
-              :id="chartName"
+              :id="getChartId"
               :layout="layout"
               :scrollZoom="true"
               :displaylogo="false"
@@ -149,6 +149,11 @@
         currentSelection : null,
         currentParameters : [],
         linkIcon: linkChartsIconPath,
+      }
+    },
+    computed : {
+      getChartId : function () {
+        return this.chartName.replace(' ', '')
       }
     },
     watch: {
@@ -360,10 +365,12 @@
       addEventsHandler : function () {
         if(this.isMainChart) {
           this.$nextTick(() => {
-            //document.getElementById( this.chartName ).on( 'plotly_hover', this.hoverHandler)
-            document.getElementById( this.chartName ).on( 'plotly_selected', this.addNewSelection)
-            //document.getElementById( this.chartName ).on( 'plotly_relayout', this.reLayoutHandler)
-            //this.addSelectionEvent()
+            if(this.getChartId) {
+              //document.getElementById( this.chartName ).on( 'plotly_hover', this.hoverHandler)
+              document.getElementById( this.getChartId ).on( 'plotly_selected', this.addNewSelection)
+              //document.getElementById( this.chartName ).on( 'plotly_relayout', this.reLayoutHandler)
+              //this.addSelectionEvent()
+            }
           });
         }
       },
@@ -381,7 +388,7 @@
       reLayoutHandler : function(data) {
         if(data && data['xaxis.range[0]'] !== this.linkedChartData.startXaxis &&
             data['xaxis.range[1]'] !== this.linkedChartData.endXaxis) {
-          this.addSelectionEvent()
+          this.addSelectionEventHandler()
           this.applyLinkedEffect(data)
         }
       },
@@ -402,71 +409,23 @@
       },
       addNewSelection : function(data) {
         let startDate = data.range.x[0], endDate = data.range.x[1]
-
-        if(data) {
+        if(startDate && endDate) {
           if(!this.isSelectionExist(startDate, endDate))
             this.drawSelection(startDate, endDate, false)
         }
       },
-      addSelectionEvent: function () {
-        /*let children =  $('#' + this.chartName).find( '.shapelayer' )[2].children
-        if(children) {
-          $('document').ready(() => {
-            children.forEach((selection, index) => {
-              if($(selection).attr('id') === undefined) {
-                $(selection).attr('id', 'selection' + index )
-                $(selection).css("pointer-events", "bounding-box")
-                $(document).on('click', '#selection' + index, this.switchSelection)
-              }
-            })
-          });
-        }*/
-      },
-      switchSelection : function(event) {
-        let startDate, endDate
-        let child = event.target
-        let parent = child.parentNode
-        let index = Array.prototype.indexOf.call(parent.children, child)
-
-        if(index !== -1 && this.currentSelection !== this.selections[index]) {
-          this.setCurrentSelection(index, false)
-        } else if(index !== -1 && this.currentSelection === this.selections[index]) {
-          startDate = this.currentSelection.x0
-          endDate = this.currentSelection.x1
-          this.notifySelection(startDate, endDate)
-        }
-      },
-      setCurrentSelection : function(index, isDefault) {
-        let startDate, endDate
-        const cloneLayout = JSON.parse(JSON.stringify(this.layout))
-        this.clearCurrentSelection()
-        this.currentSelection = this.selections[index]
-        this.currentSelection.line.color = TARGET_SELECTION_BORDER_COLOR
-        startDate = this.currentSelection.x0
-        endDate = this.currentSelection.x1
-        cloneLayout.shapes = this.selections
-        this.layout = cloneLayout
-        this.refresh()
-
-        if(!isDefault)
-          this.notifySelection(startDate, endDate)
-      },
       isSelectionExist : function (startDate, endDate) {
-        let selection
-        for(let index in this.selections) {
-          selection = this.selections[index]
-          if(this.$root.getCleanDate(selection.x0) === this.$root.getCleanDate(startDate) &&
-              this.$root.getCleanDate(selection.x1) === this.$root.getCleanDate(endDate))
-            return true
-        }
-        return false
+        return this.selections.some((selection) => {
+          return (this.$root.getCleanDate(selection.x0) === this.$root.getCleanDate(startDate) &&
+                  this.$root.getCleanDate(selection.x1) === this.$root.getCleanDate(endDate))
+        })
       },
       drawSelection : function(startDate, endDate, isDefault) {
         const cloneLayout = JSON.parse(JSON.stringify(this.layout))
         let newStartDate = this.$root.getCleanDate(startDate)
         let newEndDate = this.$root.getCleanDate(endDate)
 
-        this.clearCurrentSelection()
+        this.turnOffCurrentSelection()
 
         this.selections = [
           ...this.selections,
@@ -496,7 +455,51 @@
         cloneLayout.shapes = this.selections
         this.layout = cloneLayout
         this.currentSelection = this.selections[this.selections.length-1]
-        this.addSelectionEvent()
+        this.addSelectionEventHandler()
+        if(!isDefault)
+          this.notifySelection(startDate, endDate)
+      },
+      addSelectionEventHandler: function () {
+        let children =  $('#' + this.getChartId).find( '.shapelayer' )[2].children
+        console.log("Test children : ", children)
+        /*if(children) {
+          $('document').ready(() => {
+            children.forEach((selection, index) => {
+              if($(selection).attr('id') === undefined) {
+                $(selection).attr('id', 'selection' + index )
+                $(selection).css("pointer-events", "bounding-box")
+                $(document).on('click', '#selection' + index, this.switchSelection)
+              }
+            })
+          });
+        }*/
+      },
+      switchSelection : function(event) {
+        let startDate, endDate
+        let child = event.target
+        let parent = child.parentNode
+        let index = Array.prototype.indexOf.call(parent.children, child)
+
+        if(index !== -1 && this.currentSelection !== this.selections[index]) {
+          this.setCurrentSelection(index, false)
+        } else if(index !== -1 && this.currentSelection === this.selections[index]) {
+          startDate = this.currentSelection.x0
+          endDate = this.currentSelection.x1
+          this.notifySelection(startDate, endDate)
+        }
+      },
+      setCurrentSelection : function(index, isDefault) {
+        let startDate, endDate
+        const cloneLayout = JSON.parse(JSON.stringify(this.layout))
+        this.turnOffCurrentSelection()
+        this.currentSelection = this.selections[index]
+        this.currentSelection.line.color = TARGET_SELECTION_BORDER_COLOR
+        startDate = this.currentSelection.x0
+        endDate = this.currentSelection.x1
+        cloneLayout.shapes = this.selections
+        this.layout = cloneLayout
+        this.refresh()
+
         if(!isDefault)
           this.notifySelection(startDate, endDate)
       },
@@ -532,7 +535,7 @@
         }
         return -1
       },
-      clearCurrentSelection : function() {
+      turnOffCurrentSelection : function() {
         this.selections.forEach((selection) => {
           if(selection.line.color === TARGET_SELECTION_BORDER_COLOR) {
             selection.line.color = SELECTION_BORDER_COLOR

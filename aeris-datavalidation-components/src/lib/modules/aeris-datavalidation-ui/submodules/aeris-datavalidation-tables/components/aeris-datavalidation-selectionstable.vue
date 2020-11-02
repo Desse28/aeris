@@ -190,10 +190,12 @@ export default {
         return []
     },
     getSelectionsLen : function () {
-      if(this.session)
-        return this.session.sessionSelections.length
-      else
-        return 0
+      let mainChart, selectionsLen = 0
+      if(this.session.charts) {
+        mainChart = this.session.charts[0]
+        selectionsLen = mainChart.selections.length
+      }
+      return selectionsLen
     }
   },
   methods: {
