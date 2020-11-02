@@ -31,8 +31,8 @@
               <AerisDatavalidationDateMounthPicker
                   :dateLabel="$t('session.label_startDate')"
                   :currentDate="startDate"
-                  :minDate="getLowerBoundMinDate"
-                  :maxDate="getLowerBoundMaxDate"
+                  minDate=""
+                  maxDate=""
                   :setCurrentDate="setStartDate"
                   :disabled="false"
               />
@@ -41,28 +41,28 @@
               <AerisDatavalidationDateMounthPicker
                   :dateLabel="$t('session.label_endDate')"
                   :currentDate="endDate"
-                  :minDate="getUpperBoundMinDate"
-                  :maxDate="getUpperBoundMaxDate"
+                  minDate=""
+                  maxDate=""
                   :setCurrentDate="setEndDate"
                   :disabled="false"
               />
             </v-col>
             <v-col cols="6">
               <AerisDatavalidationTimePicker
+                  min=""
+                  max=""
                   :time_label="$t('session.label_startTime')"
                   :currentTime="startTime"
-                  :min="getLowerBoundMinTime"
-                  :max="getLowerBoundMaxTime"
                   :setCurrentTime="setStartTime"
                   :disabled="false"
               />
             </v-col>
             <v-col cols="6">
               <AerisDatavalidationTimePicker
+                  min=""
+                  max=""
                   :time_label="$t('session.label_endTime')"
                   :currentTime="endTime"
-                  :min="getUpperBoundMinTime"
-                  :max="getUpperBoundMaxTime"
                   :setCurrentTime="setEndTime"
                   :disabled="false"
               />
@@ -80,7 +80,7 @@
             <v-col cols="12">
               <v-card-actions>
                 <v-btn
-                    v-if="isSelectionMode"
+                    v-if="false"
                     v-on:click="saveSelection"
                     :disabled="false"
                 >
@@ -95,14 +95,15 @@
                 </v-btn>
                 <v-btn
                     v-on:click="deleteCurrentSelecton"
-                    v-if="!isSelectionMode"
+                    v-if="false"
                 >
                   {{$t('session.label_delete')}}
                 </v-btn>
                 <v-btn
                     v-on:click="notifyCancelPopUp"
                 >
-                  {{isSelectionMode? $t('session.label_cancel') : $t('session.label_close')}}
+                  {{ $t('session.label_cancel') }}
+                 <!-- {{true? $t('session.label_cancel') : $t('session.label_close')}}-->
                 </v-btn>
               </v-card-actions>
             </v-col>
@@ -146,10 +147,6 @@ export default {
     },
     sessionSelection : {
       type : Object,
-    },
-    isSelectionMode : {
-      type : Boolean,
-      default : () =>true,
     },
     notifySelection : {
       type : Function,
@@ -195,52 +192,6 @@ export default {
       currentSessionSelection: null,
     }
   },
-  computed : {
-    getLowerBoundMinDate : function () {
-      return ""//this.instrumentStartDate
-    },
-    getLowerBoundMaxDate : function () {
-      return ""//this.instrumentEndDate
-    },
-    getUpperBoundMaxDate : function () {
-      return ""//this.instrumentEndDate
-    },
-    getUpperBoundMinDate : function () {
-      return ""//this.instrumentStartDate
-    },
-    getLowerBoundMinTime : function () {
-      /*let lim
-      let selections = this.session.sessionSelections
-      if(this.selection !== undefined && selections !== undefined) {
-        if(!this.$root.isSinglePoint(this.selection.startDate, selections)) {
-          return this.$root.getTimePickerTimeFormat(this.selection.startDate)
-        } else {
-          lim = this.$root.getStartDateLim(this.selection.startDate, selections)
-          return this.$root.getTimePickerTimeFormat(lim)
-        }
-      }*/
-      return ""
-    },
-    getLowerBoundMaxTime : function () {
-      /*let dateTime
-      if(this.selection !== undefined) {
-        dateTime = this.$root.addMinutesToDate(this.selection.endDate, 1, "subtract")
-        return this.$root.getTimePickerTimeFormat(dateTime)
-      }
-      console.log("empty (1)")*/
-      return ""
-    },
-    getUpperBoundMinTime : function () {
-      /*let selections = this.session.sessionSelections
-      if(this.selection && selections && !this.$root.isSinglePoint(this.selection.endDate, selections)) {
-        return this.$root.getTimePickerTimeFormat(this.selection.endDate)
-      }*/
-      return ""
-    },
-    getUpperBoundMaxTime : function () {
-      return ""
-    }
-  },
   watch : {
     selection : function () {
       let selectionDate
@@ -261,35 +212,17 @@ export default {
       handler(selection) {
         if(selection !== null ) {
           this.currentSessionSelection = selection
-          this.defaultQualityFlags = selection.flags
+          this.defaultQualityFlags = selection ? selection.flags : []
         }
       },
     },
   },
   mounted() {
-    this.initForm()
+    this.initDefaultParameters()
   },
   methods: {
     initDefaultQualityFlags : function () {
-      if(this.isSelectionMode)
-        this.defaultQualityFlags = []
-      else if(this.currentSessionSelection)
         this.defaultQualityFlags = this.currentSessionSelection.flags
-    },
-    initForm : function() {
-      if(this.isSelectionMode) {
-        this.initSelectionForm()
-      } else {
-        this.initDefaultParameters()
-      }
-    },
-    initSelectionForm : function() {
-      let selectionDate = this.getSelectionDate(this.selection, false)
-
-      if(selectionDate !== null) {
-        this.defaultQualityFlags = []
-        this.setCurrentDate(selectionDate)
-      }
     },
     initDefaultParameters : function() {
       let selectionDate

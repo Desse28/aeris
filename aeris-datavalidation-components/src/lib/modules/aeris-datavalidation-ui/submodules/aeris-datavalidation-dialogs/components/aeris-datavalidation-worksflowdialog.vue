@@ -47,7 +47,6 @@
               :selection="selection"
               :qualityFlags="qualityFlags"
               :notifySelection="notifySelection"
-              :isSelectionMode="isSelectionMode"
               :sessionSelection="sessionSelection"
               :instrumentEndDate="instrumentEndDate"
               :instrumentStartDate="instrumentStartDate"
@@ -113,7 +112,6 @@ export default {
   data() {
     return {
       dialog: false,
-      isSelectionMode: true,
       sessionSelection: null,
       isResetSelection: false,
       isEditSelection : false,
@@ -121,48 +119,21 @@ export default {
     }
   },
   watch: {
-    dialog: {
-      immediate: true,
-      handler() {
-        let startDate, endDate
-
-        if(!this.dialog) {
-          if(this.sessionSelection && this.currentView === this.$t('session.label_edit')) {
-            startDate = this.$root.getCleanDate(this.sessionSelection.startDate)
-            endDate = this.$root.getCleanDate(this.sessionSelection.endDate)
-            if(this.$root.isSelectionExist(this.session, startDate, endDate)) {
-              this.isResetSelection = true
-              this.notifySelection(startDate, endDate)
-            }
-          }
-          this.currentView = this.$t('session.label_selections')
-        }
-      },
-    },
     selection: function () {
-      let targetSelection
+      let selection
       let startDate = this.selection.startDate
       let endDate = this.selection.endDate
+      let selections = this.session.charts[0].selections
 
+      this.dialog = true
 
-      if(!this.isResetSelection) {
-        this.dialog = true
-
-        if(this.selection && startDate !== "" && endDate !== "") {
-
-          if(this.currentView === this.$t('session.label_edit'))
-            return
-
-          if(this.$root.isSelectionExist(this.session, startDate, endDate)) {
-            targetSelection = this.$root.getTargetSelection(this.session, startDate, endDate)
-            this.activeEditMode(targetSelection)
-          } else {
+      if(this.$root.isSelectionExist(selections, startDate, endDate)) {
+        selection = this.$root.getTargetSelection(selections, startDate, endDate)
+        this.activeEditMode(selection)
+      } else if(startDate !== "" && endDate !== "") {
             this.activeSelectionMode()
-          }
-        }
-
       } else {
-        this.isResetSelection = false
+        this.dialog = false
       }
     }
   },
@@ -179,34 +150,27 @@ export default {
   },
   methods: {
     activeEditMode: function(selection) {
-      this.isSelectionMode = false
       this.switchCurrentView(this.$t('session.label_edit'), selection)
     },
     activeSelectionMode: function() {
-      this.isSelectionMode = true
       this.switchCurrentView( this.$t('session.label_selection'))
     },
-    switchCurrentView: function(viewName, selection, isEditSelection) {
+    switchCurrentView: function(viewName, selection) {
       let startDate, endDate
-      console.log("Test switchCurrentView")
+      let selections = this.session.charts[0].selections
+
       if(viewName && (this.selection || selection)) {
         this.currentView = viewName
         startDate = selection ? selection.startDate : this.selection.startDate
         endDate = selection ? selection.endDate : this.selection.endDate
-        this.sessionSelection = this.$root.getTargetSelection(this.session, startDate, endDate)
+        this.sessionSelection = this.$root.getTargetSelection(selections, startDate, endDate)
         this.dialog = true
       }
-
-      if( this.currentView !== this.$t('session.label_selection'))
-        this.isSelectionMode = false
-
-      this.isEditSelection = isEditSelection ?? undefined
     },
     notifyCancelPopUp : function () {
       this.dialog = false
       if(this.currentView === this.$t('session.label_selection'))
         this.notifyDeleteSelection()
-
     }
   },
 }

@@ -17,23 +17,11 @@ export default {
             let result = Math.floor(number / 10) <= 0 ? "0" + number : number
             return result
         },
-        isGreaterThan : function(startDateStr, endDateStr) {
-            let result = false
-            let startDate, endDate
-
-            if(startDateStr && endDateStr) {
-                startDate = new Date(this.getCleanDate(startDateStr))
-                endDate = new Date(this.getCleanDate(endDateStr))
-                result = startDate.getTime() > endDate.getTime()
-            }
-
-            return result
-        },
         isSameDate : function(startDateStr, endDateStr) {
             let result = false
             let startDate, endDate
 
-            if(startDateStr && endDateStr) {
+            if(startDateStr !== "" && endDateStr !== "") {
                 startDate = new Date(this.getCleanDate(startDateStr))
                 endDate = new Date(this.getCleanDate(endDateStr))
                 result = startDate.getTime() === endDate.getTime()
@@ -72,67 +60,26 @@ export default {
             let seconds =  this.completeNumber(currentDate.getSeconds())
             return year + '-' + month + '-' + day + 'T' + hours + ':'+ minutes + ':' + seconds + 'Z'
         },
-        addMinutesToDate : function (dateStr, numberOfMinute, mode) {
-            let currentDate, minute, result = ""
-            if(dateStr && numberOfMinute) {
-                currentDate = new Date(dateStr)
-                minute = mode === "subtract" ? - 1000 * (60 * numberOfMinute) : 1000 * (60 * numberOfMinute)
-                result =  this.getSpringDateFormat( currentDate.getTime() + minute )
-            }
-            return result
-        },
-        isSelectionExist : function(session, startDate, endDate) {
-            let selection, selections
-            let shortStartDate, shortEndDate
-
-            if(session) {
-                selections = session.sessionSelections
-                if(selections) {
-                    for(let index in selections) {
-                        selection = selections[index]
-                        shortStartDate = this.getCleanDate(selection.startDate)
-                        shortEndDate = this.getCleanDate(selection.endDate)
-                        if(this.getCleanDate(startDate) === shortStartDate &&
-                            this.getCleanDate(endDate) === shortEndDate) {
-                            return true
-                        }
-                    }
-                }
+        isSelectionExist : function(selections, startDate, endDate) {
+            if(selections) {
+                return selections.some((selection) => {
+                    return (this.isSameDate(selection.startDate, startDate) &&
+                        this.isSameDate(selection.endDate, endDate))
+                })
             }
             return false
         },
-        getTargetSelection : function(session, startDate, endDate) {
-            let selection, selections
-            let shortStartDate, shortEndDate
-            if(session) {
-                selections = session.sessionSelections
-                if(selections) {
-                    for(let index in selections) {
-                        selection = selections[index]
-                        shortStartDate = this.getCleanDate(selection.startDate)
-                        shortEndDate = this.getCleanDate(selection.endDate)
-
-                        if(this.getCleanDate(startDate) === shortStartDate &&
-                            this.getCleanDate(endDate) === shortEndDate)
-                            return selection
-                    }
-                }
-            }
-            return null
+        getTargetSelection : function(selections, startDate, endDate) {
+            return selections.find((selection) => {
+                return (this.isSameDate(selection.startDate, startDate) &&
+                    this.isSameDate(selection.endDate, endDate))
+            })
         },
-        getTargetSelectionIndex : function (selections, selection) {
-            let currentSelection
-            if(selection && selections) {
-                for(let index in selections) {
-                    currentSelection = selections[index]
-
-                    if( this.isSameDate(selection.x0, currentSelection.startDate) &&
-                        this.isSameDate(selection.x1, currentSelection.endDate)) {
-                        return index
-                    }
-                }
-            }
-            return -1
+        getTargetSelectionIndex : function (selections, targetSelection) {
+            return selections.findIndex((selection) => {
+                return (this.isSameDate(selection.startDate, targetSelection.x0) &&
+                    this.isSameDate(selection.endDate, targetSelection.x1))
+            })
         },
         getCleanDate: function (date) {
             let day, month, year, hours, minutes, seconds

@@ -329,18 +329,6 @@
         return (this.selection.startDate !== this.currentSelection.x0 ||
             this.selection.endDate !== this.currentSelection.x1)
       },
-      isDefaultSelection : function(startDate, endDate) {
-        let currentChart
-
-        if(this.charts) {
-          currentChart = this.charts[this.chartName]
-          return currentChart.selections.some((selection) => {
-            return (this.$root.isSameDate(selection.startDate, startDate) &&
-                    this.$root.isSameDate(selection.endDate, endDate))
-          })
-        }
-        return false
-      },
       removeParameter : function (newParameters, oldsParameters) {
         let parameterName, targetParameterIndex
 
@@ -518,24 +506,16 @@
       },
       isSwitchSelection: function(startDate, endDate) {
         if(startDate && endDate && this.currentSelection) {
-          return (this.$root.getCleanDate(this.currentSelection.x0) !== this.$root.getCleanDate(startDate) &&
-              this.$root.getCleanDate(this.currentSelection.x1) !== this.$root.getCleanDate(endDate))
+          return (!this.$root.isSameDate(this.currentSelection.x0, startDate) &&
+                  !this.$root.isSameDate(this.currentSelection.x1, endDate))
         }
-
         return false
       },
       getSelectionIndex: function(startDate, endDate) {
-        let selection
-        if(this.selections) {
-          for(let index in this.selections) {
-            selection = this.selections[index]
-            if(this.$root.getCleanDate(selection.x0) === this.$root.getCleanDate(startDate) &&
-                this.$root.getCleanDate(selection.x1) === this.$root.getCleanDate(endDate)) {
-              return index
-            }
-          }
-        }
-        return -1
+        return this.selections.findIndex((selection) => {
+          return (this.$root.isSameDate(selection.x0, startDate) &&
+              this.$root.isSameDate(selection.x1, endDate))
+        })
       },
       turnOffCurrentSelection : function() {
         this.selections.forEach((selection) => {
