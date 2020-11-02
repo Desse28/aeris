@@ -7,7 +7,7 @@
         :centered="centered"
     >
       <v-tab>
-        {{ $t("session.label_mainChart") }}
+        {{ getMainChartTitle }}
       </v-tab>
       <v-tab-item>
         <v-card
@@ -18,16 +18,16 @@
               :isMainChart="true"
               :selection="selection"
               :deleteStep="deleteStep"
-              :parameters="parameters"
+              :chartName="getMainChartTitle"
               :currentSession="currentSession"
               :instrumentInfos="instrumentInfos"
               :linkedChartData="linkedChartData"
               :notifySelection="notifySelection"
+              :parameters="getMainChartParameters"
               :switchLinkedMode="switchLinkedMode"
               :applyLinkedEffect="applyLinkedEffect"
-              :defaultSelections="defaultSelections"
               :currentInstrument="currentInstrument"
-              :isParallelChartsEmpty="isParallelChartsEmpty"
+              :secondChartsParameters="secondChartsParameters"
           />
         </v-card>
       </v-tab-item>
@@ -56,9 +56,8 @@ export default {
     AerisDatavalidationChart,
   },
   props: {
-    parameters: {
-      type: Array,
-      default: () => [],
+    charts : {
+      type : Object
     },
     instrumentInfos: {
       type : Object,
@@ -68,9 +67,8 @@ export default {
       type: Boolean,
       default: () => false
     },
-    isParallelChartsEmpty : {
-      type: Boolean,
-      default: () => false
+    secondChartsParameters : {
+      type: Array
     },
     deleteStep: {
       type: Number,
@@ -87,10 +85,6 @@ export default {
     notifyDeleteSelection: {
       type: Function,
       default: () => {}
-    },
-    defaultSelections: {
-      type: Array,
-      default: () => []
     },
     currentSession: {
       type: Object,
@@ -119,6 +113,27 @@ export default {
     isSecondChartParametersEmpty: {
       type: Boolean,
       default: false
+    },
+  },
+  computed : {
+    getMainChartTitle : function () {
+      let mainChartName = ""
+      let values = Object.values(this.charts)
+
+      if(this.charts && 0 < values.length) {
+        mainChartName = values[0].enName
+      }
+      return mainChartName
+    },
+    getMainChartParameters : function () {
+      let parameters = []
+      let values = Object.values(this.charts)
+
+      if(this.charts && 0 < values.length) {
+        parameters = values[0].parameters
+      }
+
+      return parameters
     },
   },
   data () {

@@ -154,12 +154,11 @@ export default {
     },
     create : function () {
       let charts = [this.getMainChart(), this.getSecondaryChart()]
-      let linkedParameters = this.getParametersWithColors(this.linkedParameters)
 
       let newSession = {
         charts : charts,
         mainParameter : this.mainParameter,
-        linkedParameters : linkedParameters,
+        linkedParameters : this.linkedParameters,
         instrumentName : this.currentInstrument.name,
       }
 

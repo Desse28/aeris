@@ -171,9 +171,8 @@ export default {
     },
     startNewSession : function(currentSession, instrument) {
       this.getInstrumentInfos(instrument, (infos) => {
-        console.log("Test start newSession : ", infos, currentSession)
-        //this.dialog = false
-        //this.newSession(currentSession, instrument, infos)
+        this.dialog = false
+        this.newSession(currentSession, instrument, infos)
       })
     },
     getInstrumentInfos : function ({uuid}, callBack) {

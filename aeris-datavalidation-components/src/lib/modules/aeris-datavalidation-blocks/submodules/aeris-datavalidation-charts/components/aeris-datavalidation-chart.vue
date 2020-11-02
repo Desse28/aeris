@@ -8,7 +8,6 @@
         :requestData="requestData"
         :typeOfRequest="typeOfRequest"
     >
-
       <v-alert type="error" v-if="deleteAlert">
         {{$t('session.message_chooseQualityFlag')}}
       </v-alert>
@@ -27,7 +26,7 @@
               :x="Date"
               :key="componentKey"
               :data="data"
-              :id="getChartId"
+              :id="chartName"
               :layout="layout"
               :scrollZoom="true"
               :displaylogo="false"
@@ -65,6 +64,16 @@
   export default {
     name: "aeris-datavalidation-chart",
     props: {
+      charts : {
+        type : Object
+      },
+      chartName : {
+        type : String
+      },
+      isMainChart : {
+        type : Boolean,
+        default : false
+      },
       parameters: {
         type : Array,
         default : () => [],
@@ -73,17 +82,12 @@
         type : Object,
         default : () => null,
       },
-      isMainChart : {
-        type: Boolean,
-        default: () => false
-      },
       deleteStep: {
         type: Number,
         default: () => 0
       },
-      isParallelChartsEmpty : {
-        type: Boolean,
-        default: () => false
+      secondChartsParameters : {
+        type: Array
       },
       selection: {
         type: Object,
@@ -100,10 +104,6 @@
       notifyDeleteSelection: {
         type: Function,
         default : () => {}
-      },
-      defaultSelections: {
-        type: Array,
-        default: () => []
       },
       currentSession : {
         type : Object,
@@ -123,7 +123,6 @@
       },
       switchLinkedMode: {
         type : Function,
-        default: () => {}
       }
     },
     components: {
@@ -133,11 +132,10 @@
     },
     data() {
       return {
-        componentKey: 1,
         data: [],
         flags: [],
         layout: {},
-        chartId : "",
+        componentKey: 1,
         selections : [],
         currentUrl : "",
         currentData: [],
@@ -153,17 +151,9 @@
         linkIcon: linkChartsIconPath,
       }
     },
-    computed: {
-      getChartId : function () {
-        if(this.isMainChart)
-          return "mainChart1"
-        else
-          return "mainChart2"
-      },
-    },
     watch: {
-      isParallelChartsEmpty : function () {
-        if(this.isParallelChartsEmpty)
+      secondChartsParameters : function () {
+        if(this.secondChartsParameters.length === 0)
           this.refresh()
       },
       deleteStep : function() {
@@ -173,9 +163,6 @@
       },
       parameters : function (newParameters, oldsParameters) {
         let parameter
-        if(newParameters.length === 0)
-          this.resetChart()
-
         if(this.data.length === 0) {
           parameter = newParameters[0]
           this.initCurrentChart(parameter)
@@ -225,45 +212,33 @@
         }
       },
     },
-    mounted() {
-      let paraName= this.parameters[0]
-      this.chartId = this.getChartId
-      this.initCurrentChart(paraName)
-    },
     updated() {
       this.currentUrl = ""
       this.setDefaultLinkIcon()
       this.addEventsHandler()
     },
+    mounted() {
+      this.initCurrentChart(this.parameters[0])
+    },
     methods: {
       initCurrentChart : function(parameter) {
         this.initModeBar()
-        this.setLayout()
+        this.initLayout()
+
         if(this.currentSession && this.currentInstrument) {
-          if(0 < this.parameters.length && parameter)
+          if(parameter)
             this.addNewParameter(parameter)
 
-          this.initModeBar()
-
-          if(0 < this.parameters.length && this.isMainChart)
+          if(this.isMainChart) {
+            this.drawDefaultSelections()
             this.addEventsHandler()
-
-          this.setLayout()
-
-          if(0 < this.parameters.length)
-            this.initDefaultSelections()
-
+          }
         }
-      },
-      resetChart : function() {
-        const cloneLayout = JSON.parse(JSON.stringify(this.layout))
-        this.selections = []
-        cloneLayout.shapes = this.selections
-        this.layout = cloneLayout
-        this.refresh()
       },
       addNewParameter : function (parameter) {
         let uri, nextIndex
+        let {startDate, endDate} = this.currentInstrument
+
         this.typeOfRequest = "GET"
         this.callBack = (data) => {
           if(data) {
@@ -274,7 +249,7 @@
             }
           }
         }
-        uri = "/instruments/" + parameter.name + "/" + this.startDate + "/" + this.endDate
+        uri = "/instruments/" + parameter.name + "/" + startDate + "/" + endDate
         this.currentUrl = process.env.VUE_APP_ROOT_API + uri
       },
       updateChart: function(ParamData, parameter) {
@@ -335,14 +310,14 @@
       isSelectionEmpty : function() {
         return !(this.selection && this.currentSelection !== null)
       },
-      initDefaultSelections: function() {
-        setTimeout(() => {
+      drawDefaultSelections: function() {
+        /*setTimeout(() => {
           if(this.defaultSelections) {
             this.defaultSelections.forEach((selection)=> {
               this.drawSelection(selection.startDate, selection.endDate, true)
             })
           }
-        }, 1000)
+        }, 1000)*/
       },
       isDateChange : function() {
         return (this.selection.startDate !== this.currentSelection.x0 ||
@@ -385,15 +360,16 @@
       addEventsHandler : function () {
         if(this.isMainChart) {
           this.$nextTick(() => {
-            document.getElementById( this.chartId ).on( 'plotly_hover', this.hoverHandler)
-            document.getElementById( this.chartId ).on( 'plotly_selected', this.addNewSelection)
-            document.getElementById( this.chartId ).on( 'plotly_relayout', this.reLayoutHandler)
-            this.addSelectionEvent()
+            //document.getElementById( this.chartName ).on( 'plotly_hover', this.hoverHandler)
+            document.getElementById( this.chartName ).on( 'plotly_selected', this.addNewSelection)
+            //document.getElementById( this.chartName ).on( 'plotly_relayout', this.reLayoutHandler)
+            //this.addSelectionEvent()
           });
         }
       },
       hoverHandler : function(/*data*/) {
-        console.log("Test getData : ", $('#' + this.chartId).find( '.hoverinfo' ))
+        console.log($, unLinkChartsIconPath)
+        //console.log("Test getData : ", $('#' + this.chartName).find( '.hoverinfo' ))
         //let points = eventdata.points[0], pointNum = points.pointNumber
         //console.log("Test point : ", points, ", pointNum : ", pointNum)
         /*let hoverInfo = document.getElementById('hoverinfo')
@@ -441,7 +417,7 @@
 
       },
       addSelectionEvent: function () {
-        let children =  $('#' + this.chartId).find( '.shapelayer' )[2].children
+        /*let children =  $('#' + this.chartName).find( '.shapelayer' )[2].children
         if(children) {
           $('document').ready(() => {
             children.forEach((selection, index) => {
@@ -452,7 +428,7 @@
               }
             })
           });
-        }
+        }*/
       },
       switchSelection : function(event) {
         let startDate, endDate
@@ -755,7 +731,7 @@
         }
       },
       enableLinkedMode : function() {
-        let path =  $('#' + this.chartId).find( "a[data-title='Link chart']").find("path")
+       /* let path =  $('#' + this.chartName).find( "a[data-title='Link chart']").find("path")
         if(this.isMainChart && this.linkIcon === linkChartsIconPath) {
           this.linkIcon= unLinkChartsIconPath
         } else  if(this.isMainChart && this.linkIcon === unLinkChartsIconPath) {
@@ -765,15 +741,15 @@
         if( this.isMainChart  && path)
           path.attr('d', this.linkIcon)
 
-        this.switchLinkedMode()
+        this.switchLinkedMode()*/
       },
       setDefaultLinkIcon : function() {
-        let path =  $('#' + this.chartId).find( "a[data-title='Link chart']").find("path")
+        /*let path =  $('#' + this.chartName).find( "a[data-title='Link chart']").find("path")
 
         if( this.isMainChart  && path)
-          path.attr('d', this.linkIcon)
+          path.attr('d', this.linkIcon)*/
       },
-      setLayout: function() {
+      initLayout: function() {
         this.layout = {
           height : 900,
           showlegend : true,
@@ -790,7 +766,7 @@
         }
       },
       getLayoutTitle: function() {
-        const {resourceTitle} =  this.instrumentInfos
+        const {resourceTitle} =  this.instrumentInfos ? this.instrumentInfos : ""
         let title = resourceTitle ? "Current data set - " + resourceTitle.fr : ""
         return {
           text : title,

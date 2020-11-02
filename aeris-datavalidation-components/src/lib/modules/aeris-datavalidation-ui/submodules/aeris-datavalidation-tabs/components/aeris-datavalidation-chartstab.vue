@@ -12,28 +12,30 @@
       <v-tabs-slider></v-tabs-slider>
 
       <v-tab
-          v-for="(chart, index) in getCharts"
+          v-for="({enName}, index) in getCharts"
           :key="index"
-          :href="'#' + chart.name"
+          :href="'#' + enName"
       >
-        {{ chart.name }}
+        {{ enName}}
       </v-tab>
       <v-tabs-items v-model="tab">
         <v-tab-item
-            v-for="chart in getCharts"
-            :key="chart.name"
-            :value="chart.name"
+            v-for="{enName, parameters} in getCharts"
+            :key="enName"
+            :value="enName"
         >
           <v-card
               flat
               tile
           >
             <AerisDatavalidationChart
+                :charts="charts"
+                :chartName="enName"
+                :parameters="parameters"
                 :isMainChart="isMainChart"
                 :currentSession="currentSession"
                 :instrumentInfos="instrumentInfos"
                 :linkedChartData="linkedChartData"
-                :parameters="charts[chart.name].parameters"
                 :isLinkedChartMode="isLinkedChartMode"
                 :currentInstrument="currentInstrument"
             />
@@ -51,6 +53,9 @@ export default {
     AerisDatavalidationChart,
   },
   props: {
+    charts : {
+      type : Object
+    },
     parameters: {
       type : Array,
       default : () => [],
@@ -87,10 +92,6 @@ export default {
       type : Object,
       default : () => null
     },
-    secondChartParameters : {
-      type: Array,
-      default : () => []
-    },
     hideChart : {
       type: Boolean,
       default : false
@@ -98,10 +99,6 @@ export default {
     isLinkedChartMode: {
       type: Boolean,
       default : false
-    },
-    charts : {
-      type : Object,
-      default : () => null
     },
     setCurrentParralelChart  : {
       type : Function,
@@ -116,9 +113,9 @@ export default {
   },
   computed: {
     getCharts() {
-      let result = Object.values(this.charts)
-      result.shift()
-      return result
+      return Object.values(this.charts).filter((chart) => {
+        return chart.enName !== 'Main chart'
+      })
     },
   },
   watch : {

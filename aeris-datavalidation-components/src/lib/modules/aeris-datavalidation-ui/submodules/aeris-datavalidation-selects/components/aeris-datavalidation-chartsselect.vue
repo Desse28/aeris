@@ -2,7 +2,7 @@
   <div style="max-height: 40px;">
     <v-select
         :items="charts"
-        item-text="name"
+        item-text="enName"
         v-model="select"
     >
     </v-select>
@@ -18,31 +18,25 @@ export default {
     },
     charts : {
       type : Array,
-      default : () => []
+    },
+    defaultChart : {
+      type : String
     },
     currentParameter : {
       type : Object
     },
-    switchParameterChart : {
+    notifySwitchChart : {
       type : Function,
-      default : () => {}
     }
   },
   data() {
     return {
-      select: this.charts[1],
+      select: this.defaultChart,
     }
   },
   watch : {
-    select : function (chartName, oldChart) {
-
-      if(this.currentParameter) {
-        this.currentParameter.chartName = chartName
-        this.currentParameter.oldChartName = typeof oldChart === "object" ? oldChart.name : oldChart
-      }
-
-      if(this.currentParameter.isOn)
-        this.switchParameterChart(this.currentParameter)
+    select : function (newChartName, oldChartName) {
+      this.notifySwitchChart(this.currentParameter, newChartName, oldChartName, this.selectIndex)
     }
   }
 }

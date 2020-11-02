@@ -22,11 +22,10 @@
           :addNewChart="addNewChart"
           :removeChart="removeChart"
           :addParameter="addParameter"
-          :auxParameters="auxParameters"
           :removeParameter="removeParameter"
-          :linkedParameters="linkedParameters"
           :currentParalelChart="currentParalelChart"
           :switchParameterChart="switchParameterChart"
+          :secondChartsParameters="secondChartsParameters"
       />
     </v-toolbar>
   </v-card>
@@ -71,13 +70,8 @@ export default {
     removeChart: {
       type : Function,
     },
-    linkedParameters: {
-      type : Array,
-      default : () => [],
-    },
-    auxParameters: {
-      type : Array,
-      default : () => [],
+    secondChartsParameters : {
+      type : Array
     },
     instrumentStartDate : {
       type : String,
