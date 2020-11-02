@@ -401,20 +401,12 @@
         }
       },
       addNewSelection : function(data) {
-        let neighbor, validInterval
+        let startDate = data.range.x[0], endDate = data.range.x[1]
 
         if(data) {
-          validInterval = {startDate : data.range.x[0], endDate : data.range.x[1]}
-          neighbor = this.getNeighbor(validInterval.startDate, validInterval.endDate)
-
-          if(neighbor !== null)
-            this.setValidInterval(neighbor, validInterval)
-
-          if(!this.isSelectionExist(validInterval.startDate, validInterval.endDate))
-            this.drawSelection(validInterval.startDate, validInterval.endDate, false)
-
+          if(!this.isSelectionExist(startDate, endDate))
+            this.drawSelection(startDate, endDate, false)
         }
-
       },
       addSelectionEvent: function () {
         /*let children =  $('#' + this.chartName).find( '.shapelayer' )[2].children
@@ -447,7 +439,6 @@
       setCurrentSelection : function(index, isDefault) {
         let startDate, endDate
         const cloneLayout = JSON.parse(JSON.stringify(this.layout))
-
         this.clearCurrentSelection()
         this.currentSelection = this.selections[index]
         this.currentSelection.line.color = TARGET_SELECTION_BORDER_COLOR
@@ -467,71 +458,6 @@
           if(this.$root.getCleanDate(selection.x0) === this.$root.getCleanDate(startDate) &&
               this.$root.getCleanDate(selection.x1) === this.$root.getCleanDate(endDate))
             return true
-        }
-        return false
-      },
-      setValidInterval : function(neighbor, validInterval) {
-        if(neighbor && validInterval && neighbor.orgin) {
-          if( neighbor.orgin === "left" )
-            validInterval.endDate = neighbor.startDate
-          else if(neighbor.orgin === "right")
-            validInterval.startDate = neighbor.endDate
-        }
-      },
-      getNeighbor : function(startDate, endDate) {
-        let selection, neighbor = null
-        let leftNeighbor = null, rightNeighbor = null
-        let selections = this.currentSession.sessionSelections
-
-        if(selections) {
-          for(let index in selections) {
-            selection = selections[index]
-            leftNeighbor = this.getLeftNeighbor(leftNeighbor, selections, selection, startDate, endDate)
-            rightNeighbor = this.getRightNeighbor(rightNeighbor, selection, startDate, endDate)
-          }
-          neighbor = leftNeighbor !== null ? leftNeighbor : rightNeighbor
-          if(neighbor)
-            neighbor.orgin = leftNeighbor !== null ? "left" : "right"
-        }
-        return neighbor
-      },
-      getLeftNeighbor : function (leftNeighbor, selections, selection, startDate, endDate) {
-        let result = leftNeighbor
-
-        if(this.$root.isGreaterThan(selection.startDate, startDate) && !this.isInsideSelection(startDate, selections) &&
-            ((this.$root.isGreaterThan(endDate, selection.startDate) &&
-                this.$root.isGreaterThan(selection.endDate, endDate)) ||
-            (this.$root.isGreaterThan(endDate, selection.endDate))))
-        {
-          if(leftNeighbor === null)
-            result = selection
-          else
-            result = this.$root.isGreaterThan(leftNeighbor.startDate, selection.startDate) ? selection : leftNeighbor
-        }
-
-        return result
-      },
-      getRightNeighbor : function (rightNeighbor, selection, startDate, endDate) {
-        let result = rightNeighbor
-
-        if(this.$root.isGreaterThan(selection.endDate, startDate) &&
-            this.$root.isGreaterThan(endDate, selection.endDate)) {
-          if(rightNeighbor === null)
-            result = selection
-          else
-            result = this.$root.isGreaterThan(rightNeighbor.endDate, selection.endDate) ? rightNeighbor : selection
-        }
-
-        return result
-      },
-      isInsideSelection : function(point, selections) {
-        let selection
-        if(point) {
-          for(let index in selections) {
-            selection = selections[index]
-            if(this.$root.isGreaterThan(point, selection.startDate) && this.$root.isGreaterThan(selection.endDate, point))
-              return true
-          }
         }
         return false
       },
