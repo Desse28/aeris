@@ -15,6 +15,7 @@
             tile
         >
           <AerisDatavalidationChart
+              :charts="charts"
               :isMainChart="true"
               :selection="selection"
               :deleteStep="deleteStep"

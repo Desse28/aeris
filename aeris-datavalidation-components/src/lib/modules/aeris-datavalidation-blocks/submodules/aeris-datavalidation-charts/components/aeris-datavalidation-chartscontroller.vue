@@ -46,8 +46,8 @@
         </template>
         <template v-slot:land2>
           <AerisDatavalidationChartsTab
-              :isMainChart="false"
               :charts="charts"
+              :isMainChart="false"
               :currentSession="currentSession"
               :instrumentInfos="instrumentInfos"
               :linkedChartData="linkedChartData"

@@ -316,28 +316,28 @@
         return !(this.selection && this.currentSelection !== null)
       },
       drawDefaultSelections: function() {
-        /*setTimeout(() => {
-          if(this.defaultSelections) {
-            this.defaultSelections.forEach((selection)=> {
+        let currentChart = this.charts[this.chartName]
+        if(currentChart) {
+          $('document').ready(() => {
+            currentChart.selections.forEach((selection)=> {
               this.drawSelection(selection.startDate, selection.endDate, true)
             })
-          }
-        }, 1000)*/
+          })
+        }
       },
       isDateChange : function() {
         return (this.selection.startDate !== this.currentSelection.x0 ||
             this.selection.endDate !== this.currentSelection.x1)
       },
       isDefaultSelection : function(startDate, endDate) {
-        let selection
-        if(this.defaultSelections) {
-          for(let index in this.defaultSelections) {
-            selection = this.defaultSelections[index]
-            if(this.$root.getCleanDate(selection.startDate) === this.$root.getCleanDate(startDate) &&
-                this.$root.getCleanDate(selection.endDate) === this.$root.getCleanDate(endDate)) {
-              return true
-            }
-          }
+        let currentChart
+
+        if(this.charts) {
+          currentChart = this.charts[this.chartName]
+          return currentChart.selections.some((selection) => {
+            return (this.$root.isSameDate(selection.startDate, startDate) &&
+                    this.$root.isSameDate(selection.endDate, endDate))
+          })
         }
         return false
       },
@@ -416,8 +416,8 @@
       },
       isSelectionExist : function (startDate, endDate) {
         return this.selections.some((selection) => {
-          return (this.$root.getCleanDate(selection.x0) === this.$root.getCleanDate(startDate) &&
-                  this.$root.getCleanDate(selection.x1) === this.$root.getCleanDate(endDate))
+          return (this.$root.isSameDate(selection.x0, startDate) &&
+              this.$root.isSameDate(selection.x1, endDate))
         })
       },
       drawSelection : function(startDate, endDate, isDefault) {
@@ -459,20 +459,22 @@
         if(!isDefault)
           this.notifySelection(startDate, endDate)
       },
-      addSelectionEventHandler: function () {
-        let children =  $('#' + this.getChartId).find( '.shapelayer' )[2].children
-        console.log("Test children : ", children)
-        /*if(children) {
-          $('document').ready(() => {
-            children.forEach((selection, index) => {
-              if($(selection).attr('id') === undefined) {
-                $(selection).attr('id', 'selection' + index )
-                $(selection).css("pointer-events", "bounding-box")
-                $(document).on('click', '#selection' + index, this.switchSelection)
-              }
-            })
-          });
-        }*/
+      addSelectionEventHandler : function () {
+        let children
+        $('document').ready(() => {
+          children = $('#' + this.getChartId).find( '.shapelayer' )[0].children
+          children.forEach((selection, index) => {
+            if($(selection).attr('id') === undefined) {
+              $(selection).attr('id', 'selection' + index )
+              $(selection).css("pointer-events", "bounding-box")
+              $(document).on('click', '#selection' + index, this.switchSelection)
+              //$(document).on('hover', '#selection' + index, this.hoverSelectionHandler)
+            }
+          })
+        });
+      },
+      hoverSelectionHandler : function() {
+        console.log("Test selection hover : ", this)
       },
       switchSelection : function(event) {
         let startDate, endDate
