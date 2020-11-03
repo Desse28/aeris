@@ -205,7 +205,7 @@ export default {
       } else {
         this.resetDate()
       }
-      this.initDefaultQualityFlags()
+      this.defaultQualityFlags = this.currentSessionSelection ? this.currentSessionSelection.flags : []
     },
     sessionSelection: {
       immediate: true,
@@ -221,9 +221,6 @@ export default {
     this.initDefaultParameters()
   },
   methods: {
-    initDefaultQualityFlags : function () {
-        this.defaultQualityFlags = this.currentSessionSelection.flags
-    },
     initDefaultParameters : function() {
       let selectionDate
       if(this.currentSessionSelection) {

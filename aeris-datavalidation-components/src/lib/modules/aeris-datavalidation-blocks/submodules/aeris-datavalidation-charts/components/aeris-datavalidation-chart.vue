@@ -22,19 +22,7 @@
       />
       <v-row justify="center">
         <v-col cols="12">
-          <Plotly
-              :x="Date"
-              :key="componentKey"
-              :data="data"
-              :id="getChartId"
-              :layout="layout"
-              :scrollZoom="true"
-              :displaylogo="false"
-              :displayModeBar="true"
-              :modeBarButtons="modeBarButtons"
-
-          >
-          </Plotly>
+          <div :id="getChartId" :key="componentKey"></div>
         </v-col>
       </v-row>
     </AerisDataValidationServices>
@@ -43,8 +31,7 @@
 
 <script>
   import $ from "jquery";
-  import { Plotly } from 'vue-plotly'
-
+  import Plotly from 'plotly.js-dist'
   import {
     blackTrashIconPath,
     linkChartsIconPath,
@@ -126,7 +113,6 @@
       }
     },
     components: {
-      Plotly,
       AerisDataValidationServices,
       AerisDatavalidationDeleteDialog
     },
@@ -153,13 +139,23 @@
     },
     computed : {
       getChartId : function () {
+        if(this.chartName === "")
+          return "defaultChart"
         return this.chartName.replace(' ', '')
       }
     },
     watch: {
-      secondChartsParameters : function () {
-        if(this.secondChartsParameters.length === 0)
+      secondChartsParameters : function (newParameters, oldParameters) {
+        console.log("Test secondChartsParameters : ", newParameters, " old : ", oldParameters)
+        if(this.secondChartsParameters.length === 0 || (newParameters.length === 1 && oldParameters.length === 0)) {
           this.refresh()
+          $('document').ready(() => {
+            this.initModeBar()
+            this.initLayout()
+            Plotly.newPlot(document.getElementById(this.getChartId), this.data, this.layout,
+                {modeBarButtons: this.modeBarButtons, scrollZoom: true, displaylogo: false, displayModeBar: true})
+          })
+        }
       },
       deleteStep : function() {
         if(this.deleteStep) {
@@ -223,22 +219,28 @@
       this.addEventsHandler()
     },
     mounted() {
+      console.log("Test mounted : ", this.chartName === "")
       this.initCurrentChart(this.parameters[0])
+
     },
     methods: {
       initCurrentChart : function(parameter) {
-        this.initModeBar()
-        this.initLayout()
+        $('document').ready(() => {
+          this.initModeBar()
+          this.initLayout()
+          Plotly.newPlot(document.getElementById( this.getChartId ), this.data, this.layout,
+              {modeBarButtons: this.modeBarButtons, scrollZoom : true, displaylogo:false, displayModeBar:true})
 
-        if(this.currentSession && this.currentInstrument) {
-          if(parameter)
-            this.addNewParameter(parameter)
+          if(this.currentSession && this.currentInstrument) {
+            if(parameter)
+              this.addNewParameter(parameter)
 
-          if(this.isMainChart) {
-            this.drawDefaultSelections()
-            this.addEventsHandler()
+            /*if(this.isMainChart) {
+              this.drawDefaultSelections()
+            }
+            this.addEventsHandler()*/
           }
-        }
+        })
       },
       addNewParameter : function (parameter) {
         let uri, nextIndex
@@ -279,8 +281,7 @@
       setAxis(paramDataKeys, dataContent, color) {
         const xaxis = paramDataKeys[0]
         const yaxis = paramDataKeys[1]
-
-        this.data = [...this.data, {
+        const data = [{
           x: dataContent[xaxis],
           y: dataContent[yaxis],
           name: yaxis,
@@ -292,7 +293,7 @@
             simplify: true
           },
         }]
-        this.refresh()
+        Plotly.addTraces(document.getElementById( this.getChartId ), data)
       },
       nextDefaultParameterExist : function(parameter) {
         let isDefault = false
@@ -340,8 +341,10 @@
         targetParameterIndex = this.data.findIndex(param => param.name === parameterName)
 
         if(-1 < targetParameterIndex ) {
-          this.data.splice(targetParameterIndex, 1)
-          this.refresh()
+          //this.data.splice(targetParameterIndex, 1)
+          console.log("Test index : ", targetParameterIndex)
+          Plotly.deleteTraces(document.getElementById( this.getChartId ), targetParameterIndex);
+          //this.refresh()
         }
       },
       refresh : function() {
@@ -351,19 +354,29 @@
           this.componentKey = 2
       },
       addEventsHandler : function () {
-        if(this.isMainChart) {
+        //if(this.isMainChart) {
           this.$nextTick(() => {
             if(this.getChartId) {
-              //document.getElementById( this.chartName ).on( 'plotly_hover', this.hoverHandler)
-              document.getElementById( this.getChartId ).on( 'plotly_selected', this.addNewSelection)
+              console.log("ID : " ,  this.getChartId)
+              //document.getElementById( this.getChartId ).on( 'plotly_hover', this.hoverHandler)
+              //document.getElementById( this.getChartId ).on( 'plotly_selected', this.addNewSelection)
               //document.getElementById( this.chartName ).on( 'plotly_relayout', this.reLayoutHandler)
-              //this.addSelectionEvent()
+              //this.addSelectionEventHandler()
             }
           });
-        }
+        //}
       },
-      hoverHandler : function(/*data*/) {
-        console.log($, unLinkChartsIconPath)
+      hoverHandler : function(data) {
+        console.log("Test handler : ", data, ", ID : ", Plotly.Fx.hover)
+        if(this.chartName !== 'Secondarychart') {
+          $('document').ready(() => {
+            $('#Secondarychart').trigger('plotly_hover', data);
+            console.log("current : ", $('#Secondarychart'))
+            //this.$emit('hover', data.points, this.getChartId);
+            //$('#Secondarychart').trigger('mouseenter')
+            //console.log("Test hoverHandler : ", $('#Secondarychart'))
+          })
+        }
         //console.log("Test getData : ", $('#' + this.chartName).find( '.hoverinfo' ))
         //let points = eventdata.points[0], pointNum = points.pointNumber
         //console.log("Test point : ", points, ", pointNum : ", pointNum)
@@ -396,8 +409,9 @@
         }
       },
       addNewSelection : function(data) {
-        let startDate = data.range.x[0], endDate = data.range.x[1]
-        if(startDate && endDate) {
+        let startDate, endDate
+        if(data) {
+          startDate = data.range.x[0], endDate = data.range.x[1]
           if(!this.isSelectionExist(startDate, endDate))
             this.drawSelection(startDate, endDate, false)
         }
@@ -410,8 +424,6 @@
       },
       drawSelection : function(startDate, endDate, isDefault) {
         const cloneLayout = JSON.parse(JSON.stringify(this.layout))
-        let newStartDate = this.$root.getCleanDate(startDate)
-        let newEndDate = this.$root.getCleanDate(endDate)
 
         this.turnOffCurrentSelection()
 
@@ -433,8 +445,8 @@
             xsizemode : 'scaled',
             ysizemode : 'scaled',
             xref : 'x',
-            x0 : newStartDate,
-            x1 : newEndDate,
+            x0 : this.$root.getCleanDate(startDate),
+            x1 : this.$root.getCleanDate(endDate),
             yref : 'paper',
             y0 : 0,
             y1 : 1
@@ -462,21 +474,17 @@
         });
       },
       hoverSelectionHandler : function() {
-        console.log("Test selection hover : ", this)
+        console.log("Test selection hover : ")
       },
       switchSelection : function(event) {
         let startDate, endDate
         let child = event.target
         let parent = child.parentNode
         let index = Array.prototype.indexOf.call(parent.children, child)
-
-        if(index !== -1 && this.currentSelection !== this.selections[index]) {
-          this.setCurrentSelection(index, false)
-        } else if(index !== -1 && this.currentSelection === this.selections[index]) {
-          startDate = this.currentSelection.x0
-          endDate = this.currentSelection.x1
-          this.notifySelection(startDate, endDate)
-        }
+        let targetSelection = this.selections[index]
+        startDate = targetSelection.x0
+        endDate = targetSelection.x1
+        this.notifySelection(startDate, endDate)
       },
       setCurrentSelection : function(index, isDefault) {
         let startDate, endDate
@@ -516,6 +524,16 @@
           return (this.$root.isSameDate(selection.x0, startDate) &&
               this.$root.isSameDate(selection.x1, endDate))
         })
+      },
+      turnOnCurrentSelection : function() {
+        const cloneLayout = JSON.parse(JSON.stringify(this.layout))
+        if(this.currentSelection) {
+          this.turnOffCurrentSelection()
+          this.currentSelection.line.color = TARGET_SELECTION_BORDER_COLOR
+          cloneLayout.shapes = this.selections
+          this.layout = cloneLayout
+          this.refresh()
+        }
       },
       turnOffCurrentSelection : function() {
         this.selections.forEach((selection) => {
@@ -642,7 +660,7 @@
         }
       },
       enableLinkedMode : function() {
-       /* let path =  $('#' + this.chartName).find( "a[data-title='Link chart']").find("path")
+        let path =  $('#' + this.chartName).find( "a[data-title='Link chart']").find("path")
         if(this.isMainChart && this.linkIcon === linkChartsIconPath) {
           this.linkIcon= unLinkChartsIconPath
         } else  if(this.isMainChart && this.linkIcon === unLinkChartsIconPath) {
@@ -652,7 +670,7 @@
         if( this.isMainChart  && path)
           path.attr('d', this.linkIcon)
 
-        this.switchLinkedMode()*/
+        this.switchLinkedMode()
       },
       setDefaultLinkIcon : function() {
         /*let path =  $('#' + this.chartName).find( "a[data-title='Link chart']").find("path")
