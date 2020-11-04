@@ -381,15 +381,9 @@
         }
       },
       setLayoutAxisRange : function() {
-        Plotly.relayout(document.getElementById( this.getChartId ),
-            {
-              xaxis : {
-                range : [this.linkedChartData.startXaxis, this.linkedChartData.endXaxis],
-                autorange : !this.isLinkedChartMode
-              }
-            }
-        )
-        //See default layout
+        this.layout.xaxis.range = [this.linkedChartData.startXaxis, this.linkedChartData.endXaxis]
+        this.layout.xaxis.autorange =  !this.isLinkedChartMode
+        Plotly.relayout(document.getElementById( this.getChartId ), this.layout)
       },
       addNewSelection : function(data) {
         let startDate, endDate
