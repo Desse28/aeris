@@ -36,6 +36,7 @@
               :currentSession="currentSession"
               :linkedChartData="linkedChartData"
               :instrumentInfos="instrumentInfos"
+              :isLinkedChartMode="isLinkedChartMode"
               :currentInstrument="currentInstrument"
               :secondChartsParameters="secondChartsOnParameters"
               :notifySelection="notifySelection"
@@ -168,16 +169,20 @@ export default {
       }
     },
     switchLinkedMode: function () {
-      if(this.isLinkedChartMode)
-        this.isLinkedChartMode = false
-      else
-        this.isLinkedChartMode = true
+      this.isLinkedChartMode = !this.isLinkedChartMode
     },
     applyLinkedEffect: function(data) {
       if(this.isLinkedChartMode && data && data['xaxis.range[0]'] && data['xaxis.range[1]']) {
         this.linkedChartData = {
           startXaxis: data['xaxis.range[0]'],
-          endXaxis: data['xaxis.range[1]']
+          endXaxis: data['xaxis.range[1]'],
+          points : this.linkedChartData.points
+        }
+      } else if(this.linkedChartData && data.points) {
+        this.linkedChartData = {
+          startXaxis : this.linkedChartData.startXaxis,
+          endXaxis :  this.linkedChartData.endXaxis,
+          hoverData : data
         }
       }
     },

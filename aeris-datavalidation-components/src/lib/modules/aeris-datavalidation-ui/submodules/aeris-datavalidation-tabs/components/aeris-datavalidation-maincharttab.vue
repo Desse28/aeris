@@ -27,6 +27,7 @@
               :parameters="getMainChartParameters"
               :switchLinkedMode="switchLinkedMode"
               :applyLinkedEffect="applyLinkedEffect"
+              :isLinkedChartMode="isLinkedChartMode"
               :currentInstrument="currentInstrument"
               :secondChartsParameters="secondChartsParameters"
           />
@@ -114,6 +115,10 @@ export default {
     isSecondChartParametersEmpty: {
       type: Boolean,
       default: false
+    },
+    isLinkedChartMode: {
+      type: Boolean,
+      default : false
     },
   },
   computed : {
