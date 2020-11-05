@@ -30,8 +30,10 @@ public class Session {
     )
 
     private List<Parameter> linkedParameters;
-
     private List<Chart> charts;
+    private boolean isLinkedChartMode;
+    @ApiModelProperty( example = "Secondary chart")
+    private String currentSecondChartName;
 
     public Session() {
         super();
@@ -93,6 +95,22 @@ public class Session {
         this.charts = charts;
     }
 
+    public boolean isLinkedChartMode() {
+        return isLinkedChartMode;
+    }
+
+    public void setLinkedChartMode(boolean linkedChartMode) {
+        isLinkedChartMode = linkedChartMode;
+    }
+
+    public String getCurrentSecondChartName() {
+        return currentSecondChartName;
+    }
+
+    public void setCurrentSecondChartName(String currentSecondChartName) {
+        this.currentSecondChartName = currentSecondChartName;
+    }
+
     @Override
     public String toString() {
         return "Session{" +
@@ -103,6 +121,8 @@ public class Session {
                 ", mainParameter=" + mainParameter +
                 ", linkedParameters=" + linkedParameters +
                 ", charts=" + charts +
+                ", isLinkedChartMode=" + isLinkedChartMode +
+                ", currentSecondChartName='" + currentSecondChartName + '\'' +
                 '}';
     }
 }

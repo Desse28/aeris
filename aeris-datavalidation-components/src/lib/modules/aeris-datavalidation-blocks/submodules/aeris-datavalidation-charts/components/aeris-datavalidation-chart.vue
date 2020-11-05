@@ -351,18 +351,6 @@
         this.currentSession.charts = Object.values(this.charts)
         this.updateSessionState()
       },
-      updateSessionState : function () {
-        this.typeOfRequest = "PUT"
-        this.requestData = this.currentSession
-
-        this.callBack = (data) => {
-          if(data) {
-            console.log("Test update currentSession ", data)
-            this.currentUrl = ""
-          }
-        }
-        this.currentUrl = process.env.VUE_APP_ROOT_API + SESSION_UPDATE_PATH
-      },
       refresh : function() {
         if(this.componentKey%2 === 0)
           this.componentKey = 1
@@ -394,9 +382,27 @@
       },
       reLayoutHandler : function(data) {
         if(data && data['xaxis.range[0]'] !== this.linkedChartData.startXaxis &&
-            data['xaxis.range[1]'] !== this.linkedChartData.endXaxis) {
+            data['xaxis.range[1]'] !== this.linkedChartData.endXaxis && this.isLinkedChartMode) {
           this.applyLinkedEffect(data)
         }
+
+        this.charts[this.chartName].startXaxis = data['xaxis.range[0]']
+        this.charts[this.chartName].endXaxis = data['xaxis.range[1]']
+        this.currentSession.charts = Object.values(this.charts)
+        this.updateSessionState()
+
+      },
+      updateSessionState : function () {
+        this.typeOfRequest = "PUT"
+        this.requestData = this.currentSession
+
+        this.callBack = (data) => {
+          if(data) {
+            console.log("Test update currentSession ", data)
+            this.currentUrl = ""
+          }
+        }
+        this.currentUrl = process.env.VUE_APP_ROOT_API + SESSION_UPDATE_PATH
       },
       setLayoutAxisRange : function() {
         this.layout.xaxis.range = [this.linkedChartData.startXaxis, this.linkedChartData.endXaxis]

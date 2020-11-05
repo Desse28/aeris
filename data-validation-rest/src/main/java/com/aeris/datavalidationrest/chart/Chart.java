@@ -5,6 +5,7 @@ import com.aeris.datavalidationrest.sessions.Selection;
 import io.swagger.annotations.ApiModelProperty;
 import org.springframework.data.annotation.Id;
 
+import java.util.Date;
 import java.util.List;
 
 public class Chart {
@@ -15,7 +16,9 @@ public class Chart {
     private String frName;
     @ApiModelProperty( example = "Main chart" )
     private String enName;
-    private Double startXaxis;//Default zoom
+    @ApiModelProperty( example = "2019-05-16 22:09:18.872" )
+    private Date startXaxis;//Default zoom
+    @ApiModelProperty( example = "2019-05-16 22:09:18.872" )
     private Double endXaxis;//Default zoom
     private List<Parameter> parameters;
     private List<Selection> selections;
@@ -46,11 +49,11 @@ public class Chart {
         this.enName = enName;
     }
 
-    public Double getStartXaxis() {
+    public Date getStartXaxis() {
         return startXaxis;
     }
 
-    public void setStartXaxis(Double startXaxis) {
+    public void setStartXaxis(Date startXaxis) {
         this.startXaxis = startXaxis;
     }
 
