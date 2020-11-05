@@ -44,6 +44,8 @@
 
   import AerisDatavalidationDeleteDialog from "./../../../../aeris-datavalidation-ui/submodules/aeris-datavalidation-dialogs/components/aeris-datavalidation-deletedialog"
 
+  const SESSION_UPDATE_PATH = "/sessions/update"
+
   const SELECTION_BORDER_COLOR = 'rgb(84,217,27)'
   const SELECTION_BACKGROUND_COLOR = 'rgb(33, 150, 243)'
   const TARGET_SELECTION_BORDER_COLOR = 'rgb(255, 152, 0)'
@@ -295,6 +297,8 @@
           },
         }]
         Plotly.addTraces(document.getElementById( this.getChartId ), data)
+        this.currentSession.charts = Object.values(this.charts)
+        this.updateSessionState()
       },
       nextDefaultParameterExist : function(parameter) {
         let isDefault = false
@@ -344,6 +348,20 @@
         if(-1 < targetParameterIndex ) {
           Plotly.deleteTraces(document.getElementById( this.getChartId ), targetParameterIndex)
         }
+        this.currentSession.charts = Object.values(this.charts)
+        this.updateSessionState()
+      },
+      updateSessionState : function () {
+        this.typeOfRequest = "PUT"
+        this.requestData = this.currentSession
+
+        this.callBack = (data) => {
+          if(data) {
+            console.log("Test update currentSession ", data)
+            this.currentUrl = ""
+          }
+        }
+        this.currentUrl = process.env.VUE_APP_ROOT_API + SESSION_UPDATE_PATH
       },
       refresh : function() {
         if(this.componentKey%2 === 0)

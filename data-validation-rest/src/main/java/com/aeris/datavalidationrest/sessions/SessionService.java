@@ -130,7 +130,6 @@ public class SessionService {
 
     public ResponseEntity<String> updateSession(Session session) {
         ResponseEntity<String> response;
-
         if(this.commonService.isPI(request)) {
             sessionDao.save(session);
             response = ResponseEntity.status(HttpStatus.SC_ACCEPTED).body("Update session (" + session.getId() + ")");
