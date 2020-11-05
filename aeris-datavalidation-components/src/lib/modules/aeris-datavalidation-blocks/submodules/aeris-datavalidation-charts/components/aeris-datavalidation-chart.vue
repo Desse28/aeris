@@ -22,7 +22,7 @@
       />
       <v-row justify="center">
         <v-col cols="12">
-          <div :id="getChartId" :key="componentKey"></div>
+          <div :id="getChartId" :key="componentKey" ref="graph"></div>
         </v-col>
       </v-row>
     </AerisDataValidationServices>
@@ -429,28 +429,26 @@
 
         this.currentSelection = this.selections[this.selections.length-1]
         Plotly.relayout(document.getElementById( this.getChartId ), { shapes : this.selections})
-        //this.addSelectionEventHandler()
+        this.addSelectionEventHandler(startDate, endDate)
         if(!isDefault)
           this.notifySelection(startDate, endDate)
       },
-      addSelectionEventHandler : function () {
-        let children
-        $('document').ready(() => {
-          children = $('#' + this.getChartId).find( '.shapelayer' )[0].children
-          console.log("Test1 : ", children)
-          children.forEach((selection, index) => {
-            if($(selection).attr('id') === undefined) {
-              $(selection).attr('id', 'selection' + index )
-              $(selection).css("pointer-events", "bounding-box")
-              //console.log("Test path : ", selection, ", index : ", index, children[index])
-              $(document).on('click', '#' + selection.id,this.switchSelection)
-              //$(document).on('click', '#selection' + index, this.switchSelection)
-            }
-          })
-        });
+      addSelectionEventHandler : function (/*startDate, endDate*/) {
+        let children = $('#' + this.getChartId).find( '.shapelayer' )[0].children
+        //$(children[0]).remove()
+        children.forEach((selection/*, index*/) => {
+          if($(selection).attr('id') === undefined) {
+            //this.$refs.graph//.remove()
+            //$(selection).css("pointer-events", "bounding-box")
+            //$(selection).attr('id', 'selection' + index )
+            //$(document).on('click', '#' + selection.id,this.switchSelection)
+            //console.log("Selection : ", selection)
+            //$(document).on('click', selection, this.switchSelection)
+          }
+        })
       },
       switchSelection : function(event) {
-        console.log("Test switchSelection : ", event.target)
+        console.log("Test switchSelection : ", event)
         /*let startDate, endDate
         let child = event.target
         let parent = child.parentNode
