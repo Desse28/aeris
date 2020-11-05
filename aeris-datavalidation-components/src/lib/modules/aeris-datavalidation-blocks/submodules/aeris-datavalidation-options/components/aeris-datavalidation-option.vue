@@ -213,14 +213,22 @@ export default {
 
       this.registreParametersColors(mainChart.parameters)
       Object.keys(this.charts).forEach((chartName) => {
-        if(chartName !== mainChart.enName) {
-          parameters = this.charts[chartName].parameters
-          this.registreParametersColors(parameters)
-          this.parameters = [...this.parameters, ...parameters]
-          this.parametersLabel = [...this.parametersLabel, ...parameters]
-          this.chartsSelects = [...this.chartsSelects, ...parameters.slice().fill(chartName)]
-        }
+        parameters = this.getParameters(chartName)
+        this.registreParametersColors(parameters)
+        this.parameters = [...this.parameters, ...parameters]
+        this.parametersLabel = [...this.parametersLabel, ...parameters]
+        this.chartsSelects = [...this.chartsSelects, ...parameters.slice().fill(chartName)]
       })
+    },
+    getParameters : function (chartName) {
+      const mainChart = Object.values(this.charts)[0]
+      let parameters = this.charts[chartName].parameters
+      if(chartName === mainChart.enName) {
+        parameters = parameters.filter((_, index)=>{
+          return index !== 0
+        })
+      }
+      return parameters
     },
     registreParametersColors : function(parameters) {
       parameters.forEach(({color}) => {

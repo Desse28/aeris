@@ -130,8 +130,7 @@ export default {
     initCharts : function({charts, linkedParameters}, {auxParameters}) {
       let newCharts = {}
       if(charts && linkedParameters && auxParameters) {
-        charts.forEach((chart/*, index*/) => {
-          //chart.index = index
+        charts.forEach((chart) => {
           newCharts[chart.enName] = chart
         })
         this.charts = newCharts
