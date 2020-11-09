@@ -48,10 +48,10 @@ public class Instrument {
     private List<Parameter> auxParameters;
     @ApiModelProperty(
             example = "[" +
-                        "{ \"label\": \"Episode data checked and accepted by data originator\"}," +
-                        "{ \"label\": \"Unspecified contamination or local influence\"}," +
-                        "{ \"label\": \"Unspecified contamination or local influence\"}," +
-                        "{ \"label\": \"Missing measurement\"}," +
+                        "{  \"code\": \"110\", \"label\": \"Episode data checked and accepted by data originator\"}," +
+                        "{  \"code\": \"559\", \"label\": \"Unspecified contamination or local influence\"}," +
+                        "{  \"code\": \"980\", \"label\": \"Missing due to calibration or zero/span check\"}," +
+                        "{  \"code\": \"999\", \"label\": \"Missing measurement\"}," +
                     "]"
     )
     private List<Flag> flags;
