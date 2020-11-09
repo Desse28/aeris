@@ -82,7 +82,7 @@
                     <AerisDatavalidationChartsSelect
                         :selectIndex="index"
                         :charts="getCharts"
-                        :defaultChart="chartsSelects[index]"
+                        :defaultChart="getTargetChart(chartsSelects[index])"
                         :currentParameter="parametersLabel[index]"
                         :notifySwitchChart="notifySwitchChart"
                     />
@@ -207,6 +207,9 @@ export default {
     }
   },
   methods : {
+    getTargetChart : function (chartName) {
+      return this.charts[chartName]
+    },
     addActiveParameters : function() {
       let parameters
       const mainChart = Object.values(this.charts)[0]
@@ -224,7 +227,7 @@ export default {
       const mainChart = Object.values(this.charts)[0]
       let parameters = this.charts[chartName].parameters
       if(chartName === mainChart.enName) {
-        parameters = parameters.filter((_, index)=>{
+        parameters = parameters.filter((_, index)=> {
           return index !== 0
         })
       }

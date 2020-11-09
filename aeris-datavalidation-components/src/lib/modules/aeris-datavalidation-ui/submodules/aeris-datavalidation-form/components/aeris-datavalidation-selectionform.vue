@@ -255,8 +255,8 @@ export default {
     },
     concatFlagCodeLabel : function(flags) {
       if(flags) {
-        flags.forEach((flag, index)=>{
-          flag.concatName = /*flag.code*/ index + ", " + flag.label
+        flags.forEach((flag)=>{
+          flag.concatName = flag.code + ", " + flag.label
         })
       }
       return flags

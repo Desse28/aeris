@@ -1,9 +1,12 @@
 <template>
   <div style="max-height: 40px;">
     <v-select
-        :items="charts"
-        item-text="enName"
         v-model="select"
+        :items="charts"
+        name="chart"
+        :item-text="$i18n.locale === 'fr'? 'frName' : 'enName'"
+        single-line
+        return-object
     >
     </v-select>
   </div>
@@ -20,7 +23,7 @@ export default {
       type : Array,
     },
     defaultChart : {
-      type : String
+      type : Object
     },
     currentParameter : {
       type : Object
@@ -35,9 +38,11 @@ export default {
     }
   },
   watch : {
-    select : function (newChartName, oldChartName) {
+    select : function (newChart, oldChart) {
+      const newChartName = newChart.enName
+      const oldChartName = oldChart ? oldChart.enName : undefined
       this.notifySwitchChart(this.currentParameter, newChartName, oldChartName, this.selectIndex)
-    }
+    },
   }
 }
 </script>
