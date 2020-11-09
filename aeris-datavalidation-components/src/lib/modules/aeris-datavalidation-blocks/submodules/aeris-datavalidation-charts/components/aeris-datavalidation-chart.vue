@@ -20,6 +20,15 @@
           :title="$t('session.label_deletion')"
           :message="$t('session.message_delete')"
       />
+      <v-tooltip
+          bottom
+          :position-x="positionX"
+          :position-y="positionY"
+          v-model="filterBtnTTip"
+      >
+        <div v-html="tooltipFlags">
+        </div>
+      </v-tooltip>
       <v-row justify="center">
         <v-col cols="12">
           <div :id="getChartId" :key="componentKey" ref="graph"></div>
@@ -125,6 +134,8 @@
         layout: {},
         config : {},
         pointNum : 0,
+        positionX : 0,
+        positionY : 0,
         componentKey: 1,
         selections : [],
         currentUrl : "",
@@ -132,10 +143,12 @@
         callBack : null,
         currentUuid : "",
         typeOfRequest: "",
+        tooltipFlags : "",
         requestData: null,
         deleteAlert: false,
         modeBarButtons: [],
         deleteDialog: false,
+        filterBtnTTip: false,
         currentSelection : null,
         currentParameters : [],
       }
@@ -179,7 +192,7 @@
       },
       deleteStep : function() {
         if(this.deleteStep && this.isMainChart) {
-          this.deleteCurrentSelection(false, true)
+          this.deleteCurrentSelection()
           this.addSelectionEventHandler()
         }
       },
@@ -500,6 +513,8 @@
                     $(selection).css("pointer-events", "bounding-box")
                     $(selection).attr('id', 'selection' + index )
                     $(document).on('click', '#' + 'selection' + index,this.switchSelection)
+                    $(document).on('mouseenter', '#' + 'selection' + index, this.tooltipMouseEnter)
+                    $(document).on('mouseleave', '#' + 'selection' + index, this.tooltipMouseLeave)
                   }
                 })
               }
@@ -514,25 +529,36 @@
         let targetSelection = this.selections[index]
         startDate = targetSelection.x0
         endDate = targetSelection.x1
+        this.filterBtnTTip = false
         this.currentSelection = targetSelection
         this.notifySelection(startDate, endDate)
         this.turnOnCurrentSelection(index)
-        Plotly.relayout(document.getElementById( this.getChartId ), { shapes : this.selections})
-        this.addSelectionEventHandler()
       },
       setCurrentSelection : function(index, isDefault) {
         let startDate, endDate
-        const cloneLayout = JSON.parse(JSON.stringify(this.layout))
-        this.turnOffCurrentSelection()
+
         this.currentSelection = this.selections[index]
-        this.currentSelection.line.color = TARGET_SELECTION_BORDER_COLOR
         startDate = this.currentSelection.x0
         endDate = this.currentSelection.x1
-        cloneLayout.shapes = this.selections
-        this.layout = cloneLayout
+        this.turnOnCurrentSelection(index)
 
         if(!isDefault)
           this.notifySelection(startDate, endDate)
+      },
+      tooltipMouseEnter : function(event) {
+        const mainChart = this.currentSession.charts[0]
+        const index = $(event.currentTarget).attr('data-index')
+        const targetSelection = mainChart.selections[index]
+        this.tooltipFlags = ""
+        this.positionX = event.clientX
+        this.positionY = event.clientY
+        targetSelection.flags.forEach((flag) => {
+          this.tooltipFlags += flag.code + ", " + flag.label + '</br>'
+        })
+        this.filterBtnTTip = true
+      },
+      tooltipMouseLeave : function () {
+        this.filterBtnTTip = false
       },
       setCurrentSelectionPeriod : function(newStartDate, newEndDate) {
         if(newStartDate && newEndDate) {
@@ -556,14 +582,15 @@
         })
       },
       turnOnCurrentSelection : function(targetIndex) {
-        if(this.selections && targetIndex) {
-          this.turnOffCurrentSelection()
-          this.selections.forEach((selection, index) => {
-            if(index === Number(targetIndex)) {
-              selection.line.color = TARGET_SELECTION_BORDER_COLOR
-            }
-          })
-        }
+        this.selections.forEach((selection, index) => {
+          if(index === Number(targetIndex)) {
+            selection.line.color = TARGET_SELECTION_BORDER_COLOR
+          } else if(selection.line.color === TARGET_SELECTION_BORDER_COLOR) {
+            selection.line.color = SELECTION_BORDER_COLOR
+          }
+        })
+        Plotly.relayout(document.getElementById( this.getChartId ), { shapes : this.selections})
+        this.addSelectionEventHandler()
       },
       turnOffCurrentSelection : function() {
         this.selections.forEach((selection) => {
@@ -572,33 +599,30 @@
           }
         })
       },
+
       deleteTargetSelection : function() {
         let index
-        let selections = this.currentSession.sessionSelections
+        let mainChart = this.currentSession.charts[0]
+
         if(this.currentSelection === null) {
           this.deleteAlert = true
           setTimeout(() => {
             this.deleteAlert = false
           }, 1000)
-        } else {
-          index = this.$root.getTargetSelectionIndex(selections, this.currentSelection)
+        } else if(mainChart.selections) {
+          index = this.$root.getTargetSelectionIndex(mainChart.selections, this.currentSelection)
+
           if(index !== -1) {
             this.deleteDialog = true
-            this.notifyDeleteSelection(true)
           } else {
-            this.deleteCurrentSelection(true, false)
+            this.deleteCurrentSelection()
           }
         }
       },
       validateDelete : function () {
-        let selections = this.currentSession.sessionSelections
-        let targetIndex = this.$root.getTargetSelectionIndex(selections, this.currentSelection)
-        if(targetIndex) {
-          this.currentSession.sessionSelections.splice(targetIndex, 1)
-          this.updateSession()
-          this.deleteDialog = false
-          this.resetDeleteDefaultState()
-        }
+        this.deleteDialog = false
+        this.deleteCurrentSelection()
+        this.resetDeleteDefaultState()
       },
       resetDeleteDefaultState: function () {
         setTimeout(() => {
@@ -609,7 +633,7 @@
         this.deleteDialog = false
         this.notifyDeleteSelection(false)
       },
-      deleteCurrentSelection :function(isChartEvent, isDeleteSignal) {
+      deleteCurrentSelection : function() {
         let startDate, endDate
 
         if(this.currentSelection !== null) {
@@ -624,8 +648,6 @@
           this.currentSelection = null
           $("#" + this.getChartId + " .select-outline").remove()
           Plotly.relayout(document.getElementById( this.getChartId ), { shapes : this.selections})
-          if(!isDeleteSignal && isChartEvent === undefined)
-            this.notifySelection(startDate, endDate)
         }
       },
       submitDeleteSelection : function(startDate, endDate) {
@@ -855,17 +877,6 @@
           bgcolor: 'rgba(255, 255, 255, 0.5)',
           activecolor: "rgba(212, 10, 10, 0.7)",
         }
-      },
-      updateSession : function() {
-        this.typeOfRequest = "PUT"
-        this.requestData = this.currentSession
-        this.callBack = (selection) => {
-          if(selection) {
-            this.deleteCurrentSelection(true, false)
-          }
-          this.currentUrl=""
-        }
-        this.currentUrl = process.env.VUE_APP_ROOT_API + "/sessions/update"
       },
     }
   }

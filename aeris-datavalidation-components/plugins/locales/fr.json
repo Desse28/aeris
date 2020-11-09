@@ -55,6 +55,7 @@
     "label_send" : "Envoyer",
     "label_delete" : "Effacer",
     "label_no" : "@:common.no",
+    "label_remove" : "Supprimer",
     "label_submit" : "Soumettre",
     "label_yes" : "@:common.yes",
     "label_flags" : "Drapeau(x)",

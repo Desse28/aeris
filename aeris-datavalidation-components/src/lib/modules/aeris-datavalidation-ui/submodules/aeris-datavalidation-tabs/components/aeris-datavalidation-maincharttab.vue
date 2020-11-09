@@ -134,7 +134,7 @@ export default {
       let mainChartName = ""
       let values = Object.values(this.charts)
       if(this.charts && 0 < values.length) {
-        mainChartName = /*this.$i18n.locale === 'fr' ? values[0].frName :*/ values[0].enName
+        mainChartName = values[0].enName
       }
       return mainChartName
     },

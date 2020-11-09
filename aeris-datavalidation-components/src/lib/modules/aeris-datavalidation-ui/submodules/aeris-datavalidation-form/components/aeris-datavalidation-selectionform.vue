@@ -89,7 +89,7 @@
                     v-if="this.currentView !== this.$t('session.label_selection')"
                     v-on:click="deleteCurrentSelecton"
                 >
-                  {{$t('session.label_delete')}}
+                  {{$t('session.label_remove')}}
                 </v-btn>
                 <v-btn
                     v-on:click="cancelCurrentSelection"

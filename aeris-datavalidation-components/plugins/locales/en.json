@@ -53,6 +53,7 @@
   "session": {
     "label_add" : "Add",
     "label_send" : "Send",
+    "label_remove" : "Remove",
     "label_delete" : "Delete",
     "label_flags" : "Flag(s)",
     "label_submit" : "Submit",

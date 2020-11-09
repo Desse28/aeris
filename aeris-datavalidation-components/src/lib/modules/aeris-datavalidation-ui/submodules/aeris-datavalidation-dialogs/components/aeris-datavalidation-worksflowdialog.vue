@@ -50,10 +50,9 @@
           />
         <AerisDatavalidationSelectionsTable
             v-else
-            :notifyEditMode="activeEditMode"
             :session="session"
             :selection="selection"
-            :isEditSelection="isEditSelection"
+            :resetWorkDialog="resetWorkDialog"
             :notifySelection="notifySelection"
             :notifyCancelPopUp="notifyCancelPopUp"
             :notifyDeleteSelection="notifyDeleteSelection"
@@ -109,7 +108,6 @@ export default {
       sessionSelection: null,
       currentSelection : null,
       isResetSelection: false,
-      isEditSelection : false
     }
   },
   watch: {
@@ -118,7 +116,6 @@ export default {
       let endDate = this.selection.endDate
       let selections = this.session.charts[0].selections
 
-      console.log("Test current selection : ", this.selection)
       if(this.currentSelection === null && !this.isResetSelection) {
         this.dialog = true
         if(this.$root.isSelectionExist(selections, startDate, endDate)) {
@@ -143,12 +140,13 @@ export default {
     },
   },
   methods: {
-    activeEditMode: function(/*selection*/) {
-      //this.switchCurrentView(this.$t('session.label_edit'), selection)
-    },
     switchCurrentView: function(viewName) {
       this.currentView = viewName
       this.currentSelection = this.selection
+    },
+    resetWorkDialog : function() {
+      this.currentSelection = null
+      this.isResetSelection = false
     },
     notifyCancelPopUp : function (targetSelection) {
       let startDate, endDate, selections

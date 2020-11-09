@@ -87,10 +87,6 @@ export default {
     AerisDatavalidationDeleteDialog,
   },
   props : {
-    isEditSelection : {
-      type : Boolean,
-      default : () => false
-    },
     session : {
       type : Object,
       default : () => null
@@ -99,13 +95,9 @@ export default {
       type : Object,
       default : () => null,
     },
-    notifyEditMode: {
-      type : Function,
-      default : ()=>{}
-    },
     notifySelection : {
       type : Function,
-      default : ()=>{}
+      default : () => {}
     },
     notifyDeleteSelection : {
       type : Function,
@@ -114,7 +106,10 @@ export default {
     notifyCancelPopUp : {
       type : Function,
       default : () => {}
-    }
+    },
+    resetWorkDialog : {
+      type : Function
+    },
   },
   data () {
     return {
@@ -128,7 +123,6 @@ export default {
       deleteItem: null,
       requestData: null,
       typeOfRequest: "",
-      isChartSignal: true,
       selectionsDialog: false,
       submittedSelections: false,
     }
@@ -157,9 +151,6 @@ export default {
         {text: this.$t('session.label_actions'), value: 'actions', sortable: false}
       ]
 
-      if(this.isEditSelection)
-        headers.push({text: this.$t('session.label_actions'), value: 'actions', sortable: false})
-
       return headers
     },
     getSelections : function () {
@@ -181,12 +172,12 @@ export default {
     editSelection (selection) {
       const startDate = this.$root.getCleanDate(selection.startDate)
       const endDate = this.$root.getCleanDate(selection.endDate)
+      this.resetWorkDialog()
       this.notifySelection(startDate, endDate)
     },
     setDeleteItem (selection) {
       this.dialog = true
       this.deleteItem = selection
-      this.isChartSignal = false
     },
     getDateGoodFormat : function(date) {
       let timePart, datePart
