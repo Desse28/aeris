@@ -453,54 +453,58 @@
         })
       },
       drawSelection : function(startDate, endDate, isDefault) {
-        this.turnOffCurrentSelection()
-        this.selections = [
-          ...this.selections,
-          {
-            visible : true,
-            type : 'rect',
-            editable : false,
-            layer : 'below',
-            opacity : 0.28,
-            fillcolor : SELECTION_BACKGROUND_COLOR,
-            fillrule : 'evenodd',
-            line : {
-              width : 5,
-              color : TARGET_SELECTION_BORDER_COLOR,
-              dash : 'dot'
-            },
-            xsizemode : 'scaled',
-            ysizemode : 'scaled',
-            xref : 'x',
-            x0 : this.$root.getCleanDate(startDate),
-            x1 : this.$root.getCleanDate(endDate),
-            yref : 'paper',
-            y0 : 0,
-            y1 : 1
-          }
-        ]
-
-        this.currentSelection = this.selections[this.selections.length-1]
-        Plotly.relayout(document.getElementById( this.getChartId ), { shapes : this.selections})
-        this.addSelectionEventHandler()
-        if(!isDefault)
-          this.notifySelection(startDate, endDate)
+        if(!this.$root.isSelectionExist(this.selections, startDate, endDate)) {
+          this.turnOffCurrentSelection()
+          this.selections = [
+            ...this.selections,
+            {
+              visible : true,
+              type : 'rect',
+              editable : false,
+              layer : 'below',
+              opacity : 0.28,
+              fillcolor : SELECTION_BACKGROUND_COLOR,
+              fillrule : 'evenodd',
+              line : {
+                width : 5,
+                color : TARGET_SELECTION_BORDER_COLOR,
+                dash : 'dot'
+              },
+              xsizemode : 'scaled',
+              ysizemode : 'scaled',
+              xref : 'x',
+              x0 : this.$root.getCleanDate(startDate),
+              x1 : this.$root.getCleanDate(endDate),
+              yref : 'paper',
+              y0 : 0,
+              y1 : 1
+            }
+          ]
+          this.currentSelection = this.selections[this.selections.length-1]
+          Plotly.relayout(document.getElementById( this.getChartId ), { shapes : this.selections})
+          this.addSelectionEventHandler()
+          if(!isDefault)
+            this.notifySelection(startDate, endDate)
+        }
       },
       addSelectionEventHandler : function () {
         this.$nextTick(() => {
-          let children = $('#' + this.getChartId).find( '.shapelayer' )[0].children
-
-          $('document').ready(() => {
-            if(children) {
-              children.forEach((selection, index) => {
-                if($(selection).attr('id') === undefined) {
-                  $(selection).css("pointer-events", "bounding-box")
-                  $(selection).attr('id', 'selection' + index )
-                  $(document).on('click', '#' + 'selection' + index,this.switchSelection)
-                }
-              })
-            }
-          })
+          let children
+          let layer = $('#' + this.getChartId).find( '.shapelayer' )[0]
+          if(layer) {
+            children = layer.children
+            $('document').ready(() => {
+              if(children) {
+                children.forEach((selection, index) => {
+                  if($(selection).attr('id') === undefined) {
+                    $(selection).css("pointer-events", "bounding-box")
+                    $(selection).attr('id', 'selection' + index )
+                    $(document).on('click', '#' + 'selection' + index,this.switchSelection)
+                  }
+                })
+              }
+            })
+          }
         });
 
       },

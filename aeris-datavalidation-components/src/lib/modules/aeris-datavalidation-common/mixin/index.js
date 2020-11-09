@@ -61,10 +61,14 @@ export default {
             return year + '-' + month + '-' + day + 'T' + hours + ':'+ minutes + ':' + seconds + 'Z'
         },
         isSelectionExist : function(selections, startDate, endDate) {
+            let currentStartDate, currentendDate
             if(selections) {
                 return selections.some((selection) => {
-                    return (this.isSameDate(selection.startDate, startDate) &&
-                        this.isSameDate(selection.endDate, endDate))
+                    currentStartDate = selection.startDate ? selection.startDate : selection.x0
+                    currentendDate = selection.endDate ? selection.endDate : selection.x1
+
+                    return (this.isSameDate(currentStartDate, startDate) &&
+                        this.isSameDate(currentendDate, endDate))
                 })
             }
             return false
