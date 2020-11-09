@@ -154,12 +154,11 @@ export default {
         if(session) {
           this.startNewSession(session, this.currentInstrument)
         }
-        this.currentUrl = process.env.VUE_APP_ROOT_API + CREATE_SESSION_PATH
       }
+      this.currentUrl = process.env.VUE_APP_ROOT_API + CREATE_SESSION_PATH
     },
     continueSession : function(session) {
       let {instrumentName} = session
-
       this.typeOfRequest = "GET"
       this.callBack = (instrument) => {
         if(instrument) {
@@ -171,6 +170,7 @@ export default {
     },
     startNewSession : function(currentSession, instrument) {
       this.getInstrumentInfos(instrument, (infos) => {
+        this.currentUrl = ""
         this.dialog = false
         this.newSession(currentSession, instrument, infos)
       })
@@ -183,6 +183,7 @@ export default {
     switchTablecurrentPage : function() {
       this.typeOfRequest = "GET"
       this.callBack = ((currentPageData) => {
+        this.currentUrl = ""
         if(currentPageData) {
           this.page = currentPageData.number
           this.sessions = currentPageData.content

@@ -7,7 +7,7 @@
         :centered="centered"
     >
       <v-tab>
-        {{ getMainChartTitle }}
+        {{ getMainChartName }}
       </v-tab>
       <v-tab-item>
         <v-card
@@ -122,12 +122,19 @@ export default {
     },
   },
   computed : {
+    getMainChartName : function () {
+      let mainChartName = ""
+      let values = Object.values(this.charts)
+      if(this.charts && 0 < values.length) {
+        mainChartName = this.$i18n.locale === 'fr' ? values[0].frName : values[0].enName
+      }
+      return mainChartName
+    },
     getMainChartTitle : function () {
       let mainChartName = ""
       let values = Object.values(this.charts)
-
       if(this.charts && 0 < values.length) {
-        mainChartName = values[0].enName
+        mainChartName = /*this.$i18n.locale === 'fr' ? values[0].frName :*/ values[0].enName
       }
       return mainChartName
     },

@@ -19,7 +19,7 @@ public class Chart {
     @ApiModelProperty( example = "2019-05-16 22:09:18.872" )
     private Date startXaxis;//Default zoom
     @ApiModelProperty( example = "2019-05-16 22:09:18.872" )
-    private Double endXaxis;//Default zoom
+    private Date endXaxis;//Default zoom
     private List<Parameter> parameters;
     private List<Selection> selections;
 
@@ -57,11 +57,11 @@ public class Chart {
         this.startXaxis = startXaxis;
     }
 
-    public Double getEndXaxis() {
+    public Date getEndXaxis() {
         return endXaxis;
     }
 
-    public void setEndXaxis(Double endXaxis) {
+    public void setEndXaxis(Date endXaxis) {
         this.endXaxis = endXaxis;
     }
 

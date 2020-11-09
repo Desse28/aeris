@@ -127,13 +127,15 @@ export default {
         this.qualityFlags = currentInstrument.flags
       }
     },
-    initCharts : function({charts, linkedParameters}, {auxParameters}) {
+    initCharts : function({charts, linkedParameters, linkedChartMode}, {auxParameters}) {
       let newCharts = {}
       if(charts && linkedParameters && auxParameters) {
         charts.forEach((chart) => {
           newCharts[chart.enName] = chart
         })
         this.charts = newCharts
+
+        this.isLinkedChartMode = linkedChartMode
         this.secondChartsParameters = [...auxParameters, ...linkedParameters]
       }
     },
@@ -183,6 +185,8 @@ export default {
           endXaxis :  this.linkedChartData.endXaxis,
           hoverData : data
         }
+      } else {
+        this.linkedChartData = {type : data}
       }
     },
     addNewChart: function(chartName) {

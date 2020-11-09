@@ -48,15 +48,14 @@ export default {
     },
     currentDate : {
       type : String,
-      default : ""
     },
     minDate : {
       type : String,
-      default : ""
+      default : () => ""
     },
     maxDate : {
       type : String,
-      default : ""
+      default : () => ""
     },
   },
   data() {
@@ -68,7 +67,7 @@ export default {
   computed: {
     computedDateFormatted () {
       return this.$root.formatDate(this.date)
-    },
+    }
   },
   watch: {
     date(newDate) {

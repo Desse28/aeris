@@ -21,32 +21,26 @@
         >
           <v-icon left> mdi-selection-drag</v-icon> {{$t('session.label_selections')}}
         </v-btn>
-        <v-btn class="mb-2 mt-2 blue--text"
-               color="rgb(255, 255, 255)"
-               depressed
-               v-on="on" v-bind="attrs"
-               v-on:click="switchCurrentView($t('session.label_selections'), null, false)"
-        >
-          <v-icon left>mdi-send-outline</v-icon> {{$t('session.label_sendMySession')}}
-        </v-btn>
       </template>
 
       <v-card>
-        <v-card-title class="headline grey lighten-2" v-if="currentViewIsEdit">
+        <v-card-title class="headline grey lighten-2" v-if="IsEditView">
           {{$t('session.label_edit')}}
         </v-card-title>
-        <v-card-title class="headline grey lighten-2" v-if="currentViewIsSelection">
+        <v-card-title class="headline grey lighten-2" v-if="isSelectionView">
           {{$t('session.label_selection')}}
         </v-card-title>
-        <v-card-title class="headline grey lighten-2" v-if="currentViewIsSelections">
+        <v-card-title class="headline grey lighten-2" v-if="isSelectionsView">
           {{ $t("session.label_selections") }}
         </v-card-title>
           <AerisDatavalidationSelectionform
-              v-if="currentViewIsSelection || currentViewIsEdit"
+              v-if="isSelectionView || IsEditView"
               :session="session"
               :selection="selection"
+              :currentView="currentView"
               :qualityFlags="qualityFlags"
               :notifySelection="notifySelection"
+              :targetSelection="currentSelection"
               :sessionSelection="sessionSelection"
               :instrumentEndDate="instrumentEndDate"
               :instrumentStartDate="instrumentStartDate"
@@ -93,8 +87,7 @@ export default {
       default: null
     },
     notifySelection : {
-      type: Function,
-      default: () => {}
+      type: Function
     },
     notifyDeleteSelection : {
       type: Function,
@@ -112,65 +105,69 @@ export default {
   data() {
     return {
       dialog: false,
+      currentView : "",
       sessionSelection: null,
+      currentSelection : null,
       isResetSelection: false,
-      isEditSelection : false,
-      currentView : this.$t('session.label_selection')
+      isEditSelection : false
     }
   },
   watch: {
     selection: function () {
-      let selection
       let startDate = this.selection.startDate
       let endDate = this.selection.endDate
       let selections = this.session.charts[0].selections
 
-      this.dialog = true
-
-      if(this.$root.isSelectionExist(selections, startDate, endDate)) {
-        selection = this.$root.getTargetSelection(selections, startDate, endDate)
-        this.activeEditMode(selection)
-      } else if(startDate !== "" && endDate !== "") {
-            this.activeSelectionMode()
+      console.log("Test current selection : ", this.selection)
+      if(this.currentSelection === null && !this.isResetSelection) {
+        this.dialog = true
+        if(this.$root.isSelectionExist(selections, startDate, endDate)) {
+          this.switchCurrentView(this.$t('session.label_edit'))
+        } else if(startDate !== "" && endDate !== "") {
+          this.switchCurrentView( this.$t('session.label_selection'))
+        }
       } else {
-        this.dialog = false
+        this.isResetSelection = false
       }
     }
   },
   computed: {
-    currentViewIsSelection: function () {
+    isSelectionView: function () {
       return this.currentView === this.$t('session.label_selection')
     },
-    currentViewIsSelections: function() {
+    isSelectionsView: function() {
       return this.currentView === this.$t('session.label_selections')
     },
-    currentViewIsEdit: function() {
+    IsEditView: function() {
       return this.currentView === this.$t('session.label_edit')
-    }
+    },
   },
   methods: {
-    activeEditMode: function(selection) {
-      this.switchCurrentView(this.$t('session.label_edit'), selection)
+    activeEditMode: function(/*selection*/) {
+      //this.switchCurrentView(this.$t('session.label_edit'), selection)
     },
-    activeSelectionMode: function() {
-      this.switchCurrentView( this.$t('session.label_selection'))
+    switchCurrentView: function(viewName) {
+      this.currentView = viewName
+      this.currentSelection = this.selection
     },
-    switchCurrentView: function(viewName, selection) {
-      let startDate, endDate
-      let selections = this.session.charts[0].selections
-
-      if(viewName && (this.selection || selection)) {
-        this.currentView = viewName
-        startDate = selection ? selection.startDate : this.selection.startDate
-        endDate = selection ? selection.endDate : this.selection.endDate
-        this.sessionSelection = this.$root.getTargetSelection(selections, startDate, endDate)
-        this.dialog = true
-      }
-    },
-    notifyCancelPopUp : function () {
+    notifyCancelPopUp : function (targetSelection) {
+      let startDate, endDate, selections
       this.dialog = false
-      if(this.currentView === this.$t('session.label_selection'))
-        this.notifyDeleteSelection()
+      if (this.currentSelection) {
+        selections = this.session.charts[0].selections
+        startDate = this.currentSelection.startDate
+        endDate = this.currentSelection.endDate
+        this.currentSelection = null
+
+        if(this.currentView === this.$t('session.label_selection') && targetSelection) {
+          this.notifyDeleteSelection()
+        } else if(this.currentView === this.$t('session.label_edit') && targetSelection &&
+            !this.$root.isSelectionExist(selections,targetSelection.startDate, targetSelection.endDate)) {
+          this.isResetSelection = true
+          this.notifySelection(startDate, endDate)
+        }
+      }
+
     }
   },
 }

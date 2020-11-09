@@ -30,9 +30,7 @@
             <v-col cols="6">
               <AerisDatavalidationDateMounthPicker
                   :dateLabel="$t('session.label_startDate')"
-                  :currentDate="startDate"
-                  minDate=""
-                  maxDate=""
+                  :currentDate="getDefaultstartDate"
                   :setCurrentDate="setStartDate"
                   :disabled="false"
               />
@@ -40,29 +38,23 @@
             <v-col cols="6">
               <AerisDatavalidationDateMounthPicker
                   :dateLabel="$t('session.label_endDate')"
-                  :currentDate="endDate"
-                  minDate=""
-                  maxDate=""
+                  :currentDate="getDefaultendDate"
                   :setCurrentDate="setEndDate"
                   :disabled="false"
               />
             </v-col>
             <v-col cols="6">
               <AerisDatavalidationTimePicker
-                  min=""
-                  max=""
                   :time_label="$t('session.label_startTime')"
-                  :currentTime="startTime"
+                  :currentTime="getDefaultstartTime"
                   :setCurrentTime="setStartTime"
                   :disabled="false"
               />
             </v-col>
             <v-col cols="6">
               <AerisDatavalidationTimePicker
-                  min=""
-                  max=""
                   :time_label="$t('session.label_endTime')"
-                  :currentTime="endTime"
+                  :currentTime="getDefaultendTime"
                   :setCurrentTime="setEndTime"
                   :disabled="false"
               />
@@ -70,40 +62,39 @@
             <v-col cols="12">
               <AerisDatavalidationSelect
                   name="flags"
-                  itemText="label"
-                  :qualityFlags="qualityFlags"
+                  itemText="concatName"
+                  :qualityFlags="getQualityFlags"
                   :flag_message="$t('session.label_qualityFlags')"
                   :setFlagsSelected="setFlagsSelected"
-                  :defaultQualityFlags="defaultQualityFlags"
+                  :defaultQualityFlags="getDefaultFlags"
               />
             </v-col>
             <v-col cols="12">
               <v-card-actions>
                 <v-btn
-                    v-if="false"
+                    v-if="this.currentView === this.$t('session.label_selection')"
                     v-on:click="saveSelection"
-                    :disabled="false"
+                    :disabled="isSelectedFlagsEmpty"
                 >
                   {{$t('session.label_save')}}
                 </v-btn>
                 <v-btn
                     v-else
                     v-on:click="editSelection"
-                    :disabled="false"
+                    :disabled="isSelectedFlagsEmpty"
                 >
                   {{$t('session.label_save')}}
                 </v-btn>
                 <v-btn
+                    v-if="this.currentView !== this.$t('session.label_selection')"
                     v-on:click="deleteCurrentSelecton"
-                    v-if="false"
                 >
                   {{$t('session.label_delete')}}
                 </v-btn>
                 <v-btn
-                    v-on:click="notifyCancelPopUp"
+                    v-on:click="cancelCurrentSelection"
                 >
                   {{ $t('session.label_cancel') }}
-                 <!-- {{true? $t('session.label_cancel') : $t('session.label_close')}}-->
                 </v-btn>
               </v-card-actions>
             </v-col>
@@ -137,6 +128,9 @@ export default {
       type : Object,
       default : null
     },
+    currentView : {
+      type : String
+    },
     qualityFlags : {
       type : Array,
       default : () => []
@@ -145,8 +139,9 @@ export default {
       type : Object,
       default : null,
     },
-    sessionSelection : {
+    targetSelection : {
       type : Object,
+      default : null,
     },
     notifySelection : {
       type : Function,
@@ -187,75 +182,84 @@ export default {
       selectedFlags: [],
       isRecorded: false,
       existSelection : false,
-      defaultQualityFlags: null,
+      currentSelection : null,
+      isResetSelection: false,
       isEditSelectionExist: false,
-      currentSessionSelection: null,
     }
   },
   watch : {
     selection : function () {
-      let selectionDate
-      if(!this.isSelectionEmpty()) {
-        selectionDate = this.getSelectionDate(this.selection, false)
-        if(selectionDate) {
-          if(this.isDateChange(selectionDate)) {
-            this.setCurrentDate(selectionDate)
-          }
-        }
+      if(this.isResetSelection) {
+        this.isResetSelection = false
       } else {
-        this.resetDate()
+        this.currentSelection = null
+        this.initForm()
       }
-      this.defaultQualityFlags = this.currentSessionSelection ? this.currentSessionSelection.flags : []
     },
-    sessionSelection: {
-      immediate: true,
-      handler(selection) {
-        if(selection !== null ) {
-          this.currentSessionSelection = selection
-          this.defaultQualityFlags = selection ? selection.flags : []
-        }
-      },
+  },
+  computed : {
+    isSelectedFlagsEmpty : function() {
+      return this.selectedFlags.length === 0
     },
+    getDefaultstartDate : function () {
+      if(this.currentSelection)
+        return this.$root.getDatePikerDateFormat(this.currentSelection.startDate)
+      return ""
+    },
+    getDefaultstartTime : function() {
+      if(this.currentSelection)
+        return this.$root.getTimePickerTimeFormat(this.currentSelection.startDate)
+      return ""
+    },
+    getDefaultendDate : function () {
+      if(this.currentSelection)
+        return this.$root.getDatePikerDateFormat(this.currentSelection.endDate)
+      return ""
+    },
+    getDefaultendTime : function () {
+      if(this.currentSelection)
+        return this.$root.getTimePickerTimeFormat(this.currentSelection.endDate)
+      return ""
+    },
+    getDefaultFlags : function () {
+      const mainCharts = this.session.charts[0]
+      let startDate = this.selection.startDate
+      let endDate = this.selection.endDate
+      if(this.$root.isSelectionExist(mainCharts.selections, startDate, endDate)) {
+        return this.concatFlagCodeLabel(this.$root.getTargetSelection(mainCharts.selections, startDate, endDate).flags)
+      } else if(this.currentSelection && this.currentView !== this.$t('session.label_selection')) {
+        return this.concatFlagCodeLabel(this.selectedFlags)
+      } else {
+        return []
+      }
+    },
+    getQualityFlags : function() {
+      return this.concatFlagCodeLabel(this.qualityFlags)
+    }
   },
   mounted() {
-    this.initDefaultParameters()
+    this.initForm()
   },
   methods: {
-    initDefaultParameters : function() {
-      let selectionDate
-      if(this.currentSessionSelection) {
-        this.defaultQualityFlags = this.currentSessionSelection.flags
-        selectionDate = this.getSelectionDate(this.currentSessionSelection, true)
-        this.setCurrentDate(selectionDate)
-        this.notifyDateChange()
+    initForm : function() {
+      if(this.currentSelection === null) {
+        this.initDefaultDates(this.selection)
+        this.currentSelection = this.selection
       }
     },
-    getSelectionDate : function (selection, isUtcFormat) {
-      let startDate, startTime, endDate, endTime
-
-      if(selection) {
-        endDate= this.$root.getDatePikerDateFormat(selection.endDate)
-        startDate= this.$root.getDatePikerDateFormat(selection.startDate)
-        startTime= isUtcFormat ? this.$root.getTimeUniverselFormat(selection.startDate) : this.$root.getTimePickerTimeFormat(selection.startDate)
-        endTime= isUtcFormat ? this.$root.getTimeUniverselFormat(selection.endDate) : this.$root.getTimePickerTimeFormat(selection.endDate)
-        return {startDate : startDate, startTime : startTime, endDate: endDate, endTime : endTime}
-      }
-
-      return null;
+    initDefaultDates : function(selection) {
+      this.startDate = this.$root.getDatePikerDateFormat(selection.startDate)
+      this.startTime = this.$root.getTimePickerTimeFormat(selection.startDate)
+      this.endDate = this.$root.getDatePikerDateFormat(selection.endDate)
+      this.endTime = this.$root.getTimePickerTimeFormat(selection.endDate)
     },
-    setCurrentDate : function(currentDate) {
-      if(currentDate) {
-        this.startDate = currentDate.startDate
-        this.startTime = currentDate.startTime
-        this.endDate = currentDate.endDate
-        this.endTime = currentDate.endTime
+    concatFlagCodeLabel : function(flags) {
+      if(flags) {
+        flags.forEach((flag, index)=>{
+          flag.concatName = /*flag.code*/ index + ", " + flag.label
+        })
       }
-    },
-    resetDate : function () {
-      this.startDate = ""
-      this.startTime = ""
-      this.endDate = ""
-      this.endTime = ""
+      return flags
     },
     setStartDate : function(startDate) {
       if(this.startDate !== startDate) {
@@ -288,12 +292,14 @@ export default {
     },
     notifyDateChange : function() {
       let startDate, endDate
-      if(this.startDate !== "" && this.startTime !== "" &&
-          this.endDate !== "" && this.endTime !== "") {
+      if(!this.isEmptyDate()) {
         startDate = this.startDate + " " + this.startTime
         endDate = this.endDate + " " + this.endTime
         this.notifySelection(startDate, endDate)
       }
+    },
+    isEmptyDate : function() {
+      return (this.startDate === "" || this.startTime === "" || this.endDate === "" || this.endTime === "")
     },
     saveSelection : function() {
       let mainChart
@@ -302,18 +308,13 @@ export default {
       let endDate = this.$root.getSpringDateFormat(this.endDate + " " + this.endTime)
       if(charts) {
         mainChart = charts[0]
-        if(!this.isSelectionExist(startDate, endDate, mainChart.selections)) {
+        if(!this.$root.isSelectionExist(mainChart.selections,startDate, endDate)) {
           this.createNewSelection(startDate, endDate, mainChart)
           this.submitSelection()
         } else {
           this.alertExistSelection()
         }
       }
-    },
-    isSelectionExist: function(startDate, endDate, selections) {
-      return selections.some((selection) => {
-        return (selection.startDate === startDate && selection.endDate === endDate)
-      })
     },
     createNewSelection : function(startDate, endDate, chart) {
       let selection = {
@@ -324,12 +325,23 @@ export default {
         chart.selections.push(selection)
     },
     editSelection : function() {
-      let startDate = this.startDate + " " + this.startTime
-      let endDate = this.endDate + " " + this.endTime
+      let mainChart
+      let charts = this.session.charts
+      const newStartDate = this.$root.getSpringDateFormat(this.startDate + " " + this.startTime)
+      const newEndDate = this.$root.getSpringDateFormat(this.endDate + " " + this.endTime)
 
-      if(this.session) {
-        this.setTargetSelection(startDate, endDate)
-        this.submitSelection()
+      if(charts) {
+        mainChart = charts[0]
+
+        mainChart.selections.forEach( (selection) => {
+          if(this.$root.isSameDate(selection.startDate, this.targetSelection.startDate) &&
+              this.$root.isSameDate(selection.endDate, this.targetSelection.endDate)) {
+            selection.startDate = newStartDate
+            selection.endDate = newEndDate
+            selection.flags = this.selectedFlags
+            this.submitSelection()
+          }
+        })
       }
     },
     deleteCurrentSelecton : function () {
@@ -343,36 +355,27 @@ export default {
       this.notifyDeleteSelection()
       this.notifyCancelPopUp()
     },
-    setTargetSelection : function(startDate, endDate) {
-      let selectionStartDate, selectionEndDate
+    cancelCurrentSelection : function () {
+      const startDate = this.startDate + " " + this.startTime
+      const endDate = this.endDate + " " + this.endTime
+      let selections = this.session.charts[0].selections
 
-      this.session.sessionSelections.forEach((selection) => {
-        selectionStartDate = this.$root.getCleanDate(selection.startDate)
-        selectionEndDate = this.$root.getCleanDate(selection.endDate)
+      if(!this.$root.isSelectionExist(selections,startDate, endDate) &&
+          this.currentView !== this.$t('session.label_selection')) {
+        this.isResetSelection = true
+      }
 
-        if(selectionStartDate === startDate && selectionEndDate === endDate) {
-          this.activeNoEditAlert()
-          return
-        }
-
-        if(this.currentSessionSelection.startDate === selection.startDate &&
-            this.currentSessionSelection.endDate === selection.endDate) {
-          selection.flags = this.selectedFlags
-          selection.startDate = this.$root.getSpringDateFormat(startDate)
-          selection.endDate = this.$root.getSpringDateFormat(endDate)
-        }
-      })
+      this.notifyCancelPopUp({startDate : startDate, endDate : endDate})
     },
     submitSelection : function() {
       this.typeOfRequest = "PUT"
       this.requestData = this.session
       this.callBack = (selection) => {
+        this.currentUrl=""
         if(selection) {
           this.alertIsRecorded()
-          this.switchCurrentView(this.$t('session.label_edit'))
           this.notifyCancelPopUp()
         }
-        this.currentUrl=""
       }
       this.currentUrl = process.env.VUE_APP_ROOT_API + UPDATE_SESSION_PATH
     },
@@ -380,7 +383,7 @@ export default {
       this.isRecorded = true
       setTimeout(() => {
         this.isRecorded = false
-      }, 2000);
+      }, 1000);
     },
     alertExistSelection : function () {
       this.existSelection=true

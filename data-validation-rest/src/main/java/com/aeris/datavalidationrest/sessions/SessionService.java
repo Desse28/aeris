@@ -44,7 +44,6 @@ public class SessionService {
     public ResponseEntity<Session> createNewSession(Session session) {
         Session newSession = session;
         this.setCurrentPiid();
-
         if(this.currentPiid != null) {
             session.setPiId(this.currentPiid);
             session.setCreationDate(new Date());

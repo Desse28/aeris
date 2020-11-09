@@ -6,17 +6,18 @@ import io.swagger.annotations.ApiModelProperty;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Flag {
     @ApiModelProperty( example = "0000" )
-    private int code;
+    private String code;
     @ApiModelProperty( example = "Valid measurement" )
     private String label;
 
     public Flag() {}
 
-    public int getCode() {
+
+    public String getCode() {
         return code;
     }
 
-    public void setCode(int code) {
+    public void setCode(String code) {
         this.code = code;
     }
 
@@ -31,7 +32,7 @@ public class Flag {
     @Override
     public String toString() {
         return "Flag{" +
-                "code=" + code +
+                "code='" + code + '\'' +
                 ", label='" + label + '\'' +
                 '}';
     }

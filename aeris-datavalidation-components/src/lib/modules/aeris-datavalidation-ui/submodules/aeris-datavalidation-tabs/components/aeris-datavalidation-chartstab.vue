@@ -12,11 +12,11 @@
       <v-tabs-slider></v-tabs-slider>
 
       <v-tab
-          v-for="({enName}, index) in getCharts"
+          v-for="({enName, frName}, index) in getCharts"
           :key="index"
           :href="'#' + enName"
       >
-        {{ enName}}
+        {{$i18n.locale === 'fr' ? frName : enName}}
       </v-tab>
       <v-tabs-items v-model="tab">
         <v-tab-item
@@ -116,7 +116,7 @@ export default {
       return Object.values(this.charts).filter((chart) => {
         return chart.enName !== 'Main chart'
       })
-    },
+    }
   },
   watch : {
     tab : function(chartName) {

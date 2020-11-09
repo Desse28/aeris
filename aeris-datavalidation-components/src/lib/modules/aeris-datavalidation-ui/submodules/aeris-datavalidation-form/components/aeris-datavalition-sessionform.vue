@@ -157,9 +157,11 @@ export default {
 
       let newSession = {
         charts : charts,
+        linkedChartMode : false,
         mainParameter : this.mainParameter,
         linkedParameters : this.linkedParameters,
         instrumentName : this.currentInstrument.name,
+        currentSecondChartName : SECOND_CHART_EN_NAME,
       }
 
       if(!this.isExistSession(newSession)) {
@@ -194,7 +196,7 @@ export default {
         startXaxis : 0,
         selections : [],
         frName : SECOND_CHART_FR_NAME,
-        enName : SECOND_CHART_EN_NAME,
+        enName :  SECOND_CHART_EN_NAME,
         parameters : auxParameters
       }
     },

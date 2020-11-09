@@ -38,12 +38,6 @@ export default {
       default : () => [],
     },
   },
-  data() {
-    return {
-      items: [],
-      value: [],
-    }
-  },
   watch: {
     value(flags) {
       this.setFlagsSelected(flags)
@@ -59,6 +53,12 @@ export default {
       },
     },
   },
+  data() {
+    return {
+      items: [],
+      value: [],
+    }
+  }
 }
 </script>
 
