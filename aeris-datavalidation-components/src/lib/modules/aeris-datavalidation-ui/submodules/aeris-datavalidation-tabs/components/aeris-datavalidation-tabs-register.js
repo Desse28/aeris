@@ -1,10 +1,12 @@
 import HelperRegisterModule from "./../../../../helper-register-module"
 
 import AerisDatavalidationChartsTab from "./aeris-datavalidation-chartstab";
+import AerisDatavalidationTabHandler from "./aeris-datavalidation-maincharttab";
 import AerisDatavalidationMainChartTab from "./aeris-datavalidation-maincharttab";
 
 const components = [
     AerisDatavalidationChartsTab,
+    AerisDatavalidationTabHandler,
     AerisDatavalidationMainChartTab,
 ];
 

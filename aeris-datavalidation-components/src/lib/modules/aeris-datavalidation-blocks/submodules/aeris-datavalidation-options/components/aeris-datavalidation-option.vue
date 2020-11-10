@@ -274,9 +274,9 @@ export default {
     },
     addChart : function () {
      if(this.tabName === "") {
-       this.turnTabAlert(true)
+       this.alertTab(true)
      } else if(this.tabNames.includes(this.tabName.toUpperCase())) {
-       this.turnTabAlert(false)
+       this.alertTab(false)
      } else {
        this.addNewChart(this.tabName)
        this.closeMenu = true
@@ -287,7 +287,7 @@ export default {
        }, 100)
      }
     },
-    turnTabAlert : function (isEmptyName) {
+    alertTab : function (isEmptyName) {
       this.tabAlertMess = isEmptyName ? this.$t("session.label_emptyName") : this.$t("session.label_chartExist")
       this.isEmptyName = true
       setTimeout(() => {
