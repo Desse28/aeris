@@ -19,6 +19,7 @@
       ></v-divider>
       <AerisDataValidationOptions
           :charts="charts"
+          :session="session"
           :addNewChart="addNewChart"
           :removeChart="removeChart"
           :addParameter="addParameter"

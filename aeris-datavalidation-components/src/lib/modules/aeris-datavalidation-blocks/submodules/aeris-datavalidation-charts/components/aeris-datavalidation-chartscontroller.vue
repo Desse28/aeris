@@ -189,9 +189,9 @@ export default {
         this.linkedChartData = {type : data}
       }
     },
-    addNewChart: function(chartName) {
+    addNewChart: function(newChart) {
       let cloneCharts = JSON.parse(JSON.stringify(this.charts))
-      cloneCharts[chartName] = {name: chartName, parameters : []}
+      cloneCharts[newChart.enName] = newChart
       this.charts = cloneCharts
     },
     setCurrentParralelChart : function (chartName) {

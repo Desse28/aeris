@@ -1,15 +1,5 @@
 <template>
   <div class="text-center ml-4">
-    <AerisDatavalidationDeleteDialog
-        :dialog="deleteDialog"
-        :hideOkButton="hideOkButton"
-        :ok="$t('session.label_yes')"
-        :cancel="cancelDeleteLabel"
-        :okCallBack="validateDelete"
-        :cancelCallBack="cancelDelete"
-        :title="$t('session.label_deletion')"
-        :message="deleteTabMessage"
-    />
     <v-menu
         v-for="([text], index) in getBtns"
         :key="text"
@@ -29,14 +19,14 @@
         >
           <v-icon left>{{getIcons[index]}}</v-icon> {{ text }}
         </v-btn>
-        <v-btn class="mb-2 mt-2 blue--text"
-               color="rgb(255, 255, 255)"
-               depressed
-               v-else
-               v-on:click="deleteCurrentParalelChart"
-        >
-          <v-icon left>{{getIcons[index]}}</v-icon> {{ text }}
-        </v-btn>
+        <AerisDatavalidationTabHandler
+            :currentView="text"
+            :charts="charts"
+            :session="session"
+            :addNewChart="addNewChart"
+            :removeIcon="getIcons[index]"
+            v-if="text === $t('session.label_removeChart')"
+        />
       </template>
       <v-card>
         <div v-if="text === $t('session.label_addParameters')">
@@ -92,48 +82,36 @@
             </v-col>
           </v-row>
         </div>
-        <div v-if="text ===  $t('session.label_addChart')" class="pa-4">
-          <v-alert
-              dense
-              outlined
-              type="error"
-              v-if="isEmptyName"
-          >
-            {{tabAlertMess}}
-          </v-alert>
-          <v-text-field
-              v-model="tabName"
-              :label="$t('session.label_chartName')"
-              hide-details="auto"
-          ></v-text-field>
-          <v-btn class="mb-2 mt-2"
-                 color="blue"
-                 depressed
-                 v-on:click="addChart"
-          >
-            {{$t('session.label_add')}}
-          </v-btn>
-        </div>
+        <AerisDatavalidationTabHandler
+            v-if="text === $t('session.label_addChart')"
+            :charts="charts"
+            :session="session"
+            :currentView="text"
+            :addNewChart="addNewChart"
+        />
       </v-card>
     </v-menu>
   </div>
 </template>
 <script>
 import {colors} from "../../../../aeris-datavalidation-common/colors/index"
+import AerisDatavalidationTabHandler from "./../../../../aeris-datavalidation-ui/submodules/aeris-datavalidation-tabs/components/aeris-datavalidation-tabhandler"
 import AerisDatavalidationChartsSelect from "../../../../aeris-datavalidation-ui/submodules/aeris-datavalidation-selects/components/aeris-datavalidation-chartsselect"
-import AerisDatavalidationDeleteDialog from "../../../../aeris-datavalidation-ui/submodules/aeris-datavalidation-dialogs/components/aeris-datavalidation-deletedialog"
-
 export default {
   name: "aeris-datavalidation-options",
   components : {
+    AerisDatavalidationTabHandler,
     AerisDatavalidationChartsSelect,
-    AerisDatavalidationDeleteDialog
   },
   props: {
+    session : {
+      type: Object,
+      default: null
+    },
     secondChartsParameters : {
       type : Array
     },
-    addNewChart: {
+    addNewChart : {
       type: Function,
       default: () => {}
     },
@@ -175,20 +153,12 @@ export default {
   },
   data() {
     return {
-      tabName: "",
       offset: true,
-      tabNames : [],
       parameters: [],
       closeMenu : false,
-      tabAlertMess : "",
-      hideOkButton:false,
       chartsSelects : [],
-      isEmptyName: false,
-      deleteDialog: false,
       parametersLabel : [],
       parametersColors : [],
-      deleteTabMessage : "",
-      cancelDeleteLabel: this.$t('session.label_no'),
     }
   },
   watch: {
@@ -271,58 +241,6 @@ export default {
       if(this.parameters.includes(targetParameter)) {
         this.switchParameterChart(targetParameter, newChartName, oldChartName)
       }
-    },
-    addChart : function () {
-     if(this.tabName === "") {
-       this.alertTab(true)
-     } else if(this.tabNames.includes(this.tabName.toUpperCase())) {
-       this.alertTab(false)
-     } else {
-       this.addNewChart(this.tabName)
-       this.closeMenu = true
-       this.tabNames.push(this.tabName.toUpperCase())
-       setTimeout(() => {
-         this.closeMenu = false
-         this.tabName = ""
-       }, 100)
-     }
-    },
-    alertTab : function (isEmptyName) {
-      this.tabAlertMess = isEmptyName ? this.$t("session.label_emptyName") : this.$t("session.label_chartExist")
-      this.isEmptyName = true
-      setTimeout(() => {
-        this.isEmptyName = false
-      }, 1000)
-    },
-    deleteCurrentParalelChart : function() {
-      if(this.currentParalelChart.toUpperCase() === "CHART2") {
-        this.hideOkButton = true
-        this.cancelDeleteLabel = this.$t('session.label_close')
-        this.deleteTabMessage = this.$t("session.label_nonDeletableChart")
-      } else {
-        this.deleteTabMessage = this.$t("session.message_deleteChart")
-      }
-      this.deleteDialog = true
-    },
-    validateDelete : function () {
-      let intersection
-      let targetParameters = this.charts[this.currentParalelChart].parameters
-      this.removeChart()
-      this.deleteDialog = false
-      if(targetParameters) {
-        intersection = this.parameters.filter(param => {
-          return !targetParameters.some(newParam => newParam.name === param.name)
-        })
-        if(intersection)
-          this.parameters = intersection
-      }
-
-      this.tabNames =  this.tabNames.filter(tabName => tabName.toUpperCase() !== this.currentParalelChart.toUpperCase())
-    },
-    cancelDelete : function () {
-      this.deleteDialog = false
-      this.hideOkButton = false
-      this.cancelDeleteLabel = this.$t('session.label_no')
     },
   },
 

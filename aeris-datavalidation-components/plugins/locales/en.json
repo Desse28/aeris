@@ -24,6 +24,7 @@
     "startDate" : "Start date",
     "startTime" : "Start time",
     "in_progress" : "In progress",
+    "secondaryChart" : "Secondary Chart",
     "message_greaterThan" : "The end date must be greater than the start date"
   },
   "configuration" : {
@@ -86,6 +87,7 @@
     "label_sendMySession" : "Send my session",
     "label_closeSession" : "Close the session",
     "label_nonDeletableChart": "Non-deletable chart",
+    "label_secondaryChart" : "@:common.secondaryChart",
     "label_submittedSelections": "Submitted selections",
     "message_existSelection" : "This session exist",
     "message_chooseQualityFlag": "Choose quality flag",

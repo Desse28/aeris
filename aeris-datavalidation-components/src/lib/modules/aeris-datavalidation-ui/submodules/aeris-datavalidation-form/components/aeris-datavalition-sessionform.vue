@@ -76,6 +76,7 @@ const MAIN_CHART_EN_NAME = "Main chart"
 const SECOND_CHART_EN_NAME = "Secondary chart"
 const MAIN_CHART_FR_NAME = "Graphique principal"
 const SECOND_CHART_FR_NAME = "Graphique secondaire"
+const DEFAULT_DATE = "1970-01-01T00:00:00.000+00:00"
 
 export default {
   name: "aeris-datavalition-sessionform",
@@ -174,8 +175,8 @@ export default {
       let mainChart = {
         frName : MAIN_CHART_FR_NAME,
         enName : MAIN_CHART_EN_NAME,
-        startXaxis : 0,
-        endXaxis : 0,
+        startXaxis : DEFAULT_DATE,
+        endXaxis : DEFAULT_DATE,
         parameters : [
           {
             color : this.$root.getNewColor(this.colorCount),
@@ -192,8 +193,8 @@ export default {
       let auxParameters = this.getParametersWithColors(this.currentInstrument.auxParameters)
 
       return {
-        endXaxis : 0,
-        startXaxis : 0,
+        endXaxis : DEFAULT_DATE,
+        startXaxis : DEFAULT_DATE,
         selections : [],
         frName : SECOND_CHART_FR_NAME,
         enName :  SECOND_CHART_EN_NAME,

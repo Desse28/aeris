@@ -25,6 +25,7 @@
     "layering" : "Superposition",
     "startDate" : "Date de début",
     "startTime" : "Heure de début",
+    "secondaryChart" : "Graphique secondaire",
     "message_greaterThan" : "La date de fin doit être supérieur à la date de début"
   },
   "configuration" : {
@@ -85,6 +86,7 @@
     "label_sendMySession" : "Envoyer ma session",
     "label_removeChart" : "Supprimer le graphique",
     "label_addParameters" : "Ajout des paramètres",
+    "label_secondaryChart" : "@:common.secondaryChart",
     "label_submittedSelections": "Sélections soumises",
     "message_existSelection" : "Cette selection existe",
     "message_recordedSelection":  "Sélection enregistrée",
