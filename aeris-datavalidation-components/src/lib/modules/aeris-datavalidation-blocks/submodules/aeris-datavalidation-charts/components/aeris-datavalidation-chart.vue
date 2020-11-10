@@ -24,9 +24,9 @@
           bottom
           :position-x="positionX"
           :position-y="positionY"
-          v-model="filterBtnTTip"
+          v-model="tooltipState"
       >
-        <div v-html="tooltipFlags">
+        <div v-html="tooltipContent">
         </div>
       </v-tooltip>
       <v-row justify="center">
@@ -143,12 +143,12 @@
         callBack : null,
         currentUuid : "",
         typeOfRequest: "",
-        tooltipFlags : "",
         requestData: null,
         deleteAlert: false,
         modeBarButtons: [],
         deleteDialog: false,
-        filterBtnTTip: false,
+        tooltipState: false,
+        tooltipContent : "",
         currentSelection : null,
         currentParameters : [],
       }
@@ -529,7 +529,7 @@
         let targetSelection = this.selections[index]
         startDate = targetSelection.x0
         endDate = targetSelection.x1
-        this.filterBtnTTip = false
+        this.tooltipState = false
         this.currentSelection = targetSelection
         this.notifySelection(startDate, endDate)
         this.turnOnCurrentSelection(index)
@@ -549,16 +549,20 @@
         const mainChart = this.currentSession.charts[0]
         const index = $(event.currentTarget).attr('data-index')
         const targetSelection = mainChart.selections[index]
-        this.tooltipFlags = ""
         this.positionX = event.clientX
         this.positionY = event.clientY
+
+        this.tooltipContent = this.$t('session.label_startDate') + ' : ' + this.$root.getCleanDate(targetSelection.startDate, 'fr') + '</br>'
+        this.tooltipContent +=this.$t('session.label_endDate') + ' : ' + this.$root.getCleanDate(targetSelection.endDate, 'fr') + '</br>'
+        this.tooltipContent += this.$t('session.label_flags') + " : " + '</br>'
+
         targetSelection.flags.forEach((flag) => {
-          this.tooltipFlags += flag.code + ", " + flag.label + '</br>'
+          this.tooltipContent += flag.code + ", " + flag.label + '</br>'
         })
-        this.filterBtnTTip = true
+        this.tooltipState = true
       },
       tooltipMouseLeave : function () {
-        this.filterBtnTTip = false
+        this.tooltipState = false
       },
       setCurrentSelectionPeriod : function(newStartDate, newEndDate) {
         if(newStartDate && newEndDate) {

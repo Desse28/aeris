@@ -85,7 +85,7 @@ export default {
                     this.isSameDate(selection.endDate, targetSelection.x1))
             })
         },
-        getCleanDate : function (date) {
+        getCleanDate : function (date, type) {
             let day, month, year, hours, minutes, seconds
             let dateFragment = date.split(".")
             let cleanDate = this.takeOfDateMilliseconds(dateFragment[0])
@@ -98,6 +98,9 @@ export default {
             hours = this.completeNumber(cleanDate.getHours())
             minutes = this.completeNumber(cleanDate.getMinutes())
             seconds =  this.completeNumber(cleanDate.getSeconds())
+
+            if(type === 'fr')
+                return day + '/' + month + '/' + year + ' ' + hours + ':' + minutes + ':' + seconds
 
             return year + '-' + month + '-' + day + ' ' + hours + ':' + minutes + ':' + seconds
         },
