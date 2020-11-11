@@ -38,6 +38,7 @@
                 :linkedChartData="linkedChartData"
                 :isLinkedChartMode="isLinkedChartMode"
                 :currentInstrument="currentInstrument"
+                :currentSecondChart="currentSecondChart"
             />
           </v-card>
         </v-tab-item>
@@ -96,6 +97,10 @@ export default {
       type: Boolean,
       default : false
     },
+    currentSecondChart : {
+      type : String,
+      default : () => ""
+    },
     isLinkedChartMode: {
       type: Boolean,
       default : false
@@ -107,7 +112,7 @@ export default {
   },
   data () {
     return {
-      tab: "chart-1",
+      tab: "",
       icons: false,
     }
   },
@@ -121,6 +126,10 @@ export default {
   watch : {
     tab : function(chartName) {
       this.setCurrentSecondChart(chartName)
+    },
+    currentSecondChart : function() {
+      if(this.tab === "")
+        this.tab = this.currentSecondChart
     }
   }
 }

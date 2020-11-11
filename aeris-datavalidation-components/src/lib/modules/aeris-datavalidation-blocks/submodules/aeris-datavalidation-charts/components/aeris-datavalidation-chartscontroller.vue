@@ -54,6 +54,7 @@
               :linkedChartData="linkedChartData"
               :isLinkedChartMode="isLinkedChartMode"
               :currentInstrument="currentInstrument"
+              :currentSecondChart="currentSecondChart"
               :hideChart="secondChartsOnParameters.length === 0"
               :setCurrentSecondChart="setCurrentSecondChart"
           />
@@ -125,6 +126,8 @@ export default {
         this.currentSession = currentSession
         this.currentInstrument = currentInstrument
         this.qualityFlags = currentInstrument.flags
+        this.currentSecondChart = currentSession.currentSecondChartName
+        console.log("Test default : ", currentSession.currentSecondChartName)
       }
     },
     initCharts : function({charts, linkedParameters, linkedChartMode}, {auxParameters}) {

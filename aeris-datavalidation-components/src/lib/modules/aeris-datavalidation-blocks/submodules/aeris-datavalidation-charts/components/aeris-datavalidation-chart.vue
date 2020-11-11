@@ -121,7 +121,11 @@
       },
       switchLinkedMode: {
         type : Function,
-      }
+      },
+      currentSecondChart : {
+        type : String,
+        default : () => ""
+      },
     },
     components: {
       AerisDataValidationServices,
@@ -184,6 +188,10 @@
       }
     },
     watch: {
+      currentSecondChart : function () {
+        this.currentSession.currentSecondChartName = this.currentSecondChart
+        this.updateSessionState()
+      },
       secondChartsParameters : function (newParameters, oldParameters) {
         if(this.secondChartsParameters.length === 0 || (newParameters.length === 1 && oldParameters.length === 0)) {
           this.refresh()

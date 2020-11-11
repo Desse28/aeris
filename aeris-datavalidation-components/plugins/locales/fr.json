@@ -89,6 +89,7 @@
     "label_secondaryChart" : "@:common.secondaryChart",
     "label_submittedSelections": "Sélections soumises",
     "message_existSelection" : "Cette selection existe",
+    "label_displayManagement" : "Gestion de l’affichage",
     "message_recordedSelection":  "Sélection enregistrée",
     "label_nonDeletableChart": "Graphique non supprimable",
     "message_chooseQualityFlag": "Choisissez le drapeau de qualité",

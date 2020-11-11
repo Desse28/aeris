@@ -14,7 +14,7 @@
         :close-on-content-click="closeMenu"
         :nudge-width="text ===  $t('session.label_addChart') ? 80 : 200"
         :offset-y="text ===  $t('session.label_addChart') && offset"
-        :offset-x="text === $t('session.label_addParameters')&& offset"
+        :offset-x="text === $t('session.label_displayManagement')&& offset"
         v-model="menuModel[index].active"
     >
       <template v-slot:activator="{ on, attrs }">
@@ -39,7 +39,7 @@
         </v-btn>
       </template>
       <v-card>
-        <div v-if="text === $t('session.label_addParameters')">
+        <div v-if="text === $t('session.label_displayManagement')">
           <v-row justify="center">
             <v-col cols="6">
               <v-list>
@@ -165,7 +165,7 @@ export default {
     },
     getBtns : function() {
       return [
-        [this.$t("session.label_addParameters")],
+        [this.$t("session.label_displayManagement")],
         [this.$t("session.label_addChart")],
         [this.$t("session.label_removeChart")],
       ]

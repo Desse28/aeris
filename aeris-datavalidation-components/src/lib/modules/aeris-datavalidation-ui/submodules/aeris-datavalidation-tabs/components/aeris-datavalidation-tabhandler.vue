@@ -140,7 +140,7 @@ export default {
       const tabsNames = Object.keys(this.charts)
       if(this.tabName === "") {
         this.alertTab(true)
-      } else if(tabsNames.includes(this.tabName.toUpperCase())) {
+      } else if(tabsNames.map(name => name.toUpperCase()).includes(this.tabName.toUpperCase())) {
         this.alertTab(false)
       } else {
         this.creatNewChart()

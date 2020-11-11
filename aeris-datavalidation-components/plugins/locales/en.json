@@ -87,6 +87,7 @@
     "label_sendMySession" : "Send my session",
     "label_closeSession" : "Close the session",
     "label_nonDeletableChart": "Non-deletable chart",
+    "label_displayManagement" : "Display management",
     "label_secondaryChart" : "@:common.secondaryChart",
     "label_submittedSelections": "Submitted selections",
     "message_existSelection" : "This session exist",
