@@ -100,7 +100,7 @@ export default {
       type: Boolean,
       default : false
     },
-    setCurrentParralelChart  : {
+    setCurrentSecondChart  : {
       type : Function,
       default : () => {}
     }
@@ -120,7 +120,7 @@ export default {
   },
   watch : {
     tab : function(chartName) {
-      this.setCurrentParralelChart(chartName)
+      this.setCurrentSecondChart(chartName)
     }
   }
 }

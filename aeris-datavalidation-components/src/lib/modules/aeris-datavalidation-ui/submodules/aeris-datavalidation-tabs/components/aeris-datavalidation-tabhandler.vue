@@ -1,61 +1,48 @@
 <template>
-    <div
-        v-if="currentView === $t('session.label_addChart')"
-        class="pa-4"
+  <div>
+    <AerisDataValidationServices
+        :url="currentUrl"
+        :callBack="callBack"
+        :requestData="requestData"
+        :typeOfRequest="typeOfRequest"
     >
-      <AerisDataValidationServices
-          :url="currentUrl"
-          :callBack="callBack"
-          :requestData="requestData"
-          :typeOfRequest="typeOfRequest"
+      <div
+          v-if="currentView === $t('session.label_addChart')"
+          class="pa-4"
       >
-      <v-alert
-          dense
-          outlined
-          type="error"
-          v-if="isEmptyName"
-      >
-        {{tabAlertMess}}
-      </v-alert>
-      <v-text-field
-          v-model="tabName"
-          :label="$t('session.label_chartName')"
-          hide-details="auto"
-      ></v-text-field>
-      <v-btn class="mb-2 mt-2"
-             color="blue"
-             depressed
-             v-on:click="addChart"
-      >
-        {{$t('session.label_add')}}
-      </v-btn>
-      </AerisDataValidationServices>
-    </div>
-    <v-btn class="mb-2 mt-2 blue--text"
-           color="rgb(255, 255, 255)"
-           depressed
-           v-else-if="currentView === $t('session.label_removeChart')"
-           v-on:click="deleteCurrentParalelChart"
-    >
-      <v-icon left>{{removeIcon}}</v-icon>{{  currentView }}
+        <v-alert
+            dense
+            outlined
+            type="error"
+            v-if="isEmptyName"
+        >
+          {{tabAlertMess}}
+        </v-alert>
+        <v-text-field
+            v-model="tabName"
+            :label="$t('session.label_chartName')"
+            hide-details="auto"
+        ></v-text-field>
+        <v-btn class="mb-2 mt-2"
+               color="blue"
+               depressed
+               v-on:click="addChart"
+        >
+          {{$t('session.label_add')}}
+        </v-btn>
+      </div>
       <AerisDatavalidationDeleteDialog
           :dialog="deleteDialog"
-          :hideOkButton="hideOkButton"
+          :hideOkButton="false"
           :ok="$t('session.label_yes')"
-          :cancel="cancelDeleteLabel"
           :okCallBack="validateDelete"
           :cancelCallBack="cancelDelete"
+          :cancel="$t('session.label_no')"
           :title="$t('session.label_deletion')"
-          :message="deleteTabMessage"
+          :message="$t('session.message_deleteChart')"
       />
-      <AerisDataValidationServices
-          :url="currentUrl"
-          :callBack="callBack"
-          :requestData="requestData"
-          :typeOfRequest="typeOfRequest"
-      >
-      </AerisDataValidationServices>
-    </v-btn>
+    </AerisDataValidationServices>
+  </div>
 </template>
 
 <script>
@@ -82,14 +69,22 @@ export default {
       type : String,
       default : () => ""
     },
-    removeIcon : {
-      type : String,
-      default : () => ""
-    },
-    addNewChart : {
+    chartTabsHandler : {
       type: Function,
       default: () => {}
     },
+    currentSecondChart : {
+      type : String,
+      default : () => ""
+    },
+    isDeleteChartModeState : {
+      type : Boolean,
+      default : () => false
+    },
+    switchDeleteChartModeState : {
+      type : Function,
+      default : () => {}
+    }
   },
   data() {
     return {
@@ -100,11 +95,13 @@ export default {
       callBack : null,
       tabAlertMess : "",
       typeOfRequest : "",
-      hideOkButton:false,
       deleteDialog: false,
       isEmptyName : false,
-      deleteTabMessage : "",
-      cancelDeleteLabel: this.$t('session.label_no'),
+    }
+  },
+  watch : {
+    isDeleteChartModeState : function () {
+      this.deleteDialog = this.isDeleteChartModeState;
     }
   },
   computed : {
@@ -154,7 +151,7 @@ export default {
       this.callBack = (data) => {
         this.currentUrl=""
         if(data) {
-          this.addNewChart(newChart)
+          this.chartTabsHandler(newChart, 'add')
         }
       }
       this.currentUrl = process.env.VUE_APP_ROOT_API + SESSION_UPDATE_PATH
@@ -170,35 +167,26 @@ export default {
         parameters : []
       }
     },
-    deleteCurrentParalelChart : function() {
-      if(this.currentParalelChart.toUpperCase() === "CHART2") {
-        this.hideOkButton = true
-        this.cancelDeleteLabel = this.$t('session.label_close')
-        this.deleteTabMessage = this.$t("session.label_nonDeletableChart")
-      } else {
-        this.deleteTabMessage = this.$t("session.message_deleteChart")
-      }
-      this.deleteDialog = true
-    },
     validateDelete : function () {
-      let intersection
-      let targetParameters = this.charts[this.currentParalelChart].parameters
-      this.removeChart()
-      this.deleteDialog = false
-      if(targetParameters) {
-        intersection = this.parameters.filter(param => {
-          return !targetParameters.some(newParam => newParam.name === param.name)
-        })
-        if(intersection)
-          this.parameters = intersection
-      }
+      this.session.charts = this.session.charts.filter((chart) => {
+        return(chart.enName.toUpperCase() !== this.currentSecondChart.toUpperCase())
+      })
+      this.requestData = this.session
+      this.typeOfRequest = "PUT"
+      //this.currentUrl=""
 
-      this.tabNames =  this.tabNames.filter(tabName => tabName.toUpperCase() !== this.currentParalelChart.toUpperCase())
+      this.callBack = (data) => {
+        this.currentUrl=""
+        console.log("Test validateDelete : ", data)
+        if(data) {
+          this.chartTabsHandler(this.currentSecondChart, 'remove')
+          this.switchDeleteChartModeState()
+        }
+      }
+      this.currentUrl = process.env.VUE_APP_ROOT_API + SESSION_UPDATE_PATH
     },
     cancelDelete : function () {
-      this.deleteDialog = false
-      this.hideOkButton = false
-      this.cancelDeleteLabel = this.$t('session.label_no')
+      this.switchDeleteChartModeState()
     },
   }
 }

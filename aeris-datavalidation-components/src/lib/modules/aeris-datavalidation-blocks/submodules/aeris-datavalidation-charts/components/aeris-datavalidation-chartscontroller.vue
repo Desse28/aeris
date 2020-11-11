@@ -9,13 +9,13 @@
         :selection="selection"
         :session="currentSession"
         :qualityFlags="qualityFlags"
-        :currentParalelChart="currentParalelChart"
+        :currentSecondChart="currentSecondChart"
         :secondChartsParameters="secondChartsParameters"
-        :addNewChart="addNewChart"
         :removeChart="removeChart"
         :addParameter="addParameter"
         :removeParameter="removeParameter"
         :notifySelection=" notifySelection"
+        :chartTabsHandler="chartTabsHandler"
         :switchParameterChart="switchParameterChart"
         :notifyDeleteSelection="notifyDeleteSelection"
     />
@@ -55,7 +55,7 @@
               :isLinkedChartMode="isLinkedChartMode"
               :currentInstrument="currentInstrument"
               :hideChart="secondChartsOnParameters.length === 0"
-              :setCurrentParralelChart="setCurrentParralelChart"
+              :setCurrentSecondChart="setCurrentSecondChart"
           />
         </template>
       </AerisDatavalidationLandScapeLayaout>
@@ -89,9 +89,9 @@ export default {
       sessionsDialog: false,
       currentSession: null,
       instrumentInfos: null,
+      currentSecondChart: "",
       currentInstrument: null,
       isLinkedChartMode: false,
-      currentParalelChart: "",
       secondChartsParameters : [],
       linkedChartData: {startXaxis: null, endXaxis: null},
     }
@@ -189,17 +189,23 @@ export default {
         this.linkedChartData = {type : data}
       }
     },
-    addNewChart: function(newChart) {
+    chartTabsHandler : function(chart, type) {
       let cloneCharts = JSON.parse(JSON.stringify(this.charts))
-      cloneCharts[newChart.enName] = newChart
+      console.log("Test chartTabsHandler : ", type)
+      if(type === 'add') {
+        cloneCharts[chart.enName] = chart
+      } else if(type === 'remove') {
+        console.log("Test remove : ", cloneCharts[chart])
+        delete cloneCharts[chart]
+      }
       this.charts = cloneCharts
     },
-    setCurrentParralelChart : function (chartName) {
-      this.currentParalelChart = chartName
+    setCurrentSecondChart : function (chartName) {
+      this.currentSecondChart = chartName
     },
     removeChart : function() {
       let charts = Object.values(this.charts)
-      const currentChart = this.currentParalelChart
+      const currentChart = this.currentSecondChart
       let cloneCharts = JSON.parse(JSON.stringify(this.charts))
       let mainChatName =  charts[0].name
       let defaultChartName =  charts[1].name
@@ -209,7 +215,7 @@ export default {
           currentChart !== defaultChartName) {
         delete(cloneCharts[currentChart])
         this.charts = cloneCharts
-        this.currentParalelChart = ""
+        this.currentSecondChart = ""
       }
     },
   },

@@ -1,5 +1,13 @@
 <template>
   <div class="text-center ml-4">
+    <AerisDatavalidationTabHandler
+        :charts="charts"
+        :session="session"
+        :chartTabsHandler="chartTabsHandler"
+        :currentSecondChart="currentSecondChart"
+        :isDeleteChartModeState="isDeleteChartModeState"
+        :switchDeleteChartModeState="switchDeleteChartModeState"
+    />
     <v-menu
         v-for="([text], index) in getBtns"
         :key="text"
@@ -19,14 +27,15 @@
         >
           <v-icon left>{{getIcons[index]}}</v-icon> {{ text }}
         </v-btn>
-        <AerisDatavalidationTabHandler
-            :currentView="text"
-            :charts="charts"
-            :session="session"
-            :addNewChart="addNewChart"
-            :removeIcon="getIcons[index]"
-            v-if="text === $t('session.label_removeChart')"
-        />
+        <v-btn class="mb-2 mt-2 blue--text"
+               color="rgb(255, 255, 255)"
+               depressed
+               :disabled="isSecondChart"
+               v-if="text === $t('session.label_removeChart')"
+               v-on:click="switchDeleteChartModeState"
+        >
+          <v-icon left>{{getIcons[index]}}</v-icon>{{ text }}
+        </v-btn>
       </template>
       <v-card>
         <div v-if="text === $t('session.label_addParameters')">
@@ -87,7 +96,8 @@
             :charts="charts"
             :session="session"
             :currentView="text"
-            :addNewChart="addNewChart"
+            :chartTabsHandler="chartTabsHandler"
+            :currentSecondChart="currentSecondChart"
         />
       </v-card>
     </v-menu>
@@ -108,10 +118,14 @@ export default {
       type: Object,
       default: null
     },
+    currentSecondChart : {
+      type : String,
+      default : () => ""
+    },
     secondChartsParameters : {
       type : Array
     },
-    addNewChart : {
+    chartTabsHandler : {
       type: Function,
       default: () => {}
     },
@@ -131,12 +145,14 @@ export default {
       type : Function,
       default : () => {}
     },
-    currentParalelChart : {
-      type : String,
-      default : () => ""
-    }
   },
   computed : {
+    isSecondChart : function() {
+      let tabsNames = Object.keys(this.charts)
+      if(tabsNames && this.currentSecondChart)
+        return tabsNames[1].toUpperCase() === this.currentSecondChart.toUpperCase()
+      return false
+    },
     getCharts : function () {
       return Object.values(this.charts)
     },
@@ -159,6 +175,7 @@ export default {
       chartsSelects : [],
       parametersLabel : [],
       parametersColors : [],
+      isDeleteChartModeState : false,
     }
   },
   watch: {
@@ -179,6 +196,9 @@ export default {
   methods : {
     getTargetChart : function (chartName) {
       return this.charts[chartName]
+    },
+    switchDeleteChartModeState : function() {
+      this.isDeleteChartModeState = !this.isDeleteChartModeState
     },
     addActiveParameters : function() {
       let parameters

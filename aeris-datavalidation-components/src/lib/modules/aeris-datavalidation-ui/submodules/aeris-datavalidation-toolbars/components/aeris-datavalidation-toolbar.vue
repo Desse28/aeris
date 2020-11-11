@@ -20,11 +20,11 @@
       <AerisDataValidationOptions
           :charts="charts"
           :session="session"
-          :addNewChart="addNewChart"
           :removeChart="removeChart"
           :addParameter="addParameter"
           :removeParameter="removeParameter"
-          :currentParalelChart="currentParalelChart"
+          :chartTabsHandler="chartTabsHandler"
+          :currentSecondChart="currentSecondChart"
           :switchParameterChart="switchParameterChart"
           :secondChartsParameters="secondChartsParameters"
       />
@@ -59,7 +59,7 @@ export default {
       type: Function,
       default: () => {}
     },
-    addNewChart: {
+    chartTabsHandler : {
       type : Function,
     },
     addParameter : {
@@ -90,10 +90,10 @@ export default {
       type : Function,
       default : () => {}
     },
-    currentParalelChart : {
+    currentSecondChart : {
       type : String,
       default : () => ""
-    }
+    },
   },
   components: {
     AerisDataValidationOptions,
