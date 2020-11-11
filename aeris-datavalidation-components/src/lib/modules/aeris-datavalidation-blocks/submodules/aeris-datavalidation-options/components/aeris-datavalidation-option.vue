@@ -15,6 +15,7 @@
         :nudge-width="text ===  $t('session.label_addChart') ? 80 : 200"
         :offset-y="text ===  $t('session.label_addChart') && offset"
         :offset-x="text === $t('session.label_addParameters')&& offset"
+        v-model="menuModel[index].active"
     >
       <template v-slot:activator="{ on, attrs }">
         <v-btn
@@ -99,6 +100,7 @@
             :session="session"
             :currentView="text"
             :chartTabsHandler="chartTabsHandler"
+            :menuModelState="menuModel[1].active"
             :currentSecondChart="currentSecondChart"
         />
       </v-card>
@@ -172,6 +174,11 @@ export default {
   data() {
     return {
       offset: true,
+      menuModel: [
+        {active : false},
+        {active : false},
+        {active : false},
+      ],
       parameters: [],
       closeMenu : false,
       chartsSelects : [],
@@ -250,8 +257,6 @@ export default {
       this.parameters = this.parameters.filter((parameter)=>{
         return parameter.name !== targetParameter.name
       })
-      //console.log("Test disableParameter : ", targetParameterIndex, this.parameters, currentParameter)
-      //this.parameters.splice(targetParameterIndex, 1)
     },
     flushAddParameter : function (newParameters) {
       let parameter = newParameters[newParameters.length - 1]

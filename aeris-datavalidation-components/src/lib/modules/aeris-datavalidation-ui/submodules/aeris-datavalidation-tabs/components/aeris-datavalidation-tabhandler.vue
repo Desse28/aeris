@@ -69,6 +69,10 @@ export default {
       type : String,
       default : () => ""
     },
+    menuModelState : {
+      type : Boolean,
+      default : () => null
+    },
     chartTabsHandler : {
       type: Function,
       default: () => {}
@@ -100,6 +104,13 @@ export default {
     }
   },
   watch : {
+    charts : function () {
+      this.tabName = this.genNewTabName
+    },
+    menuModelState : function () {
+      if(this.menuModelState === false)
+        this.tabName = this.genNewTabName
+    },
     isDeleteChartModeState : function () {
       this.deleteDialog = this.isDeleteChartModeState;
     }
