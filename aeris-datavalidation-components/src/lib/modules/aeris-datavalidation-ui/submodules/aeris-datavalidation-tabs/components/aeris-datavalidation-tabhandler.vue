@@ -173,11 +173,10 @@ export default {
       })
       this.requestData = this.session
       this.typeOfRequest = "PUT"
-      //this.currentUrl=""
 
       this.callBack = (data) => {
         this.currentUrl=""
-        console.log("Test validateDelete : ", data)
+
         if(data) {
           this.chartTabsHandler(this.currentSecondChart, 'remove')
           this.switchDeleteChartModeState()

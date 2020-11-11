@@ -81,9 +81,11 @@
                     <AerisDatavalidationChartsSelect
                         :selectIndex="index"
                         :charts="getCharts"
+                        :currentSecondChart="currentSecondChart"
                         :defaultChart="getTargetChart(chartsSelects[index])"
                         :currentParameter="parametersLabel[index]"
                         :notifySwitchChart="notifySwitchChart"
+                        :disableParameter="disableParameter"
                     />
                   </v-list-item-action>
                 </v-list-item>
@@ -243,6 +245,13 @@ export default {
     },
     getNewColor : function() {
       return colors.find(color => !this.parametersColors.includes(color))
+    },
+    disableParameter : function (targetParameter) {
+      this.parameters = this.parameters.filter((parameter)=>{
+        return parameter.name !== targetParameter.name
+      })
+      //console.log("Test disableParameter : ", targetParameterIndex, this.parameters, currentParameter)
+      //this.parameters.splice(targetParameterIndex, 1)
     },
     flushAddParameter : function (newParameters) {
       let parameter = newParameters[newParameters.length - 1]

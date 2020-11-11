@@ -150,7 +150,7 @@ export default {
     removeParameter : function(targetParameter, targetChartName) {
       let targetChart = this.charts[targetChartName]
 
-      if(targetParameter && targetChartName)
+      if(targetParameter && targetChartName && targetChart)
         targetChart.parameters = targetChart.parameters.filter(function(parameter) {
           return parameter.name !== targetParameter.name
         })
@@ -191,12 +191,11 @@ export default {
     },
     chartTabsHandler : function(chart, type) {
       let cloneCharts = JSON.parse(JSON.stringify(this.charts))
-      console.log("Test chartTabsHandler : ", type)
+
       if(type === 'add') {
         cloneCharts[chart.enName] = chart
       } else if(type === 'remove') {
-        console.log("Test remove : ", cloneCharts[chart])
-        delete cloneCharts[chart]
+        delete(cloneCharts[chart])
       }
       this.charts = cloneCharts
     },
