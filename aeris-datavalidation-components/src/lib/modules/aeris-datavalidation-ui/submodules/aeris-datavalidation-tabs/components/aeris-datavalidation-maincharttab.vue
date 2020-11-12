@@ -14,7 +14,12 @@
             flat
             tile
         >
+          <AerisDatavalidationHeatMap
+              v-if="typeOfData === 'Heatmap'"
+              chartId="testChart1"
+          />
           <AerisDatavalidationChart
+              v-else
               :charts="charts"
               :isMainChart="true"
               :selection="selection"
@@ -51,15 +56,20 @@
 <script>
 import $ from "jquery";
 import AerisDatavalidationChart from "./../../../../aeris-datavalidation-blocks/submodules/aeris-datavalidation-charts/components/aeris-datavalidation-chart"
+import AerisDatavalidationHeatMap from "./../../../../aeris-datavalidation-blocks/submodules/aeris-datavalidation-charts/components/aeris-datavalidation-heatmap"
 
 export default {
   name: "aeris-datavalidation-chartstabs",
   components : {
     AerisDatavalidationChart,
+    AerisDatavalidationHeatMap
   },
   props: {
     charts : {
       type : Object
+    },
+    typeOfData : {
+      type : String
     },
     instrumentInfos: {
       type : Object,

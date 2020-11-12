@@ -502,6 +502,7 @@
             }
           ]
           this.currentSelection = this.selections[this.selections.length-1]
+          $("#" + this.getChartId + " .select-outline").remove()
           Plotly.relayout(document.getElementById( this.getChartId ), { shapes : this.selections})
           this.addSelectionEventHandler()
           if(!isDefault)

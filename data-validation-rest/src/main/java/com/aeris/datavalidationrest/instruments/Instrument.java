@@ -6,7 +6,6 @@ import org.springframework.data.annotation.Id;
 import com.aeris.datavalidationrest.parameters.Parameter;
 
 import javax.validation.constraints.NotNull;
-import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
@@ -14,6 +13,8 @@ public class Instrument {
     @Id
     @ApiModelProperty(hidden = true)
     private String id;
+    @ApiModelProperty( example = "Time series")
+    private String typeOfData;
     @NotNull(message = "UUID cannot be null")
     @ApiModelProperty( example = "PDM_NEPHE")
     private String name;
@@ -72,6 +73,14 @@ public class Instrument {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getTypeOfData() {
+        return typeOfData;
+    }
+
+    public void setTypeOfData(String typeOfData) {
+        this.typeOfData = typeOfData;
     }
 
     public String getName() {
@@ -142,6 +151,7 @@ public class Instrument {
     public String toString() {
         return "Instrument{" +
                 "id='" + id + '\'' +
+                ", typeOfData='" + typeOfData + '\'' +
                 ", name='" + name + '\'' +
                 ", uuid='" + uuid + '\'' +
                 ", responsibleId=" + responsibleId +

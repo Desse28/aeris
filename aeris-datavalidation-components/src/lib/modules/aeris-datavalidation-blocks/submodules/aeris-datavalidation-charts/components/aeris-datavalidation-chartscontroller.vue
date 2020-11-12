@@ -32,6 +32,7 @@
               :charts="charts"
               :isMainChart="true"
               :selection="selection"
+              :typeOfData="typeOfData"
               :deleteStep="deleteStep"
               :currentSession="currentSession"
               :linkedChartData="linkedChartData"
@@ -49,6 +50,7 @@
           <AerisDatavalidationChartsTab
               :charts="charts"
               :isMainChart="false"
+              :typeOfData="typeOfData"
               :currentSession="currentSession"
               :instrumentInfos="instrumentInfos"
               :linkedChartData="linkedChartData"
@@ -86,6 +88,7 @@ export default {
       charts : {},
       deleteStep: 1,
       selection: null,
+      typeOfData : "",
       qualityFlags: [],
       sessionsDialog: false,
       currentSession: null,
@@ -122,12 +125,12 @@ export default {
     newSession : function(currentSession, currentInstrument, instrumentInfos) {
       if(currentSession && currentInstrument && instrumentInfos ) {
         this.instrumentInfos = instrumentInfos
+        this.typeOfData = currentInstrument.typeOfData
         this.initCharts(currentSession, currentInstrument)
         this.currentSession = currentSession
         this.currentInstrument = currentInstrument
         this.qualityFlags = currentInstrument.flags
         this.currentSecondChart = currentSession.currentSecondChartName
-        console.log("Test default : ", currentSession.currentSecondChartName)
       }
     },
     initCharts : function({charts, linkedParameters, linkedChartMode}, {auxParameters}) {

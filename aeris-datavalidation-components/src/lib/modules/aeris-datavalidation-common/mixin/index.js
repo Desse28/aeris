@@ -31,9 +31,9 @@ export default {
         },
         getDatePikerDateFormat : function(date) {
             let currentDate = new Date(date)
-            let day = this.completeNumber(currentDate.getUTCDate())
-            let month = this.completeNumber(currentDate.getUTCMonth()+1)
-            let year = currentDate.getUTCFullYear()
+            let day = this.completeNumber(currentDate.getDate())
+            let month = this.completeNumber(currentDate.getMonth()+1)
+            let year = currentDate.getFullYear()
             return year + "-" + month + "-" + day
         },
         getTimePickerTimeFormat : function(date) {
@@ -66,7 +66,6 @@ export default {
                 return selections.some((selection) => {
                     currentStartDate = selection.startDate ? selection.startDate : selection.x0
                     currentendDate = selection.endDate ? selection.endDate : selection.x1
-
                     return (this.isSameDate(currentStartDate, startDate) &&
                         this.isSameDate(currentendDate, endDate))
                 })

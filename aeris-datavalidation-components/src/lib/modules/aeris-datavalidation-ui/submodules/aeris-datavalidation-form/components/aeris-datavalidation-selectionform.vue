@@ -189,6 +189,7 @@ export default {
   },
   watch : {
     selection : function () {
+
       if(this.isResetSelection) {
         this.isResetSelection = false
       } else {
@@ -202,8 +203,9 @@ export default {
       return this.selectedFlags.length === 0
     },
     getDefaultstartDate : function () {
-      if(this.currentSelection)
+      if(this.currentSelection) {
         return this.$root.getDatePikerDateFormat(this.currentSelection.startDate)
+      }
       return ""
     },
     getDefaultstartTime : function() {
@@ -306,6 +308,7 @@ export default {
       let charts = this.session.charts
       let startDate = this.$root.getSpringDateFormat(this.startDate + " " + this.startTime)
       let endDate = this.$root.getSpringDateFormat(this.endDate + " " + this.endTime)
+
       if(charts) {
         mainChart = charts[0]
         if(!this.$root.isSelectionExist(mainChart.selections,startDate, endDate)) {
@@ -373,7 +376,7 @@ export default {
       this.callBack = (selection) => {
         this.currentUrl=""
         if(selection) {
-          this.alertIsRecorded()
+          //this.alertIsRecorded()
           this.notifyCancelPopUp()
         }
       }

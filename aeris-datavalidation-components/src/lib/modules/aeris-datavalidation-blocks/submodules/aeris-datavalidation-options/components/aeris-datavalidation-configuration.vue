@@ -175,10 +175,14 @@ export default {
         this.newSession(currentSession, instrument, infos)
       })
     },
-    getInstrumentInfos : function ({uuid}, callBack) {
-      this.typeOfRequest = "GET"
-      this.callBack = callBack
-      this.currentUrl = process.env.VUE_APP_ROOT_API + INSTRUMENT_INFOS_PATH + uuid
+    getInstrumentInfos : function ({uuid, typeOfData}, callBack) {
+      if(typeOfData === 'Heatmap') {
+        callBack({})
+      } else {
+        this.typeOfRequest = "GET"
+        this.callBack = callBack
+        this.currentUrl = process.env.VUE_APP_ROOT_API + INSTRUMENT_INFOS_PATH + uuid
+      }
     },
     switchTablecurrentPage : function() {
       this.typeOfRequest = "GET"

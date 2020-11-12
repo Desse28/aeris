@@ -173,6 +173,8 @@ export default {
   },
   data() {
     return {
+      value: 1,
+      active: true,
       offset: true,
       menuModel: [
         {active : false},
