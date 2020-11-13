@@ -51,12 +51,15 @@ export default {
       const oldChartName = oldChart ? oldChart.enName : undefined
       this.notifySwitchChart(this.currentParameter, newChartName, oldChartName, this.selectIndex)
     },
-    charts : function(newCharts) {
-      if(this.defaultChart === undefined) {
-        this.select = newCharts[1]
-        this.disableParameter(this.currentParameter)
-      }
-    }
+    charts : {
+      immediate: true,
+      handler(newCharts) {
+        if(this.defaultChart === undefined) {
+          this.select = newCharts[1]
+          this.disableParameter(this.currentParameter)
+        }
+      },
+    },
   }
 }
 </script>

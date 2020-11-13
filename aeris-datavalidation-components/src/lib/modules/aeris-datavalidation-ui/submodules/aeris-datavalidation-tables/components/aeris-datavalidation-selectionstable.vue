@@ -40,7 +40,7 @@
             <div v-for="flag in item.flags"
                  :key="item.flags.indexOf(flag)"
             >
-              <div>{{ flag.label}}</div>
+              <div>{{ flag.code}}, {{ flag.label}}</div>
             </div>
           </template>
           <template v-slot:item.actions="{ item }">
