@@ -42,7 +42,7 @@
         if(this.$store.state.common.authenticated ) {
           this.refresh();
         }
-      }
+      },
     },
     methods: {
       refresh() {

@@ -194,8 +194,14 @@
       },
       secondChartsParameters : function (newParameters, oldParameters) {
         if(this.secondChartsParameters.length === 0 || (newParameters.length === 1 && oldParameters.length === 0)) {
+
+          if(newParameters.length === 0 && 1 <= oldParameters.length) {
+            this.updateSessionState()
+          }
+
           this.refresh()
           this.initCurrentChart(null)
+
         }
       },
       deleteStep : function() {
@@ -204,17 +210,20 @@
           this.addSelectionEventHandler()
         }
       },
-      parameters : function (newParameters, oldsParameters) {
-        let parameter
-        if(this.data.length === 0) {
-          parameter = newParameters[0]
-          this.initCurrentChart(parameter)
-        } else if(oldsParameters.length < newParameters.length) {
-          parameter = newParameters[newParameters.length - 1]
-          this.addNewParameter(parameter)
-        } else if(newParameters.length < oldsParameters.length) {
-          this.removeParameter(newParameters, oldsParameters)
-        }
+      parameters : {
+        handler: function (newParameters, oldsParameters) {
+          let parameter
+          if(this.data.length === 0) {
+            parameter = newParameters[0]
+            this.initCurrentChart(parameter)
+          } else if(oldsParameters.length < newParameters.length) {
+            parameter = newParameters[newParameters.length - 1]
+            this.addNewParameter(parameter)
+          } else if(newParameters.length < oldsParameters.length) {
+            this.removeParameter(newParameters, oldsParameters)
+          }
+        },
+        deep: true
       },
       selection: function() {
         let index
@@ -308,24 +317,28 @@
         uri = "/instruments/" + parameter.name + "/" + startDate + "/" + endDate
         this.currentUrl = process.env.VUE_APP_ROOT_API + uri
       },
-      updateChart: function(ParamData, parameter) {
+      updateChart: function(paramData, parameter) {
+        let paramDataKeys
         let dataContent = {}
         let currentKey= ""
         let currentContent = null
-        let paramDataKeys = Object.keys(ParamData[0])
 
-        ParamData.forEach((data) => {
-          paramDataKeys.forEach((key) => {
-            currentKey = key === "value" ? parameter.name : key
-            if(! (currentKey in dataContent))
-              dataContent[currentKey] = []
+        if(paramData && parameter) {
+          paramDataKeys = Object.keys(paramData[0])
 
-            currentContent = data[key]
-            dataContent[currentKey].push(currentContent)
+          paramData.forEach((data) => {
+            paramDataKeys.forEach((key) => {
+              currentKey = key === "value" ? parameter.name : key
+              if(! (currentKey in dataContent))
+                dataContent[currentKey] = []
+
+              currentContent = data[key]
+              dataContent[currentKey].push(currentContent)
+            });
           });
-        });
-        paramDataKeys = [paramDataKeys[0], currentKey]
-        this.setAxis(paramDataKeys, dataContent, parameter.color)
+          paramDataKeys = [paramDataKeys[0], currentKey]
+          this.setAxis(paramDataKeys, dataContent, parameter.color)
+        }
       },
       setAxis(paramDataKeys, dataContent, color) {
         const xaxis = paramDataKeys[0]
@@ -382,9 +395,10 @@
             this.selection.endDate !== this.currentSelection.x1)
       },
       removeParameter : function (newParameters, oldsParameters) {
+        let intersection
         let parameterName, targetParameterIndex
 
-        let intersection = oldsParameters.filter(param => {
+        intersection = oldsParameters.filter(param => {
           return !newParameters.some(newParam => newParam.name === param.name)
         })
 
@@ -440,12 +454,15 @@
       updateSessionState : function () {
         this.typeOfRequest = "PUT"
         this.requestData = this.currentSession
+        this.currentUrl = ""
+
         this.callBack = (data) => {
           this.currentUrl = ""
           if(data) {
             console.info(data)
           }
         }
+
         this.currentUrl = process.env.VUE_APP_ROOT_API + SESSION_UPDATE_PATH
       },
       setLayoutAxisRange : function() {

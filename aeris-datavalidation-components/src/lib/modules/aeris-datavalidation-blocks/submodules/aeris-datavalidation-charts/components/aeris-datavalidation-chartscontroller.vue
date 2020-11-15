@@ -155,11 +155,11 @@ export default {
     },
     removeParameter : function(targetParameter, targetChartName) {
       let targetChart = this.charts[targetChartName]
-
-      if(targetParameter && targetChartName && targetChart)
+      if(targetParameter && targetChartName && targetChart) {
         targetChart.parameters = targetChart.parameters.filter(function(parameter) {
           return parameter.name !== targetParameter.name
         })
+      }
     },
     switchParameterChart: function (targetParameter, newChartName, oldChartName) {
       let oldChart = this.charts[oldChartName]

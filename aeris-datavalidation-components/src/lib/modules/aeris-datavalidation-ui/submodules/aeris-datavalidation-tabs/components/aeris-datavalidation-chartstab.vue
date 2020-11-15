@@ -127,7 +127,7 @@ export default {
       icons: false,
     }
   },
-  computed: {
+  computed : {
     getCharts() {
       return Object.values(this.charts).filter((chart) => {
         return chart.enName !== 'Main chart'
