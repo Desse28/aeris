@@ -4,7 +4,12 @@
       flat
       tile
   >
-    <v-toolbar dense class="d-flex justify-center ml-3 mt-2 mb-0 mr-1">
+    <v-toolbar
+        :dense="getDenseState"
+        :prominent="getProminentState"
+        :class="getClassState"
+        :overflow-y-auto="true"
+    >
       <AerisDatavalidationWorksFlowDialog
           :session="session"
           :selection="selection"
@@ -99,6 +104,40 @@ export default {
     AerisDataValidationOptions,
     AerisDatavalidationWorksFlowDialog,
   },
+  computed : {
+    getDenseState : function() {
+      switch (this.$vuetify.breakpoint.name) {
+        case 'xs': return false
+        case 'sm': return false
+          //case 'md': return 500
+          //case 'lg': return 600
+          //case 'xl': return 800
+        default : return true
+      }
+    },
+    getProminentState : function() {
+      switch (this.$vuetify.breakpoint.name) {
+        case 'xs': return true
+        case 'sm': return true
+          //case 'md': return 500
+          //case 'lg': return 600
+          //case 'xl': return 800
+        default : return false
+      }
+    },
+    getClassState : function() {
+      const state = "d-flex justify-center ml-3 mt-2 mb-0 mr-1 overflow-y-auto"
+
+      switch (this.$vuetify.breakpoint.name) {
+        case 'xs': return  state
+        case 'sm': return state
+          //case 'md': return 500
+          //case 'lg': return 600
+          //case 'xl': return 800
+        default : return "d-flex justify-center ml-3 mt-2 mb-0 mr-1"
+      }
+    }
+  }
 }
 </script>
 
