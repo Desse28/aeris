@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="overflow-y-auto">
     <AerisDatavalidationConfiguration
         :sessionsDialog="sessionsDialog"
         :newSession="newSession"

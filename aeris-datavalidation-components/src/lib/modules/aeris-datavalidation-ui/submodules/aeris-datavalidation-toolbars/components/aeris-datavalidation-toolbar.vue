@@ -8,7 +8,6 @@
         :dense="getDenseState"
         :prominent="getProminentState"
         :class="getClassState"
-        :overflow-y-auto="true"
     >
       <AerisDatavalidationWorksFlowDialog
           :session="session"
