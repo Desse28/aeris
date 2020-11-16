@@ -1,5 +1,5 @@
 <template>
-  <div class="ml-6">
+  <div :class="getTabClass">
     <v-tabs
         background-color="light-blue"
         :class="'elevation-2 ' + tab"
@@ -34,6 +34,7 @@
               :applyLinkedEffect="applyLinkedEffect"
               :isLinkedChartMode="isLinkedChartMode"
               :currentInstrument="currentInstrument"
+              :isBreackPointChange="isBreackPointChange"
               :secondChartsParameters="secondChartsParameters"
           />
         </v-card>
@@ -130,6 +131,10 @@ export default {
       type: Boolean,
       default : false
     },
+    isBreackPointChange : {
+      type : Boolean,
+      default : false
+    }
   },
   computed : {
     getMainChartName : function () {
@@ -158,6 +163,16 @@ export default {
 
       return parameters
     },
+    getTabClass : function () {
+      switch (this.$vuetify.breakpoint.name) {
+          //case 'xs': return "ml-6 rounded-pill"
+          //case 'sm': return "ml-6 rounded-pill"
+          // case 'md': return 500
+          //case 'lg': return 600
+          //case 'xl': return 800
+        default : return "ml-6"
+      }
+    }
   },
   data () {
     return {

@@ -126,6 +126,10 @@
         type : String,
         default : () => ""
       },
+      isBreackPointChange : {
+        type : Boolean,
+        default : false
+      }
     },
     components: {
       AerisDataValidationServices,
@@ -188,6 +192,10 @@
       }
     },
     watch: {
+      isBreackPointChange : function () {
+        this.refresh()
+        this.initCurrentChart(null)
+      },
       currentSecondChart : function () {
         this.currentSession.currentSecondChartName = this.currentSecondChart
         this.updateSessionState()

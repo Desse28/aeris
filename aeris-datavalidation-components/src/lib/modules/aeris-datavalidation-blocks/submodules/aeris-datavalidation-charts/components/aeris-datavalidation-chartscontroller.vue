@@ -25,7 +25,7 @@
           justify="center"
           key="mainLandScape"
           :nbrChildElement="2"
-          :cols="secondChartsOnParameters.length !== 0 ? [7, 5] : [12, 0]"
+          :cols="getChartsBreackPoint"
       >
         <template v-slot:land1>
           <AerisDatavalidationMainChartTab
@@ -39,6 +39,7 @@
               :instrumentInfos="instrumentInfos"
               :isLinkedChartMode="isLinkedChartMode"
               :currentInstrument="currentInstrument"
+              :isBreackPointChange="isBreackPointChange"
               :secondChartsParameters="secondChartsOnParameters"
               :notifySelection="notifySelection"
               :switchLinkedMode="switchLinkedMode"
@@ -57,6 +58,7 @@
               :isLinkedChartMode="isLinkedChartMode"
               :currentInstrument="currentInstrument"
               :currentSecondChart="currentSecondChart"
+              :isBreackPointChange="isBreackPointChange"
               :hideChart="secondChartsOnParameters.length === 0"
               :setCurrentSecondChart="setCurrentSecondChart"
           />
@@ -96,6 +98,7 @@ export default {
       currentSecondChart: "",
       currentInstrument: null,
       isLinkedChartMode: false,
+      isBreackPointChange : false,
       secondChartsParameters : [],
       linkedChartData: {startXaxis: null, endXaxis: null},
     }
@@ -110,9 +113,23 @@ export default {
         })
       }
       return parameters
+    },
+    getChartsBreackPoint : function () {
+      this.setIsBreackPointChange()
+      switch (this.$vuetify.breakpoint.name) {
+        case 'xs': return [12, 12]
+        case 'sm': return [12, 12]
+        //case 'md': return 500
+        //case 'lg': return 600
+        //case 'xl': return 800
+        default : return this.secondChartsOnParameters.length !== 0 ? [7, 5] : [12, 0]
+      }
     }
   },
   methods : {
+    setIsBreackPointChange : function () {
+      this.isBreackPointChange = !this.isBreackPointChange
+    },
     notifySelection : function(startDate, endDate) {
       this.selection = {startDate: startDate, endDate: endDate}
     },

@@ -1,7 +1,7 @@
 <template>
   <div
       v-if="!hideChart"
-      class="mr-4 rounded-pill"
+      :class="getTabClass"
   >
     <v-tabs
         v-model="tab"
@@ -44,6 +44,7 @@
                 :isLinkedChartMode="isLinkedChartMode"
                 :currentInstrument="currentInstrument"
                 :currentSecondChart="currentSecondChart"
+                :isBreackPointChange="isBreackPointChange"
             />
           </v-card>
         </v-tab-item>
@@ -119,6 +120,10 @@ export default {
     setCurrentSecondChart  : {
       type : Function,
       default : () => {}
+    },
+    isBreackPointChange : {
+      type : Boolean,
+      default : false
     }
   },
   data () {
@@ -132,6 +137,16 @@ export default {
       return Object.values(this.charts).filter((chart) => {
         return chart.enName !== 'Main chart'
       })
+    },
+    getTabClass : function () {
+      switch (this.$vuetify.breakpoint.name) {
+        case 'xs': return "ml-6 rounded-pill"
+        case 'sm': return "ml-6 rounded-pill"
+          //case 'md': return 500
+          //case 'lg': return 600
+          //case 'xl': return 800
+        default : return "mr-4 rounded-pill"
+      }
     }
   },
   watch : {
