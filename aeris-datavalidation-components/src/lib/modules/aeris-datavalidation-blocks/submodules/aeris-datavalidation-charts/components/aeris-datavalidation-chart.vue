@@ -240,7 +240,7 @@
         }
       },
       linkedChartData: function (newLinkedChartData, oldLinkedChartData) {
-        if(this.linkedChartData && !this.isMainChart) {
+        if(this.linkedChartData && !this.isMainChart && this.chartName === this.currentSecondChart) {
           if(newLinkedChartData.type === "Reset axes") {
             this.resetAxes()
           } else if(newLinkedChartData.startXaxis !== oldLinkedChartData.startXaxis ||
@@ -425,7 +425,7 @@
                 document.getElementById( this.getChartId ).on( 'plotly_selected', this.addNewSelection)
               }
               document.getElementById( this.getChartId ).on( 'plotly_relayout', this.reLayoutHandler)
-              //this.addSelectionEventHandler()
+
             }
           })
         });
@@ -448,6 +448,7 @@
           this.charts[this.chartName].endXaxis = this.$root.getSpringDateFormat(data['xaxis.range[1]'])
           this.currentSession.charts = Object.values(this.charts)
           this.updateSessionState()
+          this.addSelectionEventHandler()
         }
       },
       updateSessionState : function () {
