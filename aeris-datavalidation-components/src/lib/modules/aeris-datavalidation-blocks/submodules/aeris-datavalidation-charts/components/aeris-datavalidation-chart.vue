@@ -141,7 +141,6 @@
         flags: [],
         layout: {},
         config : {},
-        pointNum : 0,
         positionX : 0,
         positionY : 0,
         componentKey: 1,
@@ -166,14 +165,6 @@
         if(this.chartName === "")
           return "defaultChart"
         return this.chartName.replace(' ', '')
-      },
-      getPointNumber : function() {
-        let pointNum = []
-        if(this.parameters && this.pointNum) {
-          pointNum = Array.from(Array(this.parameters.length).keys(),
-              i => {return { curveNumber:i, pointNumber : this.pointNum }})
-        }
-        return pointNum
       },
       getStartXaxis : function() {
         let startXaxis = this.data ? this.data[0].x[0] : ""
@@ -445,8 +436,8 @@
           this.applyLinkedEffect(eventdata)
       },
       applyLinkedHoverEffect : function (points) {
-        this.pointNum = points.pointNumber;
-        Plotly.Fx.hover(document.getElementById( this.getChartId ), this.getPointNumber)
+        const targetDate = new Date(points.x)
+        Plotly.Fx.hover(document.getElementById( this.getChartId ), {xval: targetDate.getTime()})
       },
       reLayoutHandler : function(data) {
         if(data && data['xaxis.range[0]'] !== this.linkedChartData.startXaxis &&
