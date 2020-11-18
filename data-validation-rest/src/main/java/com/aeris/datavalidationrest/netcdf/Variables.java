@@ -4,19 +4,19 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Variables {
-    private Parameter mainParameter;
+    private Parameter main;
     private Parameter level;
     private Parameter time;
 
     public Variables() {
     }
 
-    public Parameter getMainParameter() {
-        return mainParameter;
+    public Parameter getMain() {
+        return main;
     }
 
-    public void setMainParameter(Parameter mainParameter) {
-        this.mainParameter = mainParameter;
+    public void setMain(Parameter main) {
+        this.main = main;
     }
 
     public Parameter getLevel() {
@@ -38,7 +38,7 @@ public class Variables {
     @Override
     public String toString() {
         return "Variables{" +
-                "mainParameter=" + mainParameter +
+                "Main=" + main +
                 ", level=" + level +
                 ", time=" + time +
                 '}';

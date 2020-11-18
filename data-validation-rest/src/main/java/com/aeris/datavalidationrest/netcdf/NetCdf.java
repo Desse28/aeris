@@ -2,16 +2,18 @@ package com.aeris.datavalidationrest.netcdf;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import java.util.Map;
+
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class NetCdf {
-    private Dimensions dimensions;
+    private Map<String, String> dimensions;
     private Variables variables;
 
-    public Dimensions getDimensions() {
+    public Map<String, String> getDimensions() {
         return dimensions;
     }
 
-    public void setDimensions(Dimensions dimensions) {
+    public void setDimensions(Map<String, String> dimensions) {
         this.dimensions = dimensions;
     }
 

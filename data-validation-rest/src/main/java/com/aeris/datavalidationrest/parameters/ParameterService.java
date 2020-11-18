@@ -2,6 +2,8 @@ package com.aeris.datavalidationrest.parameters;
 
 import com.aeris.datavalidationrest.auth.LoginResource;
 import com.aeris.datavalidationrest.common.CommonService;
+import com.aeris.datavalidationrest.netcdf.NetCdf;
+import com.aeris.datavalidationrest.netcdf.NetCdfService;
 import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
 import org.apache.http.HttpStatus;
@@ -34,8 +36,11 @@ public class ParameterService {
     @Autowired
     private RestTemplate restTemplate;
     @Autowired
+    private NetCdfService netCdfService;
+    @Autowired
     private CommonService commonService;
 
+    static final String DEFAULT_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX";
     private static String FOLDER = "/GROUND-BASED/P2OA_Pic-Du-Midi/NEPHE/NEPHE_RAW/2019&image=PDM_NEPH_20190517.csv";
     public static final String SEDOO_BASED_DATA_URL = "https://sedoo.aeris-data.fr/actris-datacenter-rest/rest/quicklook/download?uuid=";
 
@@ -45,13 +50,16 @@ public class ParameterService {
         return paramerDao.findById(id);
     }
 
+    public  ResponseEntity<NetCdf> getParameterByName(String parameterName) {
+        return netCdfService.getParameterByName(parameterName);
+    }
+
     public Parameter getParameterDataByPeriod(String parameterName, String strStartDate, String strEndDate) {
         Parameter response = null;
-        String dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX";
 
         try {
-            this.startDate = this.commonService.strToDate(strStartDate, dateFormat);
-            this.endDate = this.commonService.strToDate(strEndDate, dateFormat);
+            this.startDate = this.commonService.strToDate(strStartDate, DEFAULT_DATE_FORMAT);
+            this.endDate = this.commonService.strToDate(strEndDate, DEFAULT_DATE_FORMAT);
             response = this.paramerDao.findByName(parameterName);
             if(response != null) {
                 response.setParameterData(response.getParameterData().stream()

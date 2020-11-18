@@ -7,12 +7,10 @@ import java.util.Map;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Parameter {
-    public Parameter() {
-    }
-    /* private List<String> shape;
+    private List<String> shape;
     private String type;
     private Map<String, String> attributes;
-    private List<List<Float>> data;
+    private List<Object> data;
 
     public Parameter() {
     }
@@ -41,11 +39,11 @@ public class Parameter {
         this.attributes = attributes;
     }
 
-    public List<List<Float>> getData() {
+    public List<Object> getData() {
         return data;
     }
 
-    public void setData(List<List<Float>> data) {
+    public void setData(List<Object> data) {
         this.data = data;
     }
 
@@ -57,5 +55,5 @@ public class Parameter {
                 ", attributes=" + attributes +
                 ", data=" + data +
                 '}';
-    }*/
+    }
 }

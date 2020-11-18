@@ -1,11 +1,11 @@
 package com.aeris.datavalidationrest.parameters;
 
+import com.aeris.datavalidationrest.netcdf.NetCdf;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Date;
 import java.util.Optional;
 
 @RestController
@@ -25,6 +25,11 @@ public class ParameterResource {
     @GetMapping(value = "/{id}")
     public Optional<Parameter> findParametById(@PathVariable String id) {
         return this.parameterService.getParametById(id);
+    }
+
+    @GetMapping(value = "/{name}")
+    public ResponseEntity<NetCdf> findByName(@ApiParam(value = "UWE") @PathVariable String name) {
+        return this.parameterService.getParameterByName(name);
     }
 
     @GetMapping(value = "/{name}/{startDate}/{endDate}")
