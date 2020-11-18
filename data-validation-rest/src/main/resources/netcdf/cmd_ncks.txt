@@ -1,3 +1,0 @@
-ncks --jsn -v WVT P2OA-CRA-Lannemezan_UHF-RADAR_L2A-HM-Hourly-Mean_2019-12-16T00-00-00_1D_V2-00.nc > P2OA-CRA-Lannemezan_UHF-RADAR_L2A-HM-Hourly-Mean_2019-12-16T00-00-00_1D_V2-00.json
-
-N'y connaissant rien au format json je n'ai pas exploré l'option --jsn_fmt décrite à la page 255 de la doc nco de 2018
