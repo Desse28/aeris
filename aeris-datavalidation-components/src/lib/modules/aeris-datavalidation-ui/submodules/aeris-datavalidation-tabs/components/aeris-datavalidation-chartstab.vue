@@ -30,7 +30,10 @@
           >
             <AerisDatavalidationHeatMap
                 v-if="typeOfData === 'Heatmap'"
-                chartId="testChart2"
+                :charts="charts"
+                :chartName="enName"
+                :isMainChart="isMainChart"
+                :isLinkedChartMode="isLinkedChartMode"
             />
             <AerisDatavalidationChart
                 v-else

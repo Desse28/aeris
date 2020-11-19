@@ -2,7 +2,9 @@ import {colors, defaultColor} from "./../colors/index"
 
 export default {
     data () {
-        return {}
+        return {
+            test : 'Hello'
+        }
     },
     created: function () {
         console.log("Printing from the Mixin")
