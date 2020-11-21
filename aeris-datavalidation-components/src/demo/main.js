@@ -6,6 +6,7 @@ import vuetify from './../../plugins/vuetify'
 import axios from "axios"
 import VueAxios from 'vue-axios'
 import Plotly from 'plotly.js-dist'
+import VueForceNextTick from 'vue-force-next-tick'
 import {start_keycloack} from "../../plugins/keycloak.js"
 import app from "./App.vue"
 import common from "./../lib/modules/aeris-datavalidation-common/store/index"
@@ -17,6 +18,7 @@ Vue.use(VueAxios, axios);
 Vue.use(Vuex);
 Vue.use(VueRouter);
 Vue.use(Plotly)
+Vue.use(VueForceNextTick)
 Vue.config.productionTip = false
 Vue.prototype.$Plotly = Plotly
 

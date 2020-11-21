@@ -21,8 +21,8 @@
               :chartName="getMainChartTitle"
               :isLinkedChartMode="isLinkedChartMode"
           />
-          <AerisDatavalidationChart
-              v-else
+          <AerisDatavalidationTimeSeries
+              v-else-if="typeOfData === 'Time series'"
               :charts="charts"
               :isMainChart="true"
               :selection="selection"
@@ -40,18 +40,13 @@
               :isBreackPointChange="isBreackPointChange"
               :secondChartsParameters="secondChartsParameters"
           />
-        </v-card>
-      </v-tab-item>
-      <v-tab-item
-          :key="2"
-          :value="'chart-' + 2"
-      >
-        <v-card
-            flat
-            tile
-        >
-          <h3>test2</h3>
-          <AerisDatavalidationChart/>
+          <AerisDatavalidationDefaultChart
+              v-else
+              :charts="charts"
+              :isMainChart="true"
+              chartName="mainChart"
+              :selection="selection"
+          />
         </v-card>
       </v-tab-item>
     </v-tabs>
@@ -59,14 +54,16 @@
 </template>
 <script>
 import $ from "jquery";
-import AerisDatavalidationChart from "./../../../../aeris-datavalidation-blocks/submodules/aeris-datavalidation-charts/components/aeris-datavalidation-chart"
 import AerisDatavalidationHeatMap from "./../../../../aeris-datavalidation-blocks/submodules/aeris-datavalidation-charts/components/aeris-datavalidation-heatmap"
+import AerisDatavalidationTimeSeries from "./../../../../aeris-datavalidation-blocks/submodules/aeris-datavalidation-charts/components/aeris-datavalidation-timeseries"
+import  AerisDatavalidationDefaultChart from "./../../../../aeris-datavalidation-blocks/submodules/aeris-datavalidation-charts/components/aeris-datavalidation-defaultchart"
 
 export default {
   name: "aeris-datavalidation-chartstabs",
   components : {
-    AerisDatavalidationChart,
-    AerisDatavalidationHeatMap
+    AerisDatavalidationHeatMap,
+    AerisDatavalidationTimeSeries,
+    AerisDatavalidationDefaultChart
   },
   props: {
     charts : {
@@ -95,10 +92,6 @@ export default {
       default: () => null
     },
     notifySelection: {
-      type: Function,
-      default: () => {}
-    },
-    notifyDeleteSelection: {
       type: Function,
       default: () => {}
     },

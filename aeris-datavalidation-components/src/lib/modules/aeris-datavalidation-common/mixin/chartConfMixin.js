@@ -14,7 +14,6 @@ export default {
         data: [],
         layout: {},
         config : {},
-        selections : [],
         modeBarButtons: [],
     }),
     computed: {
@@ -31,7 +30,7 @@ export default {
         }
     },
     methods : {
-        initCurrentChart : function(chartDiv) {
+        initCurrentChartConf : function(chartDiv) {
             this.initChartsConfig(this.getLinkChartIcon)
             this.initLayout()
             this.$Plotly.newPlot(chartDiv, this.data, this.layout, this.config)
@@ -58,7 +57,7 @@ export default {
                                 fill: "#ed3131"
                             },
                             click: () => {
-                                //this.deleteTargetSelection()
+                                this.deleteTargetSelection()
                             }
                         },
                         {
@@ -69,7 +68,7 @@ export default {
                                 'path': linkIcon,
                             },
                             click: () => {
-                                //this.enableLinkedMode()
+                                this.enableLinkedMode()
                             }
                         },
                         'zoomIn2d',
@@ -81,7 +80,7 @@ export default {
                             name: "Reset axes",
                             icon:  this.$Plotly.Icons.home,
                             click: () => {
-                                //this.resetAxes()
+                                this.resetAxes()
                             }
                         },
                         'sendDataToCloud',
@@ -101,7 +100,7 @@ export default {
                             name: "Reset axes",
                             icon:  this.$Plotly.Icons.home,
                             click: () => {
-                                //this.resetAxes()
+                                this.resetAxes()
                             }
                         },
                     ],

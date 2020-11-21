@@ -9,11 +9,13 @@ import AerisDatavalidationSessionForm from "./aeris-datavalidation-ui/submodules
 import AerisDataValidationOptions from "./aeris-datavalidation-blocks/submodules/aeris-datavalidation-options/components/aeris-datavalidation-option";
 import AerisDatavalidationAccountItem from "./aeris-datavalidation-ui/submodules/aeris-datavalidation-items/components/aeris-datavalidation-accountitem";
 import AerisDatavalidationMainChartTab from "./aeris-datavalidation-ui/submodules/aeris-datavalidation-tabs/components/aeris-datavalidation-maincharttab";
+import AerisDatavalidationTimeSeries from "./aeris-datavalidation-blocks/submodules/aeris-datavalidation-charts/components/aeris-datavalidation-timeseries";
 import AerisDatavalidationChartsSelect from "./aeris-datavalidation-ui/submodules/aeris-datavalidation-selects/components/aeris-datavalidation-chartsselect";
 import AerisDatavalidationDeleteDialog from "./aeris-datavalidation-ui/submodules/aeris-datavalidation-dialogs/components/aeris-datavalidation-deletedialog";
 import AerisDatavalidationChart from "@/lib/modules/aeris-datavalidation-blocks/submodules/aeris-datavalidation-charts/components/aeris-datavalidation-chart";
 import AerisDatavalidationSessionsTable from "./aeris-datavalidation-ui/submodules/aeris-datavalidation-tables/components/aeris-datavalidation-sessionstable";
 import AerisDatavalidationTypography from "./aeris-datavalidation-ui/submodules/aeris-datavalidation-typographies/components/aeris-datavalidation-typography";
+import AerisDatavalidationDefaultChart from "./aeris-datavalidation-blocks/submodules/aeris-datavalidation-charts/components/aeris-datavalidation-defaultchart";
 import AerisDatavalidationPortraitLayaout from "./aeris-datavalidation-ui/submodules/aeris-datavalidation-layouts/components/aeris-datavalidation-potraitlayout";
 import AerisDatavalidationLogoutItem from "@/lib/modules/aeris-datavalidation-ui/submodules/aeris-datavalidation-items/components/aeris-datavalidation-loginitem";
 import AerisDatavalidationSelectionsTable from "./aeris-datavalidation-ui/submodules/aeris-datavalidation-tables/components/aeris-datavalidation-selectionstable";
@@ -38,12 +40,14 @@ export {
     AerisDatavalidationTypography,
     AerisDatavalidationTabHandler,
     AerisDatavalidationLogoutItem,
+    AerisDatavalidationTimeSeries,
     AerisDatavalidationSessionForm,
     AerisDatavalidationAccountItem,
     AerisDatavalidationDeleteDialog,
     AerisDatavalidationMainChartTab,
     AerisDatavalidationChartsSelect,
     AerisDatavalidationLangSwitcher,
+    AerisDatavalidationDefaultChart,
     AerisDatavalidationConfiguration,
     AerisDatavalidationSessionsTable,
     AerisDatavalidationSelectionsTable,

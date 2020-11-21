@@ -92,6 +92,7 @@
     "label_displayManagement" : "Gestion de l’affichage",
     "message_recordedSelection":  "Sélection enregistrée",
     "label_nonDeletableChart": "Graphique non supprimable",
+    "message_chooseSelection": "Veuillez choisir une sélection",
     "message_chooseQualityFlag": "Choisissez le drapeau de qualité",
     "message_deleteChart" : "Voulez-vous vraiment supprimer ce graphique ?",
     "message_delete" : "Êtes-vous sûr de vouloir supprimer cette sélection ?",
@@ -102,10 +103,7 @@
     "session_exist" : "La session existe",
     "linked_parameters": "Paramètres liés",
     "main_parameter": "Paramètre principal",
-    "instrument_name": "Nom de l'instrument",
-    "submit_selections": "Soumettre les sélections",
-    "choose_selection_message": "Veuillez choisir une sélection",
-    "greaterThan_message" : "La date de fin doit être supérieur à la date de début"
+    "instrument_name": "Nom de l'instrument"
   },
   "worksFlow": {
     "validation": "Validation",

@@ -35,8 +35,8 @@
                 :isMainChart="isMainChart"
                 :isLinkedChartMode="isLinkedChartMode"
             />
-            <AerisDatavalidationChart
-                v-else
+            <AerisDatavalidationTimeSeries
+                v-else-if="typeOfData === 'Time series'"
                 :charts="charts"
                 :chartName="enName"
                 :parameters="parameters"
@@ -49,6 +49,11 @@
                 :currentSecondChart="currentSecondChart"
                 :isBreackPointChange="isBreackPointChange"
             />
+            <AerisDatavalidationDefaultChart
+                v-else
+                :charts="charts"
+                chartName="secondChart"
+            />
           </v-card>
         </v-tab-item>
       </v-tabs-items>
@@ -56,14 +61,16 @@
   </div>
 </template>
 <script>
-import AerisDatavalidationChart from "./../../../../aeris-datavalidation-blocks/submodules/aeris-datavalidation-charts/components/aeris-datavalidation-chart"
 import AerisDatavalidationHeatMap from "./../../../../aeris-datavalidation-blocks/submodules/aeris-datavalidation-charts/components/aeris-datavalidation-heatmap"
+import AerisDatavalidationTimeSeries from  "./../../../../aeris-datavalidation-blocks/submodules/aeris-datavalidation-charts/components/aeris-datavalidation-timeseries"
+import AerisDatavalidationDefaultChart from "./../../../../aeris-datavalidation-blocks/submodules/aeris-datavalidation-charts/components/aeris-datavalidation-defaultchart"
 
 export default {
   name: "aeris-datavalidation-chartstabs",
   components : {
-    AerisDatavalidationChart,
-    AerisDatavalidationHeatMap
+    AerisDatavalidationHeatMap,
+    AerisDatavalidationTimeSeries,
+    AerisDatavalidationDefaultChart
   },
   props: {
     charts : {

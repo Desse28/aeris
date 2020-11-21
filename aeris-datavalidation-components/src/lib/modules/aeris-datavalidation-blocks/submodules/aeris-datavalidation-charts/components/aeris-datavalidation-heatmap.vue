@@ -1,16 +1,18 @@
 <template>
-  <v-row justify="center">
-    <v-col cols="12">
-      <div
-          :id="getChartId"
-      >
-      </div>
-    </v-col>
-  </v-row>
+  <div class="v-sheet v-sheet--outlined theme--light grey--text--">
+    <v-row justify="center">
+      <v-col cols="12">
+        <div
+            :id="getChartId"
+        >
+        </div>
+      </v-col>
+    </v-row>
+  </div>
 </template>
 <script>
 import $ from "jquery";
-import ChartMixin from "../../../../aeris-datavalidation-common/mixin/chartConfMixin"
+import ChartConfMixin from "../../../../aeris-datavalidation-common/mixin/chartConfMixin"
 
 export default {
   name: "aeris-datavalidation-heatmap",
@@ -30,7 +32,7 @@ export default {
       default : false
     },
   },
-  mixins: [ChartMixin],
+  mixins: [ChartConfMixin],
   data() {
     return {
       chartDiv : null
@@ -46,7 +48,7 @@ export default {
           type: 'heatmap'
         }
       ]
-      this.initCurrentChart(this.chartDiv)
+      this.initCurrentChartConf(this.chartDiv)
     })
   },
   methods: {

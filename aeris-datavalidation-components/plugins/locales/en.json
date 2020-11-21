@@ -93,6 +93,7 @@
     "message_existSelection" : "This session exist",
     "message_chooseQualityFlag": "Choose quality flag",
     "message_recordedSelection":  "Recorded selection",
+    "message_chooseSelection": "Please choose a selection",
     "message_delete" : "Are you sure you want to delete this selection ?",
     "message_deleteChart" : "Are you sure you want to delete this chart ?",
     "message_canNotEdit" : "Selection not edited, because an identical selection exists",
@@ -103,11 +104,7 @@
     "new_session" : "New session",
     "main_parameter": "Main parameter",
     "instrument_name": "Instrument name",
-    "linked_parameters": "Linked parameters",
-    "submit_selections": "Submit selections",
-    "selection_exists" : "This selection exists",
-    "choose_selection_message": "Please choose a selection",
-    "greaterThan_message" : "The end date must be greater than the start date"
+    "linked_parameters": "Linked parameters"
   },
   "worksFlow": {
     "validation": "Validation",
