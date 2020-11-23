@@ -44,7 +44,6 @@
               :notifySelection="notifySelection"
               :switchLinkedMode="switchLinkedMode"
               :applyLinkedEffect="applyLinkedEffect"
-              :notifyDeleteSelection="notifyDeleteSelection"
           />
         </template>
         <template v-slot:land2>

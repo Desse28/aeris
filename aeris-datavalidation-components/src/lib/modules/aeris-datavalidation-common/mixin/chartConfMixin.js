@@ -27,6 +27,9 @@ export default {
                 return linkChartsIconPath
             else
                 return unLinkChartsIconPath
+        },
+        getTypeOfChart : function () {
+            return this.currentInstrument.typeOfData
         }
     },
     methods : {
@@ -103,6 +106,7 @@ export default {
                                 this.resetAxes()
                             }
                         },
+                        'sendDataToCloud',
                     ],
                 ]
             )

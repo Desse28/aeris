@@ -32,8 +32,15 @@
                 v-if="typeOfData === 'Heatmap'"
                 :charts="charts"
                 :chartName="enName"
+                :parameters="parameters"
                 :isMainChart="isMainChart"
+                :currentSession="currentSession"
+                :linkedChartData="linkedChartData"
+                :instrumentInfos="instrumentInfos"
                 :isLinkedChartMode="isLinkedChartMode"
+                :currentInstrument="currentInstrument"
+                :currentSecondChart="currentSecondChart"
+                :isBreackPointChange="isBreackPointChange"
             />
             <AerisDatavalidationTimeSeries
                 v-else-if="typeOfData === 'Time series'"

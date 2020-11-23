@@ -9,7 +9,7 @@
         <v-btn class="mb-2 mt-2 blue--text"
                color="rgb(255, 255, 255)"
                depressed
-               v-on:click="()=>{}"
+               v-on:click="reloadPage"
         >
           <v-icon left>mdi-view-list</v-icon> {{$t('session.label_sessions')}}
         </v-btn>
@@ -140,6 +140,9 @@ export default {
     },
   },
   methods: {
+    reloadPage(){
+      window.location.reload()
+    },
     switchCurrentView: function(viewName) {
       this.currentView = viewName
       this.currentSelection = this.selection

@@ -96,10 +96,6 @@ export default {
       type : Boolean,
       default : false
     },
-    notifyDeleteSelection: {
-      type: Function,
-      default : () => {}
-    },
   },
   watch: {
     isBreackPointChange : function () {
@@ -134,7 +130,7 @@ export default {
           this.initCurrentChart(parameter)
         } else if(oldsParameters.length < newParameters.length) {
           parameter = newParameters[newParameters.length - 1]
-          this.addNewParameter(parameter)
+          this.addNewParameter(parameter, this.getTypeOfChart)
         } else if(newParameters.length < oldsParameters.length) {
           this.removeParameter(newParameters, oldsParameters)
         }
@@ -230,7 +226,7 @@ export default {
             this.initCurrentChartConf(this.chartDiv)
 
             if(parameter)
-              this.initDefaultParameters(parameter)
+              this.initDefaultParameters(parameter, this.getTypeOfChart)
 
             if(this.isMainChart)
               this.drawDefaultSelections()
@@ -258,11 +254,9 @@ export default {
     validateDelete : function () {
       this.deleteDialog = false
       this.deleteCurrentSelection()
-      this.resetDeleteDefaultState()
     },
     cancelDelete : function () {
       this.deleteDialog = false
-      this.notifyDeleteSelection(false)
     },
     isDateChange : function() {
       return (this.selection.startDate !== this.currentSelection.x0 ||
@@ -275,11 +269,6 @@ export default {
         this.componentKey = 2
 
       this.initCurrentChart(null)
-    },
-    resetDeleteDefaultState: function () {
-      setTimeout(() => {
-        this.notifyDeleteSelection(false)
-      }, 500)
     },
   }
 }

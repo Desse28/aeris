@@ -1,7 +1,9 @@
 <template>
-  <AerisDatavalidationChart
-      :chartId="getChartId"
-  />
+  <div>
+    <AerisDatavalidationChart
+        :chartId="getChartId"
+    />
+  </div>
 </template>
 <script>
 
@@ -29,7 +31,12 @@ export default {
   mixins: [ChartConfMixin],
   data() {
     return {
-      chartDiv : null
+      chartDiv : null,
+      attrs: {
+        class: 'mb-6',
+        boilerplate: true,
+        elevation: 2,
+      },
     }
   },
   mounted() {
@@ -41,7 +48,6 @@ export default {
         $('document').ready(() => {
           this.chartDiv = document.getElementById( this.getChartId )
           this.initCurrentChartConf(this.chartDiv)
-
         })
       })
     },

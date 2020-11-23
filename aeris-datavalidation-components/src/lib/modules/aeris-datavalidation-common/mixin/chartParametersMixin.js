@@ -1,3 +1,6 @@
+const HEAT_MAP_TYPE = "Heatmap"
+const TIME_SERIES_TYPE = "Time series"
+
 export default {
     data: () => ({
         currentUrl : "",
@@ -7,26 +10,58 @@ export default {
         typeOfRequest: "",
     }),
     methods : {
-        initDefaultParameters : function (firstParameter) {
+        initDefaultParameters : function (firstParameter, typeOfChart) {
           if(this.parameters)
-              this.addNewParameter(firstParameter)
+              this.addNewParameter(firstParameter, typeOfChart)
         },
-        addNewParameter : function (parameter) {
-            let uri, nextIndex
+        addNewParameter : function (parameter, typeOfChart) {
+            let uri
             let {startDate, endDate} = this.currentInstrument
 
             this.typeOfRequest = "GET"
             this.callBack = (data) => {
                 if(data) {
-                    this.updateChart(data.parameterData, parameter)
-                    if(this.nextDefaultParameterExist(parameter)) {
-                        nextIndex = this.getParameterIndex(parameter) + 1
-                        this.addNewParameter(this.parameters[nextIndex])
-                    }
+                    if(typeOfChart === TIME_SERIES_TYPE)
+                        this.timeSeriesDataHandler(data, parameter, typeOfChart)
+                    else if(typeOfChart === HEAT_MAP_TYPE)
+                        this.heatMapDataHandler(data, parameter, typeOfChart)
                 }
             }
-            uri = "/instruments/" + parameter.name + "/" + startDate + "/" + endDate
+            uri = this.getTargetUri(typeOfChart, parameter.name, startDate, endDate)
             this.currentUrl = process.env.VUE_APP_ROOT_API + uri
+        },
+        timeSeriesDataHandler : function (data, parameter, typeOfChart) {
+            let nextIndex
+            if(data) {
+                this.updateChart(data.parameterData, parameter)
+                if(this.nextDefaultParameterExist(parameter)) {
+                    nextIndex = this.getParameterIndex(parameter) + 1
+                    this.addNewParameter(this.parameters[nextIndex], typeOfChart)
+                }
+            }
+        },
+        heatMapDataHandler : function ({dimensions, variables}, parameter, typeOfChart) {
+            let data
+            if(dimensions && variables && parameter && typeOfChart) {
+                data = [{
+                    x : variables.time.data,
+                    y  : variables.level.data,
+                    z : variables.main.data,
+                    type : 'heatmap',
+                    showlegend : true
+                }]
+                this.$Plotly.addTraces(this.chartDiv, data)
+            }
+        },
+        getTargetUri : function (typeOfChart, parameterName, startDate, endDate) {
+            let targetUri = ""
+
+            if(typeOfChart === TIME_SERIES_TYPE)
+                targetUri =  "/instruments/" + parameterName + "/" + startDate + "/" + endDate
+            else if(typeOfChart === HEAT_MAP_TYPE)
+                targetUri =  "/instruments/" + parameterName
+
+            return targetUri
         },
         nextDefaultParameterExist : function(parameter) {
             let isDefault = false
